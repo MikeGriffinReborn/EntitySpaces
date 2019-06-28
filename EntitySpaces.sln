@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntitySpaces.Core", "Entity
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntitySpaces.Interfaces", "EntitySpaces.Interfaces\EntitySpaces.Interfaces.csproj", "{041B39D5-D8C5-468C-B398-1EBE8D099684}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntitySpaces.Loader", "EntitySpaces.Loader\EntitySpaces.Loader.csproj", "{859A3D81-57EA-4AE4-BC47-05C97045BCF9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{041B39D5-D8C5-468C-B398-1EBE8D099684}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{041B39D5-D8C5-468C-B398-1EBE8D099684}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{041B39D5-D8C5-468C-B398-1EBE8D099684}.Release|Any CPU.Build.0 = Release|Any CPU
+		{859A3D81-57EA-4AE4-BC47-05C97045BCF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{859A3D81-57EA-4AE4-BC47-05C97045BCF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{859A3D81-57EA-4AE4-BC47-05C97045BCF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{859A3D81-57EA-4AE4-BC47-05C97045BCF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
