@@ -1,0 +1,8 @@
+C:\Users\MikeGriffin\source\repos\EntitySpaces_DotNetStandard\EntitySpaces.DynamicQuery\obj\Debug\netstandard2.0\EntitySpaces.DynamicQuery.csproj.CoreCompileInputs.cache
+C:\Users\MikeGriffin\source\repos\EntitySpaces_DotNetStandard\EntitySpaces.DynamicQuery\obj\Debug\netstandard2.0\EntitySpaces.DynamicQuery.AssemblyInfoInputs.cache
+C:\Users\MikeGriffin\source\repos\EntitySpaces_DotNetStandard\EntitySpaces.DynamicQuery\obj\Debug\netstandard2.0\EntitySpaces.DynamicQuery.AssemblyInfo.cs
+C:\Users\MikeGriffin\source\repos\EntitySpaces_DotNetStandard\EntitySpaces.DynamicQuery\bin\Debug\netstandard2.0\EntitySpaces.DynamicQuery.deps.json
+C:\Users\MikeGriffin\source\repos\EntitySpaces_DotNetStandard\EntitySpaces.DynamicQuery\bin\Debug\netstandard2.0\EntitySpaces.DynamicQuery.dll
+C:\Users\MikeGriffin\source\repos\EntitySpaces_DotNetStandard\EntitySpaces.DynamicQuery\bin\Debug\netstandard2.0\EntitySpaces.DynamicQuery.pdb
+C:\Users\MikeGriffin\source\repos\EntitySpaces_DotNetStandard\EntitySpaces.DynamicQuery\obj\Debug\netstandard2.0\EntitySpaces.DynamicQuery.dll
+C:\Users\MikeGriffin\source\repos\EntitySpaces_DotNetStandard\EntitySpaces.DynamicQuery\obj\Debug\netstandard2.0\EntitySpaces.DynamicQuery.pdb
