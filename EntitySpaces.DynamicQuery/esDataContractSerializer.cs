@@ -33,7 +33,6 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
 
-#if(WCF || SILVERLIGHT)
 namespace EntitySpaces.DynamicQuery
 {
     /// <summary>
@@ -86,7 +85,6 @@ namespace EntitySpaces.DynamicQuery
             return _ToXml(o, dcs);
         }
 
-#if(!SILVERLIGHT)
         /// <summary>
         /// This overload can preserve object references
         /// </summary>
@@ -95,10 +93,9 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The serialized contract in the form of a string</returns>
         static public string ToXml(object o, bool preserveObjectReferences)
         {
-            DataContractSerializer dcs = new DataContractSerializer(o.GetType(), null, Int32.MaxValue, true, true, null);
+            DataContractSerializer dcs = new DataContractSerializer(o.GetType());
             return _ToXml(o, dcs);
         }
-#endif
 
         /// <summary>
         /// Serialize an object
@@ -113,7 +110,6 @@ namespace EntitySpaces.DynamicQuery
             return _ToXml(o, dcs);
         }
 
-#if(!SILVERLIGHT)
         /// <summary>
         /// This overload can preserve object references
         /// </summary>
@@ -124,10 +120,9 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The serialized contract in the form of a string</returns>
         static public string ToXml(object o, string rootName, string rootNamespace, bool preserveObjectReferences)
         {
-            DataContractSerializer dcs = new DataContractSerializer(o.GetType(), rootName, rootNamespace, null, Int32.MaxValue, true, true, null);
+            DataContractSerializer dcs = new DataContractSerializer(o.GetType(), rootName, rootNamespace);
             return _ToXml(o, dcs);
         }
-#endif
 
         static private string _ToXml(object o, DataContractSerializer dcs)
         {
@@ -164,7 +159,6 @@ namespace EntitySpaces.DynamicQuery
             return encoding.GetBytes(xml);
         }
 
-#if(!SILVERLIGHT)
         /// <summary>
         /// This overload can preserve object references
         /// </summary>
@@ -173,13 +167,12 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>The byte[] encoded with UTF8Encoding</returns>
         static public byte[] ToByteArray(object o, bool preserveObjectReferences)
         {
-            DataContractSerializer dcs = new DataContractSerializer(o.GetType(), null, Int32.MaxValue, true, true, null);
+            DataContractSerializer dcs = new DataContractSerializer(o.GetType());
             string xml = _ToXml(o, dcs);
 
             System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
             return encoding.GetBytes(xml);
         }
-#endif
 
         /// <summary>
         /// Serialize an object 
@@ -197,7 +190,6 @@ namespace EntitySpaces.DynamicQuery
             return encoding.GetBytes(xml);
         }
 
-#if(!SILVERLIGHT)
         /// <summary>
         /// This overload can preserve object references
         /// </summary>
@@ -208,13 +200,12 @@ namespace EntitySpaces.DynamicQuery
         /// <returns></returns>
         static public byte[] ToByteArray(object o, string rootName, string rootNamespace, bool preserveObjectReferences)
         {
-            DataContractSerializer dcs = new DataContractSerializer(o.GetType(), rootName, rootNamespace, null, Int32.MaxValue, true, true, null);
+            DataContractSerializer dcs = new DataContractSerializer(o.GetType(), rootName, rootNamespace);
             string xml = _ToXml(o, dcs);
 
             System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
             return encoding.GetBytes(xml);
         }
-#endif
 
         #endregion
 
@@ -304,11 +295,7 @@ namespace EntitySpaces.DynamicQuery
         static public object FromByteArray(byte[] bytes, Type type)
         {
             System.Text.UTF8Encoding enc = new System.Text.UTF8Encoding();
-#if(!SILVERLIGHT)
             string xml = enc.GetString(bytes);
-#else
-            string xml = enc.GetString(bytes, 0, bytes.Length);
-#endif
 
             DataContractSerializer serializer = new DataContractSerializer(type);
             return _FromXml(xml, serializer);
@@ -323,11 +310,7 @@ namespace EntitySpaces.DynamicQuery
         static public T FromByteArray<T>(byte[] bytes)
         {
             System.Text.UTF8Encoding enc = new System.Text.UTF8Encoding();
-#if(!SILVERLIGHT)
             string xml = enc.GetString(bytes);
-#else
-            string xml = enc.GetString(bytes, 0, bytes.Length);
-#endif
 
             DataContractSerializer serializer = new DataContractSerializer(typeof(T));
             return (T)_FromXml(xml, serializer);
@@ -344,11 +327,7 @@ namespace EntitySpaces.DynamicQuery
         static public object FromByteArray(byte[] bytes, Type type, string rootName, string rootNamespace)
         {
             System.Text.UTF8Encoding enc = new System.Text.UTF8Encoding();
-#if(!SILVERLIGHT)
             string xml = enc.GetString(bytes);
-#else
-            string xml = enc.GetString(bytes, 0, bytes.Length);
-#endif
 
             DataContractSerializer serializer = new DataContractSerializer(type, rootName, rootNamespace);
             return _FromXml(xml, serializer);
@@ -366,11 +345,7 @@ namespace EntitySpaces.DynamicQuery
         static public T FromByteArray<T>(byte[] bytes, string rootName, string rootNamespace)
         {
             System.Text.UTF8Encoding enc = new System.Text.UTF8Encoding();
-#if(!SILVERLIGHT)
             string xml = enc.GetString(bytes);
-#else
-            string xml = enc.GetString(bytes, 0, bytes.Length);
-#endif
 
             DataContractSerializer serializer = new DataContractSerializer(typeof(T), rootName, rootNamespace);
             return (T)_FromXml(xml, serializer);
@@ -380,4 +355,3 @@ namespace EntitySpaces.DynamicQuery
         #endregion
     }
 }
-#endif

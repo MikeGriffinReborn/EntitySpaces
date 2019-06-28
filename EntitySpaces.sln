@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.438
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntitySpaces.DynamicQuery", "EntitySpaces.DynamicQuery\EntitySpaces.DynamicQuery.csproj", "{EFF7E28C-44E3-4D62-B2AB-CF23A5758B97}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntitySpaces.Interfaces", "EntitySpaces.Interfaces\EntitySpaces.Interfaces.csproj", "{005B5CA3-5B8C-403C-A25C-DC5CC2CAA14E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EFF7E28C-44E3-4D62-B2AB-CF23A5758B97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFF7E28C-44E3-4D62-B2AB-CF23A5758B97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFF7E28C-44E3-4D62-B2AB-CF23A5758B97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFF7E28C-44E3-4D62-B2AB-CF23A5758B97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{005B5CA3-5B8C-403C-A25C-DC5CC2CAA14E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{005B5CA3-5B8C-403C-A25C-DC5CC2CAA14E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{005B5CA3-5B8C-403C-A25C-DC5CC2CAA14E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{005B5CA3-5B8C-403C-A25C-DC5CC2CAA14E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {66B8A55F-8972-40CD-8BF8-0E00C1E31731}
+	EndGlobalSection
+EndGlobal

@@ -28,10 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 using System;
-
-#if (WCF)
 using System.Runtime.Serialization;
-#endif
 
 namespace EntitySpaces.DynamicQuery
 {
@@ -39,12 +36,8 @@ namespace EntitySpaces.DynamicQuery
     /// Created when Query.GroupBy() is called, contains an esColumnItem in order
     /// to describe the column.
     /// </summary>
-#if !SILVERLIGHT    
     [Serializable]
-#endif
-#if (WCF)
     [DataContract(Namespace = "es", IsReference = true)]
-#endif
     public class esGroupByItem
     {
         /// <summary>
@@ -72,9 +65,7 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// The Expression for the OrderBy statement
         /// </summary>  
-#if (WCF)
         [DataMember(Name = "Expression", EmitDefaultValue = false)]
-#endif
         public esExpression Expression;
     }
 }

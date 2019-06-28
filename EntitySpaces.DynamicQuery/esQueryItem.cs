@@ -31,10 +31,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-
-#if (WCF)
 using System.Runtime.Serialization;
-#endif
 
 namespace EntitySpaces.DynamicQuery
 {
@@ -71,12 +68,8 @@ namespace EntitySpaces.DynamicQuery
     /// );
     /// </code>
     /// </example>
-#if !SILVERLIGHT
     [Serializable]
-#endif
-#if (WCF)
     [DataContract(Namespace = "es", IsReference = true)]
-#endif  
     public class esQueryItem
     {
         private esQueryItem()
@@ -5659,9 +5652,7 @@ namespace EntitySpaces.DynamicQuery
         /// Required due to operator overloading. Use 'Equal' not 'Equals'
         /// for DynamicQueries.
         /// </summary>
-#if !SILVERLIGHT    
         [EditorBrowsable(EditorBrowsableState.Never)]
-#endif
         public override bool Equals(object o)
         {
             throw new NotImplementedException("Use 'Equal' not 'Equals'");

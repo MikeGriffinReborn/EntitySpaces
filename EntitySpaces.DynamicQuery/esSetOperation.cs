@@ -28,23 +28,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 using System;
-using System.Collections.Generic;
-
-#if (WCF)
 using System.Runtime.Serialization;
-#endif
 
 namespace EntitySpaces.DynamicQuery
 {
     /// <summary>
     /// Created when Query.Union (UnionAll, Intersect, Except) is called.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
-#if (WCF)
     [DataContract(Namespace = "es", IsReference = true)]
-#endif
     public class esSetOperation
     {
         /// <summary>
@@ -63,16 +55,12 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// The Query to form the Set with
         /// </summary>
-#if (WCF)
         [DataMember(Name = "Query", EmitDefaultValue = false)]
-#endif
         public esDynamicQuerySerializable Query;
         /// <summary>
         /// The Set Type, Union/Unionall/Intersect/Except
         /// </summary>
-#if (WCF)
         [DataMember(Name = "Type", EmitDefaultValue = false)]
-#endif
         public esSetOperationType SetOperationType;
     }
 }

@@ -29,27 +29,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 using System.Collections.Generic;
-
-#if (WCF)
 using System.Runtime.Serialization;
-#endif
 
 namespace EntitySpaces.DynamicQuery
 {
     /// <summary>
     /// Created when Query.InnerJoin (LeftJoin, RightJoin, FullJoin) is called.
     /// </summary>
-#if !SILVERLIGHT    
     [Serializable]
-#endif
-#if (WCF)
     [DataContract(Namespace = "es", IsReference = true)]
-#endif
     public class esJoinItem
     {
-#if !SILVERLIGHT
         [NonSerialized]
-#endif
         private esDynamicQuerySerializable parentQuery;
 
         /// <summary>
@@ -178,34 +169,24 @@ namespace EntitySpaces.DynamicQuery
         /// Used internally by EntitySpaces to make the <see cref="esJoinItem"/> classes data available to the
         /// EntitySpaces data providers.
         /// </summary>
-#if !SILVERLIGHT    
-    [Serializable]
-#endif
-#if (WCF)
+        [Serializable]
         [DataContract(Namespace = "es")]
-#endif
         public struct esJoinItemData
         {
             /// <summary>
             /// The Query that makes up the join
             /// </summary>
-#if (WCF)
             [DataMember(Name = "Query", Order = 99, EmitDefaultValue = false)]
-#endif              
             public esDynamicQuerySerializable Query;
             /// <summary>
             /// The join type, InnerJoin, LeftJoin, ...
             /// </summary>
-#if (WCF)
             [DataMember(Name = "JoinType", EmitDefaultValue = false)]
-#endif              
             public esJoinType JoinType;
             /// <summary>
             /// The where conditions for the subquery
             /// </summary>
-#if (WCF)
             [DataMember(Name = "WhereItems", EmitDefaultValue = false)]
-#endif              
             public List<esComparison> WhereItems;
         }
 
@@ -221,9 +202,7 @@ namespace EntitySpaces.DynamicQuery
             return join.data;
         }
 
-#if (WCF)
         [DataMember(Name = "Data", EmitDefaultValue = false)]
-#endif   
         internal esJoinItemData data;
     }
 }

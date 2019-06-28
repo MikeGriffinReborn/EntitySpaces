@@ -28,10 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 using System;
-
-#if (WCF)
 using System.Runtime.Serialization;
-#endif
 
 namespace EntitySpaces.DynamicQuery
 {
@@ -40,29 +37,21 @@ namespace EntitySpaces.DynamicQuery
     /// information needed to decribe a column, including it's alias (if any),
     /// its DataType, and any JoinAlias to use.
     /// </summary>
-#if !SILVERLIGHT    
     [Serializable]
-#endif
-#if (WCF)
     [DataContract(Namespace = "es")]
-#endif
     public struct esColumnItem
     {
         /// <summary>
         /// The column name
         /// </summary>
-#if (WCF)
         [DataMember(Name = "Name", EmitDefaultValue = false)]
-#endif          
         public string Name;
 
         /// <summary>
         /// Returns the column name if there is no Alias, otherwise, returns 
         /// the Alias.
         /// </summary>
-#if (WCF)
         [DataMember(Name = "Alias", EmitDefaultValue = false)]
-#endif             
         public string Alias
         {
             get
@@ -87,9 +76,7 @@ namespace EntitySpaces.DynamicQuery
             }
         }
 
-#if (WCF)
         [DataMember(Name = "Distinct", EmitDefaultValue = false)]
-#endif    
         public bool Distinct
         {
             get
@@ -105,18 +92,14 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// 
         /// </summary>
-#if (WCF)
         [DataMember(Name = "ParentQuery", Order = 99, EmitDefaultValue = false)]
-#endif           
         public esDynamicQuerySerializable Query;
 
         /// <summary>
         /// This is passed into the esQueryItem's constructor, it ultimately makes its 
         /// way here
         /// </summary>
-#if (WCF)
         [DataMember(Name = "Datatype", EmitDefaultValue = false)]
-#endif           
         public esSystemType Datatype;
 
         private string alias;

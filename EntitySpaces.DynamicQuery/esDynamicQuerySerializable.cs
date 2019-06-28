@@ -36,10 +36,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-
-#if (WCF)
 using System.Runtime.Serialization;
-#endif
 
 
 namespace EntitySpaces.DynamicQuery
@@ -89,12 +86,8 @@ namespace EntitySpaces.DynamicQuery
     /// emps.Query.Load();
     /// </code>
     /// </example>
-#if !SILVERLIGHT    
     [Serializable]
-#endif
-#if (WCF)
     [DataContract(Namespace = "es", IsReference = true)]
-#endif
     public class esDynamicQuerySerializable : IDynamicQuerySerializableInternal
     {
         /// <summary>
@@ -1194,9 +1187,7 @@ namespace EntitySpaces.DynamicQuery
             }
         }
 
-#if !SILVERLIGHT    
         [NonSerialized]
-#endif
         private DynamicQueryProps props;
 
         /// <summary>
@@ -1406,9 +1397,7 @@ namespace EntitySpaces.DynamicQuery
         }
         #endregion
 
-#if (WCF || SILVERLIGHT)
         #region Serializer
-
 
         /// <summary>
         /// This class will allow you to serialize via the DataContract manaually, but normally you won't have to use this class
@@ -1425,47 +1414,27 @@ namespace EntitySpaces.DynamicQuery
             static public DataContractSerializer GetSerializer(esDynamicQuerySerializable query)
             {
                 List<System.Type> types = GetKnownTypes(query);
-#if !SILVERLIGHT 
-                return new DataContractSerializer(query.GetType(), query.GetQueryName(),
-                    "http://www.entityspaces.net", types, Int32.MaxValue, false, true, null);
-#else
                 return new DataContractSerializer(query.GetType(), query.GetQueryName(),
                     "http://www.entityspaces.net", types);
-#endif
             }
 
             static public DataContractSerializer GetSerializer(esDynamicQuerySerializable query, Type type)
             {
                 List<System.Type> types = GetKnownTypes(query);
-#if !SILVERLIGHT 
-                return new DataContractSerializer(type, query.GetQueryName(),
-                    "http://www.entityspaces.net", types, Int32.MaxValue, false, true, null);
-#else
                 return new DataContractSerializer(type, query.GetQueryName(),
                     "http://www.entityspaces.net", types);
-#endif
             }
 
             static public DataContractSerializer GetSerializer(esDynamicQuerySerializable query, List<System.Type> knownTypes)
             {
-#if !SILVERLIGHT
-                return new DataContractSerializer(query.GetType(), query.GetQueryName(),
-                    "http://www.entityspaces.net", knownTypes, Int32.MaxValue, false, true, null);
-#else
                 return new DataContractSerializer(query.GetType(), query.GetQueryName(),
                     "http://www.entityspaces.net", knownTypes);
-#endif
             }
 
             static public DataContractSerializer GetSerializer(esDynamicQuerySerializable query, Type type, List<System.Type> knownTypes)
             {
-#if !SILVERLIGHT
-                return new DataContractSerializer(type, query.GetQueryName(),
-                    "http://www.entityspaces.net", knownTypes, Int32.MaxValue, false, true, null);
-#else
                 return new DataContractSerializer(type, query.GetQueryName(),
                     "http://www.entityspaces.net", knownTypes);
-#endif
             }
 
             static public string ToXml(esDynamicQuerySerializable query)
@@ -1488,7 +1457,6 @@ namespace EntitySpaces.DynamicQuery
                 return xml;
             }
 
-#if !SILVERLIGHT
             static public esDynamicQuerySerializable FromXml(string xml, Type type)
             {
                 esDynamicQuerySerializable query = null;
@@ -1524,7 +1492,7 @@ namespace EntitySpaces.DynamicQuery
                     {
                         // Deserialize
                         DataContractSerializer serializer = new DataContractSerializer(type, type.Name, "http://www.entityspaces.net", 
-                            knownTypes, Int32.MaxValue, false, true, null);
+                            knownTypes);
                         query = serializer.ReadObject(reader) as esDynamicQuerySerializable;
                     }
                 }
@@ -1532,7 +1500,6 @@ namespace EntitySpaces.DynamicQuery
                 return query;
             }
 
-#endif
             static private void GetKnownTypes(esDynamicQuerySerializable query, List<System.Type> types)
             {
                 bool found = false;
@@ -1560,7 +1527,6 @@ namespace EntitySpaces.DynamicQuery
         }
 
         #endregion
-#endif
 
         #region Internal Workings
 
@@ -1598,180 +1564,121 @@ namespace EntitySpaces.DynamicQuery
 
         // Holds the name of the metadata maps that will eventually be turned into 
         // the real ones by esDynamicQuery
-#if (WCF)
         [DataMember(Name = "Queries", EmitDefaultValue = false)]
-#endif
         internal protected Dictionary<string, esDynamicQuerySerializable> queries = new Dictionary<string, esDynamicQuerySerializable>();
         // Filled in by SelectAllExcept()
-#if (WCF)
         [DataMember(Name = "SelectAllExcept", EmitDefaultValue = false)]
-#endif
         internal protected List<esQueryItem> m_selectAllExcept;
 
         // Set to true by SelectAll()
-#if (WCF)
         [DataMember(Name = "SelectAll", EmitDefaultValue = false)]
-#endif
         internal protected bool m_selectAll = false;
 
-#if (WCF)
         [DataMember(Name = "DefaultConjunction", EmitDefaultValue = false)]
-#endif
         internal esConjunction defaultConjunction = esConjunction.And;
 
-#if (WCF)
         [DataMember(Name = "QuerySource", EmitDefaultValue = false)]
-#endif
         internal string querySource;
-#if (WCF)
+
         [DataMember(Name = "DataID", EmitDefaultValue = false)]
-#endif
         internal Guid dataID;
 
-#if (WCF)
         [DataMember(Name = "Catalog", EmitDefaultValue = false)]
-#endif
         internal string catalog;
-#if (WCF)
+
         [DataMember(Name = "Schema", EmitDefaultValue = false)]
-#endif
         internal string schema;
 
-#if (WCF)
         [DataMember(Name = "IsInSubQuery", EmitDefaultValue = false)]
-#endif
         internal bool isInSubQuery;
-#if (WCF)
+
         [DataMember(Name = "IsExplicitParenthesis", EmitDefaultValue = false)]
-#endif
         internal bool isExplicitParenthesis;
-#if (WCF)
+
         [DataMember(Name = "SubQueryAlias", EmitDefaultValue = false, IsRequired = false)]
-#endif
         internal string subQueryAlias = string.Empty;
-#if (WCF)
+
         [DataMember(Name = "SelectColumns", Order = 99, EmitDefaultValue = false)]
-#endif
         internal List<esExpression> selectColumns;
 
-#if (WCF)
         [DataMember(Name = "FromQuery", Order = 100, EmitDefaultValue = false)]
-#endif
         internal esDynamicQuerySerializable fromQuery;
 
-#if (WCF)
         [DataMember(Name = "JoinItems", Order = 101, EmitDefaultValue = false)]
-#endif  
         internal List<esJoinItem> joinItems;
 
-#if (WCF)
         [DataMember(Name = "WhereItems", Order = 102, EmitDefaultValue = false)]
-#endif  
         internal List<esComparison> whereItems;
 
-#if (WCF)
         [DataMember(Name = "HavingItems", Order = 103, EmitDefaultValue = false)]
-#endif
         internal List<esComparison> havingItems;
 
-#if (WCF)
         [DataMember(Name = "OrderByItems", Order = 104, EmitDefaultValue = false)]
-#endif  
         internal List<esOrderByItem> orderByItems;
 
-#if (WCF)
         [DataMember(Name = "GroupByItems", Order = 105, EmitDefaultValue = false)]
-#endif  
         internal List<esGroupByItem> groupByItems;
 
-#if (WCF)
         [DataMember(Name = "SetOperations", Order = 106, EmitDefaultValue = false)]
-#endif
         internal List<esSetOperation> setOperations;
 
         /// <summary>
         /// Used by derived classes
         /// </summary>
-#if (WCF) 
         [DataMember(Name = "Distinct", EmitDefaultValue = false)] 
-#endif
         internal bool distinct;
         /// <summary>
         /// Used by derived classes
         /// </summary>
-#if (WCF)
         [DataMember(Name = "SubquerySearchCondition", EmitDefaultValue = false)]
-#endif        
         internal esSubquerySearchCondition subquerySearchCondition; 
         /// <summary>
         /// Used by derived classes
         /// </summary>
-#if (WCF)
         [DataMember(Name = "Top", EmitDefaultValue = false)]
-#endif        
         internal int? top;
         /// <summary>
         /// Used by derived classes
         /// </summary>
-#if (WCF)
         [DataMember(Name = "WithNoLock", EmitDefaultValue = false)]
-#endif
         internal bool? withNoLock;
         /// <summary>
         /// Used by derived classes
         /// </summary>
-#if (WCF)
         [DataMember(Name = "PageNumber", EmitDefaultValue = false)]
-#endif
         internal int? pageNumber;
         /// <summary>
         /// Used by derived classes
         /// </summary>
-#if (WCF)
         [DataMember(Name = "PageSize", EmitDefaultValue = false)]
-#endif          
         internal int? pageSize;
         /// <summary>
         /// Used by derived classes
         /// </summary>
-#if (WCF)
         [DataMember(Name = "CountAll", EmitDefaultValue = false)]
-#endif               
         internal bool countAll;
         /// <summary>
         /// Used by derived classes
         /// </summary>
-#if (WCF)
         [DataMember(Name = "CountAllAlias", EmitDefaultValue = false)]
-#endif          
         internal string countAllAlias;
         /// <summary>
         /// Used by derived classes
         /// </summary>
-#if (WCF)
         [DataMember(Name = "WithRollup", EmitDefaultValue = false)]
-#endif         
         internal bool withRollup;
         /// <summary>
         /// Must be supplied when using JOIN's
         /// </summary>
-#if (WCF)
         [DataMember(Name = "JoinAlias", EmitDefaultValue = false)]
-#endif           
-        internal string joinAlias = " ";
+       internal string joinAlias = " ";
 
-#if (WCF)
         [DataMember(Name = "SubQueryNames", EmitDefaultValue = false)]
-#endif 
         internal string subQueryNames;
 
-#if (WCF)
         [DataMember(Name = "Skip", EmitDefaultValue = false)]
-#endif
         internal int? skip;
-#if (WCF)
         [DataMember(Name = "Take", EmitDefaultValue = false)]
-#endif
         internal int? take;
 
         internal string lastQuery;

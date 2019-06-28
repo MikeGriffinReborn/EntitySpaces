@@ -29,10 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 using System.Collections.Generic;
-
-#if (WCF)
 using System.Runtime.Serialization;
-#endif
 
 namespace EntitySpaces.DynamicQuery
 {
@@ -56,12 +53,8 @@ namespace EntitySpaces.DynamicQuery
     /// );
     /// </code>
     /// </example>
-#if !SILVERLIGHT    
     [Serializable]
-#endif
-#if (WCF)
     [DataContract(Namespace = "es", IsReference = true)]
-#endif
     public class esComparison
     {
         /// <summary>
@@ -369,12 +362,8 @@ namespace EntitySpaces.DynamicQuery
         /// Used internally by EntitySpaces to make the <see cref="esComparison"/> classes data available to the
         /// EntitySpaces data providers.
         /// </summary>
-#if !SILVERLIGHT    
         [Serializable]
-#endif
-#if (WCF)
         [DataContract(Namespace = "es", IsReference = true)]
-#endif
         public class esComparisonData
         {
             /// <summary>
@@ -424,137 +413,103 @@ namespace EntitySpaces.DynamicQuery
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
-#if (WCF)
             [DataMember(Name = "ParentQuery", Order = 99, EmitDefaultValue = false)]
-#endif            
             public esDynamicQuerySerializable Query;
 
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
-#if (WCF)
             [DataMember(Name = "Column", EmitDefaultValue = false)]
-#endif             
             public esColumnItem Column;
 
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
-#if (WCF)
             [DataMember(Name = "IsLiteral", EmitDefaultValue = false)]
-#endif
             public bool IsLiteral;
 
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
-#if (WCF)
             [DataMember(Name = "ComparisonColumn", EmitDefaultValue = false)]
-#endif              
             public esColumnItem ComparisonColumn;
 
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
-#if (WCF)
             [DataMember(Name = "ComparisonColumn2", EmitDefaultValue = false)]
-#endif            
             public esColumnItem ComparisonColumn2;
 
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
-#if (WCF)
             [DataMember(Name = "Expression", EmitDefaultValue = false)]
-#endif             
             public esMathmaticalExpression Expression;
 
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
-#if (WCF)
             [DataMember(Name = "Value", EmitDefaultValue = false)]
-#endif             
             public object Value;
 
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
-#if (WCF)
             [DataMember(Name = "Values", EmitDefaultValue = false)]
-#endif
             public List<object> Values;
 
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
-#if (WCF)
             [DataMember(Name = "Operand", EmitDefaultValue = false)]
-#endif             
             public esComparisonOperand Operand;
 
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
-#if (WCF)
             [DataMember(Name = "Conjunction", EmitDefaultValue = false)]
-#endif             
             public esConjunction Conjunction;
 
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
-#if (WCF)
             [DataMember(Name = "Parenthesis", EmitDefaultValue = false)]
-#endif             
             public esParenthesis Parenthesis;
 
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
-#if (WCF)
             [DataMember(Name = "BetweenBegin", EmitDefaultValue = false)]
-#endif            
             public object BetweenBegin;
 
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
-#if (WCF)
             [DataMember(Name = "BetweenEnd", EmitDefaultValue = false)]
-#endif            
             public object BetweenEnd;
 
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
-#if (WCF)
             [DataMember(Name = "LikeEscape", EmitDefaultValue = false)]
-#endif             
             public char LikeEscape;
 
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
-#if (WCF)
             [DataMember(Name = "SubOperators", EmitDefaultValue = false)]
-#endif             
             public List<esQuerySubOperator> SubOperators;
 
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
-#if (WCF)
             [DataMember(Name = "WhereExpression", EmitDefaultValue = false)]
-#endif            
             public List<esComparison> WhereExpression;
 
             /// <summary>
             /// Whether the esQueryItem goes first in the expression
             /// </summary>
-#if (WCF)
             [DataMember(Name = "ItemFirst", EmitDefaultValue = false)]
-#endif
             public bool ItemFirst = true;
         }
 
@@ -570,14 +525,10 @@ namespace EntitySpaces.DynamicQuery
             return where.data;
         }
 
-#if (WCF)
         [DataMember(Name = "Data", EmitDefaultValue = false)]
-#endif  
         internal esComparisonData data = new esComparisonData();
 
-#if !SILVERLIGHT
         [NonSerialized]
-#endif
         // this lives for just a fraction during the queries build process
         private bool not;
     }

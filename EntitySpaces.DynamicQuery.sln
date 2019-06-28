@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.438
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntitySpaces.DynamicQuery", "EntitySpaces.DynamicQuery\EntitySpaces.DynamicQuery.csproj", "{9F86BFBB-754E-49EC-9F7F-8EB323C209D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntitySpaces.DynamicQuery", "EntitySpaces.DynamicQuery\EntitySpaces.DynamicQuery.csproj", "{9F86BFBB-754E-49EC-9F7F-8EB323C209D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

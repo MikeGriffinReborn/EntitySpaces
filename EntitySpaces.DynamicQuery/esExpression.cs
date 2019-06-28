@@ -29,22 +29,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 using System.Collections.Generic;
-
-#if (WCF)
 using System.Runtime.Serialization;
-#endif
 
 namespace EntitySpaces.DynamicQuery
 {
     /// <summary>
     /// Used to house the parameters to Query.Select()
     /// </summary>
-#if !SILVERLIGHT     
     [Serializable]
-#endif
-#if (WCF)
     [DataContract(Namespace = "es", IsReference = true)]
-#endif
     public class esExpression
     {
         public esExpression() { }
@@ -52,50 +45,38 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// Back Pointer to the Parent Query
         /// </summary>
-#if (WCF)
         [DataMember(Name = "ParentQuery", Order = 99, EmitDefaultValue = false)]
-#endif         
         public esDynamicQuerySerializable Query;
 
         /// <summary>
         /// Contains the necessary information to describe this column
         /// </summary>
-#if (WCF)
         [DataMember(Name = "Column", EmitDefaultValue = false)]
-#endif           
         public esColumnItem Column;
        
         /// <summary>
         /// A collection of SubOperators such as ToLower to apply to the select column
         /// </summary>
-#if (WCF)
         [DataMember(Name = "SubOperators", EmitDefaultValue = false)]
-#endif           
         public List<esQuerySubOperator> SubOperators;
 
         /// <summary>
         /// Case / When / Then / End
         /// </summary>
-#if (WCF)
         [DataMember(Name = "CaseWhen", EmitDefaultValue = false)]
-#endif
         public esCase CaseWhen;
 
         /// <summary>
         /// The data behind the expression. This ends up looking like a tree in the end as 
         /// more arithmetic expressions are applied
         /// </summary>
-#if (WCF)
         [DataMember(Name = "Expression", EmitDefaultValue = false)]
-#endif         
         public esMathmaticalExpression MathmaticalExpression;
 
         /// <summary>
         /// 
         /// </summary>
-#if (WCF)
         [DataMember(Name = "LiteralValue", EmitDefaultValue = false)]
-#endif
         public object LiteralValue;
 
         /// <summary>

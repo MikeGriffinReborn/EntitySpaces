@@ -28,10 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 using System;
-
-#if (WCF)
 using System.Runtime.Serialization;
-#endif
 
 namespace EntitySpaces.DynamicQuery
 {
@@ -39,56 +36,40 @@ namespace EntitySpaces.DynamicQuery
     /// Used when arithmetic expressions are used in the DynamicQuery syntax.
     /// See <see cref="esArithmeticOperator"/>
     /// </summary>
-#if !SILVERLIGHT     
     [Serializable]
-#endif
-#if (WCF)
     [DataContract(Namespace = "es", IsReference = true)]
-#endif
     public class esMathmaticalExpression
     {
         /// <summary>
         /// The item on the left side of the operation
         /// </summary>
-#if (WCF)
         [DataMember(Name = "SelectItem1", EmitDefaultValue = false)]
-#endif            
         public esExpression SelectItem1;
         /// <summary>
         /// The item on the right side of the operation
         /// </summary>
-#if (WCF)
         [DataMember(Name = "SelectItem2", EmitDefaultValue = false)]
-#endif         
         public esExpression SelectItem2;
         /// <summary>
         /// The esArithmeticOperator applied to SelectItem1 and SelectItem2
         /// </summary>
-#if (WCF)
         [DataMember(Name = "Operator", EmitDefaultValue = false)]
-#endif        
         public esArithmeticOperator Operator;
         /// <summary>
         /// When the right hand side is a literal value this holds its value.
         /// </summary>
-#if (WCF)
         [DataMember(Name = "Literal", EmitDefaultValue = false)]
-#endif         
         public object Literal;
         /// <summary>
         /// When the right hand side is a literal value this describes its data type.
         /// </summary>
-#if (WCF)
         [DataMember(Name = "LiteralType", EmitDefaultValue = false)]
-#endif        
         public esSystemType LiteralType;
 
         /// <summary>
         /// Whether the esQueryItem goes first in the expression
         /// </summary>
-#if (WCF)
         [DataMember(Name = "ItemFirst", EmitDefaultValue = false)]
-#endif         
         public bool ItemFirst = true;
     }
 }

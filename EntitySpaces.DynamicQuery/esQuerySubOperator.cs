@@ -29,10 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 using System.Collections.Generic;
-
-#if (WCF)
 using System.Runtime.Serialization;
-#endif
 
 namespace EntitySpaces.DynamicQuery
 {
@@ -86,29 +83,21 @@ namespace EntitySpaces.DynamicQuery
     /// );
     /// </code>
     /// </example>
-#if !SILVERLIGHT    
     [Serializable]
-#endif
-#if (WCF)
     [DataContract(Namespace = "es", IsReference = true)]
-#endif
     public class esQuerySubOperator
     {
         /// <summary>
         /// The type of the suboperator
         /// </summary>
-#if (WCF)
         [DataMember(Name = "SubOperator", Order=1, EmitDefaultValue = false)]
-#endif              
         public esQuerySubOperatorType SubOperator;
 
         /// <summary>
         /// Any parameters that this SubOperator may need. For instance Substring requires
         /// parameters
         /// </summary>
-#if (WCF)
         [DataMember(Name = "Parameters", Order=2, EmitDefaultValue = false)]
-#endif          
         public Dictionary<string, object> Parameters
         {
             get

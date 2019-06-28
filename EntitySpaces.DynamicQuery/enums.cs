@@ -105,9 +105,7 @@ namespace EntitySpaces.DynamicQuery
     ///   (4) - Uses TRUNC(STDDEV(column),10) to avoid overflow errors
     ///   
     /// </code>
-#if !SILVERLIGHT    
     [Serializable]
-#endif
     public enum esQuerySubOperatorType
     {
         /// <summary>
@@ -216,9 +214,7 @@ namespace EntitySpaces.DynamicQuery
     /// <summary>
     /// The type of comparison in a Where clause
     /// </summary>
-#if !SILVERLIGHT    
     [Serializable]
-#endif
     public enum esComparisonOperand
     {
         /// <summary>

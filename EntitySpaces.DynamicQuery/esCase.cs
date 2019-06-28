@@ -29,24 +29,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 using System.Collections.Generic;
-
-#if (WCF)
 using System.Runtime.Serialization;
-#endif
 
 namespace EntitySpaces.DynamicQuery
 {
-#if !SILVERLIGHT
     [Serializable]
-#endif
-#if (WCF)
     [DataContract(Namespace = "es", IsReference = true)]
-#endif
     public class esCase
     {
-#if !SILVERLIGHT
         [NonSerialized]
-#endif
         private esExpressionOrComparison WhenItem;
 
         /// <summary>
@@ -219,12 +210,8 @@ namespace EntitySpaces.DynamicQuery
         /// Used internally by EntitySpaces to make the <see cref="esJoinItem"/> classes data available to the
         /// EntitySpaces data providers.
         /// </summary>
-#if !SILVERLIGHT
         [Serializable]
-#endif
-#if (WCF)
         [DataContract(Namespace = "es")]
-#endif
         public struct esSimpleCaseData
         {
             public struct esCaseClause
@@ -240,9 +227,7 @@ namespace EntitySpaces.DynamicQuery
             public esExpression Else;
         }
 
-#if (WCF)
         [DataMember(Name = "Data", EmitDefaultValue = false)]
-#endif
         internal esSimpleCaseData data;
 
         public static implicit operator esSimpleCaseData(esCase caseWhen)
