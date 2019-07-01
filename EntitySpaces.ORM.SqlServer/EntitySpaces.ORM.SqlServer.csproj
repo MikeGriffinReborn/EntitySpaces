@@ -4,10 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-  </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="..\EntitySpaces.Core\esCollectionWCFPacket.cs" Link="EntitySpaces.Core\esCollectionWCFPacket.cs" />
     <Compile Include="..\EntitySpaces.Core\esEntity.cs" Link="EntitySpaces.Core\esEntity.cs" />
@@ -37,7 +33,11 @@
     <Compile Include="..\EntitySpaces.DynamicQuery\esDynamicQuerySerializable.cs" Link="EntitySpaces.DynamicQuery\esDynamicQuerySerializable.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esExpression.cs" Link="EntitySpaces.DynamicQuery\esExpression.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esExpressionOrComparison.cs" Link="EntitySpaces.DynamicQuery\esExpressionOrComparison.cs" />
-    <Compile Include="..\EntitySpaces.Loader\esDataProviderFactory.cs" Link="EntitySpaces.Loader\esDataProviderFactory.cs" />
+    <Compile Include="..\Providers\EntitySpaces.SqlClientProvider\Cache.cs" Link="EntitySpaces.SqlClientProvider\Cache.cs" />
+    <Compile Include="..\Providers\EntitySpaces.SqlClientProvider\DataProvider.cs" Link="EntitySpaces.SqlClientProvider\DataProvider.cs" />
+    <Compile Include="..\Providers\EntitySpaces.SqlClientProvider\Delimiters.cs" Link="EntitySpaces.SqlClientProvider\Delimiters.cs" />
+    <Compile Include="..\Providers\EntitySpaces.SqlClientProvider\QueryBuilder.cs" Link="EntitySpaces.SqlClientProvider\QueryBuilder.cs" />
+    <Compile Include="..\Providers\EntitySpaces.SqlClientProvider\Shared.cs" Link="EntitySpaces.SqlClientProvider\Shared.cs" />
     <None Include="..\EntitySpaces.DynamicQuery\esExtraPropertyBinder.cs" Link="EntitySpaces.DynamicQuery\esExtraPropertyBinder.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esGroupByItem.cs" Link="EntitySpaces.DynamicQuery\esGroupByItem.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esJoinItem.cs" Link="EntitySpaces.DynamicQuery\esJoinItem.cs" />
@@ -83,7 +83,11 @@
     <Folder Include="EntitySpaces.Interfaces\DynamicQuery\" />
     <Folder Include="EntitySpaces.Interfaces\Exceptions\" />
     <Folder Include="EntitySpaces.DynamicQuery\" />
-    <Folder Include="EntitySpaces.Loader\" />
+    <Folder Include="EntitySpaces.SqlClientProvider\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
   </ItemGroup>
 
 </Project>

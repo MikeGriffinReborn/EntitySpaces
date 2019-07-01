@@ -40,6 +40,7 @@ namespace EntitySpaces.Loader
     /// </summary>
     public class esDataProviderFactory : IDataProviderFactory
     {
+        static private IDataProvider _provider = new EntitySpaces.SqlClientProvider.DataProvider();
         /// <summary>
         /// Loads and Caches the EntitySpaces DataProvider.
         /// </summary>
@@ -54,33 +55,7 @@ namespace EntitySpaces.Loader
         /// <returns>The approprate data provider such as "EntitySpaces.SqlClientProvider"</returns>
         public IDataProvider GetDataProvider(string providerName, string providerClass)
         {
-            ConstructorInfo ctor = null;
-
-            lock (providerCache)
-            {
-                if (!providerCache.ContainsKey(providerName))
-                {
-                    Assembly asm = Assembly.Load(providerName);
-                    Module[] mods = asm.GetModules(false);
-
-                    Module mod = mods[0];
-                    Type type = mod.GetType(providerName + '.' + providerClass);
-
-                    ctor = type.GetConstructor(new Type[0]);
-                    providerCache[providerName] = ctor;
-                }
-                else
-                {
-                    ctor = providerCache[providerName];
-                }
-            }
-
-            object obj = ctor.Invoke(BindingFlags.CreateInstance | BindingFlags.OptionalParamBinding,
-                null, new object[0], null);
-
-            return obj as IDataProvider;
+            return _provider;
         }
-
-        static private Dictionary<string, ConstructorInfo> providerCache = new Dictionary<string, ConstructorInfo>();
     }
 }
