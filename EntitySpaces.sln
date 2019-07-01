@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntitySpaces.Core", "Entity
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntitySpaces.Interfaces", "EntitySpaces.Interfaces\EntitySpaces.Interfaces.csproj", "{041B39D5-D8C5-468C-B398-1EBE8D099684}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntitySpaces.Loader", "EntitySpaces.Loader\EntitySpaces.Loader.csproj", "{859A3D81-57EA-4AE4-BC47-05C97045BCF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntitySpaces.Loader", "EntitySpaces.Loader\EntitySpaces.Loader.csproj", "{859A3D81-57EA-4AE4-BC47-05C97045BCF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntitySpaces.SqlClientProvider", "Providers\EntitySpaces.SqlClientProvider\EntitySpaces.SqlClientProvider.csproj", "{84F05461-D5F0-42AD-ADB7-22B3B1448E84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntitySpaces.SqlClientProvider", "Providers\EntitySpaces.SqlClientProvider\EntitySpaces.SqlClientProvider.csproj", "{84F05461-D5F0-42AD-ADB7-22B3B1448E84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntitySpaces.ORM", "EntitySpaces.ORM\EntitySpaces.ORM.csproj", "{1556510D-45D8-40C3-AF97-5FC3E063B319}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{84F05461-D5F0-42AD-ADB7-22B3B1448E84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84F05461-D5F0-42AD-ADB7-22B3B1448E84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84F05461-D5F0-42AD-ADB7-22B3B1448E84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1556510D-45D8-40C3-AF97-5FC3E063B319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1556510D-45D8-40C3-AF97-5FC3E063B319}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1556510D-45D8-40C3-AF97-5FC3E063B319}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1556510D-45D8-40C3-AF97-5FC3E063B319}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
