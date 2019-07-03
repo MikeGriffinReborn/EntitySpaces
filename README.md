@@ -176,6 +176,7 @@ if(coll.Load(q))
 
 Results:
 
+```sql
 WITH [withStatement] AS 
 (
     SELECT [errorlogid], 
@@ -191,9 +192,10 @@ SELECT *
 FROM [withStatement] 
 WHERE esrn BETWEEN 21 AND 40 
 ORDER BY esrn ASC 
-Using Skip and Take for paging.
+```
 
-#### Skip and Take Require Microsoft SQL 2012 at a minimum and is a much nicer syntax.
+#### Using Skip and Take for paging.
+Skip and Take Require Microsoft SQL 2012 at a minimum and is a much nicer syntax.
 
 ```c#
 ErrorLogQuery q = new ErrorLogQuery();
@@ -210,13 +212,15 @@ if(coll.Load(q))
 
 Results:
 
+```sql
 SELECT [ErrorLogId],[Method],[Message]  
 FROM [dbo].[ErrorLog] 
 ORDER BY [DateOccurred] DESC 
 OFFSET 40 ROWS 
 FETCH NEXT 20 ROWS ONLY
+```
 
-With NoLock
+#### With NoLock
 ```c#
 OrderQuery oq = new OrderQuery("o");
 OrderItemQuery oiq = new OrderItemQuery("oi");
@@ -229,7 +233,7 @@ oq.From
             .GroupBy(oiq.OrderID)
     ).As("sub");
 oq.InnerJoin(oq).On(oq.OrderID == oiq.OrderID);
-oq.tg.WithNoLock = true;
+**oq.tg.WithNoLock = true;**
 
 OrderCollection coll = new OrderCollection();
 if(coll.Load(oq))
