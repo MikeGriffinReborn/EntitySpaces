@@ -3,6 +3,7 @@ See the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces
 EntitySpaces Studio has been updated to .NET 4.5 and will be published soon, a link will be provided here in a few days.
 
 A Simple Sample with an InnerJoin
+============
 The sample below demonstrates a self join on the Employees table which is looking for all employees with an 'a' in their last name who have people reporting to them. Kind of silly but it shows off the syntax.
 
 Full Intellisense Support
@@ -29,7 +30,7 @@ if(coll.Load(q))
 
 Yep, you can actually select only the columns you desire and the SQL is extremely lean.
 
-NOTE: InnerJoin is used above, also supported are RightJoin, LeftJoin, CrossJoin, and FullJoin.
+**NOTE**: InnerJoin is used above, also supported are RightJoin, LeftJoin, CrossJoin, and FullJoin.
 
 Results from the Query Above
 
@@ -88,8 +89,11 @@ StdDev - Standard Deviation
 Var - Variance
 Sum - Summation
 Cast - SQL Cast
+
 More Samples
+===============
 Select Top
+```
 EmployeesQuery q = new EmployeesQuery();
 q.tg.Top = 1; // TOP
 q.Where(q.EmployeeID == 1 && (q.LastName != "googy"));
@@ -100,14 +104,20 @@ if(emp.Load(q))
 {
     // Then we loaded at least one record
 }
+```
+
 Result:
 
+```sql
 SELECT  TOP 1 * 
 FROM [Employees] 
 WHERE ([EmployeeID] = @EmployeeID1 AND [LastName] <> @LastName2)
+```
+
 SelectAllExcept
 SelectAllExcept() is not really a SubQuery, just a convenient enhancement that allows you to select all except one or more listed columns.
 
+```c#
 EmployeeQuery q = new EmployeeQuery();
 // We don't want to bring back the huge photo
 q.SelectAllExcept(q.Photo);
@@ -117,27 +127,40 @@ if(coll.Load(q))
 {
     // Then we loaded at least one record
 }
+```
+
 Results:
 
+```sql
 SELECT [EmployeeID],[LastName],[FirstName],[Supervisor],[Age]
   -- not [Photo]
 FROM [dbo].[Employee]
+```
+
 Getting the Count
+
+```c#
 ErrorLogQuery q = new ErrorLogQuery();
 q.Where(q.Message.Like("%a"));
 q.tg.CountAll = true;
 
 long count = q.ExecuteScalar<long>();
+```
+
 Results:
 
+```sql
 SELECT COUNT(*) AS 'Count' 
 FROM [dbo].[ErrorLog] 
 WHERE [Message] LIKE @Message1
+```
+
 Paging
 Using PageSize and PageNumber.
 
 This is the traditional way of paging and works on all versions of SQL Server. You always need an OrderBy when sorting.
 
+```c#
 ErrorLogQuery q = new ErrorLogQuery();
 q.Select(q.ErrorLogId, q.Method, q.Message);
 q.OrderBy(q.DateOccurred.Descending);
@@ -149,6 +172,8 @@ if(coll.Load(q))
 {
     // Then we loaded at least one record
 }
+```
+
 Results:
 
 WITH [withStatement] AS 
@@ -170,6 +195,7 @@ Using Skip and Take for paging.
 
 Skip and Take Require Microsoft SQL 2012 at a minimum and is a much nicer syntax.
 
+```c#
 ErrorLogQuery q = new ErrorLogQuery();
 q.Select(q.ErrorLogId, q.Method, q.Message);
 q.OrderBy(q.DateOccurred.Descending);
@@ -180,6 +206,8 @@ if(coll.Load(q))
 {
     // Then we loaded at least one record
 }
+```
+
 Results:
 
 SELECT [ErrorLogId],[Method],[Message]  
@@ -187,7 +215,9 @@ FROM [dbo].[ErrorLog]
 ORDER BY [DateOccurred] DESC 
 OFFSET 40 ROWS 
 FETCH NEXT 20 ROWS ONLY
+
 With NoLock
+```c#
 OrderQuery oq = new OrderQuery("o");
 OrderItemQuery oiq = new OrderItemQuery("oi");
 
@@ -206,6 +236,8 @@ if(coll.Load(oq))
 {
     // Then we loaded at least one record
 }
+```
+
 Notice that even though many query objects are being used you only need to set WithNoLock to true for the parent or main query object. The SQL generated is as follows:
 
 Results:
