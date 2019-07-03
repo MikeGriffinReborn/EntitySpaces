@@ -25,7 +25,7 @@ esConfigSettings.ConnectionInfo.Connections.Add(conn);
 
 // Assign the Default Connection
 esConfigSettings.ConnectionInfo.Default = "RemoteDb";
-``
+```
 
 ## Dynamic Query API ...
 
