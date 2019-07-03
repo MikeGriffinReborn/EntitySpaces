@@ -354,7 +354,7 @@ SELECT o.*
     WHERE o.[OrderID] = oi.[OrderID]
 ) AS MaxUnitPrice  
 FROM [ForeignKeyTest].[dbo].[Order] o
-```sql
+```
 
 #### From SubQuery
 An aggregate requires a GROUP BY for each column in the SELECT that is not an aggregate. Sometimes you wish to include columns in your result set that you do not wish to group by. One way to accomplish this is by using a SubQuery in the From clause that contains the aggregate the way you want it grouped. The outer query contains the results of the aggregate, plus any additional columns.
