@@ -1,4 +1,4 @@
-EntitySpaces Studio has been updated to .NET 4.5 and will be published soon, a link will be provided here in a few days.
+EntitySpaces Studio has been updated to .NET 4.5 and is available here now ...
 
 ## Setup
 
