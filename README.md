@@ -652,6 +652,7 @@ ANY, ALL, and SOME are SubQuery qualifiers. They precede the SubQuery they apply
 
 Notice, below, that the ALL qualifier is set to true for the SubQuery with "cq.tg.All = true;".
 
+```c#
 // DateAdded for Customers whose Manager  = 3
 CustomerQuery cq = new CustomerQuery("c");
 cq.tg.All = true;
@@ -669,8 +670,11 @@ if(coll.Load(oq))
 {
     // Then we loaded at least one record
 }
+```
+
 Results:
 
+```sql
 SELECT o.[OrderID],o.[CustID]  
 FROM [dbo].[Order] o 
 WHERE o.[OrderDate] < ALL 
@@ -679,8 +683,10 @@ WHERE o.[OrderDate] < ALL
     FROM [ForeignKeyTest].[dbo].[Customer] c 
     WHERE c.[Manager] = @Manager1
 )
+```
 Below, is a nested SubQuery. The ANY qualifier is set to true for the middle SubQuery with "cq.tg.Any = true;".
 
+```c#
 // Employees whose LastName begins with 'S'.
 EmployeeQuery eq = new EmployeeQuery("e");
 eq.Select(eq.EmployeeID);
@@ -704,8 +710,11 @@ if(coll.Load(oq))
 {
     // Then we loaded at least one record
 }
+```
+
 Results:
 
+```sql
 SELECT o.[OrderID],o.[CustID]  
 FROM [dbo].[Order] o 
 WHERE o.[OrderDate] < ANY 
@@ -719,7 +728,11 @@ WHERE o.[OrderDate] < ANY
         WHERE e.[LastName] LIKE @LastName1
     )
 )
-Case().When().Then().End() Syntax
+```
+
+#### Case().When().Then().End() Syntax
+
+```c#
 EmployeesQuery q = new EmployeesQuery();
 q.Select(q.EmployeeID, q.FirstName);
 q.Where(q.EmployeeID == 2);
@@ -746,8 +759,11 @@ if(coll.Load(OrderDetails))
 {
     // Then we loaded at least one record
 }
+```
+
 Results:
 
+```sql
 SELECT 
   CASE UnitPrice  
     WHEN 'yay' THEN 'wow' 
@@ -767,10 +783,12 @@ SELECT
 FROM [Order Details] 
 WHERE (SUM([Quantity]) >= @Quantity8 AND AVG([Quantity]) < @Quantity9) 
 ORDER BY [OrderID] DESC,[Quantity] DESC
-Another Case/When Query
+```
 
+#### Another Case/When Query
+
+```c#
 EmployeeQuery q = new EmployeeQuery();
-
 q.Select
 (
     q.LastName
@@ -786,7 +804,11 @@ if(coll.Load(q))
 {
     // Then we loaded at least one record
 }
-Having Clause
+```
+
+#### Having Clause
+
+```c#
 EmployeeQuery q = new EmployeeQuery();
 q.Select(q.EmployeeID, q.Age.Sum().As("TotalAge"));
 q.Where(q.EmployeeID.IsNotNull());
@@ -799,19 +821,25 @@ if(coll.Load(q))
 {
     // Then we loaded at least one record
 }
+```
+
 Results:
 
+```sql
 SELECT [EmployeeID] AS 'EmployeeID',SUM([Age]) AS 'TotalAge' 
 FROM [dbo].[Employee] 
 WHERE[EmployeeID] IS NOT NULL 
 GROUP BY [EmployeeID] 
 HAVING SUM([Age]) > @Age2 
 ORDER BY [EmployeeID] DESC
-Union, Intersect, and Except
+```
+
+#### Union, Intersect, and Except
 These might be kind of silly but they demonstrate syntax.
 
-Union
+##### Union
 
+```c#
 EmployeeQuery eq1 = new EmployeeQuery("eq1");
 EmployeeQuery eq2 = new EmployeeQuery("eq2");
 
@@ -819,8 +847,11 @@ EmployeeQuery eq2 = new EmployeeQuery("eq2");
 eq1.Where(eq1.Age < 30);
 eq1.Union(eq2);
 eq2.Where(eq2.Age > 30);
-Intersect
+```
 
+##### Intersect
+
+```c#
 EmployeeQuery eq1 = new EmployeeQuery("eq1");
 EmployeeQuery eq2 = new EmployeeQuery("eq2");
 
@@ -828,8 +859,11 @@ EmployeeQuery eq2 = new EmployeeQuery("eq2");
 eq1.Where(eq1.FirstName.Like("%n%"));
 eq1.Intersect(eq2);
 eq2.Where(eq2.FirstName.Like("%a%"));
-Except
+```
 
+##### Except
+
+```c#
 EmployeeQuery eq1 = new EmployeeQuery("eq1");
 EmployeeQuery eq2 = new EmployeeQuery("eq2");
 
@@ -837,11 +871,14 @@ EmployeeQuery eq2 = new EmployeeQuery("eq2");
 eq1.Where(eq1.FirstName.Like("%J%"));
 eq1.Except(eq2);
 eq2.Where(eq2.FirstName == "Jim");
-Raw SQL Injection Everywhere
+```
+
+#### Raw SQL Injection Everywhere
 There may be times when you need to access some SQL feature that is not supported by the DynamicQuery API. But, now having used and fallen in love with DynamicQuery, the last thing you want to do is stop and go write a stored procedure or create a view. We have always supported the raw injection feature in our Select statement, but it will soon be available almost everywhere. The way it works is you pass in raw SQL in the form of a string surrounded by < > angle brackets. That indicates that you want the raw SQL passed directly to the database engine “as is”.
 
 Here is an example query. You would never write a query like this in reality. Tiraggo supports this simple query without having to use < > angle brackets. This is just to show all of the places that can accept the raw SQL injection technique:
 
+```c#
 EmployeesQuery q = new EmployeesQuery();
 q.Select("<FirstName>", q.HireDate);
 q.Where("<EmployeeID = 1>");
@@ -853,41 +890,27 @@ if(coll.Load(q))
 {
     // Then we loaded at least one record
 }
+```
+
 The SQL Generated is as follows (and works)
 
 Results:
 
+```sql
 SELECT FirstName,[HireDate] AS 'HireDate'  
 FROM [Employees] WHERE (EmployeeID = 1) 
 GROUP BY FirstName,[HireDate] 
 ORDER BY FirstName ASC
+```
+
 Of course, you could easily write the above query without injection, but you get the idea. The escape hatch will be available to you almost everywhere ….
 
+```c#
 EmployeesQuery q = new EmployeesQuery();
 q.Select(q.FirstName);
 q.Where(q.EmployeeID == 1);
 q.OrderBy(q.FirstName.Ascending);
 q.GroupBy(q.FirstName, q.HireDate);
+```
+
 Using the raw SQL injection techniques above will allow you to invoke SQL functions that we don’t support, including database vender specific SQL, and so on. Hopefully, you will almost never have to resort to writing a custom load method to invoke a stored procedure or an entirely hand written SQL statement. Of course, you can use our native API everywhere and just inject the raw SQL on the GroupBy for instance. You can mix and match to get the desired SQL.
-
-Some Final Thoughts
-The examples given above were designed to demonstrate (and test) usage in a variety of settings. They are not necessarily the simplest, or most efficient, way to achieve the desired result set. Think of them as an API usage guide, not as design guidelines. Most SubQueries can be re-written as Joins, and most Joins can be re-written as SubQueries. If, while coding, you are having trouble conceptualizing one approach, then try the other.
-
-Technically, a JOIN's ON clause can take almost any where_condition, and Tiraggo supports many of these, including SubQueries. But, I agree with most authorities on the subject, that the ON clause should be reserved for the conditions that relate the two tables. All other conditional statements should be placed in a WHERE clause. Typically, the ON clause only contains a column from each table and a comparison operator.
-
-For example, take the Join(query).On(SubQuery) example above. The much simpler query below returns the same result set. Its Where() clause not only simplifies the On() clause, but eliminates the SubQuery completely.
-
-// Query for the Join
-OrderItemQuery oiq = new OrderItemQuery("oi");
-
-// Orders with discounted items
-OrderQuery oq = new OrderQuery("o");
-oq.Select(oq.OrderID, oiq.Discount);
-oq.InnerJoin(oiq).On(oq.OrderID == oiq.OrderID);
-oq.Where(oiq.Discount > 0);
-
-OrderCollection coll = new OrderCollection();
-if(coll.Load(oq))
-{
-    // Then we loaded at least one record
-}
