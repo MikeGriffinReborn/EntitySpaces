@@ -48,6 +48,20 @@ if (employee.LoadByPrimaryKey(newEmp.EmployeeID.Value))
 }
 ```
 
+## Collections
+
+```c#
+EmployeesCollection coll = new EmployeesCollection();
+if (coll.LoadAll())
+{
+    foreach (Employees emp in coll)
+    {
+        int i = 9;
+    }
+
+}
+```
+
 ## Dynamic Query API ...
 
 ### A Simple Sample with an InnerJoin
