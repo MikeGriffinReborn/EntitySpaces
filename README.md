@@ -58,7 +58,6 @@ if (coll.LoadAll())
     {
         int i = 9;
     }
-
 }
 ```
 
