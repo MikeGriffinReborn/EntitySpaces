@@ -2,11 +2,10 @@ See the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces
 
 EntitySpaces Studio has been updated to .NET 4.5 and will be published soon, a link will be provided here in a few days.
 
-A Simple Sample with an InnerJoin
-============
+### A Simple Sample with an InnerJoin
+
 The sample below demonstrates a self join on the Employees table which is looking for all employees with an 'a' in their last name who have people reporting to them. Kind of silly but it shows off the syntax.
 
-Full Intellisense Support
 
 ```c#
 EmployeeQuery q = new EmployeeQuery("e");
@@ -28,7 +27,7 @@ if(coll.Load(q))
 }
 ```
 
-Yep, you can actually select only the columns you desire and the SQL is extremely lean.
+Notice that the SQL is extremely lean.
 
 **NOTE**: InnerJoin is used above, also supported are RightJoin, LeftJoin, CrossJoin, and FullJoin.
 
