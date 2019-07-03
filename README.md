@@ -363,6 +363,7 @@ An aggregate requires a GROUP BY for each column in the SELECT that is not an ag
 
 If you use a SubQuery in a From clause, you must give the From clause its own alias (shown below as "sub"). In the outer query, to refer to an aliased element in the From SubQuery, use the inline raw SQL technique to qualify the aggregate's alias with the From clause alias, i.e., "".
 
+```c#
 OrderQuery oq = new OrderQuery("o");
 OrderItemQuery oiq = new OrderItemQuery("oi");
 
@@ -383,8 +384,11 @@ if(coll.Load(oq))
 {
     // Then we loaded at least one record
 }
+```
+
 Results:
 
+```sql
 SELECT o.[CustID],o.[OrderDate],sub.OrderTotal  
 FROM 
 (
@@ -394,9 +398,12 @@ FROM
     GROUP BY oi.[OrderID]
 ) AS sub 
 INNER JOIN [dbo].[Order] o ON o.[OrderID] = sub.[OrderID]
-Where SubQuery
+```
+
+#### Where SubQuery
 In and NotIn are two of the most common operators used in a Where SubQuery. The following produces a result set containing Territories that an Employee is not associated with.
 
+```c#
 // SubQuery of Territories that Employee 1 is assigned to.
 EmployeeTerritoryQuery etq = new EmployeeTerritoryQuery("et");
 etq.Select(etq.TerrID);
@@ -412,8 +419,11 @@ if(coll.Load(tq))
 {
     // Then we loaded at least one record
 }
+```
+
 Results:
 
+```sql
 SELECT t.[Description]  
 FROM [dbo].[Territory] t 
 WHERE t.[TerritoryID] NOT IN 
@@ -422,6 +432,8 @@ WHERE t.[TerritoryID] NOT IN
     FROM .[dbo].[EmployeeTerritory] et 
     WHERE et.[EmpID] = @EmpID1
 ) 
+```
+
 Exists evaluates to true, if the SubQuery returns a result set.
 
 // SubQuery of Employees with a null Supervisor column.
