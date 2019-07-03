@@ -233,7 +233,7 @@ oq.From
             .GroupBy(oiq.OrderID)
     ).As("sub");
 oq.InnerJoin(oq).On(oq.OrderID == oiq.OrderID);
-**oq.tg.WithNoLock = true;**
+oq.tg.WithNoLock = true;
 
 OrderCollection coll = new OrderCollection();
 if(coll.Load(oq))
@@ -246,6 +246,7 @@ Notice that even though many query objects are being used you only need to set W
 
 Results:
 
+```sql
 SELECT o.[CustID],o.[OrderDate],sub.OrderTotal  
 FROM 
 (
@@ -256,9 +257,12 @@ FROM
 ) AS sub 
 INNER JOIN [Order] o WITH (NOLOCK) 
 ON o.[OrderID] = sub.[OrderID] 
-Full Expressions in OrderBy and GroupBy
-This query doesn’t really make sense, but we wanted to show you what will be possible in the next release.
+```
 
+#### Full Expressions in OrderBy and GroupBy
+This query doesn’t really make sense, but we wanted to show you what will is possible.
+
+```c#
 EmployeesQuery q = new EmployeesQuery(); 
 q.Select(q.LastName.Substring(2, 4).ToLower()); 
 q.OrderBy(q.LastName.Substring(2, 4).ToLower().Descending); 
@@ -269,15 +273,21 @@ if(coll.Load(q))
 {
     // Then we loaded at least one record
 }
+```
+
 Results:
 
+```sql
 SELECT SUBSTRING(LOWER([LastName]),2,4) AS 'LastName' 
 FROM [Employees] 
 GROUP BY SUBSTRING(LOWER([LastName]),2,4) 
 ORDER BY SUBSTRING(LOWER([LastName]),2,4) DESC
-Select SubQuery
+```
+
+#### Select SubQuery
 A SubQuery in a Select clause must return a single value.
 
+```c#
 OrderQuery orders = new OrderQuery("o");
 OrderItemQuery details = new OrderItemQuery("oi");
 
@@ -297,8 +307,11 @@ if(coll.Load(orders))
 {
     // Then we loaded at least one record
 }
+```
+
 Results:
 
+```sql
 SELECT o.[OrderID],o.[OrderDate], 
 (
     SELECT MAX(oi.[UnitPrice]) AS 'UnitPrice'  
@@ -306,8 +319,11 @@ SELECT o.[OrderID],o.[OrderDate],
     WHERE o.[OrderID] = oi.[OrderID]
 ) AS MaxUnitPrice  
 FROM [dbo].[Order] o
+```
+
 This is the same as the query above, but returns all columns in the Order table, instead of just OrderID and OrderDate. Notice that the Select clause contains orders, not orders.. The SQL produced will use the supplied alias o..
 
+```c#
 OrderQuery orders = new OrderQuery("o");
 OrderItemQuery details = new OrderItemQuery("oi");
 
@@ -326,8 +342,11 @@ if(coll.Load(orders))
 {
     // Then we loaded at least one record
 }
+```
+
 Results:
 
+```sql
 SELECT o.* 
 (
     SELECT MAX(oi.[UnitPrice]) AS 'UnitPrice'  
@@ -335,7 +354,9 @@ SELECT o.*
     WHERE o.[OrderID] = oi.[OrderID]
 ) AS MaxUnitPrice  
 FROM [ForeignKeyTest].[dbo].[Order] o
-From SubQuery
+```sql
+
+#### From SubQuery
 An aggregate requires a GROUP BY for each column in the SELECT that is not an aggregate. Sometimes you wish to include columns in your result set that you do not wish to group by. One way to accomplish this is by using a SubQuery in the From clause that contains the aggregate the way you want it grouped. The outer query contains the results of the aggregate, plus any additional columns.
 
 If you use a SubQuery in a From clause, you must give the From clause its own alias (shown below as "sub"). In the outer query, to refer to an aliased element in the From SubQuery, use the inline raw SQL technique to qualify the aggregate's alias with the From clause alias, i.e., "".
