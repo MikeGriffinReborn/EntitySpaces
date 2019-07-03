@@ -1,4 +1,4 @@
-### Setup
+## Setup
 
 1. Install the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") for the SQL Server NuGet package
 
