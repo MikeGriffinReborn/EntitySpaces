@@ -89,10 +89,11 @@ Sub Operators
 - Sum - Summation
 - Cast - SQL Cast
 
-More Samples
-===============
-Select Top
-```
+###More Samples
+
+####Select Top
+
+```C#
 EmployeesQuery q = new EmployeesQuery();
 q.tg.Top = 1; // TOP
 q.Where(q.EmployeeID == 1 && (q.LastName != "googy"));
@@ -154,7 +155,7 @@ FROM [dbo].[ErrorLog]
 WHERE [Message] LIKE @Message1
 ```
 
-Paging
+####Paging
 Using PageSize and PageNumber.
 
 This is the traditional way of paging and works on all versions of SQL Server. You always need an OrderBy when sorting.
