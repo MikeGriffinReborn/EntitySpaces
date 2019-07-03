@@ -4,7 +4,28 @@ EntitySpaces Studio has been updated to .NET 4.5 and is available here now ...
 
 1. Install [EntitySpaces Studio](https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard/blob/master/EntitySpaces.Studio/EntitySpacesStudio_2019.1.0702.zip)
 
-2. Install the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") for the SQL Server NuGet package into your Visual Studio project.
+2. Install the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") for the SQL Server NuGet package into your Visual Studio project.\
+
+## Setup SQL Connection
+
+```c#
+// esDataProviderFactory is a one time setup 
+esProviderFactory.Factory = new EntitySpaces.Loader.esDataProviderFactory();
+
+// Add a connection
+esConnectionElement conn = new esConnectionElement();
+conn.Name = "RemoteDb";
+conn.ProviderMetadataKey = "esDefault";
+conn.Provider = "EntitySpaces.SqlClientProvider";
+conn.ProviderClass = "DataProvider";
+conn.SqlAccessType = esSqlAccessType.DynamicSQL;
+conn.ConnectionString = "User ID=mydmin;Password=abc123;Initial Catalog=Northwind;Data Source=localhost";
+conn.DatabaseVersion = "2012";
+esConfigSettings.ConnectionInfo.Connections.Add(conn);
+
+// Assign the Default Connection
+esConfigSettings.ConnectionInfo.Default = "RemoteDb";
+``
 
 ## Dynamic Query API ...
 
