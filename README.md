@@ -436,6 +436,7 @@ WHERE t.[TerritoryID] NOT IN
 
 Exists evaluates to true, if the SubQuery returns a result set.
 
+```c#
 // SubQuery of Employees with a null Supervisor column.
 EmployeeQuery sq = new EmployeeQuery("s");
 sq.tg.Distinct = true;
@@ -454,8 +455,11 @@ if(coll.Load(eq))
 {
     // Then we loaded at least one record
 }
+```
+
 Results:
 
+```sql
 SELECT e.[EmployeeID],e.[Supervisor]  
 FROM [dbo].[Employee] e 
 WHERE EXISTS 
@@ -465,8 +469,11 @@ WHERE EXISTS
     WHERE s.[Supervisor] IS NULL
 )
 Join(query).On(SubQuery)
+```
+
 SubQueries cannot be used directly within a Join(SubQuery) clause, but they can be used within a Join(query).On(SubQuery) clause.
 
+```c#
 // Query for the Join
 OrderItemQuery oiq = new OrderItemQuery("oi");
 
@@ -487,8 +494,11 @@ if(coll.Load(oq))
 {
     // Then we loaded at least one record
 }   
+```
+
 Results:
 
+```sql
 SELECT o.[OrderID],oi.[Discount]  
 FROM [dbo].[Order] o 
 INNER JOIN [dbo].[OrderItem] oi 
@@ -498,9 +508,12 @@ ON (o.[OrderID] = oi.[OrderID] AND oi.[Discount] IN
     FROM [dbo].[OrderItem] ois 
     WHERE ois.[Discount] > @Discount1)
 )
-Correlated SubQuery
+```
+
+#### Correlated SubQuery
 A correlated SubQuery is where the inner query relies on an element of the outer query. The inner select cannot run on its own. Below, the inner pq query uses the outer query's oiq.ProductID in the Where() clause.
 
+```c#
 OrderItemQuery oiq = new OrderItemQuery("oi");
 ProductQuery pq = new ProductQuery("p");
 
@@ -521,8 +534,11 @@ if(coll.Load(oiq))
 {
     // Then we loaded at least one record
 }   
+```
+
 Results:
 
+```sql
 SELECT oi.[OrderID],SUM((oi.[Quantity]*oi.[UnitPrice])) AS 'Total'  
 FROM [dbo].[OrderItem] oi 
 WHERE oi.[ProductID] IN 
@@ -532,11 +548,14 @@ WHERE oi.[ProductID] IN
     WHERE oi.[ProductID] = p.[ProductID]
 )  
 GROUP BY oi.[OrderID]
-Nested SubQuery
-Tiraggo supports nesting of SubQueries. Each database vendor has their own limits on just how deep the nesting can go. Tiraggo supports two different syntax approaches to nested SubQueries.
+```
+
+#### Nested SubQuery
+EntitySpaces supports nesting of SubQueries. Each database vendor has their own limits on just how deep the nesting can go. EntitySpaces supports two different syntax approaches to nested SubQueries.
 
 Traditional SQL-style syntax is most useful if you already have a query designed using standard SQL, and are just converting it to a DynamicQuery.
 
+```c#
 OrderQuery oq = new OrderQuery("o");
 CustomerQuery cq = new CustomerQuery("c");
 EmployeeQuery eq = new EmployeeQuery("e");
@@ -564,8 +583,11 @@ if(coll.Load(oq))
 {
     // Then we loaded at least one record
 }   
+```
+
 Results:
 
+```sql
 SELECT o.[OrderID],o.[CustID]  
 FROM [dbo].[Order] o 
 WHERE o.[OrderDate] IN 
@@ -579,8 +601,10 @@ WHERE o.[OrderDate] IN
         WHERE e.[LastName] LIKE @LastName1
     ) 
 )
+```
 Nesting by query instance name can be easier to understand and construct, if you are starting from scratch, and have no pre-existing SQL to go by. The trick is to start with the inner-most SubQuery and work your way out. The query below produces the same results as the traditional SQL-style query above. The instance names are color coded to emphasize how they are nested.
 
+```c#
 // Employees whose LastName begins with 'S'.
 EmployeeQuery eq = new EmployeeQuery("e");
 eq.Select(eq.EmployeeID);
@@ -603,8 +627,11 @@ if(coll.Load(oq))
 {
     // Then we loaded at least one record
 }
+```
+
 Results:
 
+```sql
 SELECT o.[OrderID],o.[CustID]  
 FROM [dbo].[Order] o 
 WHERE o.[OrderDate] IN 
@@ -618,7 +645,9 @@ WHERE o.[OrderDate] IN
         WHERE e.[LastName] LIKE @LastName1
     )
 )
-Any, All, and Some
+```
+
+#### Any, All, and Some
 ANY, ALL, and SOME are SubQuery qualifiers. They precede the SubQuery they apply to. For most databases, ANY and SOME are synonymous. Usually, if you use an operator (>, >=, =, <, <=) in a Where clause against a SubQuery, then the SubQuery must return a single value. By applying a qualifier to the SubQuery, you can use operators against SubQueries that return multiple results.
 
 Notice, below, that the ALL qualifier is set to true for the SubQuery with "cq.tg.All = true;".
