@@ -26,6 +26,15 @@ esConfigSettings.ConnectionInfo.Connections.Add(conn);
 // Assign the Default Connection
 esConfigSettings.ConnectionInfo.Default = "RemoteDb";
 ```
+## Load a Single Entity
+```c#
+Employees employee = new Employees();
+if (employee.LoadByPrimaryKey(2))
+{
+    // Then it was loaded
+    int i = 9;
+}
+```
 
 ## Dynamic Query API ...
 
