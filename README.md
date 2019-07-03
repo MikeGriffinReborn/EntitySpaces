@@ -26,13 +26,25 @@ esConfigSettings.ConnectionInfo.Connections.Add(conn);
 // Assign the Default Connection
 esConfigSettings.ConnectionInfo.Default = "RemoteDb";
 ```
-## Load a Single Entity
+## Add/Load/Save/Delete Single Entity
 ```c#
+// Add
+Employees newEmp = new Employees();
+newEmp.FirstName = "Joe";
+newEmp.LastName = "Smith";
+newEmp.Save();
+
+// Load
 Employees employee = new Employees();
-if (employee.LoadByPrimaryKey(2))
+if (employee.LoadByPrimaryKey(newEmp.EmployeeID.Value))
 {
-    // Then it was loaded
-    Console.WriteLine(employee.FirstName);
+    // Save
+    employee.FirstName = "Bob";
+    employee.Save();
+
+    // Delete
+    employee.MarkAsDeleted();
+    employee.Save();
 }
 ```
 
