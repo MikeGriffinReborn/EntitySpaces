@@ -6,6 +6,8 @@
 
 EntitySpaces Studio has been updated to .NET 4.5 and will be published soon, a link will be provided here in a few days.
 
+## Dynamic Query API ...
+
 ### A Simple Sample with an InnerJoin
 
 The sample below demonstrates a self join on the Employees table which is looking for all employees with an 'a' in their last name who have people reporting to them. Kind of silly but it shows off the syntax.
