@@ -1,8 +1,8 @@
 ## Setup
 
-1. Install the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") for the SQL Server NuGet package
+1. Install [EntitySpaces Studio](https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard/blob/master/EntitySpaces.Studio/EntitySpacesStudio_2019.1.0702.zip)
 
-2) Install EntitySpaces Studio
+2. Install the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") for the SQL Server NuGet package into your Visual Studio project.
 
 EntitySpaces Studio has been updated to .NET 4.5 and will be published soon, a link will be provided here in a few days.
 
