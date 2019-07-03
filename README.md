@@ -32,7 +32,7 @@ Employees employee = new Employees();
 if (employee.LoadByPrimaryKey(2))
 {
     // Then it was loaded
-    int i = 9;
+    Console.WriteLine(employee.FirstName);
 }
 ```
 
