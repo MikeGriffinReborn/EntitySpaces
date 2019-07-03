@@ -125,8 +125,8 @@ Use the native language syntax, it works as you expect it would.
 - \>=
 - \==
 - \!=
-- \&& = SQL 'AND' in VB use "And"
-- \|| = SQL 'OR' in VB use "Or"
+- \&& 
+- \|| 
 
 ### Sub Operators
 
