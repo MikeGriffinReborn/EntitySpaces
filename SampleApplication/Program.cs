@@ -1,5 +1,6 @@
 ﻿using BusinessObjects;
 using EntitySpaces.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 
@@ -18,9 +19,10 @@ namespace ConsoleApp
             conn.Provider = "EntitySpaces.SqlClientProvider";
             conn.ProviderClass = "DataProvider";
             conn.SqlAccessType = esSqlAccessType.DynamicSQL;
-            conn.ConnectionString = "User ID=myuser;Password=mypassword;Initial Catalog=Northwind;Data Source=localhost";
+            conn.ConnectionString = "User ID=sa;Password=abc;Initial Catalog=Northwind;Data Source=localhost";
             conn.DatabaseVersion = "2012";
             esConfigSettings.ConnectionInfo.Connections.Add(conn);
+
 
             // Assign the Default Connection
             esConfigSettings.ConnectionInfo.Default = "RemoteDb";
@@ -127,11 +129,14 @@ namespace ConsoleApp
                 {
                     int? id = order.OrderID;
                     var discount = order.GetColumn("Discount");
-        
+                    
+                    // Lazy loads ...
+                    /*
                     foreach (OrderDetails orderItem in order.OrderDetailsCollectionByOrderID)
                     {
-      
+
                     }
+                    */
                 }
             }
         }
@@ -255,14 +260,13 @@ namespace ConsoleApp
         static private void Paging()
         {
             EmployeesQuery q = new EmployeesQuery("e");
-            q.es.PageSize = 20;
-            q.es.PageNumber = 5;
+            q.es.PageSize = 5;
+            q.es.PageNumber = 2;
             q.OrderBy(q.HireDate.Descending);
 
-            Employees employee = new Employees();
-            if (employee.Load(q))
+            EmployeesCollection coll1 = new EmployeesCollection();
+            if (coll1.Load(q))
             {
-
             }
 
             EmployeesQuery q1 = new EmployeesQuery("e");
@@ -270,10 +274,9 @@ namespace ConsoleApp
             q1.Skip(5);
             q1.OrderBy(q.HireDate.Descending);
 
-            Employees employee1 = new Employees();
-            if (employee1.Load(q1))
+            EmployeesCollection coll2 = new EmployeesCollection();
+            if (coll2.Load(q1))
             {
-
             }
         }
 
@@ -282,8 +285,8 @@ namespace ConsoleApp
             EmployeesQuery q = new EmployeesQuery("e");
             q.SelectAllExcept(q.Photo);
 
-            Employees employee = new Employees();
-            if (employee.Load(q))
+            EmployeesCollection coll = new EmployeesCollection();
+            if (coll.Load(q))
             {
 
             }
@@ -308,8 +311,8 @@ namespace ConsoleApp
             EmployeesQuery q = new EmployeesQuery("e");
             q.Select(q.FirstName.As("MyAlias"));
 
-            Employees employee = new Employees();
-            if (employee.Load(q))
+            EmployeesCollection coll = new EmployeesCollection();
+            if (coll.Load(q))
             {
 
             }

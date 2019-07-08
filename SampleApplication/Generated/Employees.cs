@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0702.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/3/2019 2:00:42 PM
+Date Generated       : 7/8/2019 9:34:08 AM
 ===============================================================================
 */
 
@@ -1238,14 +1238,24 @@ namespace BusinessObjects
 			data.Root.InnerJoin(parent).On(parent.ReportsTo == me.EmployeeID);
 
 			data.You = parent;
-		}			
+		}	
+		
+		public bool ShouldSerializeEmployeesCollectionByReportsTo()
+		{
+            if(this._EmployeesCollectionByReportsTo != null && this._EmployeesCollectionByReportsTo.Count > 0)
+				return true;
+            else
+				return false;
+		}	
 		
 		/// <summary>
 		/// Zero to Many
 		/// Foreign Key Name - FK_Employees_Employees
 		/// </summary>
+		
 
 		[XmlIgnore]
+		[DataMember]
 		public EmployeesCollection EmployeesCollectionByReportsTo
 		{
 			get
@@ -1284,11 +1294,15 @@ namespace BusinessObjects
 				} 
 			} 			
 		}
+		
+
+		
 			
 		
 		private EmployeesCollection _EmployeesCollectionByReportsTo;
 		#endregion
 
+				
 				
 		#region UpToEmployeesByReportsTo - Many To One
 		/// <summary>
@@ -1337,6 +1351,8 @@ namespace BusinessObjects
 		#endregion
 		
 
+					
+			
 		#region UpToTerritoriesCollection - Many To Many
 		/// <summary>
 		/// Many to Many
@@ -1453,14 +1469,24 @@ namespace BusinessObjects
 			data.Root.InnerJoin(parent).On(parent.EmployeeID == me.EmployeeID);
 
 			data.You = parent;
-		}			
+		}	
+		
+		public bool ShouldSerializeEmployeeTerritoriesCollectionByEmployeeID()
+		{
+            if(this._EmployeeTerritoriesCollectionByEmployeeID != null && this._EmployeeTerritoriesCollectionByEmployeeID.Count > 0)
+				return true;
+            else
+				return false;
+		}	
 		
 		/// <summary>
 		/// Zero to Many
 		/// Foreign Key Name - FK_EmployeeTerritories_Employees
 		/// </summary>
+		
 
 		[XmlIgnore]
+		[DataMember]
 		public EmployeeTerritoriesCollection EmployeeTerritoriesCollectionByEmployeeID
 		{
 			get
@@ -1499,6 +1525,9 @@ namespace BusinessObjects
 				} 
 			} 			
 		}
+		
+
+		
 			
 		
 		private EmployeeTerritoriesCollection _EmployeeTerritoriesCollectionByEmployeeID;
@@ -1534,14 +1563,24 @@ namespace BusinessObjects
 			data.Root.InnerJoin(parent).On(parent.EmployeeID == me.EmployeeID);
 
 			data.You = parent;
-		}			
+		}	
+		
+		public bool ShouldSerializeOrdersCollectionByEmployeeID()
+		{
+            if(this._OrdersCollectionByEmployeeID != null && this._OrdersCollectionByEmployeeID.Count > 0)
+				return true;
+            else
+				return false;
+		}	
 		
 		/// <summary>
 		/// Zero to Many
 		/// Foreign Key Name - FK_Orders_Employees
 		/// </summary>
+		
 
 		[XmlIgnore]
+		[DataMember]
 		public OrdersCollection OrdersCollectionByEmployeeID
 		{
 			get
@@ -1580,6 +1619,9 @@ namespace BusinessObjects
 				} 
 			} 			
 		}
+		
+
+		
 			
 		
 		private OrdersCollection _OrdersCollectionByEmployeeID;

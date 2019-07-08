@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0702.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/3/2019 2:00:40 PM
+Date Generated       : 7/8/2019 9:34:07 AM
 ===============================================================================
 */
 
@@ -513,6 +513,8 @@ namespace BusinessObjects
 	public partial class CustomerDemographics : esCustomerDemographics
 	{
 
+					
+			
 		#region UpToCustomersCollection - Many To Many
 		/// <summary>
 		/// Many to Many
@@ -629,14 +631,24 @@ namespace BusinessObjects
 			data.Root.InnerJoin(parent).On(parent.CustomerTypeID == me.CustomerTypeID);
 
 			data.You = parent;
-		}			
+		}	
+		
+		public bool ShouldSerializeCustomerCustomerDemoCollectionByCustomerTypeID()
+		{
+            if(this._CustomerCustomerDemoCollectionByCustomerTypeID != null && this._CustomerCustomerDemoCollectionByCustomerTypeID.Count > 0)
+				return true;
+            else
+				return false;
+		}	
 		
 		/// <summary>
 		/// Zero to Many
 		/// Foreign Key Name - FK_CustomerCustomerDemo
 		/// </summary>
+		
 
 		[XmlIgnore]
+		[DataMember]
 		public CustomerCustomerDemoCollection CustomerCustomerDemoCollectionByCustomerTypeID
 		{
 			get
@@ -675,6 +687,9 @@ namespace BusinessObjects
 				} 
 			} 			
 		}
+		
+
+		
 			
 		
 		private CustomerCustomerDemoCollection _CustomerCustomerDemoCollectionByCustomerTypeID;

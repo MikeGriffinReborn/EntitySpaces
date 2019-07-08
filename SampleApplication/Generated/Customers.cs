@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0702.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/3/2019 2:00:40 PM
+Date Generated       : 7/8/2019 9:34:07 AM
 ===============================================================================
 */
 
@@ -891,6 +891,8 @@ namespace BusinessObjects
 	public partial class Customers : esCustomers
 	{
 
+					
+			
 		#region UpToCustomerDemographicsCollection - Many To Many
 		/// <summary>
 		/// Many to Many
@@ -1007,14 +1009,24 @@ namespace BusinessObjects
 			data.Root.InnerJoin(parent).On(parent.CustomerID == me.CustomerID);
 
 			data.You = parent;
-		}			
+		}	
+		
+		public bool ShouldSerializeCustomerCustomerDemoCollectionByCustomerID()
+		{
+            if(this._CustomerCustomerDemoCollectionByCustomerID != null && this._CustomerCustomerDemoCollectionByCustomerID.Count > 0)
+				return true;
+            else
+				return false;
+		}	
 		
 		/// <summary>
 		/// Zero to Many
 		/// Foreign Key Name - FK_CustomerCustomerDemo_Customers
 		/// </summary>
+		
 
 		[XmlIgnore]
+		[DataMember]
 		public CustomerCustomerDemoCollection CustomerCustomerDemoCollectionByCustomerID
 		{
 			get
@@ -1053,6 +1065,9 @@ namespace BusinessObjects
 				} 
 			} 			
 		}
+		
+
+		
 			
 		
 		private CustomerCustomerDemoCollection _CustomerCustomerDemoCollectionByCustomerID;
@@ -1088,14 +1103,24 @@ namespace BusinessObjects
 			data.Root.InnerJoin(parent).On(parent.CustomerID == me.CustomerID);
 
 			data.You = parent;
-		}			
+		}	
+		
+		public bool ShouldSerializeOrdersCollectionByCustomerID()
+		{
+            if(this._OrdersCollectionByCustomerID != null && this._OrdersCollectionByCustomerID.Count > 0)
+				return true;
+            else
+				return false;
+		}	
 		
 		/// <summary>
 		/// Zero to Many
 		/// Foreign Key Name - FK_Orders_Customers
 		/// </summary>
+		
 
 		[XmlIgnore]
+		[DataMember]
 		public OrdersCollection OrdersCollectionByCustomerID
 		{
 			get
@@ -1134,6 +1159,9 @@ namespace BusinessObjects
 				} 
 			} 			
 		}
+		
+
+		
 			
 		
 		private OrdersCollection _OrdersCollectionByCustomerID;

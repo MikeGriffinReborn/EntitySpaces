@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0702.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/3/2019 2:00:49 PM
+Date Generated       : 7/8/2019 9:34:12 AM
 ===============================================================================
 */
 
@@ -970,14 +970,24 @@ namespace BusinessObjects
 			data.Root.InnerJoin(parent).On(parent.SupplierID == me.SupplierID);
 
 			data.You = parent;
-		}			
+		}	
+		
+		public bool ShouldSerializeProductsCollectionBySupplierID()
+		{
+            if(this._ProductsCollectionBySupplierID != null && this._ProductsCollectionBySupplierID.Count > 0)
+				return true;
+            else
+				return false;
+		}	
 		
 		/// <summary>
 		/// Zero to Many
 		/// Foreign Key Name - FK_Products_Suppliers
 		/// </summary>
+		
 
 		[XmlIgnore]
+		[DataMember]
 		public ProductsCollection ProductsCollectionBySupplierID
 		{
 			get
@@ -1016,6 +1026,9 @@ namespace BusinessObjects
 				} 
 			} 			
 		}
+		
+
+		
 			
 		
 		private ProductsCollection _ProductsCollectionBySupplierID;

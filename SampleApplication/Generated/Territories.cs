@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0702.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/3/2019 2:00:49 PM
+Date Generated       : 7/8/2019 9:34:13 AM
 ===============================================================================
 */
 
@@ -566,6 +566,8 @@ namespace BusinessObjects
 	public partial class Territories : esTerritories
 	{
 
+					
+			
 		#region UpToEmployeesCollection - Many To Many
 		/// <summary>
 		/// Many to Many
@@ -682,14 +684,24 @@ namespace BusinessObjects
 			data.Root.InnerJoin(parent).On(parent.TerritoryID == me.TerritoryID);
 
 			data.You = parent;
-		}			
+		}	
+		
+		public bool ShouldSerializeEmployeeTerritoriesCollectionByTerritoryID()
+		{
+            if(this._EmployeeTerritoriesCollectionByTerritoryID != null && this._EmployeeTerritoriesCollectionByTerritoryID.Count > 0)
+				return true;
+            else
+				return false;
+		}	
 		
 		/// <summary>
 		/// Zero to Many
 		/// Foreign Key Name - FK_EmployeeTerritories_Territories
 		/// </summary>
+		
 
 		[XmlIgnore]
+		[DataMember]
 		public EmployeeTerritoriesCollection EmployeeTerritoriesCollectionByTerritoryID
 		{
 			get
@@ -728,11 +740,15 @@ namespace BusinessObjects
 				} 
 			} 			
 		}
+		
+
+		
 			
 		
 		private EmployeeTerritoriesCollection _EmployeeTerritoriesCollectionByTerritoryID;
 		#endregion
 
+				
 				
 		#region UpToRegionByRegionID - Many To One
 		/// <summary>

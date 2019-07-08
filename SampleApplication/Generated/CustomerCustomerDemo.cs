@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0702.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/3/2019 2:00:38 PM
+Date Generated       : 7/8/2019 9:34:06 AM
 ===============================================================================
 */
 
@@ -524,6 +524,7 @@ namespace BusinessObjects
 	{
 
 				
+				
 		#region UpToCustomerDemographicsByCustomerTypeID - Many To One
 		/// <summary>
 		/// Many to One
@@ -571,6 +572,7 @@ namespace BusinessObjects
 		#endregion
 		
 
+				
 				
 		#region UpToCustomersByCustomerID - Many To One
 		/// <summary>

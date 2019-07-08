@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0702.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/3/2019 2:00:46 PM
+Date Generated       : 7/8/2019 9:34:11 AM
 ===============================================================================
 */
 
@@ -913,6 +913,8 @@ namespace BusinessObjects
 	public partial class Products : esProducts
 	{
 
+					
+			
 		#region UpToOrdersCollection - Many To Many
 		/// <summary>
 		/// Many to Many
@@ -1029,14 +1031,24 @@ namespace BusinessObjects
 			data.Root.InnerJoin(parent).On(parent.ProductID == me.ProductID);
 
 			data.You = parent;
-		}			
+		}	
+		
+		public bool ShouldSerializeOrderDetailsCollectionByProductID()
+		{
+            if(this._OrderDetailsCollectionByProductID != null && this._OrderDetailsCollectionByProductID.Count > 0)
+				return true;
+            else
+				return false;
+		}	
 		
 		/// <summary>
 		/// Zero to Many
 		/// Foreign Key Name - FK_Order_Details_Products
 		/// </summary>
+		
 
 		[XmlIgnore]
+		[DataMember]
 		public OrderDetailsCollection OrderDetailsCollectionByProductID
 		{
 			get
@@ -1075,11 +1087,15 @@ namespace BusinessObjects
 				} 
 			} 			
 		}
+		
+
+		
 			
 		
 		private OrderDetailsCollection _OrderDetailsCollectionByProductID;
 		#endregion
 
+				
 				
 		#region UpToCategoriesByCategoryID - Many To One
 		/// <summary>
@@ -1128,6 +1144,7 @@ namespace BusinessObjects
 		#endregion
 		
 
+				
 				
 		#region UpToSuppliersBySupplierID - Many To One
 		/// <summary>

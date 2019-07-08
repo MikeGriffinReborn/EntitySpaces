@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0702.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/3/2019 2:00:44 PM
+Date Generated       : 7/8/2019 9:34:10 AM
 ===============================================================================
 */
 
@@ -531,6 +531,7 @@ namespace BusinessObjects
 	{
 
 				
+				
 		#region UpToEmployeesByEmployeeID - Many To One
 		/// <summary>
 		/// Many to One
@@ -578,6 +579,7 @@ namespace BusinessObjects
 		#endregion
 		
 
+				
 				
 		#region UpToTerritoriesByTerritoryID - Many To One
 		/// <summary>

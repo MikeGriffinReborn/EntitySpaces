@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0702.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/3/2019 2:00:48 PM
+Date Generated       : 7/8/2019 9:34:12 AM
 ===============================================================================
 */
 
@@ -550,14 +550,24 @@ namespace BusinessObjects
 			data.Root.InnerJoin(parent).On(parent.RegionID == me.RegionID);
 
 			data.You = parent;
-		}			
+		}	
+		
+		public bool ShouldSerializeTerritoriesCollectionByRegionID()
+		{
+            if(this._TerritoriesCollectionByRegionID != null && this._TerritoriesCollectionByRegionID.Count > 0)
+				return true;
+            else
+				return false;
+		}	
 		
 		/// <summary>
 		/// Zero to Many
 		/// Foreign Key Name - FK_Territories_Region
 		/// </summary>
+		
 
 		[XmlIgnore]
+		[DataMember]
 		public TerritoriesCollection TerritoriesCollectionByRegionID
 		{
 			get
@@ -596,6 +606,9 @@ namespace BusinessObjects
 				} 
 			} 			
 		}
+		
+
+		
 			
 		
 		private TerritoriesCollection _TerritoriesCollectionByRegionID;
