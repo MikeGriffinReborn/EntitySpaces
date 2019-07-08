@@ -527,6 +527,17 @@ namespace EntitySpaces.Core
             return theProps;
         }
 
+        [XmlIgnore]
+        [DataMember(Name = "ExtraColumns", EmitDefaultValue = false)]
+        private Dictionary<string, object> ExtraColumns
+        {
+            get
+            {
+                Dictionary<string, object> extra = this.GetExtraColumns();
+                return extra.Keys.Count == 0 ? null : extra;
+            }
+         }
+
         /// <summary>
         /// Called by the EntitySpaces Proxies to determine of they are any
         /// extra column in the entity that need to be serialized
@@ -4553,7 +4564,7 @@ namespace EntitySpaces.Core
         }
 
         [XmlIgnore]
-        [DataMember(Name = "RowState", EmitDefaultValue = false)]
+     // [DataMember(Name = "RowState", EmitDefaultValue = false)]
         private esDataRowState TempRowState
         {
             get { return es.RowState; }
@@ -4565,7 +4576,7 @@ namespace EntitySpaces.Core
         private esDataRowState tempRowState;
 
         [XmlIgnore]
-        [DataMember(Name = "ModifiedColumns", EmitDefaultValue=false)]
+    //  [DataMember(Name = "ModifiedColumns", EmitDefaultValue=false)]
         private List<string> TempModifiedColumns
         {
             get { return m_modifiedColumns; }
