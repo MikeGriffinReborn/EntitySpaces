@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0702.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/8/2019 9:34:06 AM
+Date Generated       : 7/8/2019 9:55:57 AM
 ===============================================================================
 */
 
@@ -244,106 +244,6 @@ namespace BusinessObjects
 		internal protected CustomerDemographics _UpToCustomerDemographicsByCustomerTypeID;
 		[CLSCompliant(false)]
 		internal protected Customers _UpToCustomersByCustomerID;
-		#endregion	
-
-		#region .str() Properties
-		
-		public override void SetProperties(IDictionary values)
-		{
-			foreach (string propertyName in values.Keys)
-			{
-				this.SetProperty(propertyName, values[propertyName]);
-			}
-		}
-		
-		public override void SetProperty(string name, object value)
-		{
-			esColumnMetadata col = this.Meta.Columns.FindByPropertyName(name);
-			if (col != null)
-			{
-				if(value == null || value is System.String)
-				{				
-					// Use the strongly typed property
-					switch (name)
-					{							
-						case "CustomerID": this.str().CustomerID = (string)value; break;							
-						case "CustomerTypeID": this.str().CustomerTypeID = (string)value; break;
-					}
-				}
-				else
-				{
-					switch (name)
-					{
-
-						default:
-							break;
-					}
-				}
-			}
-            else if (this.ContainsColumn(name))
-            {
-                this.SetColumn(name, value);
-            }
-			else
-			{
-				throw new Exception("SetProperty Error: '" + name + "' not found");
-			}
-		}		
-
-		public esStrings str()
-		{
-			if (esstrings == null)
-			{
-				esstrings = new esStrings(this);
-			}
-			return esstrings;
-		}
-
-		sealed public class esStrings
-		{
-			public esStrings(esCustomerCustomerDemo entity)
-			{
-				this.entity = entity;
-			}
-			
-	
-			public System.String CustomerID
-			{
-				get
-				{
-					System.String data = entity.CustomerID;
-					return (data == null) ? String.Empty : Convert.ToString(data);
-				}
-
-				set
-				{
-					if (value == null || value.Length == 0) entity.CustomerID = null;
-					else entity.CustomerID = Convert.ToString(value);
-				}
-			}
-				
-			public System.String CustomerTypeID
-			{
-				get
-				{
-					System.String data = entity.CustomerTypeID;
-					return (data == null) ? String.Empty : Convert.ToString(data);
-				}
-
-				set
-				{
-					if (value == null || value.Length == 0) entity.CustomerTypeID = null;
-					else entity.CustomerTypeID = Convert.ToString(value);
-				}
-			}
-			
-
-			private esCustomerCustomerDemo entity;
-		}
-		
-		[NonSerialized]
-		private esStrings esstrings;		
-		
 		#endregion
 		
 		#region Housekeeping methods

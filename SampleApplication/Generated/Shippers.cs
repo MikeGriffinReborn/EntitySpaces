@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0702.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/8/2019 9:34:12 AM
+Date Generated       : 7/8/2019 9:56:03 AM
 ===============================================================================
 */
 
@@ -253,129 +253,6 @@ namespace BusinessObjects
 				}
 			}
 		}		
-		
-		#endregion	
-
-		#region .str() Properties
-		
-		public override void SetProperties(IDictionary values)
-		{
-			foreach (string propertyName in values.Keys)
-			{
-				this.SetProperty(propertyName, values[propertyName]);
-			}
-		}
-		
-		public override void SetProperty(string name, object value)
-		{
-			esColumnMetadata col = this.Meta.Columns.FindByPropertyName(name);
-			if (col != null)
-			{
-				if(value == null || value is System.String)
-				{				
-					// Use the strongly typed property
-					switch (name)
-					{							
-						case "ShipperID": this.str().ShipperID = (string)value; break;							
-						case "CompanyName": this.str().CompanyName = (string)value; break;							
-						case "Phone": this.str().Phone = (string)value; break;
-					}
-				}
-				else
-				{
-					switch (name)
-					{	
-						case "ShipperID":
-						
-							if (value == null || value is System.Int32)
-								this.ShipperID = (System.Int32?)value;
-								OnPropertyChanged(ShippersMetadata.PropertyNames.ShipperID);
-							break;
-					
-
-						default:
-							break;
-					}
-				}
-			}
-            else if (this.ContainsColumn(name))
-            {
-                this.SetColumn(name, value);
-            }
-			else
-			{
-				throw new Exception("SetProperty Error: '" + name + "' not found");
-			}
-		}		
-
-		public esStrings str()
-		{
-			if (esstrings == null)
-			{
-				esstrings = new esStrings(this);
-			}
-			return esstrings;
-		}
-
-		sealed public class esStrings
-		{
-			public esStrings(esShippers entity)
-			{
-				this.entity = entity;
-			}
-			
-	
-			public System.String ShipperID
-			{
-				get
-				{
-					System.Int32? data = entity.ShipperID;
-					return (data == null) ? String.Empty : Convert.ToString(data);
-				}
-
-				set
-				{
-					if (value == null || value.Length == 0) entity.ShipperID = null;
-					else entity.ShipperID = Convert.ToInt32(value);
-				}
-			}
-				
-			public System.String CompanyName
-			{
-				get
-				{
-					System.String data = entity.CompanyName;
-					return (data == null) ? String.Empty : Convert.ToString(data);
-				}
-
-				set
-				{
-					if (value == null || value.Length == 0) entity.CompanyName = null;
-					else entity.CompanyName = Convert.ToString(value);
-				}
-			}
-				
-			public System.String Phone
-			{
-				get
-				{
-					System.String data = entity.Phone;
-					return (data == null) ? String.Empty : Convert.ToString(data);
-				}
-
-				set
-				{
-					if (value == null || value.Length == 0) entity.Phone = null;
-					else entity.Phone = Convert.ToString(value);
-				}
-			}
-			
-
-			private esShippers entity;
-		}
-		
-		[NonSerialized]
-		private esStrings esstrings;		
 		
 		#endregion
 		

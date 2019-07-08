@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0702.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/8/2019 9:34:05 AM
+Date Generated       : 7/8/2019 9:55:56 AM
 ===============================================================================
 */
 
@@ -273,136 +273,6 @@ namespace BusinessObjects
 				}
 			}
 		}		
-		
-		#endregion	
-
-		#region .str() Properties
-		
-		public override void SetProperties(IDictionary values)
-		{
-			foreach (string propertyName in values.Keys)
-			{
-				this.SetProperty(propertyName, values[propertyName]);
-			}
-		}
-		
-		public override void SetProperty(string name, object value)
-		{
-			esColumnMetadata col = this.Meta.Columns.FindByPropertyName(name);
-			if (col != null)
-			{
-				if(value == null || value is System.String)
-				{				
-					// Use the strongly typed property
-					switch (name)
-					{							
-						case "CategoryID": this.str().CategoryID = (string)value; break;							
-						case "CategoryName": this.str().CategoryName = (string)value; break;							
-						case "Description": this.str().Description = (string)value; break;
-					}
-				}
-				else
-				{
-					switch (name)
-					{	
-						case "CategoryID":
-						
-							if (value == null || value is System.Int32)
-								this.CategoryID = (System.Int32?)value;
-								OnPropertyChanged(CategoriesMetadata.PropertyNames.CategoryID);
-							break;
-						
-						case "Picture":
-						
-							if (value == null || value is System.Byte[])
-								this.Picture = (System.Byte[])value;
-								OnPropertyChanged(CategoriesMetadata.PropertyNames.Picture);
-							break;
-					
-
-						default:
-							break;
-					}
-				}
-			}
-            else if (this.ContainsColumn(name))
-            {
-                this.SetColumn(name, value);
-            }
-			else
-			{
-				throw new Exception("SetProperty Error: '" + name + "' not found");
-			}
-		}		
-
-		public esStrings str()
-		{
-			if (esstrings == null)
-			{
-				esstrings = new esStrings(this);
-			}
-			return esstrings;
-		}
-
-		sealed public class esStrings
-		{
-			public esStrings(esCategories entity)
-			{
-				this.entity = entity;
-			}
-			
-	
-			public System.String CategoryID
-			{
-				get
-				{
-					System.Int32? data = entity.CategoryID;
-					return (data == null) ? String.Empty : Convert.ToString(data);
-				}
-
-				set
-				{
-					if (value == null || value.Length == 0) entity.CategoryID = null;
-					else entity.CategoryID = Convert.ToInt32(value);
-				}
-			}
-				
-			public System.String CategoryName
-			{
-				get
-				{
-					System.String data = entity.CategoryName;
-					return (data == null) ? String.Empty : Convert.ToString(data);
-				}
-
-				set
-				{
-					if (value == null || value.Length == 0) entity.CategoryName = null;
-					else entity.CategoryName = Convert.ToString(value);
-				}
-			}
-				
-			public System.String Description
-			{
-				get
-				{
-					System.String data = entity.Description;
-					return (data == null) ? String.Empty : Convert.ToString(data);
-				}
-
-				set
-				{
-					if (value == null || value.Length == 0) entity.Description = null;
-					else entity.Description = Convert.ToString(value);
-				}
-			}
-			
-
-			private esCategories entity;
-		}
-		
-		[NonSerialized]
-		private esStrings esstrings;		
 		
 		#endregion
 		

@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0702.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/8/2019 9:34:10 AM
+Date Generated       : 7/8/2019 9:56:00 AM
 ===============================================================================
 */
 
@@ -244,113 +244,6 @@ namespace BusinessObjects
 		internal protected Employees _UpToEmployeesByEmployeeID;
 		[CLSCompliant(false)]
 		internal protected Territories _UpToTerritoriesByTerritoryID;
-		#endregion	
-
-		#region .str() Properties
-		
-		public override void SetProperties(IDictionary values)
-		{
-			foreach (string propertyName in values.Keys)
-			{
-				this.SetProperty(propertyName, values[propertyName]);
-			}
-		}
-		
-		public override void SetProperty(string name, object value)
-		{
-			esColumnMetadata col = this.Meta.Columns.FindByPropertyName(name);
-			if (col != null)
-			{
-				if(value == null || value is System.String)
-				{				
-					// Use the strongly typed property
-					switch (name)
-					{							
-						case "EmployeeID": this.str().EmployeeID = (string)value; break;							
-						case "TerritoryID": this.str().TerritoryID = (string)value; break;
-					}
-				}
-				else
-				{
-					switch (name)
-					{	
-						case "EmployeeID":
-						
-							if (value == null || value is System.Int32)
-								this.EmployeeID = (System.Int32?)value;
-								OnPropertyChanged(EmployeeTerritoriesMetadata.PropertyNames.EmployeeID);
-							break;
-					
-
-						default:
-							break;
-					}
-				}
-			}
-            else if (this.ContainsColumn(name))
-            {
-                this.SetColumn(name, value);
-            }
-			else
-			{
-				throw new Exception("SetProperty Error: '" + name + "' not found");
-			}
-		}		
-
-		public esStrings str()
-		{
-			if (esstrings == null)
-			{
-				esstrings = new esStrings(this);
-			}
-			return esstrings;
-		}
-
-		sealed public class esStrings
-		{
-			public esStrings(esEmployeeTerritories entity)
-			{
-				this.entity = entity;
-			}
-			
-	
-			public System.String EmployeeID
-			{
-				get
-				{
-					System.Int32? data = entity.EmployeeID;
-					return (data == null) ? String.Empty : Convert.ToString(data);
-				}
-
-				set
-				{
-					if (value == null || value.Length == 0) entity.EmployeeID = null;
-					else entity.EmployeeID = Convert.ToInt32(value);
-				}
-			}
-				
-			public System.String TerritoryID
-			{
-				get
-				{
-					System.String data = entity.TerritoryID;
-					return (data == null) ? String.Empty : Convert.ToString(data);
-				}
-
-				set
-				{
-					if (value == null || value.Length == 0) entity.TerritoryID = null;
-					else entity.TerritoryID = Convert.ToString(value);
-				}
-			}
-			
-
-			private esEmployeeTerritories entity;
-		}
-		
-		[NonSerialized]
-		private esStrings esstrings;		
-		
 		#endregion
 		
 		#region Housekeeping methods

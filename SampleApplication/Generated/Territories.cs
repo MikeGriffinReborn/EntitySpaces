@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0702.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/8/2019 9:34:13 AM
+Date Generated       : 7/8/2019 9:56:03 AM
 ===============================================================================
 */
 
@@ -258,129 +258,6 @@ namespace BusinessObjects
 		
 		[CLSCompliant(false)]
 		internal protected Region _UpToRegionByRegionID;
-		#endregion	
-
-		#region .str() Properties
-		
-		public override void SetProperties(IDictionary values)
-		{
-			foreach (string propertyName in values.Keys)
-			{
-				this.SetProperty(propertyName, values[propertyName]);
-			}
-		}
-		
-		public override void SetProperty(string name, object value)
-		{
-			esColumnMetadata col = this.Meta.Columns.FindByPropertyName(name);
-			if (col != null)
-			{
-				if(value == null || value is System.String)
-				{				
-					// Use the strongly typed property
-					switch (name)
-					{							
-						case "TerritoryID": this.str().TerritoryID = (string)value; break;							
-						case "TerritoryDescription": this.str().TerritoryDescription = (string)value; break;							
-						case "RegionID": this.str().RegionID = (string)value; break;
-					}
-				}
-				else
-				{
-					switch (name)
-					{	
-						case "RegionID":
-						
-							if (value == null || value is System.Int32)
-								this.RegionID = (System.Int32?)value;
-								OnPropertyChanged(TerritoriesMetadata.PropertyNames.RegionID);
-							break;
-					
-
-						default:
-							break;
-					}
-				}
-			}
-            else if (this.ContainsColumn(name))
-            {
-                this.SetColumn(name, value);
-            }
-			else
-			{
-				throw new Exception("SetProperty Error: '" + name + "' not found");
-			}
-		}		
-
-		public esStrings str()
-		{
-			if (esstrings == null)
-			{
-				esstrings = new esStrings(this);
-			}
-			return esstrings;
-		}
-
-		sealed public class esStrings
-		{
-			public esStrings(esTerritories entity)
-			{
-				this.entity = entity;
-			}
-			
-	
-			public System.String TerritoryID
-			{
-				get
-				{
-					System.String data = entity.TerritoryID;
-					return (data == null) ? String.Empty : Convert.ToString(data);
-				}
-
-				set
-				{
-					if (value == null || value.Length == 0) entity.TerritoryID = null;
-					else entity.TerritoryID = Convert.ToString(value);
-				}
-			}
-				
-			public System.String TerritoryDescription
-			{
-				get
-				{
-					System.String data = entity.TerritoryDescription;
-					return (data == null) ? String.Empty : Convert.ToString(data);
-				}
-
-				set
-				{
-					if (value == null || value.Length == 0) entity.TerritoryDescription = null;
-					else entity.TerritoryDescription = Convert.ToString(value);
-				}
-			}
-				
-			public System.String RegionID
-			{
-				get
-				{
-					System.Int32? data = entity.RegionID;
-					return (data == null) ? String.Empty : Convert.ToString(data);
-				}
-
-				set
-				{
-					if (value == null || value.Length == 0) entity.RegionID = null;
-					else entity.RegionID = Convert.ToInt32(value);
-				}
-			}
-			
-
-			private esTerritories entity;
-		}
-		
-		[NonSerialized]
-		private esStrings esstrings;		
-		
 		#endregion
 		
 		#region Housekeeping methods
