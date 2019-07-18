@@ -69,8 +69,8 @@ The sample below demonstrates a self join on the Employees table which is lookin
 
 
 ```c#
-EmployeeQuery q = new EmployeeQuery("e");
-EmployeeQuery q1 = new EmployeeQuery("e1");
+EmployeeQuery q = new EmployeeQuery("e");   // Employees
+EmployeeQuery q1 = new EmployeeQuery("e1"); // ReportsTo
 
 q.Select(q.EmployeeID, q.LastName)  // To bind to combobox
     .Where(q.LastName.Like("%a%"))
