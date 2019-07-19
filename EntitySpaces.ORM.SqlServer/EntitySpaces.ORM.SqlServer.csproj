@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyVersion>2019.07.07.2</AssemblyVersion>
-    <FileVersion>2019.07.07.2</FileVersion>
-    <Version>2019.07.07.2</Version>
+    <AssemblyVersion>2019.07.19.1</AssemblyVersion>
+    <FileVersion>2019.07.19.1</FileVersion>
+    <Version>2019.07.19.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
