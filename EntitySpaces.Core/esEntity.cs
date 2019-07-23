@@ -515,6 +515,7 @@ namespace EntitySpaces.Core
         /// Called to create an instance of this type of object, rarely called
         /// </summary>
         /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         virtual public esEntity CreateInstance()
         {
             return null;
@@ -553,6 +554,7 @@ namespace EntitySpaces.Core
         /// Overridden in the generated classes.
         /// </summary>
         /// <param name="values"></param>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         virtual public void SetProperties(IDictionary values)
         {
 
@@ -563,6 +565,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         virtual public void SetProperty(string name, object value)
         {
 
@@ -730,6 +733,7 @@ namespace EntitySpaces.Core
         /// method is called
         /// </summary>
         /// <param name="propertyName"></param>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         virtual public void OnPropertyChanged(string propertyName)
         {
             if (propertyChanged != null)
@@ -803,6 +807,7 @@ namespace EntitySpaces.Core
         /// <param name="esColumn">The esColumn - will be null for extra properties</param>
         /// <param name="propertyName">The column name, will always be valid</param>
         /// <returns></returns>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         virtual public int OnSort(esEntity other, esColumnMetadata esColumn, string propertyName)
         {
             esSystemType esType = esSystemType.Unassigned;
@@ -1000,11 +1005,7 @@ namespace EntitySpaces.Core
 
         #region Entity Property Helpers
 
-        //protected Dictionary<string, object> GetExtraColumnsArray()
-        //{
-        //    return this.GetExtraColumns();
-        //}
-
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public List<string> GetCurrentListOfColumns()
         {
             List<string> columns = new List<string>();
@@ -1085,6 +1086,7 @@ namespace EntitySpaces.Core
         [BrowsableAttribute(false)]
 #endif
         [XmlIgnore]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         virtual public object SpecialBinder
         {
             get
@@ -4537,6 +4539,7 @@ namespace EntitySpaces.Core
         /// See the ES 2007 v1.1021.0 Release notes for details at
         /// http://www.entityspaces.net
         /// </remarks>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public event ValidateDelegate OnValidateDelegate
         {
             add

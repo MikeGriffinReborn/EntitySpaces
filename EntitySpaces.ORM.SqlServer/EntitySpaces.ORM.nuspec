@@ -2,14 +2,18 @@
 <package  xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>EntitySpaces.ORM.SqlServer</id>
-    <version>2019.07.19.1</version>
+    <version>2019.07.23.0</version>
     <title>EntitySpaces ORM for .NET Standard (SqlServer)</title>
     <authors>Original EntitySpaces Team with Mike Griffin republishing in 2019</authors>
     <owners>Griffin GSA</owners>
-    <license type="expression">MIT</license>
+    <license type="expression">BSD-2-Clause-FreeBSD</license>
     <projectUrl>https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <tags>EntitySpaces ORM</tags>
     <description>EntitySpaces for SQL Server</description>
+    <dependencies>
+      <dependency id="Microsoft.EntityFrameworkCore.SqlServer" version="2.2.4" />
+    </dependencies>    
+    
   </metadata>
 </package>

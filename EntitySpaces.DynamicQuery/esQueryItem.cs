@@ -5661,6 +5661,7 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// Required due to operator overloading.
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()
         {
             return base.GetHashCode();

@@ -2,10 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyVersion>2019.07.19.1</AssemblyVersion>
-    <FileVersion>2019.07.19.1</FileVersion>
-    <Version>2019.07.19.1</Version>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyVersion>2019.07.23.0</AssemblyVersion>
+    <FileVersion>2019.07.23.0</FileVersion>
+    <Version>2019.07.23.0</Version>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Description>EntitySpaces in .NET Standard Mode for SQL Server (single assembly install)</Description>
+    <PackageProjectUrl>https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard</PackageProjectUrl>
+    <PackageTags>EntitySpaces, ORM</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
