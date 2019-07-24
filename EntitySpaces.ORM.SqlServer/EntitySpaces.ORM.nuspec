@@ -1,19 +1,20 @@
-﻿<?xml version="1.0"?>
-<package  xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>EntitySpaces.ORM.SqlServer</id>
-    <version>2019.07.23.0</version>
-    <title>EntitySpaces ORM for .NET Standard (SqlServer)</title>
-    <authors>Original EntitySpaces Team with Mike Griffin republishing in 2019</authors>
-    <owners>Griffin GSA</owners>
+    <version>2019.7.23.4</version>
+    <authors>EntitySpaces.ORM.SqlServer</authors>
+    <owners>EntitySpaces.ORM.SqlServer</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">BSD-2-Clause-FreeBSD</license>
     <projectUrl>https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard</projectUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <tags>EntitySpaces ORM</tags>
-    <description>EntitySpaces for SQL Server</description>
+    <description>EntitySpaces in .NET Standard Mode for SQL Server (single assembly install)</description>
+    <tags>EntitySpaces, ORM</tags>
     <dependencies>
-      <dependency id="Microsoft.EntityFrameworkCore.SqlServer" version="2.2.4" />
-    </dependencies>    
-    
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Microsoft.EntityFrameworkCore.SqlServer" version="2.2.4" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <readme>readme.md</readme>
   </metadata>
 </package>

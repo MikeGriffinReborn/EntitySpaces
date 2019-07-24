@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyVersion>2019.07.23.0</AssemblyVersion>
-    <FileVersion>2019.07.23.0</FileVersion>
-    <Version>2019.07.23.0</Version>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <AssemblyVersion>2019.07.23.4</AssemblyVersion>
+    <FileVersion>2019.07.23.4</FileVersion>
+    <Version>2019.07.23.4</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>EntitySpaces in .NET Standard Mode for SQL Server (single assembly install)</Description>
     <PackageProjectUrl>https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard</PackageProjectUrl>
     <PackageTags>EntitySpaces, ORM</PackageTags>
@@ -95,6 +95,15 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="EntitySpaces.ORM.nuspec">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="readme.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
