@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0702.0
+EntitySpaces Version : 2019.1.0725.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/8/2019 9:55:58 AM
+Date Generated       : 7/25/2019 4:41:32 PM
 ===============================================================================
 */
 
@@ -533,9 +533,10 @@ namespace BusinessObjects
 			data.You = parent;
 		}	
 		
+		[EditorBrowsable(EditorBrowsableState.Never)]
 		public bool ShouldSerializeCustomerCustomerDemoCollectionByCustomerTypeID()
 		{
-            if(this._CustomerCustomerDemoCollectionByCustomerTypeID != null && this._CustomerCustomerDemoCollectionByCustomerTypeID.Count > 0)
+		    if(this._CustomerCustomerDemoCollectionByCustomerTypeID != null && this._CustomerCustomerDemoCollectionByCustomerTypeID.Count > 0)
 				return true;
             else
 				return false;
