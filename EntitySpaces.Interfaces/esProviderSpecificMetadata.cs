@@ -37,9 +37,7 @@ namespace EntitySpaces.Interfaces
     /// development with EntitySpaces a given class will have a different esProviderSpecificMetadata
     /// for each database. 
     /// </summary>
-    #if (!WindowsCE)
     [Serializable] 
-    #endif
     public class esProviderSpecificMetadata : IProviderSpecificMetadata
     {
         /// <summary>

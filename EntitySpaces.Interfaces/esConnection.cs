@@ -120,7 +120,6 @@ namespace EntitySpaces.Interfaces
                 {
                     cnString = this.connectionString;
 
-                    #if (!WindowsCE)
                     if (!this.converted)
                     {
                         // Check for 'AppSettings:' as the leading string in the ConnectionString in the config
@@ -139,7 +138,6 @@ namespace EntitySpaces.Interfaces
 
                         this.converted = true;
                     }
-                    #endif
                 }
 
                 return cnString;

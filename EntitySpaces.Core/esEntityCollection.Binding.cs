@@ -40,9 +40,7 @@ using System.Data.Linq;
 using System.Linq;
 #endif
 
-#if (!WindowsCE)
 using System.Runtime.Serialization;
-#endif
 
 using EntitySpaces.Interfaces;
 using EntitySpaces.DynamicQuery;
@@ -426,7 +424,6 @@ namespace EntitySpaces.Core
             // Now we deal with extended properties that are using the
             // esExtendedPropertyAttribute technique
             //------------------------------------------------------------
-#if (!WindowsCE)
             foreach (PropertyDescriptor prop in props)
             {
                 if (prop.Attributes.Contains(esEntityCollection<T>.extendedPropertyAttribute))
@@ -434,7 +431,6 @@ namespace EntitySpaces.Core
                     coll.Add(lastOrdinal++, prop);
                 }
             }
-#endif
 
             //------------------------------------------------------------
             // Now we deal with any local properties. Local properties are

@@ -31,10 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using System;
 using System.Data;
 using System.Collections.Generic;
-
-#if (WCF)
 using System.Runtime.Serialization;
-#endif
 
 using EntitySpaces.DynamicQuery;
 
@@ -154,9 +151,7 @@ namespace EntitySpaces.Interfaces
     /// emps.Query.Load();
     /// </code>
     /// </example>
-    #if (!WindowsCE)
     [Serializable] 
-    #endif
     public class esDynamicQuery : esDynamicQuerySerializable
     {
         /// <summary>
@@ -312,9 +307,7 @@ namespace EntitySpaces.Interfaces
         /// by default this method does nothing.
         /// When overriding you don't use the internal keyword.
         /// </summary>
-#if (WCF || SILVERLIGHT)
         [OptionalFieldAttribute]
-#endif
         public QueryLoadedDelegate OnLoadDelegate;
 
         /// <summary>

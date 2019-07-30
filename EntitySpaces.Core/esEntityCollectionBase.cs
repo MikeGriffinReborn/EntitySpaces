@@ -44,9 +44,7 @@ using System.Runtime.Serialization;
 namespace EntitySpaces.Core
 {
     [Serializable]
-#if (!WindowsCE)
     [CollectionDataContract]
-#endif
     abstract public class esEntityCollectionBase : IEntityCollection, IEnumerable, IComponent
     {
         #region IComponent Members

@@ -57,9 +57,7 @@ namespace EntitySpaces.Interfaces
     /// }
     /// </code>
     /// </example>
-#if (!WindowsCE)
     [Serializable]
-#endif
     public class esTypeMap
     {
         /// <summary>

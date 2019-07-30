@@ -61,9 +61,7 @@ namespace EntitySpaces.Interfaces
     /// </code>
     /// <seealso cref="esParameter"/>, <seealso cref="esDataProvider"/>, <seealso cref="IDataProvider"/>
     /// </example> 
-    #if (!WindowsCE)
     [Serializable] 
-    #endif
     public class esParameters : IEnumerable 
     {
         public esParameters()
@@ -214,9 +212,7 @@ namespace EntitySpaces.Interfaces
     /// It is important not to add prefixes to the parameter names such as @, ?, : as the providers will do this.
     /// </remarks>
     /// <seealso cref="esParameters"/>
-    #if (!WindowsCE)
     [Serializable] 
-    #endif
     public class esParameter
     {
         public esParameter()
@@ -377,9 +373,7 @@ namespace EntitySpaces.Interfaces
     /// <summary>
     /// Used to determine the direction of the esParameter class. The default is Input
     /// </summary>
-    #if (!WindowsCE)
     [Serializable] 
-    #endif
     public enum esParameterDirection
     {
         /// <summary>

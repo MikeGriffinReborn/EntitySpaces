@@ -36,9 +36,7 @@ namespace EntitySpaces.Interfaces
     /// Returned by the EntitySpaces DataProvider in response to a request. 
     /// </summary>
     /// <seealso cref="esDataRequest"/>
-    #if (!WindowsCE)
     [Serializable] 
-    #endif
     public class esDataResponse
     {
         /// <summary>

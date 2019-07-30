@@ -57,9 +57,7 @@ namespace EntitySpaces.Interfaces
     ///	}	
     /// </code>
     /// </remarks>
-    #if (!WindowsCE)
     [Serializable] 
-    #endif
     public class esColumnMetadata
     {
         /// <summary>

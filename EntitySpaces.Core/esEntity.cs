@@ -96,9 +96,7 @@ namespace EntitySpaces.Core
     /// </example>
     [Serializable]
     [XmlType(IncludeInSchema = false)]
-#if (!WindowsCE)
     [DataContract]
-#endif
     public abstract class esEntity : DynamicObject, IVisitable, IEditableObject, IEntity, ICommittable, INotifyPropertyChanged, IDataErrorInfo
 #if (WebBinding)
        , ICustomTypeDescriptor
@@ -447,9 +445,7 @@ namespace EntitySpaces.Core
         /// Used a a nice way to quickly see the values of an Entity, this exists only for
         /// debugging purposes and is called when you inspect an entity in the debugger.
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden | DebuggerBrowsableState.Never)]
-#endif
         virtual protected esEntityDebuggerView[] Debug
         {
             get
@@ -678,11 +674,7 @@ namespace EntitySpaces.Core
 
             if (ext.Values.Count > 0)
             {
-#if (!WindowsCE)
                 return esDataContractSerializer.ToXml(ext);
-#else
-                return null;
-#endif
             }
             else
             {
@@ -723,9 +715,7 @@ namespace EntitySpaces.Core
         }
 
         [NonSerialized]
-#if (!WindowsCE)
         [IgnoreDataMember]
-#endif
         private PropertyChangedEventHandler propertyChanged;
 
         /// <summary>
@@ -785,10 +775,8 @@ namespace EntitySpaces.Core
         /// This is used to keep certain EntitySpaces defined properties from conflicting with the
         /// generated properties
         /// </summary>
-#if (!WindowsCE)
         [Browsable(false)]
         [Bindable(false)]
-#endif
         [XmlIgnore]
         public IEntity es
         {
@@ -1082,9 +1070,7 @@ namespace EntitySpaces.Core
         /// this.comboBox1.ValueMember = InvoicesMetadata.ColumnNames.CustomerID;
         /// </code>
         /// </example>
-#if (!WindowsCE)
         [BrowsableAttribute(false)]
-#endif
         [XmlIgnore]
         [EditorBrowsable(EditorBrowsableState.Never)]
         virtual public object SpecialBinder
@@ -1744,8 +1730,6 @@ namespace EntitySpaces.Core
             return SetValue(columnName, data);
         }
 
-#if (!WindowsCE)
-
         /// <summary>
         /// This is used internally to get type specific column values for a row.
         /// </summary>
@@ -1787,8 +1771,6 @@ namespace EntitySpaces.Core
         {
             return SetValue(columnName, data);
         }
-
-#endif
 
         /// <summary>
         /// This is used internally to get type specific column values for a row.
@@ -3774,9 +3756,7 @@ namespace EntitySpaces.Core
         /// Allows you access the Connection information that is contained in your config file or that was
         /// setup via the configless methods.
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         esConnection IEntity.Connection
         {
             get
@@ -3816,9 +3796,7 @@ namespace EntitySpaces.Core
         /// <summary>
         /// Contains a list of modified columns
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         List<string> IEntity.ModifiedColumns
         {
             get
@@ -3835,9 +3813,7 @@ namespace EntitySpaces.Core
         /// <summary>
         /// The Catalog of this entity
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         string IEntity.Catalog
         {
             get
@@ -3852,9 +3828,7 @@ namespace EntitySpaces.Core
         /// <summary>
         /// The Schema of this entity
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         string IEntity.Schema
         {
             get
@@ -3869,9 +3843,7 @@ namespace EntitySpaces.Core
         /// <summary>
         /// The Destination of this entity. This is the Table this entity is saved to
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         string IEntity.Destination
         {
             get { return this.GetProviderMetadata().Destination; }
@@ -3880,9 +3852,7 @@ namespace EntitySpaces.Core
         /// <summary>
         /// The source of this entity
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         string IEntity.Source
         {
             get { return this.GetProviderMetadata().Source; }
@@ -3891,9 +3861,7 @@ namespace EntitySpaces.Core
         /// <summary>
         /// The INSERT stored procedure name
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         string IEntity.spInsert
         {
             get { return this.GetProviderMetadata().spInsert; }
@@ -3902,9 +3870,7 @@ namespace EntitySpaces.Core
         /// <summary>
         /// The UPDATE stored procedure name
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         string IEntity.spUpdate
         {
             get { return this.GetProviderMetadata().spUpdate; }
@@ -3913,9 +3879,7 @@ namespace EntitySpaces.Core
         /// <summary>
         /// The DELETE stored procedure name
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         string IEntity.spDelete
         {
             get { return this.GetProviderMetadata().spDelete; }
@@ -3924,9 +3888,7 @@ namespace EntitySpaces.Core
         /// <summary>
         /// The LoadAll stored procedure name
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         string IEntity.spLoadAll
         {
             get { return this.GetProviderMetadata().spLoadAll; }
@@ -3935,9 +3897,7 @@ namespace EntitySpaces.Core
         /// <summary>
         /// The LoadByPrimaryKey stored procedure name
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         string IEntity.spLoadByPrimaryKey
         {
             get { return this.GetProviderMetadata().spLoadByPrimaryKey; }
@@ -3948,9 +3908,7 @@ namespace EntitySpaces.Core
         /// marked as Deleted. Remember, an esEntity can only represent a single row. However the full Query
         /// syntax is allowed to load an esEntity. See <see cref="esDynamicQuery"/>
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         bool IEntity.HasData
         {
             get
@@ -3966,9 +3924,7 @@ namespace EntitySpaces.Core
         /// This is set to true if it is a new entity, MarkAsDeleted(), or if any of the esEntities table based properties 
         /// have been changed. After a successful call to <see cref="Save"/> IsDirty will report false.
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         bool IEntity.IsDirty
         {
             get
@@ -3993,9 +3949,7 @@ namespace EntitySpaces.Core
         /// Returns true if any entity or collection in the object graph returns true from thier 
         /// respect IsDirty property.
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         bool IEntity.IsGraphDirty
         {
             get
@@ -4033,9 +3987,7 @@ namespace EntitySpaces.Core
         /// <summary>
         /// Returns true of the RowState is esDataRowState.Modified
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         bool IEntity.IsModified
         {
             get
@@ -4047,9 +3999,7 @@ namespace EntitySpaces.Core
         /// <summary>
         /// Returns true of the RowState is esDataRowState.Added
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         bool IEntity.IsAdded
         {
             get
@@ -4061,9 +4011,7 @@ namespace EntitySpaces.Core
         /// <summary>
         /// Returns true of the RowState is esDataRowState.Deleted
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         bool IEntity.IsDeleted
         {
             get
@@ -4075,9 +4023,7 @@ namespace EntitySpaces.Core
         /// <summary>
         /// See the ADO.NET esDataRowState enum for more information. 
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         esDataRowState IEntity.RowState
         {
             get
@@ -4109,9 +4055,7 @@ namespace EntitySpaces.Core
         /// <summary>
         /// See the ADO.NET DataRow.RowError for more information.
         /// </summary>
-#if (!WindowsCE)
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#endif
         string IEntity.RowError
         {
             get
@@ -4553,9 +4497,7 @@ namespace EntitySpaces.Core
         }
 
         [NonSerialized]
-#if (!WindowsCE)
         [IgnoreDataMember]
-#endif
         private ValidateDelegate onValidateDelegate;
 
         #endregion
@@ -4644,7 +4586,6 @@ namespace EntitySpaces.Core
 
         #endregion
 
-#if (!WindowsCE)
         #region DataContract Serialization Trickery
 
         [OnDeserialized]
@@ -4686,7 +4627,6 @@ namespace EntitySpaces.Core
         private List<string> tempModifiedColumns;
 
         #endregion
-#endif
 
         #region ModifiedBy Hooks
 

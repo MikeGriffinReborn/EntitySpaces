@@ -44,9 +44,7 @@ namespace EntitySpaces.Interfaces
     /// <summary>
     /// Sent to the EntitySpaces DataProviders to carry out commands.
     /// </summary>
-    #if (!WindowsCE)
     [Serializable] 
-    #endif
     public class esDataRequest
     {
         #region Error Handling

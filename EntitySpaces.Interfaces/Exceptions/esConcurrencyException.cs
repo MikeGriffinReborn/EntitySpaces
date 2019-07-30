@@ -44,9 +44,7 @@ namespace EntitySpaces.Interfaces
     /// overwrites using the SQL "timestamp" data type and in other
     /// databases systems as well.
     /// </remarks>
-    #if (!WindowsCE)
     [Serializable] 
-    #endif
     public class esConcurrencyException : esException
     {
         public esConcurrencyException(string message)

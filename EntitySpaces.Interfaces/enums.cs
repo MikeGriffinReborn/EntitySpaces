@@ -82,34 +82,22 @@ namespace EntitySpaces.Interfaces
 
     [Flags]
     [XmlType(IncludeInSchema = false, Namespace="")]
-#if (!WindowsCE)
     [DataContract(Namespace= "www.entityspaces.net")]
-#endif
     public enum esDataRowState
     {
-#if (!WindowsCE)
         [EnumMember]
-#endif
         Invalid = 0,
 
-#if (!WindowsCE)
         [EnumMember]
-#endif
         Unchanged = 2,
 
-#if (!WindowsCE)
         [EnumMember]
-#endif
         Added = 4,
 
-#if (!WindowsCE)
         [EnumMember]
-#endif
         Deleted = 8,
 
-#if (!WindowsCE)
         [EnumMember]
-#endif
         Modified = 16,
     }
 

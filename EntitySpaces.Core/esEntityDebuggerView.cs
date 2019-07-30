@@ -27,12 +27,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
-using System;
-using System.Collections.Generic;
-#if (!WindowsCE)
-using System.Linq;
-#endif
-using System.Text;
 
 using System.Diagnostics;
 
@@ -41,9 +35,7 @@ namespace EntitySpaces.Core
     /// <summary>
     /// A tiny helper class used when you inspect entity's in the debugger
     /// </summary>
-#if (!WindowsCE)
     [DebuggerDisplay("{Data}", Name = "{Property}")]
-#endif
     public struct esEntityDebuggerView
     {
         public string Property;
