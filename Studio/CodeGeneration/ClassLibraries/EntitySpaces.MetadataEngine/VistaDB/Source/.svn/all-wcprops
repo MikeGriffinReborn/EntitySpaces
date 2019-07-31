@@ -1,0 +1,191 @@
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source
+END
+IVistaDBDataSet.cs
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/IVistaDBDataSet.cs
+END
+vsDatabase.cs
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/vsDatabase.cs
+END
+vnDataAdapter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/vnDataAdapter.cs
+END
+VistaDBDataSet.resx
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/VistaDBDataSet.resx
+END
+Interfaces.cs
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/Interfaces.cs
+END
+vnParameter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/vnParameter.cs
+END
+vnParameterEnumerator.cs
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/vnParameterEnumerator.cs
+END
+VistaDBLocalConnection.cs
+K 25
+svn:wc:ra_dav:version-url
+V 146
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/VistaDBLocalConnection.cs
+END
+vnTransaction.cs
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/vnTransaction.cs
+END
+VistaDBSQLConnection.cs
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/VistaDBSQLConnection.cs
+END
+VistaDBLocalQuery.cs
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/VistaDBLocalQuery.cs
+END
+vnCommand.resx
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/vnCommand.resx
+END
+VistaDBRemoteQuery.cs
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/VistaDBRemoteQuery.cs
+END
+vsTable.cs
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/vsTable.cs
+END
+VistaDBErrorMsgs.cs
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/VistaDBErrorMsgs.cs
+END
+VistaDBDataSet.cs
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/VistaDBDataSet.cs
+END
+MetaDataReader.cs
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/MetaDataReader.cs
+END
+vnCommandBuilder.resx
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/vnCommandBuilder.resx
+END
+VistaDBSQL.cs
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/VistaDBSQL.cs
+END
+VistaDBDataRow.cs
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/VistaDBDataRow.cs
+END
+vnConnection.resx
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/vnConnection.resx
+END
+VistaDB.Provider.csproj
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/VistaDB.Provider.csproj
+END
+vnCommand.cs
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/vnCommand.cs
+END
+VistaDBAPI.cs
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/VistaDBAPI.cs
+END
+VistaDBRemoteConnection.cs
+K 25
+svn:wc:ra_dav:version-url
+V 147
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/VistaDBRemoteConnection.cs
+END
+vnCommandBuilder.cs
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/vnCommandBuilder.cs
+END
+RemoteParameter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/RemoteParameter.cs
+END
+vnParameterCollection.cs
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/vnParameterCollection.cs
+END
+vnDataReader.cs
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/vnDataReader.cs
+END
+VistaDBSQLQuery.cs
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/VistaDBSQLQuery.cs
+END
+vnConnection.cs
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/VistaDB/Source/vnConnection.cs
+END

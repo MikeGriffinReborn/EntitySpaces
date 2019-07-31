@@ -1,0 +1,428 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Languages>
+  <Language From="SQL" To="C#">
+    <Type From="bigint" To="long" />
+    <Type From="binary" To="object" />
+    <Type From="bit" To="bool" />
+    <Type From="char" To="string" />
+    <Type From="char(1)" To="char" />
+    <Type From="date" To="DateTime" />
+    <Type From="datetime" To="DateTime" />
+    <Type From="datetime2" To="DateTime" />
+    <Type From="datetimeoffset" To="DateTimeOffset" />
+    <Type From="decimal" To="decimal" />
+    <Type From="float" To="double" />
+    <Type From="geography" To="SqlGeography" NonSystemType="true" />
+    <Type From="geometry" To="SqlGeometry" NonSystemType="true" />
+    <Type From="hierarchyid" To="SqlHierarchyId" NonSystemType="true" />
+    <Type From="image" To="byte[]" />
+    <Type From="int" To="int" />
+    <Type From="money" To="decimal" />
+    <Type From="nchar" To="string" />
+    <Type From="nchar(1)" To="char" />
+    <Type From="ntext" To="string" />
+    <Type From="numeric" To="decimal" />
+    <Type From="nvarchar" To="string" />
+    <Type From="nvarchar(1)" To="char" />
+    <Type From="real" To="float" />
+    <Type From="smalldatetime" To="DateTime" />
+    <Type From="smallint" To="short" />
+    <Type From="smallmoney" To="decimal" />
+    <Type From="sysname" To="string" />
+    <Type From="text" To="string" />
+    <Type From="time" To="TimeSpan" />
+    <Type From="timestamp" To="byte[]" />
+    <Type From="tinyint" To="byte" />
+    <Type From="uniqueidentifier" To="Guid" />
+    <Type From="varbinary" To="byte[]" />
+    <Type From="varchar" To="string" />
+    <Type From="varchar(1)" To="char" />
+    <Type From="xml" To="string" />
+    <Type From="sql_variant" To="object" />
+  </Language>
+  <Language From="SQLAZURE" To="C#">
+    <Type From="bigint" To="long" />
+    <Type From="binary" To="object" />
+    <Type From="bit" To="bool" />
+    <Type From="char" To="string" />
+    <Type From="char(1)" To="char" />
+    <Type From="date" To="DateTime" />
+    <Type From="datetime" To="DateTime" />
+    <Type From="datetime2" To="DateTime" />
+    <Type From="datetimeoffset" To="DateTimeOffset" />
+    <Type From="decimal" To="decimal" />
+    <Type From="float" To="double" />
+    <Type From="geography" To="SqlGeography" NonSystemType="true" />
+    <Type From="geometry" To="SqlGeometry" NonSystemType="true" />
+    <Type From="hierarchyid" To="SqlHierarchyId" NonSystemType="true" />
+    <Type From="image" To="byte[]" />
+    <Type From="int" To="int" />
+    <Type From="money" To="decimal" />
+    <Type From="nchar" To="string" />
+    <Type From="nchar(1)" To="char" />
+    <Type From="ntext" To="string" />
+    <Type From="numeric" To="decimal" />
+    <Type From="nvarchar" To="string" />
+    <Type From="nvarchar(1)" To="char" />
+    <Type From="real" To="float" />
+    <Type From="smalldatetime" To="DateTime" />
+    <Type From="smallint" To="short" />
+    <Type From="smallmoney" To="decimal" />
+    <Type From="sysname" To="string" />
+    <Type From="text" To="string" />
+    <Type From="time" To="TimeSpan" />
+    <Type From="timestamp" To="byte[]" />
+    <Type From="tinyint" To="byte" />
+    <Type From="uniqueidentifier" To="Guid" />
+    <Type From="varbinary" To="byte[]" />
+    <Type From="varchar" To="string" />
+    <Type From="varchar(1)" To="char" />
+    <Type From="xml" To="string" />
+    <Type From="sql_variant" To="object" />
+  </Language>
+  <Language From="SQLCE" To="C#">
+    <Type From="bigint" To="long" />
+    <Type From="binary" To="object" />
+    <Type From="bit" To="bool" />
+    <Type From="char" To="string" />
+    <Type From="datetime" To="DateTime" />
+    <Type From="decimal" To="decimal" />
+    <Type From="float" To="double" />
+    <Type From="image" To="byte[]" />
+    <Type From="int" To="int" />
+    <Type From="money" To="decimal" />
+    <Type From="nchar" To="string" />
+    <Type From="ntext" To="string" />
+    <Type From="numeric" To="decimal" />
+    <Type From="nvarchar" To="string" />
+    <Type From="real" To="float" />
+    <Type From="rowversion" To="byte[]" />
+    <Type From="smalldatetime" To="DateTime" />
+    <Type From="smallint" To="short" />
+    <Type From="smallmoney" To="decimal" />
+    <Type From="text" To="string" />
+    <Type From="timestamp" To="byte[]" />
+    <Type From="tinyint" To="byte" />
+    <Type From="uniqueidentifier" To="Guid" />
+    <Type From="varbinary" To="byte[]" />
+    <Type From="varchar" To="string" />
+    <Type From="xml" To="string" />
+    <Type From="sql_variant" To="object" />
+  </Language>
+  <Language From="ACCESS" To="C#">
+    <Type From="Text" To="string" />
+    <Type From="Memo" To="string" />
+    <Type From="DateTime" To="DateTime" />
+    <Type From="Currency" To="decimal" />
+    <Type From="Yes/No" To="bool" />
+    <Type From="OLE Object" To="byte[]" />
+    <Type From="Hyperlink" To="string" />
+    <Type From="Double" To="double" />
+    <Type From="Replication ID" To="Guid" />
+    <Type From="Long" To="int" />
+    <Type From="Single" To="float" />
+    <Type From="Decimal" To="decimal" />
+    <Type From="Byte" To="byte" />
+    <Type From="Integer" To="short" />
+  </Language>
+  <Language From="ORACLE" To="C#">
+    <Type From="ANYDATA" To="object" />
+    <Type From="BFILE" To="byte[]" />
+    <Type From="BLOB" To="byte[]" />
+    <Type From="CHAR" To="string" />
+    <Type From="CLOB" To="string" />
+    <Type From="DATE" To="DateTime" />
+    <Type From="FLOAT" To="decimal" />
+    <Type From="INTEGER" To="decimal" />
+    <Type From="INTERVAL YEAR TO MONTH" To="int" />
+    <Type From="INTERVAL DAY TO SECOND" To="TimeSpan" />
+    <Type From="LONG" To="string" />
+    <Type From="LONGRAW" To="byte[]" />
+    <Type From="NCHAR" To="string" />
+    <Type From="NCLOB" To="string" />
+    <Type From="NUMBER" To="decimal" />
+    <Type From="NVARCHAR2" To="string" />
+    <Type From="RAW" To="byte[]" />
+    <Type From="ROWID" To="string" />
+    <Type From="UROWID" To="string" />
+    <Type From="TIMESTAMP" To="DateTime" />
+    <Type From="TIMESTAMP WITH TIME ZONE" To="DateTime" />
+    <Type From="TIMESTAMP WITH LOCAL TIME ZONE" To="DateTime" />
+    <Type From="UNSIGNEDINTEGER" To="decimal" />
+    <Type From="VARCHAR2" To="string" />
+    <Type From="XMLTYPE" To="string" />
+  </Language>
+  <Language From="POSTGRESQL" To="C#">
+    <Type From="SET" To="string" />
+    <Type From="abstime" To="string" />
+    <Type From="aclitem" To="string" />
+    <Type From="bit" To="string" />
+    <Type From="bool" To="bool" />
+    <Type From="bpchar" To="string" />
+    <Type From="bytea" To="byte[]" />
+    <Type From="char" To="string" />
+    <Type From="cid" To="string" />
+    <Type From="cidr" To="string" />
+    <Type From="circle" To="NpgsqlTypes.NpgsqlCircle" />
+    <Type From="date" To="DateTime" />
+    <Type From="float4" To="float" />
+    <Type From="float8" To="double" />
+    <Type From="inet" To="string" />
+    <Type From="int2" To="short" />
+    <Type From="int4" To="int" />
+    <Type From="int8" To="long" />
+    <Type From="interval" To="string" />
+    <Type From="macaddr" To="string" />
+    <Type From="money" To="decimal" />
+    <Type From="numeric" To="decimal" />
+    <Type From="oid" To="long" />
+    <Type From="path" To="NpgsqlTypes.NpgsqlPath" />
+    <Type From="polygon" To="NpgsqlTypes.NpgsqlPolygon" />
+    <Type From="refcursor" To="string" />
+    <Type From="regclass" To="string" />
+    <Type From="regoper" To="string" />
+    <Type From="regoperator" To="string" />
+    <Type From="regproc" To="string" />
+    <Type From="regprocedure" To="string" />
+    <Type From="regtype" To="string" />
+    <Type From="reltime" To="string" />
+    <Type From="smgr" To="string" />
+    <Type From="text" To="string" />
+    <Type From="tid" To="string" />
+    <Type From="time" To="DateTime" />
+    <Type From="timestamp" To="DateTime" />
+    <Type From="timestamptz" To="DateTime" />
+    <Type From="timetz" To="DateTime" />
+    <Type From="tinterval" To="string" />
+    <Type From="unknown" To="string" />
+    <Type From="uuid" To="Guid" />
+    <Type From="varbit" To="string" />
+    <Type From="varchar" To="string" />
+    <Type From="xid" To="string" />
+    <Type From="_abstime" To="string" />
+    <Type From="_aclitem" To="string" />
+    <Type From="_bit" To="string" />
+    <Type From="_bool" To="string" />
+    <Type From="_box" To="string" />
+    <Type From="_bpchar" To="string" />
+    <Type From="_bytea" To="string" />
+    <Type From="_char" To="string" />
+    <Type From="_cid" To="string" />
+    <Type From="_cidr" To="string" />
+    <Type From="_circle" To="string" />
+    <Type From="_date" To="string" />
+    <Type From="_float4" To="string" />
+    <Type From="_float8" To="string" />
+    <Type From="_inet" To="string" />
+    <Type From="_int2" To="string" />
+    <Type From="_int2vector" To="string" />
+    <Type From="_int4" To="string" />
+    <Type From="_int8" To="string" />
+    <Type From="_interval" To="string" />
+    <Type From="_line" To="string" />
+    <Type From="_lseg" To="string" />
+    <Type From="_macaddr" To="string" />
+    <Type From="_money" To="string" />
+    <Type From="_name" To="string" />
+    <Type From="_numeric" To="string" />
+    <Type From="_oid" To="string" />
+    <Type From="_oidvector" To="string" />
+    <Type From="_path" To="string" />
+    <Type From="_point" To="string" />
+    <Type From="_polygon" To="string" />
+    <Type From="_refcursor" To="string" />
+    <Type From="_regclass" To="string" />
+    <Type From="_regoper" To="string" />
+    <Type From="_regoperator" To="string" />
+    <Type From="_regproc" To="string" />
+    <Type From="_regprocedure" To="string" />
+    <Type From="_regtype" To="string" />
+    <Type From="_reltime" To="string" />
+    <Type From="_text" To="string" />
+    <Type From="_tid" To="string" />
+    <Type From="_time" To="string" />
+    <Type From="_timestamp" To="string" />
+    <Type From="_timestamptz" To="string" />
+    <Type From="_timetz" To="string" />
+    <Type From="_tinterval" To="string" />
+    <Type From="_varbit" To="string" />
+    <Type From="_varchar" To="string" />
+    <Type From="_xid" To="string" />
+    <Type From="box" To="NpgsqlTypes.NpgsqlBox" />
+    <Type From="int2vector" To="string" />
+    <Type From="line" To="string" />
+    <Type From="lseg" To="NpgsqlTypes.NpgsqlLSeg" />
+    <Type From="name" To="string" />
+    <Type From="oidvector" To="string" />
+    <Type From="point" To="NpgsqlTypes.NpgsqlPoint" />
+  </Language>
+  <Language From="VISTADB" To="C#">
+    <Type From="BigInt" To="long" />
+    <Type From="Bit" To="bool" />
+    <Type From="Char" To="string" />
+    <Type From="DateTime" To="DateTime" />
+    <Type From="Decimal" To="decimal" />
+    <Type From="Float" To="double" />
+    <Type From="Image" To="byte[]" />
+    <Type From="Int" To="int" />
+    <Type From="Money" To="decimal" />
+    <Type From="NChar" To="string" />
+    <Type From="NText" To="string" />
+    <Type From="NVarChar" To="string" />
+    <Type From="Real" To="float" />
+    <Type From="SmallDateTime" To="DateTime" />
+    <Type From="SmallInt" To="short" />
+    <Type From="SmallMoney" To="decimal" />
+    <Type From="Text" To="string" />
+    <Type From="Timestamp" To="long" />
+    <Type From="TinyInt" To="byte" />
+    <Type From="UniqueIdentifier" To="Guid" />
+    <Type From="VarBinary" To="byte[]" />
+    <Type From="VarChar" To="string" />
+  </Language>
+  <Language From="VISTADB4" To="C#">
+    <Type From="BigInt" To="long" />
+    <Type From="Bit" To="bool" />
+    <Type From="Char" To="string" />
+    <Type From="DateTime" To="DateTime" />
+    <Type From="Decimal" To="decimal" />
+    <Type From="Float" To="double" />
+    <Type From="Image" To="byte[]" />
+    <Type From="Int" To="int" />
+    <Type From="Money" To="decimal" />
+    <Type From="NChar" To="string" />
+    <Type From="NText" To="string" />
+    <Type From="NVarChar" To="string" />
+    <Type From="Real" To="float" />
+    <Type From="SmallDateTime" To="DateTime" />
+    <Type From="SmallInt" To="short" />
+    <Type From="SmallMoney" To="decimal" />
+    <Type From="Text" To="string" />
+    <Type From="Timestamp" To="long" />
+    <Type From="TinyInt" To="byte" />
+    <Type From="UniqueIdentifier" To="Guid" />
+    <Type From="VarBinary" To="byte[]" />
+    <Type From="VarChar" To="string" />
+  </Language>
+  <Language From="MYSQL" To="C#">
+    <Type From="BIT" To="sbyte" />
+    <Type From="BIGINT" To="long" />
+    <Type From="INT" To="int" />
+    <Type From="MEDIUMINT" To="int" />
+    <Type From="SMALLINT" To="short" />
+    <Type From="TINYINT" To="sbyte" />
+    <Type From="BIGINT UNSIGNED" To="ulong" />
+    <Type From="INT UNSIGNED" To="uint" />
+    <Type From="MEDIUMINT UNSIGNED" To="uint" />
+    <Type From="SMALLINT UNSIGNED" To="ushort" />
+    <Type From="TINYINT UNSIGNED" To="byte" />
+    <Type From="FLOAT" To="float" />
+    <Type From="FLOAT UNSIGNED" To="float" />
+    <Type From="DECIMAL" To="decimal" />
+    <Type From="DECIMAL UNSIGNED" To="decimal" />
+    <Type From="NUMERIC" To="decimal" />
+    <Type From="NUMERIC UNSIGNED" To="decimal" />
+    <Type From="DOUBLE UNSIGNED" To="double" />
+    <Type From="DOUBLE" To="double" />
+    <Type From="REAL" To="double" />
+    <Type From="REAL UNSIGNED" To="double" />
+    <Type From="VARCHAR" To="string" />
+    <Type From="CHAR" To="string" />
+    <Type From="TIMESTAMP" To="DateTime" />
+    <Type From="DATE" To="DateTime" />
+    <Type From="DATETIME" To="DateTime" />
+    <Type From="BLOB" To="byte[]" />
+    <Type From="LONGBLOB" To="byte[]" />
+    <Type From="TINYBLOB" To="byte[]" />
+    <Type From="MEDIUMBLOB" To="byte[]" />
+    <Type From="TEXT" To="string" />
+    <Type From="TIME" To="TimeSpan" />
+    <Type From="LONGTEXT" To="string" />
+    <Type From="MEDIUMTEXT" To="string" />
+    <Type From="TINYTEXT" To="string" />
+    <Type From="ENUM" To="string" />
+    <Type From="BINARY" To="string" />
+    <Type From="VARBINARY" To="string" />
+	<Type From="CHAR(36)" To="Guid" />	
+  </Language>
+  <Language From="SYBASE" To="C#">
+    <Type From="bigint" To="long" />
+    <Type From="binary" To="byte[]" />
+    <Type From="bit" To="bool" />
+    <Type From="char" To="string" />
+    <Type From="date" To="DateTime" />
+    <Type From="dateTime" To="DateTime" />
+    <Type From="decimal" To="decimal" />
+    <Type From="double" To="double" />
+    <Type From="float" To="float" />
+    <Type From="image" To="byte[]" />
+    <Type From="integer" To="int" />
+    <Type From="long binary" To="byte[]" />
+    <Type From="long nvarchar" To="string" />
+    <Type From="long varbit" To="bool[]" />
+    <Type From="long varchar" To="string" />
+    <Type From="money" To="decimal" />
+    <Type From="nchar" To="string" />
+    <Type From="ntext" To="string" />
+    <Type From="numeric" To="decimal" />
+    <Type From="nvarchar" To="string" />
+    <Type From="smalldatetime" To="DateTime" />
+    <Type From="smallint" To="short" />
+    <Type From="smallmoney" To="decimal" />
+    <Type From="sysname" To="string" />
+    <Type From="text" To="string" />
+    <Type From="time" To="TimeSpan" />
+    <Type From="timestamp" To="DateTime" />
+    <Type From="tinyint" To="byte" />
+    <Type From="uniqueidentifier" To="Guid" />
+    <Type From="uniqueidentifierstr" To="string" />
+    <Type From="unsigned bigint" To="ulong" />
+    <Type From="unsigned int" To="uint" />
+    <Type From="unsigned smallint" To="ushort" />
+    <Type From="varbinary" To="byte[]" />
+    <Type From="varbit" To="bool[]" />
+    <Type From="varchar" To="string" />
+    <Type From="xml" To="string" />
+  </Language>
+  <Language From="SQLITE" To="C#">
+    <Type From="bigint" To="long" />
+    <Type From="binary" To="object" />
+    <Type From="bit" To="bool" />
+    <Type From="blob" To="byte[]" />
+    <Type From="boolean" To="bool" />
+    <Type From="char" To="string" />
+    <Type From="char(1)" To="char" />
+    <Type From="date" To="DateTime" />
+    <Type From="datetime" To="DateTime" />
+    <Type From="datetime2" To="DateTime" />
+    <Type From="datetimeoffset" To="DateTimeOffset" />
+    <Type From="decimal" To="decimal" />
+    <Type From="float" To="double" />
+    <Type From="geography" To="SqlGeography" />
+    <Type From="geometry" To="SqlGeometry" />
+    <Type From="guid" To="Guid" />
+    <Type From="hierarchyid" To="SqlHierarchyId" />
+    <Type From="image" To="byte[]" />
+    <Type From="int" To="int" />
+    <Type From="integer" To="int" />
+    <Type From="money" To="decimal" />
+    <Type From="nchar" To="string" />
+    <Type From="nchar(1)" To="char" />
+    <Type From="ntext" To="string" />
+    <Type From="numeric" To="decimal" />
+    <Type From="nvarchar" To="string" />
+    <Type From="real" To="float" />
+    <Type From="smalldatetime" To="DateTime" />
+    <Type From="smallint" To="short" />
+    <Type From="smallmoney" To="decimal" />
+    <Type From="sql_variant" To="object" />
+    <Type From="text" To="string" />
+    <Type From="time" To="TimeSpan" />
+    <Type From="timestamp" To="byte[]" />
+    <Type From="tinyint" To="byte" />
+    <Type From="varbinary" To="byte[]" />
+    <Type From="varchar" To="string" />
+    <Type From="varchar(1)" To="char" />
+    <Type From="xml" To="string" />
+  </Language>
+</Languages>

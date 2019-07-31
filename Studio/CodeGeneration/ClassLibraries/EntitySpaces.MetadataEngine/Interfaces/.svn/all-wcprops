@@ -1,0 +1,167 @@
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces
+END
+IForeignKey.cs
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IForeignKey.cs
+END
+IParameters.cs
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IParameters.cs
+END
+IDatabase.cs
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IDatabase.cs
+END
+IIndex.cs
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IIndex.cs
+END
+IDomain.cs
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IDomain.cs
+END
+ITables.cs
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/ITables.cs
+END
+IView.cs
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IView.cs
+END
+IProcedures.cs
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IProcedures.cs
+END
+IProviderTypes.cs
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IProviderTypes.cs
+END
+IResultColumns.cs
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IResultColumns.cs
+END
+IParameter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IParameter.cs
+END
+IColumns.cs
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IColumns.cs
+END
+ITableView.cs
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/ITableView.cs
+END
+IProperty.cs
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IProperty.cs
+END
+IForeignKeys.cs
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IForeignKeys.cs
+END
+IDatabases.cs
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IDatabases.cs
+END
+ITable.cs
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/ITable.cs
+END
+IProcedure.cs
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IProcedure.cs
+END
+IDomains.cs
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IDomains.cs
+END
+INameValueItem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/INameValueItem.cs
+END
+IProviderType.cs
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IProviderType.cs
+END
+IResultColumn.cs
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IResultColumn.cs
+END
+IColumn.cs
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IColumn.cs
+END
+IClassFactory.cs
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IClassFactory.cs
+END
+IViews.cs
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IViews.cs
+END
+IIndexes.cs
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IIndexes.cs
+END
+IPropertyCollection.cs
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/CodeGeneration/ClassLibraries/EntitySpaces.MetadataEngine/Interfaces/IPropertyCollection.cs
+END

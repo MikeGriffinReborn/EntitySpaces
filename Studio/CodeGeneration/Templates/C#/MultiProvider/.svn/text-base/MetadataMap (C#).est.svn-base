@@ -1,0 +1,226 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/
+%><%@ TemplateInfo 
+    UniqueID="B3AF29A4-A71B-4131-A679-E63284E8B769" 
+	UserInterfaceID="DF64D8BE-865C-449c-B43A-FB8B6A1DC3B9"	
+    Title="MetadataMap(C#)"   
+    Description="The Metadata Map used in MultiProvider Scenarios" 
+    Namespace="EntitySpaces.2019.C#.MultiProvider" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    RequiresUI="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------
+IPropertyCollection props;
+ITable table = null;
+IView  view = null;
+IColumns cols = null;
+
+string MapName = (string)esMeta.Input["MapName"];
+string Namespace = (string)esMeta.Input["Namespace"];
+ArrayList entities = esMeta.Input["Entities"] as ArrayList;
+string entityType = (string)esMeta.Input["EntityType"];
+string databaseName = (string)esMeta.Input["Database"];
+IDatabase database = esMeta.Databases[databaseName];
+
+bool MetadataClassShouldIgnoreSchema = (bool)esMeta.Input["MetadataClassShouldIgnoreSchema"];
+bool MetadataClassShouldIgnoreCatalog = (bool)esMeta.Input["MetadataClassShouldIgnoreCatalog"];
+
+foreach(string tableOrView in entities)
+{
+	string text = "";
+	
+	if(entityType == dbEntityType.Tables.ToString())
+	{
+		table = database.Tables[tableOrView];
+		view = null;
+		
+		cols = table.Columns;
+		props = table.Properties;
+	}
+	else 
+	{
+		view = database.Views[tableOrView];
+		table = null;
+		
+		cols = view.Columns;
+		props = view.Properties;
+		
+	}
+	
+	esPluginSource source = new esPluginSource(esMeta, table, view);
+	esMeta.Input["Source"] = source;
+
+%>/*
+===============================================================================
+                    EntitySpaces Studio by EntitySpaces, LLC
+             Persistence Layer and Business Objects for Microsoft .NET
+             EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+                          http://www.entityspaces.net
+===============================================================================
+EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+===============================================================================
+*/
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Data;
+
+using EntitySpaces.Interfaces;
+using EntitySpaces.Core;
+
+namespace <%=Namespace%>
+{
+    public partial class <%=source.Metadata%> : esMetadata, IMetadata
+    {
+		static private int RegisterDelegate<%=MapName%>()
+		{
+			// This is only executed once per the life of the application
+			lock (typeof(<%=source.Metadata%>))
+			{
+				if(<%=source.Metadata%>.mapDelegates == null)
+				{
+					<%=source.Metadata%>.mapDelegates = new Dictionary<string,MapToMeta>();
+				}
+				
+				if (<%=source.Metadata%>.meta == null)
+				{
+					<%=source.Metadata%>.meta = new <%=source.Metadata%>();
+				}
+				
+				MapToMeta mapMethod = new MapToMeta(meta.<%=MapName%>);
+				mapDelegates.Add("<%=MapName%>", mapMethod);
+				mapMethod("<%=MapName%>");
+			}
+			return 0;	
+		}		
+		
+		private esProviderSpecificMetadata <%=MapName%>(string mapName)
+		{
+			if(!m_providerMetadataMaps.ContainsKey(mapName))
+			{
+				esProviderSpecificMetadata meta = new esProviderSpecificMetadata();	
+				
+<% 
+		foreach(IColumn col in cols)
+		{ 
+			%>
+				meta.AddTypeMap("<%=col.PropertyName%>", new esTypeMap("<%=col.DataTypeName%>", "<%=col.CSharpToSystemType%>"));<%
+		}
+		
+		foreach(IColumn col in cols)
+		{
+			if(col.AutoKeyText != null && col.AutoKeyText.Length > 0)
+			{
+				%><%="\r\n\t\t\t\tmeta[\"AutoKeyText\"] = \"" + col.AutoKeyText + "\""%>;<%
+			}
+			else
+			{
+				if(col.IsAutoKey && esMeta.DriverString == esMetaDrivers.PostgreSQL)
+				{
+				%><%="\r\n\r\n\t\t\t\tmeta[\"AutoKeyText\"] = @\"" + col.Default.Replace("\"", "\"\"") + "\""%>;<%
+				}
+			}
+			if(col.IsDateAddedColumn)
+			{
+				if(col.DateAddedType == esSettingsDriverInfo.DateType.ServerSide)
+				{
+				%><%="\r\n\r\n\t\t\t\tmeta[\"DateAdded.ServerSideText\"] = \"" + col.DateAddedServerSideText + "\""%>;<%
+				}
+			}
+			else if(col.IsDateModifiedColumn)
+			{
+				if(col.DateModifiedType == esSettingsDriverInfo.DateType.ServerSide)
+				{
+				%><%="\r\n\r\n\t\t\t\tmeta[\"DateModified.ServerSideText\"] = \"" + col.DateModifiedServerSideText + "\""%>;<%
+				}
+			}
+			else if(col.IsAddedByColumn)
+			{
+				if(col.UseAddedByEventHandler == false)
+				{
+				%><%="\r\n\r\n\t\t\t\tmeta[\"AddedBy.ServerSideText\"] = \"" + col.AddedByServerSideText + "\""%>;<%
+				}
+			}
+			else if(col.IsModifiedByColumn)
+			{
+				if(col.UseModifiedByEventHandler == false)
+				{
+				%><%="\r\n\r\n\t\t\t\tmeta[\"ModifiedBy.ServerSideText\"] = \"" + col.ModifiedByServerSideText + "\""%>;<%
+				}
+			}			
+		}		
+%>				
+				<%if(!MetadataClassShouldIgnoreCatalog && source.Catalog.Length > 0){%>meta.Catalog = "<%=source.Catalog%>";<%}%>
+				<%if(!MetadataClassShouldIgnoreSchema && source.Schema.Length > 0) { %>meta.Schema = "<%=source.Schema%>";<%}%>
+				meta.Source = "<%=source.PhysicalName%>";
+				meta.Destination = "<%=source.PhysicalName%>";
+				
+				meta.spInsert = "<%=esMeta.esPlugIn.ProcInsert(source)%>";				
+				meta.spUpdate = "<%=esMeta.esPlugIn.ProcUpdate(source)%>";		
+				meta.spDelete = "<%=esMeta.esPlugIn.ProcDelete(source)%>";
+				meta.spLoadAll = "<%=esMeta.esPlugIn.ProcLoadAll(source)%>";
+				meta.spLoadByPrimaryKey = "<%=esMeta.esPlugIn.ProcLoadByPK(source)%>";
+				
+				m_providerMetadataMaps["<%=MapName%>"] = meta;
+			}
+			
+			return m_providerMetadataMaps["<%=MapName%>"];
+		}
+		
+		static private int _<%=MapName%> = RegisterDelegate<%=MapName%>();
+    }
+}
+<%
+	string fileName = source.Metadata + MapName + ".cs";
+	this.SaveToFile(fileName, output.ToString(), false);
+	this.ClearOutput();
+}%>
+
+<script runat="template">
+private string SaveToFile(string fileName, string text, bool generateSingleFile)
+{
+	if(!generateSingleFile)
+	{
+	    string path = (string)esMeta.Input["OutputPath"];
+	    
+		string fname = path;
+		if (!fname.EndsWith("\\")) 
+			fname += "\\";
+			
+		Directory.CreateDirectory(path);		
+		
+		fname += fileName;
+		
+		using (StreamWriter sw = System.IO.File.CreateText(fname)) 
+		{
+			sw.Write(text);
+		} 	
+		
+		return "";
+	}
+	else
+	{
+		return text;			
+	}
+}
+</script>

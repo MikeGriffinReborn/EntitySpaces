@@ -1,0 +1,498 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/%><%@ TemplateInfo 
+    UniqueID="de7395d3-5214-4232-a52d-4b07e898d2da" 
+    Title="Generated - esEntity (VB).cst"   
+    Description="The Abstract Entity Class" 
+    Namespace="EntitySpaces.2019.VB.Generated" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    IsSubTemplate="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------	
+bool TargetTheCompactFramework = (bool)esMeta.Input["TargetTheCompactFramework"];
+string Namespace = (string)esMeta.Input["Namespace"];
+bool GenerateSingleFile = (bool)esMeta.Input["GenerateSingleFile"];
+bool SelectedTablesOnly = (bool)esMeta.Input["GenerateHierarchicalModelSelectedTablesOnly"];
+bool UseDnnObjectQualifier = (bool)esMeta.Input["UseDnnObjectQualifier"];
+bool UseCustomBaseClass = (bool)esMeta.Input["UseCustomBaseClass"];
+bool GenerateStrProperties = esMeta.GetInput<bool>("GenerateStrProperties", true);
+bool RiaServicesSupport = esMeta.GetInput<bool>("GenerateHierarchicalRiaServicesSupport", false);
+bool DataContractSupportHierachical = esMeta.GetInput<bool>("GenerateHierarchicalDataContracts", false);
+bool GenerateHierarchicalModel = (bool)esMeta.Input["GenerateHierarchicalModel"];
+ArrayList entities = esMeta.Input["Entities"] as ArrayList;
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+string comma;
+string upToPrefix = "";
+
+if(esMeta.esPlugIn.UseUpToPrefix)
+{
+	upToPrefix = esMeta.esPlugIn.sUpToPrefix;
+}
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------	
+ITable table = (ITable)esMeta.Input["Table"];
+IView view = (IView)esMeta.Input["View"];			
+IColumns cols = (IColumns)esMeta.Input["Columns"];
+esPluginSource source = (esPluginSource)esMeta.Input["Source"];
+
+if(!GenerateSingleFile){ %>'===============================================================================
+'                   EntitySpaces Studio by EntitySpaces, LLC
+'            Persistence Layer and Business Objects for Microsoft .NET
+'            EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+'                         http://www.entityspaces.net
+'===============================================================================
+' EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+' EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+' Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+'===============================================================================
+
+Imports System
+Imports System.Collections
+Imports System.Collections.Generic
+Imports System.Text
+Imports System.Data
+Imports System.ComponentModel
+
+Imports EntitySpaces.Core
+Imports EntitySpaces.Interfaces
+Imports EntitySpaces.DynamicQuery
+
+Namespace <%=Namespace%>
+<%}%><%if(!TargetTheCompactFramework){%>	
+	<DataContract> _
+	<Serializable()> _<%}%>
+	MustInherit Public Partial Class <%=source.esEntity%><%if (UseCustomBaseClass) {%>
+		Inherits EntityBase<%}else{%>
+		Inherits esEntity
+		Implements INotifyPropertyChanged<%}%>
+	
+		Public Sub New()
+		
+		End Sub
+		
+#Region "LoadByPrimaryKey"		
+		<% 
+	if(table != null)
+	{
+		comma = "";	
+	%>Public Overridable Function LoadByPrimaryKey(<%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%="ByVal " + col.ParameterName + " As " + col.VBToSystemType%><%
+			comma = ", ";
+		}%>) As Boolean
+		
+			If Me.es.Connection.SqlAccessType = esSqlAccessType.DynamicSQL
+				Return LoadByPrimaryKeyDynamic(<%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%=col.ParameterName%><%
+			comma = ", ";
+		}%>)
+			Else
+				Return LoadByPrimaryKeyStoredProcedure(<%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%=col.ParameterName%><%
+			comma = ", ";
+		}%>)
+			End If
+			
+		End Function<%
+		comma = "";
+	%>
+	
+		Public Overridable Function LoadByPrimaryKey(ByVal sqlAccessType As esSqlAccessType, <%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%="ByVal " + col.ParameterName + " As " + col.VBToSystemType%><%
+			comma = ", ";
+		}%>) As Boolean
+		
+			If sqlAccessType = esSqlAccessType.DynamicSQL
+				Return LoadByPrimaryKeyDynamic(<%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%=col.ParameterName%><%
+			comma = ", ";
+		}%>)
+			Else
+				Return LoadByPrimaryKeyStoredProcedure(<%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%=col.ParameterName%><%
+			comma = ", ";
+		}%>)
+			End If
+			
+		End Function
+	
+		Private Function LoadByPrimaryKeyDynamic(<%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%="ByVal " + col.ParameterName + " As " + col.VBToSystemType%><%
+			comma = ", ";
+		}%>) As Boolean
+		
+			Dim query As New <%=source.Query%>()
+			query.Where(<%
+		comma = "";	
+
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma + "query." + col.PropertyName + " = " + col.ParameterName%><%
+			comma = " And ";
+		}%>)
+			Return Me.Load(query)
+			
+		End Function
+	
+		Private Function LoadByPrimaryKeyStoredProcedure(<%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%="ByVal " + col.ParameterName + " As " + col.VBToSystemType%><%
+			comma = ", ";
+		}%>) As Boolean
+		
+			Dim parms As esParameters = New esParameters()
+<%
+		comma = "";	
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%>			<%="parms.Add(\"" + esMeta.esPlugIn.ToPascalCase(col.Alias) + "\", " + col.ParameterName + ")"%>
+			<%
+		}%>
+			Return MyBase.Load(esQueryType.StoredProcedure, Me.es.spLoadByPrimaryKey, parms)
+			
+		End Function<%
+	} // End LoadByPrimaryKey
+%>
+#End Region
+		
+#Region "Properties"
+		<%if(RiaServicesSupport) {%>		
+		' For Ria Services
+		<DataMember(EmitDefaultValue:=False)> _
+		<Display(AutoGenerateField:=False)> _
+		Public Property esExtendedData() As String
+			Get
+				Return GetExtraColumnsSerialized()
+			End Get
+			
+			Private Set
+			End Set
+		End Property<%}%>
+		
+		<% 
+			string objName = "";
+			string objType = "";
+			foreach(IColumn col in cols)
+			{
+				objName = "";
+				if(col.ForeignKeys.Count > 0 && table != null && GenerateHierarchicalModel)
+				{
+					foreach(IForeignKey fk in col.ForeignKeys )
+					{
+						EntitySpaces.MetadataEngine.TableRelation tr = new EntitySpaces.MetadataEngine.TableRelation(table, fk);
+						
+						if(SelectedTablesOnly)
+						{
+							if(!entities.Contains(tr.PrimaryTable.FullName) || !entities.Contains(tr.ForeignTable.FullName))
+							{
+								continue;
+							}
+						}
+						
+						if(tr.IsManyToOne && !(col.IsInPrimaryKey && tr.IsSelfReference))
+						{
+							objName = upToPrefix + esMeta.esPlugIn.EntityRelationName(tr.ForeignTable, tr.PrimaryColumns[0], tr.IsSelfReference);
+						}
+					}
+				}%>	
+		' <summary>
+		<% 
+				if(col.Description == "")
+					%><%="' Maps to " + source.PhysicalName + "." + col.Name%><%
+				else	
+					%><%="' " + col.Description.Replace("\r\n", " ").Replace("\n", " ")%>
+		' </summary><%if(!col.IsNonSystemType){ if(!TargetTheCompactFramework) {%>
+		<DataMember(EmitDefaultValue:=False)> _<%}%>
+		Public Overridable Property <%=col.PropertyName%> As <%=col.NullableTypeVB%>
+			Get
+				Return MyBase.<%=col.GetRowAccessor%>(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>)
+			End Get
+			
+			Set(ByVal value As <%=col.NullableTypeVB%>)
+				If MyBase.<%=col.SetRowAccessor%>(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>, value) Then<% if(objName.Length > 0 && GenerateHierarchicalModel){%>
+					Me._<%=objName%> = Nothing
+					Me.OnPropertyChanged("<%=objName%>")<%}%>
+					OnPropertyChanged(<%=source.Metadata%>.PropertyNames.<%=col.PropertyName%>)
+				End If
+			End Set
+		End Property<% } else { if(!TargetTheCompactFramework) {%>%>
+		<DataMember(EmitDefaultValue:=False)> _<%}%>
+		Public Overridable Property <%=col.PropertyName%> As <%=col.NullableTypeVB%>
+			Get
+				Return DirectCast(MyBase.GetSystemObject(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>), <%=col.LanguageType%>)
+			End Get
+			
+			Set
+				If MyBase.SetSystemObject(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>, value) Then
+					OnPropertyChanged(<%=source.Metadata%>.PropertyNames.<%=col.PropertyName%>)
+				End If
+			End Set
+		End Property<%}%>	
+		<%
+			} // next col
+			
+			objName = "";
+			objType = "";
+			if(table != null && GenerateHierarchicalModel)
+			{
+				foreach(IForeignKey fk in table.ForeignKeys )
+				{
+					EntitySpaces.MetadataEngine.TableRelation tr = new EntitySpaces.MetadataEngine.TableRelation(table, fk);
+					
+					if(SelectedTablesOnly)
+					{
+						if(!entities.Contains(tr.PrimaryTable.FullName) || !entities.Contains(tr.ForeignTable.FullName))
+						{
+							continue;
+						}
+					}
+					
+					if(tr.IsManyToOne)
+					{
+						objName = upToPrefix + esMeta.esPlugIn.EntityRelationName(tr.ForeignTable, tr.PrimaryColumns[0], tr.IsSelfReference);
+						objType = esMeta.esPlugIn.Entity(tr.ForeignTable);%>
+		<CLSCompliant(false)> _<%if(DataContractSupportHierachical) {%>
+		<DataMember(EmitDefaultValue:=False)> _<%}%>
+		Dim Friend Protected _<%=objName%> As <%=objType%>
+		<%
+					}
+				}
+			}%>
+#End Region	<%if(GenerateStrProperties) {%>
+
+#Region ".str() Properties"
+
+		Public Overrides Sub SetProperties(values as IDictionary)
+
+		Dim propertyName As String
+			For Each propertyName In values.Keys
+				Me.SetProperty(propertyName, values(propertyName))
+			Next
+
+		End Sub
+
+		Public Overrides Sub SetProperty(name as string, value as object)
+
+			Dim col As esColumnMetadata = Me.Meta.Columns.FindByPropertyName(name)
+			If Not col Is Nothing Then
+
+				If value Is Nothing OrElse value.GetType().ToString() = "System.String" Then
+
+					' Use the strongly typed property
+					Select Case name
+					<% foreach(IColumn col in cols)
+					   {
+							if(!col.IsArrayType && !col.IsObjectType && !col.IsNonSystemType){%>							
+						Case "<%=col.PropertyName%>"
+							Me.str().<%=col.PropertyName%> = CType(value, string)
+					<%}}%>
+					End Select
+					
+				Else
+				
+					Select Case name
+					<% foreach(IColumn col in cols) 
+					   {
+							if(col.IsNonSystemType) continue;
+							
+							if(col.VBToSystemType != "System.String"){%>	
+						Case "<%=col.PropertyName%>"
+						
+							If value Is Nothing Or value.GetType().ToString() = "<%=col.VBToSystemType%>" Then
+								Me.<%=col.PropertyName%> = CType(value, <%=col.NullableTypeVB%>)
+								OnPropertyChanged(<%=source.Metadata%>.PropertyNames.<%=col.PropertyName%>)
+							End If
+					<%}}%>	
+					
+						Case Else
+						
+					End Select
+				End If
+
+			Else If Me.ContainsColumn(name) Then
+				Me.SetColumn(name, value)
+			Else
+				throw New Exception("SetProperty Error: '" + name + "' not found")
+			End If	
+
+		End Sub
+
+		Public Function str() As esStrings
+		
+			If _esstrings Is Nothing Then
+				_esstrings = New esStrings(Me)
+			End If
+			Return _esstrings
+			
+		End Function
+
+		NotInheritable Public Class esStrings
+		
+			Public Sub New(ByVal entity As <%=source.esEntity%>)
+				Me.entity = entity
+			End Sub				
+		
+<%			foreach(IColumn col in cols)
+			{
+				if(!col.IsArrayType && !col.IsObjectType && !col.IsNonSystemType)
+				{
+					if(esMeta.esPlugIn.UseNullableTypesAlways || col.IsNullable)
+					{%>	
+			Public Property <%=col.PropertyName%> As System.String 
+				Get
+					Dim data_ As <%=col.NullableTypeVB%> = entity.<%=col.PropertyName%>
+					<% if(col.IsNullableType) {%>
+					If Not data_.HasValue Then
+					<%} else {%>
+					if data_ Is Nothing Then<%}%>
+						Return String.Empty
+					Else
+						Return <%=esMeta.esPlugIn.GetStringConversion(col, "data_")%>
+					End If
+				End Get
+
+				Set(ByVal Value as System.String)
+					If String.IsNullOrEmpty(value) Then
+						entity.<%=col.PropertyName%> = Nothing
+					Else
+						entity.<%=col.PropertyName%> = <%=esMeta.esPlugIn.SetStringConversion(col, "Value")%>
+					End If
+				End Set
+			End Property
+		  <%		}
+					else
+					{%>
+			Public Property <%=col.PropertyName%> As System.String 
+				Get
+					Return <%=esMeta.esPlugIn.GetStringConversion(col, "entity." + col.PropertyName)%>
+				End Get
+
+				Set(ByVal Value as System.String)
+					entity.<%=col.PropertyName%> = <%=esMeta.esPlugIn.SetStringConversion(col, "Value")%>
+				End Set		
+			End Property				
+<%				
+					}
+				}
+		  }%>
+
+			Private entity As <%=source.esEntity%>
+		End Class
+		
+
+        <%if(!TargetTheCompactFramework){%><NonSerialized> _
+        <IgnoreDataMember> _<%}%>		
+		Private _esstrings As esStrings
+		
+#End Region<%}%>
+
+#Region "Housekeeping methods"
+
+		Protected Overloads Overrides ReadOnly Property Meta() As IMetadata
+			Get
+				Return <%=source.Metadata%>.Meta()
+			End Get
+		End Property
+
+#End Region
+
+#Region "Query Logic"
+
+		Public ReadOnly Property Query() As <%=source.Query%>
+			Get
+				If Me.m_query Is Nothing Then
+					Me.m_query = New <%=source.Query%>()
+					InitQuery(Me.m_query)
+				End If
+				
+				Return Me.m_query
+			End Get
+		End Property
+
+		Public Overloads Function Load(ByVal query As <%=source.Query%>) As Boolean
+			Me.m_query = query
+			InitQuery(Me.m_query)
+			Return Me.Query.Load()
+		End Function
+
+		Protected Sub InitQuery(ByVal query As <%=source.Query%>)
+			query.OnLoadDelegate = AddressOf OnQueryLoaded
+			
+			If Not query.es2.HasConnection Then
+				query.es2.Connection = DirectCast(Me, IEntity).Connection
+			End If
+		End Sub
+
+#End Region
+
+        <%if(!TargetTheCompactFramework){%><IgnoreDataMember> _<%}%>
+        Private m_query As <%=source.Query%>
+
+	End Class
+<%if(!GenerateSingleFile){ %>	
+End Namespace<%}%>
+<script runat="template">
+
+public string GetFileName()
+{
+	return esMeta.esPlugIn.esEntity((esPluginSource)esMeta.Input["Source"]) + ".vb";
+}
+
+public EntitySpaces.MetadataEngine.Root TheMetaData
+{
+	get { return esMeta;  }
+	set { esMeta = value; }	
+}
+
+</script>	

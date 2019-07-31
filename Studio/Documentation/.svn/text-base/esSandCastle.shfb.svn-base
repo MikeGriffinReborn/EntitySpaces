@@ -1,0 +1,72 @@
+﻿<project schemaVersion="1.6.0.7">
+    <assemblies>
+        <assembly assemblyPath="..\EntitySpaces\BusinessObjects\bin\Debug\BusinessObjects.dll" xmlCommentsPath="..\EntitySpaces\BusinessObjects\bin\Debug\BusinessObjects.xml" commentsOnly="False" />
+        <assembly assemblyPath="..\EntitySpaces\EntitySpaces.Core\bin\Debug35\EntitySpaces.Core.dll" xmlCommentsPath="..\EntitySpaces\EntitySpaces.Core\bin\Debug35\EntitySpaces.Core.xml" commentsOnly="False" />
+        <assembly assemblyPath="..\EntitySpaces\EntitySpaces.DynamicQuery\bin\Debug35\EntitySpaces.DynamicQuery.dll" xmlCommentsPath="..\EntitySpaces\EntitySpaces.DynamicQuery\bin\Debug35\EntitySpaces.DynamicQuery.xml" commentsOnly="False" />
+        <assembly assemblyPath="..\EntitySpaces\EntitySpaces.Interfaces\bin\Debug35\EntitySpaces.Interfaces.dll" xmlCommentsPath="..\EntitySpaces\EntitySpaces.Interfaces\bin\Debug35\EntitySpaces.Interfaces.xml" commentsOnly="False" />
+        <assembly assemblyPath="..\EntitySpaces\EntitySpaces.Loader\bin\Debug35\EntitySpaces.Loader.dll" xmlCommentsPath="..\EntitySpaces\EntitySpaces.Loader\bin\Debug35\EntitySpaces.Loader.xml" commentsOnly="False" />
+        <assembly assemblyPath="..\EntitySpaces\EntitySpaces.Web\bin\Debug35\EntitySpaces.Web.dll" xmlCommentsPath="..\EntitySpaces\EntitySpaces.Web\bin\Debug35\EntitySpaces.Web.xml" commentsOnly="False" />
+    </assemblies>
+    <namespaceSummaries>
+        <namespaceSummaryItem name="" isDocumented="False">The EntitySpaces Persistence Layer and Business Objects for Microsoft .NET 2.0</namespaceSummaryItem>
+        <namespaceSummaryItem name="BusinessObjects" isDocumented="True">An example of an EntitySpaces set of classes. The proxy classes are optional and can be used for two way communications, including WCF. The CustomBase classes are, also, optional. They change the inheritance hierarchy. This allows you to add custom code that affects all entities, collections, or queries.</namespaceSummaryItem>
+        <namespaceSummaryItem name="EntitySpaces.Core" isDocumented="True">The EntitySpaces Core Classes</namespaceSummaryItem>
+        <namespaceSummaryItem name="EntitySpaces.DynamicQuery" isDocumented="True" />
+        <namespaceSummaryItem name="EntitySpaces.Interfaces" isDocumented="True">The EntitySpaces Interface Classes</namespaceSummaryItem>
+        <namespaceSummaryItem name="EntitySpaces.Loader" isDocumented="True">The EntitySpaces Data Provider Loader</namespaceSummaryItem>
+        <namespaceSummaryItem name="EntitySpaces.LoaderMT" isDocumented="True">The EntitySpaces Medium Trust Data Provider Loader</namespaceSummaryItem>
+        <namespaceSummaryItem name="EntitySpaces.Web" isDocumented="True">The EntitySpaces  ASP.NET esDataSource</namespaceSummaryItem>
+    </namespaceSummaries>
+    <dependencies>
+        <dependencyItem depPath="GAC:System.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    </dependencies>
+    <componentConfigurations>
+        <component id="Post-transform Component" enabled="True" configuration="&lt;component type=&quot;SandcastleBuilder.Components.PostTransformComponent&quot; assembly=&quot;{@SHFBFolder}SandcastleBuilder.Components.dll&quot; id=&quot;Post-transform Component&quot;&gt;&lt;!-- Code colorizer files (required).&#xD;&#xA;                 Attributes:&#xD;&#xA;                    Stylesheet file (required)&#xD;&#xA;                    Script file (required)&#xD;&#xA;                    &quot;Copy&quot; image file (required) --&gt;&lt;colorizer stylesheet=&quot;{@SHFBFolder}Colorizer\highlight.css&quot; scriptFile=&quot;{@SHFBFolder}Colorizer\highlight.js&quot; copyImage=&quot;{@SHFBFolder}Colorizer\CopyCode.gif&quot; /&gt;&lt;!-- Output path for the files (required).  This should match the&#xD;&#xA;                 output path of the HTML files (see SaveComponent below). --&gt;&lt;outputPath value=&quot;Output\html&quot; /&gt;&lt;!-- Logo image file (optional).  Filename is required. The height,&#xD;&#xA;                 width, altText, placement, and alignment attributes are&#xD;&#xA;                 optional. --&gt;&lt;logoFile filename=&quot;C:\newlogo\EntitySpacesD22baR01bP01ZL.png&quot; height=&quot;140&quot; width=&quot;277&quot; altText=&quot;&quot; placement=&quot;left&quot; alignment=&quot;left&quot; /&gt;&lt;/component&gt;" />
+    </componentConfigurations>
+    <apiFilter>
+        <filter entryType="Namespace" fullName="EntitySpaces.Interfaces" isExposed="True">
+            <filter entryType="Interface" fullName="EntitySpaces.Interfaces.ICommittable" filterName="ICommittable" isExposed="False" />
+        </filter>
+    </apiFilter>
+    <ProjectSummary />
+    <MissingTags>AutoDocumentCtors, Namespace, TypeParameter</MissingTags>
+    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
+    <HtmlHelp1xCompilerPath path="" />
+    <HtmlHelp2xCompilerPath path="" />
+    <OutputPath>.\help\</OutputPath>
+    <SandcastlePath path="" />
+    <WorkingPath path="" />
+    <CleanIntermediates>True</CleanIntermediates>
+    <KeepLogFile>True</KeepLogFile>
+    <BuildLogFile path="" />
+    <HelpFileFormat>Help1xAndWebsite</HelpFileFormat>
+    <CppCommentsFixup>False</CppCommentsFixup>
+    <FrameworkVersion>3.5</FrameworkVersion>
+    <IndentHtml>False</IndentHtml>
+    <Preliminary>False</Preliminary>
+    <RootNamespaceContainer>False</RootNamespaceContainer>
+    <RootNamespaceTitle />
+    <HelpTitle>The EntitySpaces 2010 API Reference (Full)</HelpTitle>
+    <HtmlHelpName>EntitySpaces</HtmlHelpName>
+    <Language>en-US</Language>
+    <CopyrightHref>http://www.entityspaces.net</CopyrightHref>
+    <CopyrightText>Copyright 2005 - 2010, EntitySpaces, LLC</CopyrightText>
+    <FeedbackEMailAddress>api_doc@entityspaces.net</FeedbackEMailAddress>
+    <FeedbackEMailLinkText />
+    <HeaderText>Persistence Layer and Business Objects for Microsoft .NET</HeaderText>
+    <FooterText />
+    <ProjectLinkType>Local</ProjectLinkType>
+    <SdkLinkType>Msdn</SdkLinkType>
+    <SdkLinkTarget>Blank</SdkLinkTarget>
+    <PresentationStyle>Prototype</PresentationStyle>
+    <NamingMethod>Guid</NamingMethod>
+    <SyntaxFilters>Standard</SyntaxFilters>
+    <ShowFeedbackControl>False</ShowFeedbackControl>
+    <BinaryTOC>True</BinaryTOC>
+    <IncludeFavorites>False</IncludeFavorites>
+    <CollectionTocStyle>Hierarchical</CollectionTocStyle>
+    <IncludeStopWordList>True</IncludeStopWordList>
+    <PlugInNamespaces>ms.vsipcc+, ms.vsexpresscc+</PlugInNamespaces>
+    <HelpFileVersion>1.0.0.0</HelpFileVersion>
+    <ContentPlacement>AboveNamespaces</ContentPlacement>
+</project>

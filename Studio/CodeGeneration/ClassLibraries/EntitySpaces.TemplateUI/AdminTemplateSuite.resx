@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <metadata name="toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>122, 17</value>
+  </metadata>
+  <metadata name="toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>122, 17</value>
+  </metadata>
+  <data name="cboxBrowseViews.ToolTip" xml:space="preserve">
+    <value>This ComboBox lists the views in your database. 
+
+Instead of selecting columns from your main table you can select column from a view to 
+bring back columns for better readability. For instance, you can use a view to perform a 
+join to bring back lookup values instead of showing thier raw foreignkey values.
+
+The 'Search Page' will also use this view if you choose one.</value>
+  </data>
+  <data name="lboxBrowseColumns.ToolTip" xml:space="preserve">
+    <value>These are the columns that will be displayed in your main grid for
+this table or view. You do not have to choose the primary key columns, 
+they are chosen for you and kept hidden. You can choose them however
+if you would like them to be displayed.
+
+Users will use these columns in the main grid to identify records. You do
+not have to select all of the columns as the edit page allows you to choose
+which columns the users can edit. </value>
+  </data>
+  <data name="lboxDetailColumns.ToolTip" xml:space="preserve">
+    <value>When a user selects a record in the main grid they are taken to the
+Detaill page. Select the columns in this grid you want to be present when 
+showing the Detail record. Typically, you have the same columns shown on
+the Detail page and on the Edit page.
+</value>
+  </data>
+  <data name="txtDetailEditTitle.ToolTip" xml:space="preserve">
+    <value>This columns added here are used to display a header at the top
+of the Detail page.
+
+You can add columns to this and they will be seperated by a space.
+An example would be FirstName and LastName for an employee.
+
+</value>
+  </data>
+  <data name="cboxViewKey.ToolTip" xml:space="preserve">
+    <value>You must define which column in the view to related back to the main table.
+
+For instance, if you main table is an Employee table your relationship view
+should also return the EmployeeId. You would then choose the EmployeeId 
+here.</value>
+  </data>
+  <data name="chklistDetailGrids.ToolTip" xml:space="preserve">
+    <value>These are all of the relationships to your main table as chosen on the Tables tab.
+When you select a record from the main grid you are taken to the Detail page. By
+choosing relationships in this CheckListBox you are indicating that you want to display
+the associated records as defined by this relationship. This can be very powerful as
+the user can then navigate to the related records as well. 
+
+Check the relationships you want to display.</value>
+  </data>
+  <data name="cboxViews.ToolTip" xml:space="preserve">
+    <value>You can choose to select related columns from a view rather than a table.
+
+This very useful when you want to show foreign key or lookup values rather
+than raw foriegn keys values. For example, rather than display DepartmentId 
+you could create a view than returns the DepartmentName and then choose the
+view here and you would have DepartmentName available.
+</value>
+  </data>
+  <data name="lboxDetailLookups.ToolTip" xml:space="preserve">
+    <value>If you are displaying columns on your Detail page that are foreign keys you
+can choose the columns from the 'other table' in order to display user friendly
+data. 
+
+Choose any column in this ListBox that you wish to replace with user friendly
+columns.</value>
+  </data>
+  <data name="lboxSearchColumns.ToolTip" xml:space="preserve">
+    <value>Select the columns in the list that you wish to allow users
+to Search on. These columns will be made available to the 
+users on the search page. 
+
+If you chose to use a view in the Browse tag then the columns 
+listed here are also from the same view.</value>
+  </data>
+  <metadata name="pathFinder.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+</root>

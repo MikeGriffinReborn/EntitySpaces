@@ -1,0 +1,150 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/%>
+<%@ TemplateInfo 
+    UniqueID="0262D791-9EA4-43dd-9EDF-26AE23077427" 
+	UserInterfaceID="2216AB4F-BDB4-47de-8412-8560C1F2F420"	
+    Title="Generated - Classes Master (VB)"   
+    Description="The Generated Master Template" 
+    Namespace="EntitySpaces.2019.VB"  
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    RequiresUI="True" %>
+
+<% 
+string fileName = "";
+string outputDirectory = (string)esMeta.Input["OutputPath"];
+
+//===============================================================
+// Execute our SubTemplates ....
+//===============================================================
+// System.Diagnostics.Debugger.Break();
+
+ITable table = null;
+IView  view  = null;
+
+ArrayList entities = esMeta.Input["Entities"] as ArrayList;
+string entityType = (string)esMeta.Input["EntityType"];
+string databaseName = (string)esMeta.Input["Database"];
+
+IDatabase database = esMeta.Databases[databaseName];
+
+foreach(string tableOrView in entities)
+{
+	string text = "";
+	
+	if(entityType == EntitySpaces.MetadataEngine.dbEntityType.Tables.ToString())
+	{
+		table = database.Tables[tableOrView];
+		
+		esMeta.Input["View"] = null;
+		esMeta.Input["Table"] = table;
+		esMeta.Input["Columns"] = table.Columns;
+	}
+	else 
+	{
+		view = database.Views[tableOrView];
+		
+		esMeta.Input["Table"] = null;
+		esMeta.Input["View"] = view;	
+		esMeta.Input["Columns"] = view.Columns;
+	}
+	
+	bool GenerateSingleFile = (bool)esMeta.Input["GenerateSingleFile"];
+	
+	esPluginSource source = new esPluginSource(esMeta, table, view);
+	
+	esMeta.Input["Source"] = source;
+	
+	//----------------------------------------
+	// Begin actual template execution
+	//----------------------------------------
+	string path = this.Template.Header.FilePath;
+	
+	fileName = esMeta.esPlugIn.Entity(source) + ".vb";
+	text += this.SaveToFile(fileName, ExecuteTemplate(esMeta, path + @"\Generated\Generated - Entity (VB).est"), GenerateSingleFile);	
+	
+	fileName = esMeta.esPlugIn.Collection(source) + ".vb";
+	text += this.SaveToFile(fileName, ExecuteTemplate(esMeta, path + @"\Generated\Generated - Collection (VB).est"), GenerateSingleFile);	
+	
+	fileName = esMeta.esPlugIn.Query(source) + ".vb";
+	text += this.SaveToFile(fileName, ExecuteTemplate(esMeta, path + @"\Generated\Generated - Query (VB).est"), GenerateSingleFile);
+
+	fileName = esMeta.esPlugIn.esEntity(source) + ".vb";
+	text += this.SaveToFile(fileName, ExecuteTemplate(esMeta, path + @"\Generated\Generated - esEntity (VB).est"), GenerateSingleFile);
+	
+	fileName = esMeta.esPlugIn.esCollection(source) + ".vb";	
+	text += this.SaveToFile(fileName, ExecuteTemplate(esMeta, path + @"\Generated\Generated - esCollection (VB).est"), GenerateSingleFile);	
+	
+	fileName = esMeta.esPlugIn.esQuery(source) + ".vb";
+	text += this.SaveToFile(fileName, ExecuteTemplate(esMeta, path + @"\Generated\Generated - esQuery (VB).est"), GenerateSingleFile);
+	
+	if((bool)esMeta.Input["GenerateHierarchicalModel"])
+	{
+	    fileName = esMeta.esPlugIn.esEntity(source) + "Hierarchical.vb";
+	    text += this.SaveToFile(fileName, ExecuteTemplate(esMeta, path + @"\Generated\Generated - Hierarchical (VB).est"), GenerateSingleFile);	
+	}	
+	
+	if((bool)esMeta.Input["GenerateProxyStub"])
+	{
+	    fileName = esMeta.esPlugIn.ProxyStub(source) + ".vb";
+	    text += this.SaveToFile(fileName, ExecuteTemplate(esMeta, path + @"\Generated\Generated - ProxyStub (VB).est"), GenerateSingleFile);
+	    
+	    fileName = esMeta.esPlugIn.ProxyStubCollection(source) + ".vb";
+	    text += this.SaveToFile(fileName, ExecuteTemplate(esMeta, path + @"\Generated\Generated - ProxyStub Collection (VB).est"), GenerateSingleFile);
+	}
+	
+	fileName = esMeta.esPlugIn.esEntity(source) + "Metadata.vb";
+    text += this.SaveToFile(fileName, ExecuteTemplate(esMeta, path + @"\Generated\Generated - Metadata (VB).est"), GenerateSingleFile);		
+
+	if(GenerateSingleFile)
+	{
+	    fileName = esMeta.esPlugIn.Entity(source) + ".vb";
+		this.SaveToFile(fileName, text, false);
+	}
+	
+	output.Append(text);
+}%>
+
+<script runat="template">
+private string SaveToFile(string fileName, string text, bool generateSingleFile)
+{
+	if(!generateSingleFile)
+	{
+	    string path = (string)esMeta.Input["OutputPath"];
+	    
+		string fname = path;
+		if (!fname.EndsWith("\\")) 
+			fname += "\\";
+			
+		Directory.CreateDirectory(path);		
+		
+		fname += fileName;
+		
+		using (StreamWriter sw = System.IO.File.CreateText(fname)) 
+		{
+			sw.Write(text);
+		} 	
+		
+		return "";
+	}
+	else
+	{
+		return text;			
+	}
+}
+</script>

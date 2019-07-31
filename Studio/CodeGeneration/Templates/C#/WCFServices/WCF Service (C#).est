@@ -1,0 +1,362 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/
+%><%@ TemplateInfo 
+    UniqueID="66CA4D07-D93F-4534-82CF-4606E06BB8DA" 
+	UserInterfaceID="50D483A8-0081-41c5-95C4-65841D25D162" 
+    Title="WCF Service" 
+    Description="The WCF Service" 
+    Namespace="EntitySpaces.2019.C#.WCFService" 
+    Author="EntitySpaces, LLC" 
+    Version="2019.0.0.0" 
+    RequiresUI="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------
+// System.Diagnostics.Debugger.Break();
+
+bool TargetTheCompactFramework = false; //(bool)esMeta.Input["TargetTheCompactFramework"];
+ArrayList entities = esMeta.Input["Entities"] as ArrayList;
+string entityType = (string)esMeta.Input["EntityType"];
+string databaseName = (string)esMeta.Input["Database"];
+string EntitySpacesNamespace = (string)esMeta.Input["EntitySpacesNamespace"];
+string WCFServiceClassNamespace = (string)esMeta.Input["WCFServiceClassNamespace"];
+string WCFServiceClassName = (string)esMeta.Input["WCFServiceClassName"];
+
+//===============================================================
+// Execute our SubTemplates ....
+//===============================================================
+
+ITable table = null;
+IView  view = null;
+IColumns cols = null;
+bool first = true;
+
+IDatabase database = esMeta.Databases[databaseName];
+
+foreach(string tableOrView in entities)
+{
+	string text = "";
+	
+	if(entityType == dbEntityType.Tables.ToString())
+	{
+		table = database.Tables[tableOrView];
+		view = null;
+		cols = table.Columns;
+	}
+	else 
+	{
+		view = database.Views[tableOrView];
+		
+		table = null;
+		cols = view.Columns;
+	}
+	
+	esPluginSource source = new esPluginSource(esMeta, table, view);
+	esMeta.Input["Source"] = source;
+
+	if(first) 
+	{
+%>/*
+===============================================================================
+                    EntitySpaces Studio by EntitySpaces, LLC
+             Persistence Layer and Business Objects for Microsoft .NET
+             EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+                          http://www.entityspaces.net
+===============================================================================
+EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+===============================================================================
+*/
+
+using System.ServiceModel;
+using <%=EntitySpacesNamespace%>;
+
+namespace <%=WCFServiceClassNamespace%>
+{
+	[ServiceContract]
+	public partial interface I<%=WCFServiceClassName%>
+	{
+<% 	} // first
+ 
+    first = false;
+%>	
+		#region <%=source.Entity%>
+		
+		[OperationContract]
+		<%=source.ProxyStubCollection%> <%=source.Entity%>_LoadAll();		
+
+		[OperationContract]
+		<%=source.ProxyStubCollection%> <%=source.Entity%>_QueryForCollection(string serializedQuery);
+
+		[OperationContract]
+		<%=source.ProxyStub%> <%=source.Entity%>_QueryForEntity(string serializedQuery);
+<%if(table != null) {%>		
+		[OperationContract]
+		<%=source.ProxyStub%> <%=source.Entity%>_GetByPrimaryKey(<%
+		string comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%=col.CSharpToSystemType + " " + col.ParameterName%><%
+			comma = ", ";
+		}%>);
+
+		[OperationContract]
+		<%=source.ProxyStubCollection%> <%=source.Entity%>_SaveCollection(<%=source.ProxyStubCollection%> collection);
+
+		[OperationContract]
+		<%=source.ProxyStub%> <%=source.Entity%>_SaveEntity(<%=source.ProxyStub%> entity);<%}%>		
+
+		#endregion
+<%
+} // foreach
+%>
+    }
+}<% 
+
+// Write out the Service Interface
+string filepath = "I" + WCFServiceClassName + ".cs";
+this.SaveToFile(filepath, output.ToString(), false);
+this.ClearOutput();
+
+first = true;
+	
+foreach(string tableOrView in entities)
+{
+	string text = "";
+	
+	if(entityType == dbEntityType.Tables.ToString())
+	{
+		table = database.Tables[tableOrView];
+		view = null;
+		cols = table.Columns;
+	}
+	else 
+	{
+		view = database.Views[tableOrView];
+		
+		table = null;
+		cols = view.Columns;
+	}
+	
+	esPluginSource source = new esPluginSource(esMeta, table, view);
+	esMeta.Input["Source"] = source;
+
+	if(first) 
+	{
+%>/*
+===============================================================================
+                    EntitySpaces 2010 by EntitySpaces, LLC
+             Persistence Layer and Business Objects for Microsoft .NET
+             EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+                          http://www.entityspaces.net
+===============================================================================
+EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+===============================================================================
+*/
+
+using System;
+using System.Collections.Generic;
+using System.ServiceModel.Activation;
+using System.Text.RegularExpressions;
+
+using <%=EntitySpacesNamespace%>;
+
+using EntitySpaces.Interfaces;
+
+namespace <%=WCFServiceClassNamespace%>
+{
+	[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
+	public partial class <%=WCFServiceClassName%> : I<%=WCFServiceClassName%>
+	{
+<% 	} // first
+ 
+    first = false;
+%>		
+		#region I<%=source.Entity%> Members
+		
+		public <%=source.ProxyStubCollection%> <%=source.Entity%>_LoadAll()
+		{
+			<%=source.Collection%> coll = new <%=source.Collection%>();
+			if (coll.LoadAll())
+			{
+				return coll;
+			}
+
+			return null;
+		}		
+
+		public <%=source.ProxyStubCollection%> <%=source.Entity%>_QueryForCollection(string serializedQuery)
+		{
+			<%=source.Query%> query = <%=source.Query%>.SerializeHelper.FromXml(
+				serializedQuery, typeof(<%=source.Query%>), AllKnownTypes) as <%=source.Query%>;
+
+			<%=source.Collection%> coll = new <%=source.Collection%>();
+			if (coll.Load(query))
+			{
+				return coll;
+			}
+
+			return null;
+		}
+
+		public <%=source.ProxyStub%> <%=source.Entity%>_QueryForEntity(string serializedQuery)
+		{
+			<%=source.Query%> query = <%=source.Query%>.SerializeHelper.FromXml(
+				serializedQuery, typeof(<%=source.Query%>), AllKnownTypes) as <%=source.Query%>;
+
+			<%=source.Entity%> obj = new <%=source.Entity%>();
+			if (obj.Load(query))
+			{
+				return obj;
+			}
+
+			return null;
+		}<%if(table != null) {%>
+		
+		public <%=source.ProxyStub%> <%=source.Entity%>_GetByPrimaryKey(<%
+		string comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%=col.CSharpToSystemType + " " + col.ParameterName%><%
+			comma = ", ";
+		}%>)
+		{
+			<%=source.Entity%> obj = new <%=source.Entity%>();
+			if (obj.LoadByPrimaryKey(<% 
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%=col.ParameterName%><%
+			comma = ", ";
+		}%>))
+			{
+				return obj;
+			}
+			return null;
+		}
+
+		public <%=source.ProxyStubCollection%> <%=source.Entity%>_SaveCollection(<%=source.ProxyStubCollection%> collection)
+		{
+			if (collection != null)
+			{
+				<%=source.Collection%> c = collection.GetCollection();
+				c.Save();
+				return c;
+			}
+
+			return null;
+		}
+
+		public <%=source.ProxyStub%> <%=source.Entity%>_SaveEntity(<%=source.ProxyStub%> entity)
+		{
+			if (entity != null)
+			{
+				entity.Entity.Save();
+
+				if (entity.Entity.RowState != esDataRowState.Deleted && entity.Entity.RowState != esDataRowState.Invalid)
+				{
+					return entity;
+				}
+			}
+
+			return null;
+		}<%}%>
+
+		#endregion
+<%
+} // foreach %>
+		#region EntitySpaces Support Routines
+		
+		static private List<Type> AllKnownTypes = GetAllKnownTypes();
+
+		static List<Type> GetAllKnownTypes()
+		{
+			List<Type> types = new List<Type>();
+			<% 
+			foreach(string tableOrView in entities)
+			{
+				string text = "";
+				
+				if(entityType == dbEntityType.Tables.ToString())
+				{
+					table = database.Tables[tableOrView];
+					view = null;
+					cols = table.Columns;
+				}
+				else 
+				{
+					view = database.Views[tableOrView];
+					
+					table = null;
+					cols = view.Columns;
+				}
+
+				esPluginSource source = new esPluginSource(esMeta, table, view);
+				esMeta.Input["Source"] = source;%>
+			types.Add(typeof(<%=source.Query%>));<%}%>
+
+			return types;
+		}
+		
+		#endregion
+	}
+}
+<% 
+// Write out the Service Interface
+filepath = WCFServiceClassName + ".svc.cs";
+this.SaveToFile(filepath, output.ToString(), false);
+this.ClearOutput();
+%><%="<%@ "%>ServiceHost Language="C#" Debug="true" Service="<%=WCFServiceClassNamespace + "." + WCFServiceClassName%>" CodeBehind="<%=WCFServiceClassName + ".svc.cs"%>" %><% 
+// Write out the Service Interface
+filepath = WCFServiceClassName + ".svc";
+this.SaveToFile(filepath, output.ToString(), false);
+this.ClearOutput();
+%>
+<script runat="template">
+private string SaveToFile(string fileName, string text, bool generateSingleFile)
+{
+	if(!generateSingleFile)
+	{
+	    string path = (string)esMeta.Input["OutputPath"];
+	    
+		string fname = path;
+		if (!fname.EndsWith("\\")) 
+			fname += "\\";
+			
+		Directory.CreateDirectory(path);		
+		
+		fname += fileName;
+		
+		using (StreamWriter sw = System.IO.File.CreateText(fname)) 
+		{
+			sw.Write(text);
+		} 	
+		
+		return "";
+	}
+	else
+	{
+		return text;			
+	}
+}
+</script>

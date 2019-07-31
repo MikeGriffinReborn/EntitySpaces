@@ -1,0 +1,111 @@
+﻿<project schemaVersion="1.6.0.7">
+    <assemblies>
+        <assembly assemblyPath="..\CodeGeneration\ClassLibraries\EntitySpaces.AddIn.TemplateUI\bin\x86\Debug\EntitySpaces.AddIn.TemplateUI.dll" xmlCommentsPath="..\CodeGeneration\ClassLibraries\EntitySpaces.AddIn.TemplateUI\bin\x86\Debug\EntitySpaces.AddIn.TemplateUI.xml" commentsOnly="False" />
+        <assembly assemblyPath="..\CodeGeneration\ClassLibraries\EntitySpaces.MetadataEngine\bin\x86\Debug\EntitySpaces.MetadataEngine.dll" xmlCommentsPath="..\CodeGeneration\ClassLibraries\EntitySpaces.MetadataEngine\bin\x86\Debug\EntitySpaces.MetadataEngine.xml" commentsOnly="False" />
+    </assemblies>
+    <namespaceSummaries>
+        <namespaceSummaryItem name="" isDocumented="False">The EntitySpaces Persistence Layer and Business Objects for Microsoft .NET 2.0</namespaceSummaryItem>
+        <namespaceSummaryItem name="BusinessObjects" isDocumented="False">An example of an EntitySpaces set of classes. The proxy classes are optional and can be used for two way communications, including WCF. The CustomBase classes are, also, optional. They change the inheritance hierarchy. This allows you to add custom code that affects all entities, collections, or queries.</namespaceSummaryItem>
+        <namespaceSummaryItem name="EntitySpaces.AddIn.TemplateUI" isDocumented="True" />
+        <namespaceSummaryItem name="EntitySpaces.Core" isDocumented="False">The EntitySpaces Core Classes</namespaceSummaryItem>
+        <namespaceSummaryItem name="EntitySpaces.DynamicQuery" isDocumented="False" />
+        <namespaceSummaryItem name="EntitySpaces.Interfaces" isDocumented="False">The EntitySpaces Interface Classes</namespaceSummaryItem>
+        <namespaceSummaryItem name="EntitySpaces.Loader" isDocumented="False">The EntitySpaces Data Provider Loader</namespaceSummaryItem>
+        <namespaceSummaryItem name="EntitySpaces.LoaderMT" isDocumented="False">The EntitySpaces Medium Trust Data Provider Loader</namespaceSummaryItem>
+        <namespaceSummaryItem name="EntitySpaces.MetadataEngine" isDocumented="True" />
+        <namespaceSummaryItem name="EntitySpaces.MetadataEngine.Access" isDocumented="False" />
+        <namespaceSummaryItem name="EntitySpaces.MetadataEngine.MySql" isDocumented="False" />
+        <namespaceSummaryItem name="EntitySpaces.MetadataEngine.Oracle" isDocumented="False" />
+        <namespaceSummaryItem name="EntitySpaces.MetadataEngine.Plugin" isDocumented="True" />
+        <namespaceSummaryItem name="EntitySpaces.MetadataEngine.PostgreSQL" isDocumented="False" />
+        <namespaceSummaryItem name="EntitySpaces.MetadataEngine.Sql" isDocumented="False" />
+        <namespaceSummaryItem name="EntitySpaces.Web" isDocumented="False">The EntitySpaces  ASP.NET esDataSource</namespaceSummaryItem>
+    </namespaceSummaries>
+    <dependencies>
+        <dependencyItem depPath="GAC:System.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+        <dependencyItem depPath=".\adodb.dll" />
+        <dependencyItem depPath="..\CodeGeneration\ClassLibraries\EntitySpaces.MetadataEngine\bin\x86\Debug\Interop.ADODB.dll" />
+    </dependencies>
+    <componentConfigurations>
+        <component id="Post-transform Component" enabled="True" configuration="&lt;component type=&quot;SandcastleBuilder.Components.PostTransformComponent&quot; assembly=&quot;{@SHFBFolder}SandcastleBuilder.Components.dll&quot; id=&quot;Post-transform Component&quot;&gt;&lt;!-- Code colorizer files (required).&#xD;&#xA;                 Attributes:&#xD;&#xA;                    Stylesheet file (required)&#xD;&#xA;                    Script file (required)&#xD;&#xA;                    &quot;Copy&quot; image file (required) --&gt;&lt;colorizer stylesheet=&quot;{@SHFBFolder}Colorizer\highlight.css&quot; scriptFile=&quot;{@SHFBFolder}Colorizer\highlight.js&quot; copyImage=&quot;{@SHFBFolder}Colorizer\CopyCode.gif&quot; /&gt;&lt;!-- Output path for the files (required).  This should match the&#xD;&#xA;                 output path of the HTML files (see SaveComponent below). --&gt;&lt;outputPath value=&quot;Output\html&quot; /&gt;&lt;!-- Logo image file (optional).  Filename is required. The height,&#xD;&#xA;                 width, altText, placement, and alignment attributes are&#xD;&#xA;                 optional. --&gt;&lt;logoFile filename=&quot;C:\newlogo\EntitySpacesD22baR01bP01ZL.png&quot; height=&quot;139&quot; width=&quot;277&quot; altText=&quot;&quot; placement=&quot;left&quot; alignment=&quot;left&quot; /&gt;&lt;/component&gt;" />
+    </componentConfigurations>
+    <apiFilter>
+        <filter entryType="Namespace" fullName="EntitySpaces.MetadataEngine" isExposed="False">
+            <filter entryType="Class" fullName="EntitySpaces.MetadataEngine.Collection" filterName="Collection" isExposed="False">
+                <filter entryType="Property" fullName="EntitySpaces.MetadataEngine.Collection.Count" filterName="Count" isExposed="True" />
+            </filter>
+            <filter entryType="Enumeration" fullName="EntitySpaces.MetadataEngine.dbDriver" filterName="dbDriver" isExposed="True" />
+            <filter entryType="Enumeration" fullName="EntitySpaces.MetadataEngine.dbEntityType" filterName="dbEntityType" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.MetadataEngine.esPlugIn" filterName="esPlugIn" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.MetadataEngine.esPluginSource" filterName="esPluginSource" isExposed="True" />
+            <filter entryType="Interface" fullName="EntitySpaces.MetadataEngine.IColumn" filterName="IColumn" isExposed="True" />
+            <filter entryType="Interface" fullName="EntitySpaces.MetadataEngine.IColumns" filterName="IColumns" isExposed="True" />
+            <filter entryType="Interface" fullName="EntitySpaces.MetadataEngine.IDatabase" filterName="IDatabase" isExposed="True" />
+            <filter entryType="Interface" fullName="EntitySpaces.MetadataEngine.IDatabases" filterName="IDatabases" isExposed="True" />
+            <filter entryType="Interface" fullName="EntitySpaces.MetadataEngine.IForeignKey" filterName="IForeignKey" isExposed="True" />
+            <filter entryType="Interface" fullName="EntitySpaces.MetadataEngine.IForeignKeys" filterName="IForeignKeys" isExposed="True" />
+            <filter entryType="Interface" fullName="EntitySpaces.MetadataEngine.IIndex" filterName="IIndex" isExposed="True" />
+            <filter entryType="Interface" fullName="EntitySpaces.MetadataEngine.IIndexes" filterName="IIndexes" isExposed="True" />
+            <filter entryType="Interface" fullName="EntitySpaces.MetadataEngine.ITable" filterName="ITable" isExposed="True" />
+            <filter entryType="Interface" fullName="EntitySpaces.MetadataEngine.ITables" filterName="ITables" isExposed="True" />
+            <filter entryType="Interface" fullName="EntitySpaces.MetadataEngine.ITableView" filterName="ITableView" isExposed="True" />
+            <filter entryType="Interface" fullName="EntitySpaces.MetadataEngine.IView" filterName="IView" isExposed="True" />
+            <filter entryType="Interface" fullName="EntitySpaces.MetadataEngine.IViews" filterName="IViews" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.MetadataEngine.Root" filterName="Root" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.MetadataEngine.Single" filterName="Single" isExposed="False">
+                <filter entryType="Property" fullName="EntitySpaces.MetadataEngine.Single.Alias" filterName="Alias" isExposed="True" />
+                <filter entryType="Property" fullName="EntitySpaces.MetadataEngine.Single.Name" filterName="Name" isExposed="True" />
+                <filter entryType="Property" fullName="EntitySpaces.MetadataEngine.Single.Properties" filterName="Properties" isExposed="True" />
+            </filter>
+            <filter entryType="Class" fullName="EntitySpaces.MetadataEngine.TableRelation" filterName="TableRelation" isExposed="True" />
+            <filter entryType="Enumeration" fullName="EntitySpaces.MetadataEngine.TableRelation.RelType" filterName="TableRelation.RelType" isExposed="True" />
+        </filter>
+        <filter entryType="Namespace" fullName="EntitySpaces.MetadataEngine.Access" isExposed="False" />
+        <filter entryType="Namespace" fullName="EntitySpaces.MetadataEngine.MySql" isExposed="False" />
+        <filter entryType="Namespace" fullName="EntitySpaces.MetadataEngine.Oracle" isExposed="False" />
+        <filter entryType="Namespace" fullName="EntitySpaces.MetadataEngine.Plugin" isExposed="False" />
+        <filter entryType="Namespace" fullName="EntitySpaces.MetadataEngine.PostgreSQL" isExposed="False" />
+        <filter entryType="Namespace" fullName="EntitySpaces.MetadataEngine.Sql" isExposed="False" />
+    </apiFilter>
+    <ProjectSummary />
+    <MissingTags>AutoDocumentCtors</MissingTags>
+    <VisibleItems>Protected, SealedProtected</VisibleItems>
+    <HtmlHelp1xCompilerPath path="" />
+    <HtmlHelp2xCompilerPath path="" />
+    <OutputPath>c:\help_TemplateAPI\</OutputPath>
+    <SandcastlePath path="" />
+    <WorkingPath path="" />
+    <CleanIntermediates>True</CleanIntermediates>
+    <KeepLogFile>True</KeepLogFile>
+    <BuildLogFile path="" />
+    <HelpFileFormat>Help1xAndWebsite</HelpFileFormat>
+    <CppCommentsFixup>False</CppCommentsFixup>
+    <FrameworkVersion>3.5</FrameworkVersion>
+    <IndentHtml>False</IndentHtml>
+    <Preliminary>False</Preliminary>
+    <RootNamespaceContainer>False</RootNamespaceContainer>
+    <RootNamespaceTitle />
+    <HelpTitle>The EntitySpaces 2010 Code Generation / Template API Reference</HelpTitle>
+    <HtmlHelpName>EntitySpaces_TemplateAPI</HtmlHelpName>
+    <Language>en-US</Language>
+    <CopyrightHref>http://www.entityspaces.net</CopyrightHref>
+    <CopyrightText>Copyright 2005 - 2010, EntitySpaces, LLC</CopyrightText>
+    <FeedbackEMailAddress>api_doc@entityspaces.net</FeedbackEMailAddress>
+    <FeedbackEMailLinkText />
+    <HeaderText>Persistence Layer and Business Objects for Microsoft .NET</HeaderText>
+    <FooterText />
+    <ProjectLinkType>Local</ProjectLinkType>
+    <SdkLinkType>Msdn</SdkLinkType>
+    <SdkLinkTarget>Blank</SdkLinkTarget>
+    <PresentationStyle>Prototype</PresentationStyle>
+    <NamingMethod>Guid</NamingMethod>
+    <SyntaxFilters>Standard</SyntaxFilters>
+    <ShowFeedbackControl>False</ShowFeedbackControl>
+    <BinaryTOC>True</BinaryTOC>
+    <IncludeFavorites>False</IncludeFavorites>
+    <CollectionTocStyle>Hierarchical</CollectionTocStyle>
+    <IncludeStopWordList>True</IncludeStopWordList>
+    <PlugInNamespaces>ms.vsipcc+, ms.vsexpresscc+</PlugInNamespaces>
+    <HelpFileVersion>1.0.0.0</HelpFileVersion>
+    <ContentPlacement>AboveNamespaces</ContentPlacement>
+</project>

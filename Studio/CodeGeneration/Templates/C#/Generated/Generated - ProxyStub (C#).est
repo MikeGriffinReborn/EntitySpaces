@@ -1,0 +1,341 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/
+%><%@ TemplateInfo 
+    UniqueID="165B75EB-8FFD-4d99-8468-2F8E00B28028" 
+    Title="Generated - ProxyStub (C#)"   
+    Description="The Proxy Entity Class" 
+    Namespace="EntitySpaces.2019.C#.Generated" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    IsSubTemplate="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------	
+bool TargetTheCompactFramework = (bool)esMeta.Input["TargetTheCompactFramework"];
+string Namespace = (string)esMeta.Input["Namespace"];
+bool GenerateSingleFile = (bool)esMeta.Input["GenerateSingleFile"];
+bool WcfSupport = (bool)esMeta.Input["WcfSupport"];
+string WcfDataContract = (string)esMeta.Input["WcfDataContract"];
+bool WcfEmitDefaultValue = (bool)esMeta.Input["WcfEmitDefaultValue"];
+bool WcfOrder = (bool)esMeta.Input["WcfOrder"];
+bool IncludeRowStateInXml = (bool)esMeta.Input["IncludeRowStateInXml"];
+bool WcfIsRequired = (bool)esMeta.Input["WcfIsRequired"];
+bool CompactXML = (bool)esMeta.Input["CompactXML"];
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+string comma = "";
+EntitySpaces.MetadataEngine.IPropertyCollection props;	
+int lastOrdinal = 0;
+int compactXmlIndex = 0;
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------	
+ITable table = (ITable)esMeta.Input["Table"];
+IView view = (IView)esMeta.Input["View"];			
+IColumns cols = (IColumns)esMeta.Input["Columns"];
+esPluginSource source = (esPluginSource)esMeta.Input["Source"];
+
+if(table != null)
+{
+	props = table.Properties;
+}
+else
+{
+	props = view.Properties;
+}
+
+if(!GenerateSingleFile){ %>/*
+===============================================================================
+                    EntitySpaces Studio by EntitySpaces, LLC
+             Persistence Layer and Business Objects for Microsoft .NET
+             EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+                          http://www.entityspaces.net
+===============================================================================
+EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+===============================================================================
+*/
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Data;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
+
+using EntitySpaces.Interfaces;
+using EntitySpaces.Core;
+
+namespace <%=Namespace%>
+{<%}%>
+
+	<%if(WcfSupport){%>[DataContract(Namespace = "<%=WcfDataContract%>", Name = "<%=source.Entity%>")]<%}%>
+	[XmlType(TypeName="<%=source.ProxyStub%>")]	
+	[Serializable]
+	public partial class <%=source.ProxyStub%>
+	{
+		public <%=source.ProxyStub%>() 
+		{
+			theEntity = this.entity = new <%=source.Entity%>();
+		}
+
+		public <%=source.ProxyStub%>(<%=source.Entity%> obj)
+		{
+			theEntity = this.entity = obj;
+		}
+
+		public <%=source.ProxyStub%>(<%=source.Entity%> obj, bool dirtyColumnsOnly)
+		{
+			theEntity = this.entity = obj;
+			this.dirtyColumnsOnly = dirtyColumnsOnly;
+		}
+<%if(!TargetTheCompactFramework){%>			
+		#region Implicit Casts
+
+		public static implicit operator <%=source.Entity%>(<%=source.ProxyStub%> entity)
+		{
+			return entity.Entity;
+		}
+
+		#endregion<%}%>	
+		
+		public Type GetEntityType()
+		{
+			return typeof(<%=source.Entity%>);
+		}
+<%	foreach(IColumn col in cols)
+	{
+		lastOrdinal = col.Ordinal; %>
+		<%if(WcfSupport){%>[DataMember(Name="<%=CompactXML ? "a" + compactXmlIndex++.ToString() : col.PropertyName%>"<%if(WcfOrder){%>, Order=<%=col.Ordinal.ToString()%><%} if(WcfEmitDefaultValue){%>, EmitDefaultValue=false<%} if(WcfIsRequired && !col.IsNullable) {%>, IsRequired=true<%}%>)]<%}%>
+		public <%=col.NullableType%> <%=col.PropertyName%>
+		{
+			get 
+			{ 
+				<%if(col.IsInPrimaryKey || IsConcurrency(props, col)) { %>if (this.Entity.es.IsDeleted)
+					return (<%=col.NullableType%>)this.Entity.
+						GetOriginalColumnValue(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>);
+				else
+					return this.Entity.<%=col.PropertyName%>;<% } else { %>
+				if (this.IncludeColumn(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>))
+					return this.Entity.<%=col.PropertyName%>;
+				else
+					return null;<%}%>
+			}
+			set { this.Entity.<%=col.PropertyName%> = value; }
+		}
+<%	}%><%if(IncludeRowStateInXml) { %>
+
+		<%if(WcfSupport){%>[DataMember(Name="<%=CompactXML ? "a10000" : "esRowState"%>"<%if(WcfOrder){%>, Order=10000<%}%>)]<%}%>
+		public string esRowState
+		{
+			get { return TheRowState;  }
+			set { TheRowState = value; }
+		}<%}%>
+		
+		<%if(WcfSupport){%>[DataMember(Name="<%=CompactXML ? "a10001" : "ModifiedColumns"%>"<%if(WcfOrder){%>, Order=10001<%}%><%if(WcfEmitDefaultValue){%>, EmitDefaultValue=false<%}%>)]<%}%>
+		private List<string> ModifiedColumns
+		{
+			get { return Entity.es.ModifiedColumns; }
+			set 
+			{ 
+				Entity.es.ModifiedColumns.AddRange(value); 
+			}
+		}
+		
+		<%if(WcfSupport){%>[DataMember(Name="<%=CompactXML ? "a10002" : "ExtraColumns"%>"<%if(WcfOrder){%>, Order=10002<%}%><%if(WcfEmitDefaultValue){%>, EmitDefaultValue=false<%}%>)]<%}%>
+		[XmlIgnore]		
+		public Dictionary<string, object> esExtraColumns
+		{
+			get { return Entity.GetExtraColumns(); }
+			set { Entity.SetExtraColumns(value);   }
+		}
+		
+		[XmlArray("_x_ExtraColumns")]
+		[XmlArrayItem("_x_ExtraColumns", Type = typeof(DictionaryEntry))]
+		public DictionaryEntry[] _x_ExtraColumns
+		{
+			get
+			{
+				Dictionary<string, object> extra = Entity.GetExtraColumns();
+
+				// Make an array of DictionaryEntries to return   
+				DictionaryEntry[] ret = new DictionaryEntry[extra.Count];
+				int i = 0;
+				DictionaryEntry de;
+
+				// Iterate through the extra columns to load items into the array.   
+				foreach (KeyValuePair<string, object> kv in extra)
+				{
+					de = new DictionaryEntry();
+					de.Key = kv.Key;
+					de.Value = kv.Value;
+					ret[i] = de;
+					i++;
+				}
+				return ret;
+			}
+			set
+			{
+				Dictionary<string, object> extra = new Dictionary<string, object>();
+				for (int i = 0; i < value.Length; i++)
+				{
+					extra.Add((string)value[i].Key, (int)value[i].Value);
+				}
+				Entity.SetExtraColumns(extra);
+			}
+		}	
+
+		[XmlIgnore]
+		public <%=source.Entity%> Entity
+		{
+			get
+			{
+				if (this.entity == null)
+				{
+					theEntity = this.entity = new <%=source.Entity%>();
+				}
+
+				return this.entity;
+			}
+
+			set
+			{
+				this.entity = value;
+			}
+		}
+		
+		protected string TheRowState
+		{
+			get
+			{
+				return theEntity.es.RowState.ToString();
+			}
+
+			set
+			{
+				switch (value)
+				{
+					case "Unchanged":
+						theEntity.AcceptChanges();
+						break;
+
+					case "Added":
+						theEntity.AcceptChanges();
+						theEntity.es.RowState = esDataRowState.Added;
+						break;
+
+					case "Modified":
+						theEntity.AcceptChanges();
+						theEntity.es.RowState = esDataRowState.Modified;
+						break;
+
+					case "Deleted":
+						theEntity.AcceptChanges();
+						theEntity.MarkAsDeleted();
+						break;
+				}
+			}
+		}		
+		
+		protected bool IncludeColumn(string columnName)
+		{
+			bool include = false;
+
+			if (dirtyColumnsOnly)
+			{
+				if (theEntity.es.ModifiedColumns != null &&
+					theEntity.es.ModifiedColumns.Contains(columnName))
+				{
+					include = true;
+				}
+			}
+			else if (!theEntity.es.IsDeleted)
+			{
+				include = true;
+			}
+
+			return include;
+		}		
+
+		[NonSerialized, XmlIgnore, CLSCompliant(false)]
+		public <%=source.Entity%> entity;
+		
+		[NonSerialized, XmlIgnore, CLSCompliant(false)]
+		protected esEntity theEntity;
+
+		[NonSerialized, XmlIgnore]
+		protected bool dirtyColumnsOnly;		
+	}
+<%if(!GenerateSingleFile){ %>
+}<%}%>
+<script runat="template">
+
+public string GetFileName()
+{
+	return esMeta.esPlugIn.ProxyStub((esPluginSource)esMeta.Input["Source"]) + ".vb";
+}
+
+public EntitySpaces.MetadataEngine.Root TheMetaData
+{
+	get { return esMeta;  }
+	set { esMeta = value; }	
+}
+
+private bool IsConcurrency(EntitySpaces.MetadataEngine.IPropertyCollection props, EntitySpaces.MetadataEngine.IColumn col)
+{
+	bool isConcurrency = false;
+	
+	switch(esMeta.DriverString)
+	{
+		case "ORACLE":
+		
+				EntitySpaces.MetadataEngine.IProperty prop = props["CONCURR:" + col.Name];
+				if(prop != null)
+				{
+					isConcurrency = true;
+				}
+				break;
+		
+		case "SQL":
+		
+				if(col.DataTypeName == "timestamp")
+				{
+					isConcurrency = true;
+				}
+				break;
+				
+		case "VISTADB3X":
+		
+				if(col.DataTypeName == "Timestamp")
+				{
+					isConcurrency = true;
+				}
+				break;
+			
+		default:
+			break;
+	}		
+	
+	return isConcurrency;
+}
+
+</script>	

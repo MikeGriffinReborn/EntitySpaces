@@ -1,0 +1,507 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/%>
+<%@ TemplateInfo 
+    UniqueID="8F1DCABB-8B14-428c-8D32-0BF463611BB3"
+	UserInterfaceID="977DCCF4-5529-406e-A392-CEB0267AD416"
+    Title="MySQL"   
+    Description="MySQL Stored Procedures" 
+    Namespace="EntitySpaces.2019.StoredProcedures" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    RequiresUI="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------
+ArrayList entities         = esMeta.Input["Entities"] as ArrayList;
+string entityType          = (string)esMeta.Input["EntityType"];
+string databaseName        = (string)esMeta.Input["Database"];
+bool useSqlSecurityInvoker = (bool)esMeta.Input["UseSqlSecurityInvoker"];
+
+//System.Diagnostics.Debugger.Break();
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+bool inFirst = true;
+string delimiter = "`";
+
+bool blnHasComputed = false;
+string strWhereClause = "";
+string strWhereAnd = "";
+string strWhereFields = "";
+string strComma = "";
+
+string allSQL = "";
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------
+ITable table = null;
+IColumns cols = null;
+
+IDatabase database = esMeta.Databases[databaseName];
+
+foreach(string tableOrView in entities)
+{
+	if(entityType == dbEntityType.Tables.ToString())
+	{
+		table = database.Tables[tableOrView];
+		cols = table.Columns;
+	}
+	else 
+	{
+		break;
+	}
+	
+	esPluginSource source = new esPluginSource(esMeta, table, null);
+	esMeta.Input["Source"] = source;
+	
+	if(table.PrimaryKeys.Count == 0)
+	{
+		this.ClearOutput();
+		continue;
+	} 	
+
+//----------------------------------------------------------------------
+// LoadByPrimaryKey 
+//----------------------------------------------------------------------
+%>DELIMITER //
+USE <%=delimiter %><%=database.Name %><%=delimiter %>//
+
+/* LoadByPrimaryKey */
+<%=BuildCreateAlterStatement(esMeta.esPlugIn.ProcLoadByPK(table.Name)) %>
+(<%
+	// List all keys as parameters
+	inFirst = true;
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+	p<%=StripGarbage(col)%> <%=col.DataTypeNameComplete%><%
+		inFirst = false;
+	}
+%>
+)
+<%
+	if(useSqlSecurityInvoker)
+	{
+		%>
+		SQL SECURITY INVOKER<%
+	}
+%>
+BEGIN
+
+	SELECT<%
+	// List all fields
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+		<%=delimiter%><%=col.Name%><%=delimiter%><%
+		inFirst = false;
+	}
+%>
+	FROM <%=delimiter%><%=table.Name%><%=delimiter%>
+	WHERE
+	(<%
+	// Compare keys with parameters
+	inFirst = true;
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=" AND "%><%}%>
+		<%=delimiter%><%=col.Name%><%=delimiter%> = p<%=StripGarbage(col)%><%
+		inFirst = false;
+	}
+%>
+	);
+
+END//
+
+<%
+//----------------------------------------------------------------------
+// LoadAll 
+//----------------------------------------------------------------------
+%>
+/* LoadAll */
+<%=BuildCreateAlterStatement(esMeta.esPlugIn.ProcLoadAll(table.Name)) %>
+()
+<%
+	if(useSqlSecurityInvoker)
+	{
+		%>
+		SQL SECURITY INVOKER<%
+	}
+%>
+BEGIN
+
+	SELECT<%
+	// List all fields
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+		<%=delimiter%><%=col.Name%><%=delimiter%><%
+		inFirst = false;
+	}
+%>
+	FROM <%=delimiter%><%=table.Name%><%=delimiter%>;
+
+END//
+
+<%
+//----------------------------------------------------------------------
+// Update
+//----------------------------------------------------------------------
+int colCount = 0;
+
+foreach(IColumn col in cols)
+{
+	if(col.IsInPrimaryKey || col.IsComputed)
+	{
+		colCount += 1;
+	}
+}
+
+if (cols.Count == colCount)
+{%>
+
+-- -----------------------------------------
+-- NO UPDATE Stored Procedure Generated 
+-- All Columns are part of the Primary key
+-- -----------------------------------------
+
+<%}else{%>
+/* Update */
+<%=BuildCreateAlterStatement(esMeta.esPlugIn.ProcUpdate(table.Name))%>
+(<%
+	// List all keys as parameters
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+	<%
+		if(col.IsComputed || col.IsEntitySpacesConcurrency) {%>INOUT <%}%>p<%=StripGarbage(col)%> <%=col.DataTypeNameComplete%><%
+		inFirst = false;
+	}
+%>
+)
+<%
+	if(useSqlSecurityInvoker)
+	{
+		%>
+		SQL SECURITY INVOKER<%
+	}
+%>
+BEGIN
+
+	UPDATE <%=delimiter%><%=table.Name %><%=delimiter%>
+	SET<%
+	// List all fields
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(!col.IsInPrimaryKey && !col.IsAutoKey && !col.IsComputed)
+		{
+			if(!inFirst) {%><%=", "%><%}%><%
+			if(col.IsEntitySpacesConcurrency) {%>
+		<%=delimiter%><%=col.Name%><%=delimiter%> = <%=delimiter%><%=col.Name%><%=delimiter%> + 1<%} else {%>			
+		<%=delimiter%><%=col.Name%><%=delimiter%> = p<%=StripGarbage(col)%><%}%><%
+			inFirst = false;
+		}
+	}
+%>
+	WHERE
+	(<%
+	// Compare keys with parameters
+	inFirst = true;
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=" AND "%><%}%>
+		<%=delimiter%><%=col.Name%><%=delimiter%> = p<%=StripGarbage(col)%><%
+		inFirst = false;
+	}
+	
+	foreach(IColumn col in table.Columns)
+	{
+		if(col.IsConcurrency || col.IsEntitySpacesConcurrency)
+		{
+			if(!inFirst) {%><%=" AND "%><%}%>
+		<%=delimiter%><%=col.Name%><%=delimiter%> = p<%=StripGarbage(col)%><%
+		}
+	}%>
+	);
+<%	foreach(IColumn col in table.Columns)
+	{
+		if(col.IsEntitySpacesConcurrency)
+		{%>
+	SET p<%=StripGarbage(col)%> = p<%=StripGarbage(col)%> + 1;<%
+		}
+	}
+	
+	// Add the Logic to return computed columns if necessary 
+	blnHasComputed = false;
+	strWhereClause = "";
+	strWhereAnd = "";
+	strWhereFields = "";
+	strComma = "";
+
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(col.IsComputed)
+		{
+			blnHasComputed = true;
+		}
+
+		if(col.IsInPrimaryKey)
+		{
+			strWhereClause += strWhereAnd + delimiter + col.Name + delimiter + " = p" + StripGarbage(col);
+			strWhereAnd = " AND ";
+		}
+
+		if(col.IsComputed)
+		{
+			strWhereFields += strComma + " p" + StripGarbage(col) + " = " + delimiter + col.Name + delimiter;
+			strComma =  ", "; 
+		}
+	}
+
+	if(blnHasComputed)
+	{%>
+		    SELECT <%=strWhereFields%>
+			  FROM <%=delimiter%><%=table.Name%><%=delimiter%>
+			 WHERE (<%=strWhereClause%>);
+  <%}%>	
+END//
+
+<%} // END UPDATE%> 
+
+<%
+//----------------------------------------------------------------------
+// Insert
+//----------------------------------------------------------------------
+%>
+/* Insert */
+<%=BuildCreateAlterStatement(esMeta.esPlugIn.ProcInsert(table.Name))%>
+(<%
+	// List all keys as parameters
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+	<%
+		if(col.IsAutoKey || col.IsComputed || col.IsEntitySpacesConcurrency) {%>OUT <%}%>p<%=StripGarbage(col)%> <%=col.DataTypeNameComplete%><%
+		inFirst = false;
+	}
+%>
+)
+<%
+	if(useSqlSecurityInvoker)
+	{
+		%>
+		SQL SECURITY INVOKER<%
+	}
+%>
+BEGIN
+	INSERT
+	INTO <%=delimiter%><%=table.Name%><%=delimiter%>
+	(<%
+		// List all fields except identity (if one exists)
+		inFirst = true;
+		foreach(IColumn col in cols)
+		{
+			if(!col.IsAutoKey && !col.IsComputed)
+			{
+				if(!inFirst) {%><%=", "%><%}%>
+		<%=delimiter%><%=col.Name%><%=delimiter%><%
+				inFirst = false;
+			}
+		}
+%>
+	)
+	VALUES
+	(<%
+		// List all fields except identity (if one exists)
+		inFirst = true;
+		foreach(IColumn col in cols)
+		{
+			if(!col.IsAutoKey && !col.IsComputed)
+			{
+				if(!inFirst) {%><%=", "%><%}%><%
+				if(col.IsEntitySpacesConcurrency) {%>
+		1<%} else {%>	
+		p<%=StripGarbage(col)%><%}%><%
+				inFirst = false;
+			}
+		}
+%>
+	);
+<%
+	// Add the Logic to return computed columns if necessary 
+	blnHasComputed = false;
+	strWhereClause = "";
+	strWhereAnd = "";
+	strWhereFields = "";
+	strComma = "";
+
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(col.IsAutoKey)
+		{
+			%>
+	SET p<%=StripGarbage(col)%> = LAST_INSERT_ID();<%
+		}
+		
+		if(col.IsEntitySpacesConcurrency)
+		{
+			%>
+	SET p<%=StripGarbage(col)%> = 1;<%
+		}
+		if(col.IsComputed)
+		{
+			blnHasComputed = true;
+		}
+
+		if(col.IsComputed)
+		{
+			strWhereFields += strComma + "p" + StripGarbage(col) + " = " + delimiter + col.Name + delimiter;
+			strComma =  ", ";
+		}
+	}
+
+	if(blnHasComputed)
+	{%>
+		    SELECT <%=strWhereFields%>
+			  FROM <%=delimiter%><%=table.Name%><%=delimiter%>
+			 WHERE (<%=strWhereClause%>);
+  <%}%>	
+
+END//
+
+<%
+//----------------------------------------------------------------------
+// Delete
+//----------------------------------------------------------------------
+%>
+/* Delete */
+<%=BuildCreateAlterStatement(esMeta.esPlugIn.ProcDelete(table.Name))%>
+(<%
+	// List all keys as parameters
+	inFirst = true;
+	foreach(IColumn col in table.Columns)
+	{
+		if(col.IsInPrimaryKey || col.IsEntitySpacesConcurrency)
+		{
+			if(!inFirst) {%><%=", "%><%}%>
+	p<%=StripGarbage(col)%> <%=col.DataTypeNameComplete%><%
+			inFirst = false;
+		}
+	}
+%>
+)
+<%
+	if(useSqlSecurityInvoker)
+	{
+		%>
+		SQL SECURITY INVOKER<%
+	}
+%>
+BEGIN
+	DELETE
+	FROM <%=delimiter%><%=table.Name%><%=delimiter%>
+	WHERE
+	(<%
+	// Compare keys with parameters
+	inFirst = true;
+	foreach(IColumn col in table.Columns)
+	{
+		if(col.IsInPrimaryKey || col.IsEntitySpacesConcurrency)
+		{
+		if(!inFirst) {%><%=" AND "%><%}%>
+		<%=delimiter%><%=col.Name%><%=delimiter%> = p<%=StripGarbage(col)%><%
+		inFirst = false;
+		}
+	}
+%>
+	);
+END//
+
+DELIMITER ;
+
+<%
+	string sql = output.ToString();
+	allSQL += sql;
+	
+	this.SaveToFile(table.Name + ".sql", sql, false);
+	this.ClearOutput();	
+} // end main for loop
+
+	this.SaveToFile("MySQL_ALL.sql", allSQL, false);
+%>
+
+<script runat="template">
+
+
+private string SaveToFile(string fileName, string text, bool generateSingleFile)
+{
+	if(!generateSingleFile)
+	{
+	    string path = (string)esMeta.Input["OutputPath"];
+	    
+		string fname = path;
+		if (!fname.EndsWith("\\")) 
+			fname += "\\";
+			
+		Directory.CreateDirectory(path);		
+		
+		fname += fileName;
+		
+		using (StreamWriter sw = System.IO.File.CreateText(fname)) 
+		{
+			sw.Write(text);
+		} 	
+		
+		return "";
+	}
+	else
+	{
+		return text;			
+	}
+}
+
+private string BuildCreateAlterStatement(string procName)
+{
+	string delimiter = "`";
+	
+	string sql = "";
+	
+	// Drop and recreate
+	sql += "DROP PROCEDURE IF EXISTS ";
+	sql += delimiter + procName + delimiter + "//" + "\r\n\r\n";
+
+	sql += "CREATE PROCEDURE " + delimiter + procName + delimiter;
+
+	return sql; 
+}
+
+private string StripGarbage(EntitySpaces.MetadataEngine.IColumn col)
+{
+	return esMeta.esPlugIn.ToPascalCase(col.Alias);
+}
+
+</script>

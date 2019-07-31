@@ -1,0 +1,321 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/%><%@ TemplateInfo 
+    UniqueID="A710FFF2-73F3-430f-88FE-267754FE39FB" 
+	UserInterfaceID="2E918CFD-D2A7-44a8-BED7-CEFC1EDCC4EC"	
+    Title="Client Side Proxy/Stub"   
+    Description="The Lightweight Client Side Proxy/Stub" 
+    Namespace="EntitySpaces.2019.VB.ProxyStub" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    RequiresUI="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------
+// System.Diagnostics.Debugger.Break();
+
+ArrayList entities = esMeta.Input["Entities"] as ArrayList;
+string entityType = (string)esMeta.Input["EntityType"];
+string databaseName = (string)esMeta.Input["Database"];
+string Namespace = (string)esMeta.Input["Namespace"];
+bool EnableDynamicQueryAPI = (bool)esMeta.Input["EnableDynamicQueryAPI"];
+bool WcfSupport = (bool)esMeta.Input["WcfSupport"];
+bool TargetSilverlight = (bool)esMeta.Input["TargetSilverlight"];
+bool INotifyPropertyChanged = (bool)esMeta.Input["INotifyPropertyChanged"];
+bool ObservableCollection = (bool)esMeta.Input["ObservableCollection"];
+bool BindingList = (bool)esMeta.Input["BindingList"];
+bool CompactXML = (bool)esMeta.Input["CompactXML"];
+string WcfDataContract = (string)esMeta.Input["WcfDataContract"];
+bool WcfEmitDefaultValue = (bool)esMeta.Input["WcfEmitDefaultValue"];
+bool WcfOrder = (bool)esMeta.Input["WcfOrder"];
+bool IncludeRowStateInXml = (bool)esMeta.Input["IncludeRowStateInXml"];
+bool WcfIsRequired = (bool)esMeta.Input["WcfIsRequired"];
+int compactXmlIndex = 0;
+int lastOrdinal = 0;
+
+string listType = "List";
+if(ObservableCollection) listType = "ObservableCollection";
+if(BindingList) listType = "BindingList";
+
+//===============================================================
+// Execute our SubTemplates ....
+//===============================================================
+//System.Diagnostics.Debugger.Break();
+
+ITable table = null;
+IView  view = null;
+IColumns cols = null;
+
+IDatabase database = esMeta.Databases[databaseName];
+
+foreach(string tableOrView in entities)
+{
+	string text = "";
+	compactXmlIndex = 0;
+	
+	if(entityType == dbEntityType.Tables.ToString())
+	{
+		table = database.Tables[tableOrView];
+		view = null;
+		cols = table.Columns;
+	}
+	else 
+	{
+		view = database.Views[tableOrView];
+		
+		table = null;
+		cols = view.Columns;
+	}
+	
+	EntitySpaces.MetadataEngine.esPluginSource source = new EntitySpaces.MetadataEngine.esPluginSource(esMeta, table, view);
+	esMeta.Input["Source"] = source;
+
+%>'===============================================================================
+'                   EntitySpaces Studio by EntitySpaces, LLC
+'            Persistence Layer and Business Objects for Microsoft .NET
+'            EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+'                         http://www.entityspaces.net
+'===============================================================================
+' EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+' EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+' Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+'===============================================================================
+
+Imports System
+Imports System.Collections.Generic<%if(ObservableCollection){%>
+Imports System.Collections.ObjectModel<%}%><%if(BindingList){%>
+Imports System.ComponentModel<%}%>
+Imports System.Text
+Imports System.Xml.Serialization
+<%if(WcfSupport){ %>Imports System.Runtime.Serialization<%}%>
+
+Imports EntitySpaces.DynamicQuery
+
+Namespace <%=Namespace%>
+
+	<%if(WcfSupport){%><DataContract(Namespace:="<%=WcfDataContract%>", Name:="<%=source.Collection%>")> _<%}%>
+	<XmlType(TypeName:="<%=source.Entity%>CollectionProxyStub")> _<%if(!TargetSilverlight){ %>	
+	<Serializable> _<%}%>	
+	Partial Public Class <%=source.Entity%>CollectionProxyStub 
+
+		Public Sub New() 
+		
+		End Sub
+		
+		<%if(WcfSupport){%><DataMember(Name:="Collection", EmitDefaultValue:=False)> _<%}%>
+		Public Collection As New <%=listType%> (Of <%=esMeta.esPlugIn.ProxyStub(source)%>)
+		
+		<%if(IncludeRowStateInXml) { %>Public Function IsDirty() As Boolean
+			For Each obj As <%=source.ProxyStub%> In Collection
+				If obj.IsDirty() Then
+					Return True
+				End If
+			Next
+			Return False
+		End Function
+	<%}%>
+
+	End Class
+	
+	<%if(WcfSupport){%><DataContract(Namespace:="<%=WcfDataContract%>", Name:="<%=source.Entity%>")> _<%}%>
+	<XmlType(TypeName:="<%=source.Entity%>ProxyStub")> _<%if(!TargetSilverlight){ %>	
+	<Serializable> _<%}%>	
+	Partial Public Class <%=source.Entity%>ProxyStub
+		<%if(INotifyPropertyChanged){%>Implements System.ComponentModel.INotifyPropertyChanged<%}%>
+		
+		Public Sub New()
+			<%if(IncludeRowStateInXml){%>Me.esRowState = "Added"<%}%>
+		End Sub
+		
+		<%if(IncludeRowStateInXml){%>Public Function IsDirty() As Boolean
+			Return If(esRowState <> "Unchanged", True, False)
+		End Function<%}%>
+		<%if(INotifyPropertyChanged){%>
+		Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
+		
+		Protected Sub RaisePropertyChanged(ByVal propertyName As String)
+			Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
+			If (Not (propertyChanged) Is Nothing) Then
+				propertyChanged(Me, New System.ComponentModel.PropertyChangedEventArgs(propertyName))
+			End If
+		End Sub<%}%>
+		
+		<%foreach(EntitySpaces.MetadataEngine.IColumn col in cols) {
+		lastOrdinal = col.Ordinal; 
+		string comparison = "";
+		
+		if(col.LanguageType.ToLower() == "string")
+		{
+			comparison = "Not String.Compare(_" + col.PropertyName + ", value) = 0";
+		}
+		else
+		{
+			if(col.IsNullableType)
+			{
+				comparison = "Not _" + col.PropertyName + ".Equals(value)";
+			}
+			else
+			{
+				comparison = "_" + col.PropertyName + "<> value";
+			}
+		}%><%if(WcfSupport){%><DataMember(Name:="<%=CompactXML ? "a" + compactXmlIndex++.ToString() : col.PropertyName%>"<%if(WcfOrder){%>, Order:=<%=col.Ordinal.ToString()%><%} if(WcfEmitDefaultValue){%>, EmitDefaultValue:=False<%} if(WcfIsRequired && !col.IsNullable) {%>, IsRequired=True<%}%>)> _<%}%>
+        Public Property <%=col.PropertyName%> As <%=col.NullableTypeVB%>
+			Get
+				Return _<%=col.PropertyName%>
+			End Get
+			Set(ByVal value As <%=col.NullableTypeVB%>)
+				<%if(!col.IsArrayType){%>If <%=comparison%> Then<%} else {%>If _<%=col.PropertyName%> Is value Then<%}%>
+					_<%=col.PropertyName%> = value
+					<%if(IncludeRowStateInXml){%>SetDirty("<%=col.Name%>")<%}%>
+					<%if(INotifyPropertyChanged){%>RaisePropertyChanged("<%=col.PropertyName%>")<%}%>
+				End If
+			End Set
+		End Property
+		Private _<%=col.PropertyName%> As <%=col.NullableTypeVB%>
+		<%}%>
+		
+<%if(IncludeRowStateInXml) { %>
+		<%if(WcfSupport){%><DataMember(Name:="<%=CompactXML ? "a10000" : "esRowState"%>"<%if(WcfOrder){%>, Order:=10000<%}%>)> _<%}%>
+		Public Property esRowState As String
+			Get
+				Return Me._esRowState
+			End Get
+			Set
+				If Not String.Compare(_esRowState, value) = 0 Then
+					Me._esRowState = value
+					<%if(INotifyPropertyChanged){%>RaisePropertyChanged("esRowState")<%}%>
+				End If
+			End Set
+		End Property
+		Private _esRowState As String = "Unchanged"
+		
+		<%if(WcfSupport){%><DataMember(Name := "<%=CompactXML ? "a10001" : "ModifiedColumns"%>"<%if(WcfOrder){%>, Order := 10001<%}%><%if(WcfEmitDefaultValue){%>, EmitDefaultValue := False<%}%>)> _<%}%>		
+		Public Property ModifiedColumns() As List(Of String)
+			Get
+				If _ModifiedColumns Is Nothing Then
+					_ModifiedColumns = New List(Of String)()
+				End If
+				Return _ModifiedColumns
+			End Get
+			Set(ByVal value As List(Of String))
+				_ModifiedColumns = New List(Of String)(value)
+			End Set
+		End Property
+		Private _ModifiedColumns As List(Of String)
+
+		<%if(WcfSupport){%><DataMember(Name := "<%=CompactXML ? "a10002" : "ExtraColumns"%>"<%if(WcfOrder){%>, Order := 10002<%}%><%if(WcfEmitDefaultValue){%>, EmitDefaultValue := False<%}%>)> _<%}%>
+		Public Property esExtraColumns() As Dictionary(Of String, Object)
+			Get
+				If _ExtraColumns Is Nothing Then
+					_ExtraColumns = New Dictionary(Of String, Object)()
+				End If
+				Return _ExtraColumns
+			End Get
+			Set(ByVal value As Dictionary(Of String, Object))
+				_ExtraColumns = New Dictionary(Of String, Object)(value)
+			End Set
+		End Property
+		Private _ExtraColumns As Dictionary(Of String, Object)
+
+		Public Sub MarkAsDeleted()
+			Me.esRowState = "Deleted"
+		End Sub
+
+		Private Sub SetDirty(ByVal [property] As String)
+			If Not ModifiedColumns.Contains([property]) Then
+				ModifiedColumns.Add([property])
+			End If
+			
+			If Me.esRowState = "Unchanged" Then
+				Me.esRowState = "Modified"
+			End If
+		End Sub
+		<%}%>
+	End Class
+<%if(EnableDynamicQueryAPI) {%>	
+	<XmlType(TypeName:="<%=esMeta.esPlugIn.ProxyStubQuery(source)%>")> _<%if(!TargetSilverlight){ %>	
+	<Serializable> _<%}%>	
+	<%if(WcfSupport){%><DataContract(Name:="<%=source.Query%>", Namespace:= "http://www.entityspaces.net")> _<%}%>	
+	Partial Public Class <%=esMeta.esPlugIn.ProxyStubQuery(source)%> 
+		Inherits esDynamicQuerySerializable
+
+		Public Sub New()
+		
+		End Sub
+
+		Public Sub New(ByVal joinAlias As String)
+			MyBase.es.JoinAlias = joinAlias
+		End Sub	
+		
+		<%if(WcfSupport){%>
+		Protected Overrides Function GetQueryName() As String
+			Return "<%=source.Query%>"
+		End Function<%}%>
+
+		#Region "Implicit Casts"
+
+		Public Shared Widening Operator CType(ByVal query As <%=source.ProxyStubQuery%>) As String
+			Return <%=source.ProxyStubQuery%>.SerializeHelper.ToXml(query)
+		End Operator
+
+		#End Region
+		
+<%		foreach(IColumn col in cols) {%>
+		Public ReadOnly Property <%=col.PropertyName%> As esQueryItem
+			Get
+				Return new esQueryItem(Me, "<%=col.Name%>", <%=col.esSystemType%>)
+			End Get
+		End Property 
+		<%} %>
+	<%}%>
+	End Class
+	
+End Namespace
+<%
+	string fileName = source.Entity + ".vb";
+	this.SaveToFile(fileName, output.ToString(), false);
+	this.ClearOutput();
+}%>
+
+<script runat="template">
+private string SaveToFile(string fileName, string text, bool generateSingleFile)
+{
+	if(!generateSingleFile)
+	{
+	    string path = (string)esMeta.Input["OutputPath"];
+	    
+		string fname = path;
+		if (!fname.EndsWith("\\")) 
+			fname += "\\";
+			
+		Directory.CreateDirectory(path);		
+		
+		fname += fileName;
+		
+		using (StreamWriter sw = System.IO.File.CreateText(fname)) 
+		{
+			sw.Write(text);
+		} 	
+		
+		return "";
+	}
+	else
+	{
+		return text;			
+	}
+}
+</script>

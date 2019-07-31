@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Profiler", "Profiler.csproj", "{46C82F9D-21C1-47FE-B403-2421BBC895FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XDMessaging35", "..\XDMessaging\XDMessaging35.csproj", "{EFAAE69D-F65D-4247-81AA-440E18C3336F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{46C82F9D-21C1-47FE-B403-2421BBC895FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46C82F9D-21C1-47FE-B403-2421BBC895FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46C82F9D-21C1-47FE-B403-2421BBC895FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46C82F9D-21C1-47FE-B403-2421BBC895FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFAAE69D-F65D-4247-81AA-440E18C3336F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFAAE69D-F65D-4247-81AA-440E18C3336F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFAAE69D-F65D-4247-81AA-440E18C3336F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFAAE69D-F65D-4247-81AA-440E18C3336F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

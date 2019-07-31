@@ -1,0 +1,407 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/%>
+<%@ TemplateInfo 
+    UniqueID="E3C97D04-A885-40ad-A401-22B11CC0863B"
+	UserInterfaceID="A372A980-BB8E-479a-A77E-79FDD6F09E10"
+    Title="Microsoft Access"   
+    Description="Microsoft Access Stored Procedures" 
+    Namespace="EntitySpaces.2019.StoredProcedures" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    RequiresUI="True" %>
+<%@Assembly Name="C:\Program Files\EntitySpaces 2010\CodeGeneration\Bin\ADODB" %>
+<%@Assembly Name="C:\Program Files\EntitySpaces 2010\CodeGeneration\Bin\Interop.ADODB" %>
+<%@Import Namespaces="ADODB" %>
+<%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------
+ArrayList entities = esMeta.Input["Entities"] as ArrayList;
+string entityType = (string)esMeta.Input["EntityType"];
+string databaseName = (string)esMeta.Input["Database"];
+bool WriteProcsDirectlyToAccessDatabase = (bool)esMeta.Input["WriteProcsDirectlyToAccessDatabase"];
+
+// System.Diagnostics.Debugger.Break();
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------
+bool bInFirst = true;
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------
+ITable table = null;
+IColumns cols = null;
+
+EntitySpaces.MetadataEngine.Access.AccessDatabase database = esMeta.Databases[databaseName] as EntitySpaces.MetadataEngine.Access.AccessDatabase;
+
+foreach(string tableOrView in entities)
+{
+	string sql = "";
+	
+	if(entityType == dbEntityType.Tables.ToString())
+	{
+		table = database.Tables[tableOrView];
+		cols = table.Columns;
+	}
+	else 
+	{
+		break;
+	}
+	
+	esPluginSource source = new esPluginSource(esMeta, table, null);
+	esMeta.Input["Source"] = source;
+	
+	if(table.PrimaryKeys.Count > 0)
+	{
+		//----------------------------------------------------------------------
+		// LoadByPrimaryKey 
+		//----------------------------------------------------------------------
+		sql = "DROP PROC " + esMeta.esPlugIn.ProcLoadByPK(table.Alias) + ";";	
+		if(WriteProcsDirectlyToAccessDatabase)
+		{
+			database.ExecuteSql(sql);
+		}
+	
+		sql = "CREATE PROC " + esMeta.esPlugIn.ProcLoadByPK(table.Alias) + " (";
+	
+		// list all keys as parameters
+		bInFirst = true;
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			if(!bInFirst)
+			{
+				sql += ", ";
+			}	
+	
+			bInFirst = false;	
+	
+			sql += "[_" + TrimSpaces(col.Name) + "] " + col.DataTypeNameComplete;
+		}
+	
+		sql += ") AS" + "\r\n" + "SELECT ";
+		
+	
+		// list all fields
+		bInFirst = true;
+		foreach(IColumn col in table.Columns)
+		{
+			if(!bInFirst)
+			{
+				sql +=  ", ";
+			}
+	
+			bInFirst = false;
+	
+			sql += "[" + TrimSpaces(col.Name) + "]";
+		}
+	
+		sql += "\r\n" + "FROM [" + table.Name + "] ";
+		sql += "\r\n" + "WHERE ";
+	
+		// compare keys with parameters
+		bInFirst = true;
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			if(!bInFirst)
+			{
+				sql += " AND";
+			}	
+	
+			bInFirst = false;
+	
+			sql += " ([" + col.Name + "] = [_" + TrimSpaces(col.Name) + "])";
+		}
+	
+		%><%="\r\n"%><%=sql%><%="\r\n"%><%
+		if(WriteProcsDirectlyToAccessDatabase)
+		{
+			database.ExecuteSql(sql);
+		}
+
+		//----------------------------------------------------------------------
+		// LoadAll
+		//----------------------------------------------------------------------
+		sql = "DROP PROC " + esMeta.esPlugIn.ProcLoadAll(table.Alias) + ";";
+		if(WriteProcsDirectlyToAccessDatabase)
+		{
+			database.ExecuteSql(sql);
+		}
+		
+		sql = "CREATE PROC " + esMeta.esPlugIn.ProcLoadAll(table.Alias) + " AS" + "\r\n" + "SELECT" + "\r\n";
+		
+	
+		// list all keys as parameters
+		bInFirst = true;
+		foreach(IColumn col in table.Columns)
+		{
+			if(!bInFirst)
+			{
+				sql +=  ", ";
+			}	
+	
+			bInFirst = false;	
+	
+			sql += "[" + TrimSpaces(col.Name) + "]";
+		}
+	
+		sql += "\r\n" + "FROM [" + table.Name + "]; ";
+	
+		%><%="\r\n"%><%=sql%><%="\r\n"%><%
+		if(WriteProcsDirectlyToAccessDatabase)
+		{
+			database.ExecuteSql(sql);
+		}
+	
+		//----------------------------------------------------------------------
+		// Update
+		//----------------------------------------------------------------------
+		if(table.Columns.Count != table.PrimaryKeys.Count)
+		{
+			sql = "DROP PROC " + esMeta.esPlugIn.ProcUpdate(table.Alias) + ";";
+			if(WriteProcsDirectlyToAccessDatabase)
+			{
+				database.ExecuteSql(sql);
+			}
+		
+			sql = "CREATE PROC " + esMeta.esPlugIn.ProcUpdate(table.Alias) + " ( ";
+		
+			// list all keys as parameters
+			bInFirst = true;
+			foreach(IColumn col in table.Columns)
+			{
+				if(!bInFirst)
+				{
+					sql +=  ", ";
+				}	
+		
+				bInFirst = false;	
+		
+				sql += "[_" + TrimSpaces(col.Name) + "] " + col.DataTypeNameComplete;
+			}
+		
+			sql += ") AS" + "\r\n" + "UPDATE ["  +  table.Name + "]" + "\r\n" + "SET ";
+		
+			// list all fields
+			bInFirst = true;
+			foreach(IColumn col in table.Columns)
+			{
+				if(!col.IsInPrimaryKey)
+				{
+					if(!col.IsComputed)
+					{
+						if(!bInFirst)
+						{
+							sql +=  ", ";
+						}
+					}
+			
+					bInFirst = false;
+			
+					sql += "[" + TrimSpaces(col.Name) + "] = [_" + TrimSpaces(col.Name) + "] ";
+				}
+			}
+		
+			sql += "\r\n" + "WHERE ";
+		
+			// compare keys with parameters
+			bInFirst = true;
+			foreach(IColumn col in table.PrimaryKeys)
+			{
+				if(!bInFirst)
+				{
+					sql += " AND";
+				}	
+		
+				bInFirst = false;
+		
+				sql += " ([" + col.Name + "] = [_" + TrimSpaces(col.Name) + "])";
+			}
+		
+			%><%="\r\n"%><%=sql%><%="\r\n"%><%
+			if(WriteProcsDirectlyToAccessDatabase)
+			{
+				database.ExecuteSql(sql);
+			}
+		}
+	
+		//----------------------------------------------------------------------
+		// INSERT
+		//----------------------------------------------------------------------
+		sql = "DROP PROC " + esMeta.esPlugIn.ProcInsert(table.Alias) + ";";	
+		if(WriteProcsDirectlyToAccessDatabase)
+		{
+			database.ExecuteSql(sql);
+		}
+	
+		sql = "CREATE PROC " + esMeta.esPlugIn.ProcInsert(table.Alias) + " ( ";
+	
+		// list all keys as parameters
+		bInFirst = true;
+		foreach(IColumn col in table.Columns)
+		{
+			if(!bInFirst)
+			{
+				sql += ", ";
+			}	
+	
+			bInFirst = false;	
+	
+			sql += "[_" + TrimSpaces(col.Name) + "] " + col.DataTypeNameComplete;
+		}
+	
+		sql += ") AS" + "\r\n" + "INSERT INTO ["  +  table.Name + "]" + "\r\n" + "( ";
+	
+		// list all fields
+		bInFirst = true;
+		foreach(IColumn col in table.Columns)
+		{
+			if(!col.IsAutoKey)
+			{
+				if(!col.IsComputed)
+				{
+					if(!bInFirst)
+					{
+						sql +=  ", ";
+					}
+				}
+		
+				bInFirst = false;
+		
+				sql += "[" + TrimSpaces(col.Name) + "] ";
+			}
+		}
+	
+		sql += " )"  + "\r\n" + "VALUES" + "\r\n" + "( ";
+	
+		// list all fields
+		bInFirst = true;
+		foreach(IColumn col in table.Columns)
+		{
+			if(!col.IsAutoKey)
+			{
+				if(!col.IsComputed)
+				{
+					if(!bInFirst)
+					{
+						sql +=  ", ";
+					}
+				}
+		
+				bInFirst = false;
+		
+				sql += "[_" + TrimSpaces(col.Name) + "] ";
+			}
+		}
+	
+		sql += ")" + "\r\n";
+	
+		%><%="\r\n"%><%=sql%><%="\r\n"%><%
+		if(WriteProcsDirectlyToAccessDatabase)
+		{
+			database.ExecuteSql(sql);
+		}
+	
+		//----------------------------------------------------------------------
+		// DELETE
+		//----------------------------------------------------------------------
+		sql = "DROP PROC " + esMeta.esPlugIn.ProcDelete(table.Alias) + ";";
+		if(WriteProcsDirectlyToAccessDatabase)
+		{
+			database.ExecuteSql(sql);
+		}
+	
+		sql = "CREATE PROC " + esMeta.esPlugIn.ProcDelete(table.Alias) + " (";
+		
+		// list all keys as parameters
+		bInFirst = true;
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			if(!bInFirst)
+			{
+				sql +=  ", ";
+			}	
+	
+			bInFirst = false;	
+	
+			sql += "[_" + TrimSpaces(col.Name) + "] " + col.DataTypeNameComplete;
+		}
+	
+		sql += ") AS" + "\r\n";
+		sql += "DELETE" + "\r\n" + "FROM [" + table.Name + "]" + "\r\n";
+		sql += "WHERE ";
+	
+		// compare keys with parameters
+		bInFirst = true;
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			if(!bInFirst)
+			{
+				sql += " AND";
+			}	
+	
+			bInFirst = false;
+	
+			sql += " ([" + col.Name + "] = [_" + TrimSpaces(col.Name) + "])";
+		}
+	
+		%><%="\r\n"%><%=sql%><%="\r\n"%><%
+		if(WriteProcsDirectlyToAccessDatabase)
+		{
+			database.ExecuteSql(sql);
+		}
+	}
+} // end main for loop
+%>
+
+<script runat="template">
+
+private string SaveToFile(string fileName, string text, bool generateSingleFile)
+{
+	if(!generateSingleFile)
+	{
+	    string path = (string)esMeta.Input["OutputPath"];
+	    
+		string fname = path;
+		if (!fname.EndsWith("\\")) 
+			fname += "\\";
+			
+		Directory.CreateDirectory(path);		
+		
+		fname += fileName;
+		
+		using (StreamWriter sw = System.IO.File.CreateText(fname)) 
+		{
+			sw.Write(text);
+		} 	
+		
+		return "";
+	}
+	else
+	{
+		return text;			
+	}
+}
+
+private string TrimSpaces(string sql)
+{
+	return sql.Replace(" ", "");	
+}
+
+</script>

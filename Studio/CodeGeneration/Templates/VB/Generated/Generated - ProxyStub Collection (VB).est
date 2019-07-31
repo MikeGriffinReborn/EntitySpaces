@@ -1,0 +1,181 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/%><%@ TemplateInfo 
+    UniqueID="D6FCBC7D-7F41-4d84-A6FA-C361774E0FFF" 
+    Title="Generated - ProxyStub Collection (VB)"   
+    Description="The Proxy Collection Class" 
+    Namespace="EntitySpaces.2019.VB.Generated" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    IsSubTemplate="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------	
+bool TargetTheCompactFramework = (bool)esMeta.Input["TargetTheCompactFramework"];
+string Namespace = (string)esMeta.Input["Namespace"];
+bool GenerateSingleFile = (bool)esMeta.Input["GenerateSingleFile"];
+bool WcfSupport = (bool)esMeta.Input["WcfSupport"];
+string WcfDataContract = (string)esMeta.Input["WcfDataContract"];
+bool WcfEmitDefaultValue = (bool)esMeta.Input["WcfEmitDefaultValue"];
+bool WcfOrder = (bool)esMeta.Input["WcfOrder"];
+bool IncludeRowStateInXml = (bool)esMeta.Input["IncludeRowStateInXml"];
+bool WcfIsRequired = (bool)esMeta.Input["WcfIsRequired"];
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+string comma;
+EntitySpaces.MetadataEngine.IPropertyCollection props;	
+int lastOrdinal = 0;
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------	
+ITable table = (ITable)esMeta.Input["Table"];
+IView view = (IView)esMeta.Input["View"];			
+IColumns cols = (IColumns)esMeta.Input["Columns"];
+esPluginSource source = (esPluginSource)esMeta.Input["Source"];
+
+if(table != null)
+{
+	props = table.Properties;
+}
+else
+{
+	props = view.Properties;
+}
+
+if(!GenerateSingleFile){ %>'===============================================================================
+'                   EntitySpaces Studio by EntitySpaces, LLC
+'            Persistence Layer and Business Objects for Microsoft .NET
+'            EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+'                         http://www.entityspaces.net
+'===============================================================================
+' EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+' EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+' Date Generated       : <%=DateTime.Now.ToString()%><%}%>>
+'===============================================================================
+
+Imports System
+Imports System.Collections.Generic
+Imports System.Text
+Imports System.Data
+Imports System.Runtime.Serialization
+Imports System.Xml.Serialization
+
+Imports EntitySpaces.Interfaces
+Imports EntitySpaces.Core
+
+Namespace <%=Namespace%>
+<%}%>
+
+    <%if(WcfSupport){%><DataContract(Namespace:="<%=WcfDataContract%>", Name:="<%=source.Collection%>")> _<%}%>
+    <XmlType(TypeName:="<%=source.Collection%>ProxyStub")> _
+    <Serializable> _
+    Partial Public Class <%=source.Collection%>ProxyStub
+	
+		Protected Sub New()
+			
+		End Sub	
+		
+		Public Sub New(ByVal coll As esEntityCollection(Of <%=source.Entity%>))
+			Me.New(coll, False, False)
+		End Sub
+
+		Public Sub New(ByVal coll As esEntityCollection(Of <%=source.Entity%>), ByVal dirtyRowsOnly As Boolean)
+			Me.New(coll, dirtyRowsOnly, False)
+		End Sub
+<%if(!TargetTheCompactFramework){%>		
+		#Region "Implicit Casts"
+
+		Public Shared Widening Operator CType(ByVal proxyStubCollection As <%=source.ProxyStubCollection%>) As <%=source.Collection%>
+			Return proxyStubCollection.GetCollection()
+		End Operator
+
+		#End Region<%}%>	
+		
+        Public Function GetEntityType() As Type
+ 	        Return GetType(<%=source.Entity%>)
+        End Function
+		
+		Public Sub New(ByVal coll As esEntityCollection(Of <%=source.Entity%>), ByVal dirtyRowsOnly As Boolean, ByVal dirtyColumnsOnly As Boolean)
+
+            For Each entity As <%=source.Entity%> In coll
+                Select Case entity.RowState
+                    Case esDataRowState.Added, esDataRowState.Modified
+
+                        Collection.Add(New <%=source.ProxyStub%>(entity, dirtyColumnsOnly))
+                        Exit Select
+
+                    Case esDataRowState.Unchanged
+
+                        If Not dirtyRowsOnly Then
+                            Collection.Add(New <%=source.ProxyStub%>(entity, dirtyColumnsOnly))
+                        End If
+                        Exit Select
+                End Select
+            Next
+
+            If coll.es.DeletedEntities IsNot Nothing Then
+                For Each entity As <%=source.Entity%> In coll.es.DeletedEntities
+                    Collection.Add(New <%=source.ProxyStub%>(entity, dirtyColumnsOnly))
+                Next
+            End If
+
+        End Sub		
+
+        <%if(WcfSupport){%><DataMember(Name := "Collection", EmitDefaultValue := False)> _<%}%>
+		Public Collection As New List(Of <%=source.Entity%>ProxyStub)		
+
+        Public Function GetCollection As <%=source.Collection%>
+			
+                If Me._coll is Nothing Then
+                    Me._coll = New <%=source.Collection%>()
+					
+		            Dim proxy As <%=source.Entity%>ProxyStub
+
+                    For Each proxy In Me.Collection
+                        Me._coll.AttachEntity(proxy.Entity)
+                    Next
+                End If
+
+                Return Me._coll
+
+        End Function
+
+        <NonSerialized> _
+		<XmlIgnore> _
+        Private _coll As <%=source.Collection%>
+		
+    End Class
+	
+<%if(!GenerateSingleFile){ %>	
+End Namespace<%}%>
+<script runat="template">
+
+public string GetFileName()
+{
+	return esMeta.esPlugIn.ProxyStubCollection((esPluginSource)esMeta.Input["Source"]) + ".vb";
+}
+
+public EntitySpaces.MetadataEngine.Root TheMetaData
+{
+	get { return esMeta;  }
+	set { esMeta = value; }	
+}
+
+</script>	

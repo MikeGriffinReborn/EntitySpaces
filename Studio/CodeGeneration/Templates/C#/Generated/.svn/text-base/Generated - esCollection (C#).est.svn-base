@@ -1,0 +1,169 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/
+%><%@ TemplateInfo 
+    UniqueID="9D9C3562-88A0-4e9b-B706-6AA92BCC8C53" 
+    Title="Generated - esCollection (C#)"   
+    Description="The Abstract Collection Class" 
+    Namespace="EntitySpaces.2019.C#.Generated" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    IsSubTemplate="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------	
+bool TargetTheCompactFramework = (bool)esMeta.Input["TargetTheCompactFramework"];
+string Namespace = (string)esMeta.Input["Namespace"];
+bool GenerateSingleFile = (bool)esMeta.Input["GenerateSingleFile"];
+bool UseDnnObjectQualifier = (bool)esMeta.Input["UseDnnObjectQualifier"];
+bool UseCustomBaseClass = (bool)esMeta.Input["UseCustomBaseClass"];
+bool SerializableQueries = (bool)esMeta.Input["SerializableQueries"];
+bool WcfSupport = (bool)esMeta.Input["WcfSupport"];
+bool LINQtoSQL = (bool)esMeta.Input["LINQtoSQL"];
+bool GenerateProxyStubs = (bool)esMeta.Input["GenerateProxyStub"];
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------
+string comma;
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------
+ITable table = (ITable)esMeta.Input["Table"];
+IView view = (IView)esMeta.Input["View"];
+IColumns cols = (IColumns)esMeta.Input["Columns"];
+esPluginSource source = (esPluginSource)esMeta.Input["Source"];
+
+if(!GenerateSingleFile){ %>/*
+===============================================================================
+                    EntitySpaces Studio by EntitySpaces, LLC
+             Persistence Layer and Business Objects for Microsoft .NET
+             EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+                          http://www.entityspaces.net
+===============================================================================
+EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+===============================================================================
+*/
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Data;<%if(LINQtoSQL) {%>
+using System.Data.Linq;
+using System.Data.Linq.Mapping;<%}%>
+using System.ComponentModel;
+
+using EntitySpaces.Core;
+using EntitySpaces.Interfaces;
+
+namespace <%=Namespace%>
+{<%}%>
+<%if(!TargetTheCompactFramework){%>
+	[Serializable]<%} if (UseCustomBaseClass) {%>
+	abstract public partial class <%=source.esCollection%> : CollectionBase<<%=source.Entity%>><%}else{%>
+	abstract public partial class <%=source.esCollection%> : esEntityCollection<<%=source.Entity%>><%}%>
+	{
+		#region Housekeeping methods
+		override protected IMetadata Meta
+		{
+			get
+			{
+				return <%=source.Metadata%>.Meta();
+			}
+		}
+
+		protected override string GetCollectionName()
+		{
+			return "<%=source.Collection%>";
+		}
+
+		#endregion		
+		
+		#region Query Logic
+
+	#if (!WindowsCE)
+		[BrowsableAttribute(false)]
+	#endif
+		public <%=source.Query%> Query
+		{
+			get
+			{
+				if (this.query == null)
+				{
+					this.query = new <%=source.Query%>();
+					InitQuery(this.query);
+				}
+
+				return this.query;
+			}
+		}
+
+		public bool Load(<%=source.Query%> query)
+		{
+			this.query = query;
+			InitQuery(this.query);
+			return Query.Load();
+		}
+
+		override protected esDynamicQuery GetDynamicQuery()
+		{
+			if (this.query == null)
+			{
+				this.query = new <%=source.Query%>();
+				this.InitQuery(query);
+			}
+			return this.query;
+		}
+
+		protected void InitQuery(<%=source.Query%> query)
+		{
+			query.OnLoadDelegate = this.OnQueryLoaded;
+			
+			if (!query.es2.HasConnection)
+			{
+				query.es2.Connection = ((IEntityCollection)this).Connection;
+			}			
+		}
+
+		protected override void HookupQuery(esDynamicQuery query)
+		{
+			this.InitQuery((<%=source.Query%>)query);
+		}
+
+		#endregion
+		
+		private <%=source.Query%> query;
+	}
+<%if(!GenerateSingleFile){ %>
+}<%}%>
+<script runat="template">
+
+public string GetFileName()
+{
+	return esMeta.esPlugIn.esCollection((esPluginSource)esMeta.Input["Source"]) + ".cs";
+}
+
+public EntitySpaces.MetadataEngine.Root TheMetaData
+{
+	get { return esMeta;  }
+	set { esMeta = value; }	
+}
+
+</script>	

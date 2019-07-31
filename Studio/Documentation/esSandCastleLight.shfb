@@ -1,0 +1,165 @@
+﻿<project schemaVersion="1.6.0.7">
+    <assemblies>
+        <assembly assemblyPath="..\EntitySpaces\BusinessObjects\bin\Debug\BusinessObjects.dll" xmlCommentsPath="..\EntitySpaces\BusinessObjects\bin\Debug\BusinessObjects.xml" commentsOnly="False" />
+        <assembly assemblyPath="..\EntitySpaces\EntitySpaces.Core\bin\Debug35\EntitySpaces.Core.dll" xmlCommentsPath="..\EntitySpaces\EntitySpaces.Core\bin\Debug35\EntitySpaces.Core.xml" commentsOnly="False" />
+        <assembly assemblyPath="..\EntitySpaces\EntitySpaces.DynamicQuery\bin\Debug35\EntitySpaces.DynamicQuery.dll" xmlCommentsPath="..\EntitySpaces\EntitySpaces.DynamicQuery\bin\Debug35\EntitySpaces.DynamicQuery.xml" commentsOnly="False" />
+        <assembly assemblyPath="..\EntitySpaces\EntitySpaces.Interfaces\bin\Debug35\EntitySpaces.Interfaces.dll" xmlCommentsPath="..\EntitySpaces\EntitySpaces.Interfaces\bin\Debug35\EntitySpaces.Interfaces.xml" commentsOnly="False" />
+        <assembly assemblyPath="..\EntitySpaces\EntitySpaces.Loader\bin\Debug35\EntitySpaces.Loader.dll" xmlCommentsPath="..\EntitySpaces\EntitySpaces.Loader\bin\Debug35\EntitySpaces.Loader.xml" commentsOnly="False" />
+        <assembly assemblyPath="..\EntitySpaces\EntitySpaces.Web\bin\Debug35\EntitySpaces.Web.dll" xmlCommentsPath="..\EntitySpaces\EntitySpaces.Web\bin\Debug35\EntitySpaces.Web.xml" commentsOnly="False" />
+    </assemblies>
+    <namespaceSummaries>
+        <namespaceSummaryItem name="" isDocumented="False">The EntitySpaces Persistence Layer and Business Objects for Microsoft .NET 2.0</namespaceSummaryItem>
+        <namespaceSummaryItem name="BusinessObjects" isDocumented="False">An example of an EntitySpaces set of classes. The proxy classes are optional and can be used for two way communications, including WCF. The CustomBase classes are, also, optional. They change the inheritance hierarchy. This allows you to add custom code that affects all entities, collections, or queries.</namespaceSummaryItem>
+        <namespaceSummaryItem name="EntitySpaces.Core" isDocumented="True">The EntitySpaces Core Classes</namespaceSummaryItem>
+        <namespaceSummaryItem name="EntitySpaces.DynamicQuery" isDocumented="True" />
+        <namespaceSummaryItem name="EntitySpaces.Interfaces" isDocumented="True">The EntitySpaces Interface Classes</namespaceSummaryItem>
+        <namespaceSummaryItem name="EntitySpaces.Loader" isDocumented="True">The EntitySpaces Data Provider Loader</namespaceSummaryItem>
+        <namespaceSummaryItem name="EntitySpaces.LoaderMT" isDocumented="True">The EntitySpaces Medium Trust Data Provider Loader</namespaceSummaryItem>
+        <namespaceSummaryItem name="EntitySpaces.Web" isDocumented="True">The EntitySpaces  ASP.NET esDataSource</namespaceSummaryItem>
+    </namespaceSummaries>
+    <dependencies>
+        <dependencyItem depPath="GAC:System.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    </dependencies>
+    <componentConfigurations>
+        <component id="Post-transform Component" enabled="True" configuration="&lt;component type=&quot;SandcastleBuilder.Components.PostTransformComponent&quot; assembly=&quot;{@SHFBFolder}SandcastleBuilder.Components.dll&quot; id=&quot;Post-transform Component&quot;&gt;&lt;!-- Code colorizer files (required).&#xD;&#xA;                 Attributes:&#xD;&#xA;                    Stylesheet file (required)&#xD;&#xA;                    Script file (required)&#xD;&#xA;                    &quot;Copy&quot; image file (required) --&gt;&lt;colorizer stylesheet=&quot;{@SHFBFolder}Colorizer\highlight.css&quot; scriptFile=&quot;{@SHFBFolder}Colorizer\highlight.js&quot; copyImage=&quot;{@SHFBFolder}Colorizer\CopyCode.gif&quot; /&gt;&lt;!-- Output path for the files (required).  This should match the&#xD;&#xA;                 output path of the HTML files (see SaveComponent below). --&gt;&lt;outputPath value=&quot;Output\html&quot; /&gt;&lt;!-- Logo image file (optional).  Filename is required. The height,&#xD;&#xA;                 width, altText, placement, and alignment attributes are&#xD;&#xA;                 optional. --&gt;&lt;logoFile filename=&quot;C:\newlogo\EntitySpacesD22baR01bP01ZL.png&quot; height=&quot;139&quot; width=&quot;277&quot; altText=&quot;&quot; placement=&quot;left&quot; alignment=&quot;left&quot; /&gt;&lt;/component&gt;" />
+    </componentConfigurations>
+    <apiFilter>
+        <filter entryType="Namespace" fullName="BusinessObjects" isExposed="False">
+            <filter entryType="Class" fullName="BusinessObjects.Employees" filterName="Employees" isExposed="True" />
+            <filter entryType="Class" fullName="BusinessObjects.EmployeesCollection" filterName="EmployeesCollection" isExposed="True" />
+            <filter entryType="Class" fullName="BusinessObjects.EmployeesCollectionProxyStub" filterName="EmployeesCollectionProxyStub" isExposed="True" />
+            <filter entryType="Class" fullName="BusinessObjects.EmployeesMetadata" filterName="EmployeesMetadata" isExposed="True" />
+            <filter entryType="Class" fullName="BusinessObjects.EmployeesMetadata.ColumnNames" filterName="EmployeesMetadata.ColumnNames" isExposed="True" />
+            <filter entryType="Class" fullName="BusinessObjects.EmployeesMetadata.PropertyNames" filterName="EmployeesMetadata.PropertyNames" isExposed="True" />
+            <filter entryType="Class" fullName="BusinessObjects.EmployeesProxyStub" filterName="EmployeesProxyStub" isExposed="True" />
+            <filter entryType="Class" fullName="BusinessObjects.EmployeesQuery" filterName="EmployeesQuery" isExposed="True" />
+            <filter entryType="Class" fullName="BusinessObjects.esEmployees" filterName="esEmployees" isExposed="True" />
+            <filter entryType="Class" fullName="BusinessObjects.esEmployees.esStrings" filterName="esEmployees.esStrings" isExposed="True" />
+            <filter entryType="Class" fullName="BusinessObjects.esEmployeesCollection" filterName="esEmployeesCollection" isExposed="True" />
+            <filter entryType="Class" fullName="BusinessObjects.esEmployeesQuery" filterName="esEmployeesQuery" isExposed="True" />
+        </filter>
+        <filter entryType="Namespace" fullName="EntitySpaces.Core" isExposed="False">
+            <filter entryType="Class" fullName="EntitySpaces.Core.esEntity" filterName="esEntity" isExposed="False">
+                <filter entryType="Constructor" fullName="EntitySpaces.Core.esEntity.#ctor" filterName=".ctor" isExposed="True" />
+                <filter entryType="Method" fullName="EntitySpaces.Core.esEntity.AcceptChanges" filterName="AcceptChanges" isExposed="True" />
+                <filter entryType="Method" fullName="EntitySpaces.Core.esEntity.ExecuteNonQuery" filterName="ExecuteNonQuery" isExposed="True" />
+                <filter entryType="Method" fullName="EntitySpaces.Core.esEntity.ExecuteReader" filterName="ExecuteReader" isExposed="True" />
+                <filter entryType="Method" fullName="EntitySpaces.Core.esEntity.ExecuteScalar" filterName="ExecuteScalar" isExposed="True" />
+                <filter entryType="Method" fullName="EntitySpaces.Core.esEntity.GetColumn" filterName="GetColumn" isExposed="True" />
+                <filter entryType="Method" fullName="EntitySpaces.Core.esEntity.GetOriginalColumnValue" filterName="GetOriginalColumnValue" isExposed="True" />
+                <filter entryType="Method" fullName="EntitySpaces.Core.esEntity.Load" filterName="Load" isExposed="True" />
+                <filter entryType="Method" fullName="EntitySpaces.Core.esEntity.MarkAllColumnsAsDirty" filterName="MarkAllColumnsAsDirty" isExposed="True" />
+                <filter entryType="Method" fullName="EntitySpaces.Core.esEntity.MarkAsDeleted" filterName="MarkAsDeleted" isExposed="True" />
+                <filter entryType="Method" fullName="EntitySpaces.Core.esEntity.MarkFieldAsModified" filterName="MarkFieldAsModified" isExposed="True" />
+                <filter entryType="Method" fullName="EntitySpaces.Core.esEntity.RejectChanges" filterName="RejectChanges" isExposed="True" />
+                <filter entryType="Method" fullName="EntitySpaces.Core.esEntity.Save" filterName="Save" isExposed="True" />
+                <filter entryType="Method" fullName="EntitySpaces.Core.esEntity.SetColumn" filterName="SetColumn" isExposed="True" />
+                <filter entryType="Method" fullName="EntitySpaces.Core.esEntity.Validate" filterName="Validate" isExposed="True" />
+                <filter entryType="Property" fullName="EntitySpaces.Core.esEntity.Collection" filterName="Collection" isExposed="True" />
+                <filter entryType="Property" fullName="EntitySpaces.Core.esEntity.es" filterName="es" isExposed="True" />
+                <filter entryType="Property" fullName="EntitySpaces.Core.esEntity.Meta" filterName="Meta" isExposed="True" />
+                <filter entryType="Property" fullName="EntitySpaces.Core.esEntity.SpecialBinder" filterName="SpecialBinder" isExposed="True" />
+            </filter>
+            <filter entryType="Class" fullName="EntitySpaces.Core.esEntityCollection`1" filterName="esEntityCollection`1" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.Core.esEntityCollectionBase" filterName="esEntityCollectionBase" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.Core.esEntityCollectionView`1" filterName="esEntityCollectionView`1" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.Core.esExtendedPropertyAttribute" filterName="esExtendedPropertyAttribute" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.Core.esHierarchicalPropertyAttribute" filterName="esHierarchicalPropertyAttribute" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.Core.esMetadata" filterName="esMetadata" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.Core.esUtility" filterName="esUtility" isExposed="True" />
+        </filter>
+        <filter entryType="Namespace" fullName="EntitySpaces.DynamicQuery" isExposed="False">
+            <filter entryType="Class" fullName="EntitySpaces.DynamicQuery.esCast" filterName="esCast" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.DynamicQuery.esComparison" filterName="esComparison" isExposed="True" />
+            <filter entryType="Enumeration" fullName="EntitySpaces.DynamicQuery.esConjunction" filterName="esConjunction" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.DynamicQuery.esDynamicQuerySerializable" filterName="esDynamicQuerySerializable" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.DynamicQuery.esExpression" filterName="esExpression" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.DynamicQuery.esGroupByItem" filterName="esGroupByItem" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.DynamicQuery.esJoinItem" filterName="esJoinItem" isExposed="True" />
+            <filter entryType="Enumeration" fullName="EntitySpaces.DynamicQuery.esOrderByDirection" filterName="esOrderByDirection" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.DynamicQuery.esOrderByItem" filterName="esOrderByItem" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.DynamicQuery.esQueryItem" filterName="esQueryItem" isExposed="True" />
+            <filter entryType="Enumeration" fullName="EntitySpaces.DynamicQuery.esQueryType" filterName="esQueryType" isExposed="True" />
+        </filter>
+        <filter entryType="Namespace" fullName="EntitySpaces.Interfaces" isExposed="False">
+            <filter entryType="Class" fullName="EntitySpaces.Interfaces.esConcurrencyException" filterName="esConcurrencyException" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.Interfaces.esConnection" filterName="esConnection" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.Interfaces.esDynamicQuery" filterName="esDynamicQuery" isExposed="True">
+                <filter entryType="Method" fullName="EntitySpaces.Interfaces.esDynamicQuery.PopulateRequest" filterName="PopulateRequest" isExposed="False" />
+                <filter entryType="Field" fullName="EntitySpaces.Interfaces.esDynamicQuery.OnLoadDelegate" filterName="OnLoadDelegate" isExposed="False" />
+            </filter>
+            <filter entryType="Class" fullName="EntitySpaces.Interfaces.esException" filterName="esException" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.Interfaces.esParameter" filterName="esParameter" isExposed="True" />
+            <filter entryType="Enumeration" fullName="EntitySpaces.Interfaces.esParameterDirection" filterName="esParameterDirection" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.Interfaces.esParameters" filterName="esParameters" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.Interfaces.esProviderSpecificMetadata" filterName="esProviderSpecificMetadata" isExposed="True" />
+            <filter entryType="Enumeration" fullName="EntitySpaces.Interfaces.esSqlAccessType" filterName="esSqlAccessType" isExposed="True" />
+            <filter entryType="Class" fullName="EntitySpaces.Interfaces.esTransactionScope" filterName="esTransactionScope" isExposed="True" />
+            <filter entryType="Enumeration" fullName="EntitySpaces.Interfaces.esTransactionScopeOption" filterName="esTransactionScopeOption" isExposed="True" />
+        </filter>
+        <filter entryType="Namespace" fullName="EntitySpaces.Loader" isExposed="True">
+            <filter entryType="Class" fullName="EntitySpaces.Loader.esDataProviderFactory" filterName="esDataProviderFactory" isExposed="True">
+                <filter entryType="Constructor" fullName="EntitySpaces.Loader.esDataProviderFactory.#ctor" filterName=".ctor" isExposed="False" />
+            </filter>
+        </filter>
+        <filter entryType="Namespace" fullName="EntitySpaces.Web" isExposed="True">
+            <filter entryType="Class" fullName="EntitySpaces.Web.esDataSource" filterName="esDataSource" isExposed="True">
+                <filter entryType="Method" fullName="EntitySpaces.Web.esDataSource.GetView" filterName="GetView" isExposed="False" />
+                <filter entryType="Method" fullName="EntitySpaces.Web.esDataSource.GetViewNames" filterName="GetViewNames" isExposed="False" />
+                <filter entryType="Method" fullName="EntitySpaces.Web.esDataSource.LoadViewState" filterName="LoadViewState" isExposed="False" />
+                <filter entryType="Method" fullName="EntitySpaces.Web.esDataSource.SaveViewState" filterName="SaveViewState" isExposed="False" />
+                <filter entryType="Method" fullName="EntitySpaces.Web.esDataSource.TrackViewState" filterName="TrackViewState" isExposed="False" />
+            </filter>
+            <filter entryType="Delegate" fullName="EntitySpaces.Web.esDataSource.esDataSourceCreateCollectionEventHandler" filterName="esDataSource.esDataSourceCreateCollectionEventHandler" isExposed="False" />
+            <filter entryType="Delegate" fullName="EntitySpaces.Web.esDataSource.esDataSourceCreateEntityEventHandler" filterName="esDataSource.esDataSourceCreateEntityEventHandler" isExposed="False" />
+            <filter entryType="Delegate" fullName="EntitySpaces.Web.esDataSource.esDataSourceDeleteEventHandler" filterName="esDataSource.esDataSourceDeleteEventHandler" isExposed="False" />
+            <filter entryType="Delegate" fullName="EntitySpaces.Web.esDataSource.esDataSourceExceptionEventHandler" filterName="esDataSource.esDataSourceExceptionEventHandler" isExposed="False" />
+            <filter entryType="Delegate" fullName="EntitySpaces.Web.esDataSource.esDataSourceInsertEventHandler" filterName="esDataSource.esDataSourceInsertEventHandler" isExposed="False" />
+            <filter entryType="Delegate" fullName="EntitySpaces.Web.esDataSource.esDataSourceSelectEventHandler" filterName="esDataSource.esDataSourceSelectEventHandler" isExposed="False" />
+            <filter entryType="Delegate" fullName="EntitySpaces.Web.esDataSource.esDataSourceUpdateEventHandler" filterName="esDataSource.esDataSourceUpdateEventHandler" isExposed="False" />
+            <filter entryType="Class" fullName="EntitySpaces.Web.esDataSourceSortItem" filterName="esDataSourceSortItem" isExposed="False" />
+            <filter entryType="Class" fullName="EntitySpaces.Web.esDataSourceView" filterName="esDataSourceView" isExposed="False" />
+        </filter>
+    </apiFilter>
+    <ProjectSummary />
+    <MissingTags>AutoDocumentCtors, Namespace, TypeParameter</MissingTags>
+    <VisibleItems>Protected, SealedProtected</VisibleItems>
+    <HtmlHelp1xCompilerPath path="" />
+    <HtmlHelp2xCompilerPath path="" />
+    <OutputPath>c:\help_light\</OutputPath>
+    <SandcastlePath path="" />
+    <WorkingPath path="" />
+    <CleanIntermediates>True</CleanIntermediates>
+    <KeepLogFile>True</KeepLogFile>
+    <BuildLogFile path="" />
+    <HelpFileFormat>Help1xAndWebsite</HelpFileFormat>
+    <CppCommentsFixup>False</CppCommentsFixup>
+    <FrameworkVersion>3.5</FrameworkVersion>
+    <IndentHtml>False</IndentHtml>
+    <Preliminary>False</Preliminary>
+    <RootNamespaceContainer>False</RootNamespaceContainer>
+    <RootNamespaceTitle />
+    <HelpTitle>The EntitySpaces 2010 API Reference (Simple)</HelpTitle>
+    <HtmlHelpName>EntitySpaces_Simple</HtmlHelpName>
+    <Language>en-US</Language>
+    <CopyrightHref>http://www.entityspaces.net</CopyrightHref>
+    <CopyrightText>Copyright 2005 - 2010, EntitySpaces, LLC</CopyrightText>
+    <FeedbackEMailAddress>api_doc@entityspaces.net</FeedbackEMailAddress>
+    <FeedbackEMailLinkText />
+    <HeaderText>Persistence Layer and Business Objects for Microsoft .NET</HeaderText>
+    <FooterText />
+    <ProjectLinkType>Local</ProjectLinkType>
+    <SdkLinkType>Msdn</SdkLinkType>
+    <SdkLinkTarget>Blank</SdkLinkTarget>
+    <PresentationStyle>Prototype</PresentationStyle>
+    <NamingMethod>Guid</NamingMethod>
+    <SyntaxFilters>Standard</SyntaxFilters>
+    <ShowFeedbackControl>False</ShowFeedbackControl>
+    <BinaryTOC>True</BinaryTOC>
+    <IncludeFavorites>False</IncludeFavorites>
+    <CollectionTocStyle>Hierarchical</CollectionTocStyle>
+    <IncludeStopWordList>True</IncludeStopWordList>
+    <PlugInNamespaces>ms.vsipcc+, ms.vsexpresscc+</PlugInNamespaces>
+    <HelpFileVersion>1.0.0.0</HelpFileVersion>
+    <ContentPlacement>AboveNamespaces</ContentPlacement>
+</project>

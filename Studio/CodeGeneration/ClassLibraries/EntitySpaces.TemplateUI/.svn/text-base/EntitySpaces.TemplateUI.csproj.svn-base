@@ -1,0 +1,341 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{988AF577-2940-47E7-A568-9A9C58C6418B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EntitySpaces.TemplateUI</RootNamespace>
+    <AssemblyName>EntitySpaces.TemplateUI</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\StrongNameKey\EntitySpaces.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DevExpress.Data.v10.2, Version=10.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Utils.v10.2, Version=10.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraEditors.v10.2, Version=10.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminTemplateSuite.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AdminTemplateSuite.Designer.cs">
+      <DependentUpon>AdminTemplateSuite.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ClientProxyStub_Basic.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ClientProxyStub_Basic.Designer.cs">
+      <DependentUpon>ClientProxyStub_Basic.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ClientProxyStub_MetadataMaps.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ClientProxyStub_MetadataMaps.Designer.cs">
+      <DependentUpon>ClientProxyStub_MetadataMaps.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ClientProxyStub_ProxyStub.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ClientProxyStub_ProxyStub.Designer.cs">
+      <DependentUpon>ClientProxyStub_ProxyStub.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WCFServiceJson_Advanced.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WCFServiceJson_Advanced.Designer.cs">
+      <DependentUpon>WCFServiceJson_Advanced.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WCFServiceJson_Basic.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WCFServiceJson_Basic.Designer.cs">
+      <DependentUpon>WCFServiceJson_Basic.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EntitySpaces_js_Advanced.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EntitySpaces_js_Advanced.Designer.cs">
+      <DependentUpon>EntitySpaces_js_Advanced.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EntitySpaces_js_Generated.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EntitySpaces_js_Generated.Designer.cs">
+      <DependentUpon>EntitySpaces_js_Generated.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RIA_DomainService.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RIA_DomainService.Designer.cs">
+      <DependentUpon>RIA_DomainService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Ria_DynamicQueries.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Ria_DynamicQueries.Designer.cs">
+      <DependentUpon>Ria_DynamicQueries.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RIA_Metadata.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RIA_Metadata.Designer.cs">
+      <DependentUpon>RIA_Metadata.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RIA_SharedClasses.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RIA_SharedClasses.Designer.cs">
+      <DependentUpon>RIA_SharedClasses.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StoredProcedure_DotNetNuke.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StoredProcedure_DotNetNuke.Designer.cs">
+      <DependentUpon>StoredProcedure_DotNetNuke.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomMaster_Basic.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomMaster_Basic.Designer.cs">
+      <DependentUpon>CustomMaster_Basic.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GeneratedMaster_Advanced.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GeneratedMaster_Advanced.Designer.cs">
+      <DependentUpon>GeneratedMaster_Advanced.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GeneratedMaster_Basic.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GeneratedMaster_Basic.Designer.cs">
+      <DependentUpon>GeneratedMaster_Basic.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GeneratedMaster_ProxyStub.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GeneratedMaster_ProxyStub.Designer.cs">
+      <DependentUpon>GeneratedMaster_ProxyStub.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MultiProviderMap_Advanced.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MultiProviderMap_Advanced.Designer.cs">
+      <DependentUpon>MultiProviderMap_Advanced.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MultiProviderMap_Basic.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MultiProviderMap_Basic.Designer.cs">
+      <DependentUpon>MultiProviderMap_Basic.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StoredProcedure_Access.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StoredProcedure_Access.Designer.cs">
+      <DependentUpon>StoredProcedure_Access.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StoredProcedure_MicrosoftSQL.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StoredProcedure_MicrosoftSQL.Designer.cs">
+      <DependentUpon>StoredProcedure_MicrosoftSQL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StoredProcedure_MySQL.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StoredProcedure_MySQL.Designer.cs">
+      <DependentUpon>StoredProcedure_MySQL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StoredProcedure_Oracle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StoredProcedure_Oracle.Designer.cs">
+      <DependentUpon>StoredProcedure_Oracle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StoredProcedure_PostgreSQL.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StoredProcedure_PostgreSQL.Designer.cs">
+      <DependentUpon>StoredProcedure_PostgreSQL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StoredProcedure_Sybase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StoredProcedure_Sybase.Designer.cs">
+      <DependentUpon>StoredProcedure_Sybase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WCFService_Basic.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WCFService_Basic.Designer.cs">
+      <DependentUpon>WCFService_Basic.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AdminTemplateSuite.resx">
+      <DependentUpon>AdminTemplateSuite.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClientProxyStub_Basic.resx">
+      <DependentUpon>ClientProxyStub_Basic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClientProxyStub_MetadataMaps.resx">
+      <DependentUpon>ClientProxyStub_MetadataMaps.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClientProxyStub_ProxyStub.resx">
+      <DependentUpon>ClientProxyStub_ProxyStub.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WCFServiceJson_Advanced.resx">
+      <DependentUpon>WCFServiceJson_Advanced.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WCFServiceJson_Basic.resx">
+      <DependentUpon>WCFServiceJson_Basic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EntitySpaces_js_Advanced.resx">
+      <DependentUpon>EntitySpaces_js_Advanced.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EntitySpaces_js_Generated.resx">
+      <DependentUpon>EntitySpaces_js_Generated.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RIA_DomainService.resx">
+      <DependentUpon>RIA_DomainService.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ria_DynamicQueries.resx">
+      <DependentUpon>Ria_DynamicQueries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RIA_Metadata.resx">
+      <DependentUpon>RIA_Metadata.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RIA_SharedClasses.resx">
+      <DependentUpon>RIA_SharedClasses.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StoredProcedure_DotNetNuke.resx">
+      <DependentUpon>StoredProcedure_DotNetNuke.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomMaster_Basic.resx">
+      <DependentUpon>CustomMaster_Basic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GeneratedMaster_Advanced.resx">
+      <DependentUpon>GeneratedMaster_Advanced.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GeneratedMaster_Basic.resx">
+      <DependentUpon>GeneratedMaster_Basic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GeneratedMaster_ProxyStub.resx">
+      <DependentUpon>GeneratedMaster_ProxyStub.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MultiProviderMap_Advanced.resx">
+      <DependentUpon>MultiProviderMap_Advanced.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MultiProviderMap_Basic.resx">
+      <DependentUpon>MultiProviderMap_Basic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StoredProcedure_Access.resx">
+      <DependentUpon>StoredProcedure_Access.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StoredProcedure_MicrosoftSQL.resx">
+      <DependentUpon>StoredProcedure_MicrosoftSQL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StoredProcedure_MySQL.resx">
+      <DependentUpon>StoredProcedure_MySQL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StoredProcedure_Oracle.resx">
+      <DependentUpon>StoredProcedure_Oracle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StoredProcedure_PostgreSQL.resx">
+      <DependentUpon>StoredProcedure_PostgreSQL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StoredProcedure_Sybase.resx">
+      <DependentUpon>StoredProcedure_Sybase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WCFService_Basic.resx">
+      <DependentUpon>WCFService_Basic.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EntitySpaces.AddIn.TemplateUI\EntitySpaces.AddIn.TemplateUI.csproj">
+      <Project>{60B3C557-01AB-4099-82C8-616E8BBF20E7}</Project>
+      <Name>EntitySpaces.AddIn.TemplateUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EntitySpaces.MetadataEngine\EntitySpaces.MetadataEngine.csproj">
+      <Project>{72BEAB1C-B55F-4F0E-89AF-17F71E74A452}</Project>
+      <Name>EntitySpaces.MetadataEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\StrongNameKey\EntitySpaces.snk">
+      <Link>EntitySpaces.snk</Link>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

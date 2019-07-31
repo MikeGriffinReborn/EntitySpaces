@@ -1,0 +1,92 @@
+﻿2019-03-15 13:49:11|       9.87.0.7014|      508296|-R-S|C:\Program Files\InstallMate 9\Stubs80\Tsu32u.dll
+2019-07-09 07:44:08|                  |      100495|-R-S|C:\svnroot\entityspaces_new\Code\ES2017\Installer\EntitySpaces_Developer_test\Developer\EntitySpaces_2019_Developer.dat
+2019-07-09 07:44:08|                  |      282112|-R-S|C:\svnroot\entityspaces_new\Code\ES2017\Installer\EntitySpaces_Developer_test\Developer\EntitySpaces_2019_Developer32.dll
+2017-08-08 11:27:13|                  |        4846|-R-S|C:\Program Files\InstallMate 9\Data\Resources\Generic.ico
+2019-07-09 07:44:08|                  |        2197|-R-S|C:\svnroot\entityspaces_new\Code\ES2017\Installer\EntitySpaces_Developer_test\Developer\Readme.txt
+2019-03-15 13:47:38|       9.87.0.7014|       24968|-R-S|C:\Program Files\InstallMate 9\Stubs80\Setup.Administrator\Setup32u.exe
+2012-03-27 20:17:29|                  |     3962751|----|C:\svnroot\entityspaces_new\Code\ES2017\Documentation\EntitySpaces.chm
+2012-03-27 20:17:29|                  |      788592|----|C:\svnroot\entityspaces_new\Code\ES2017\Documentation\EntitySpaces_GetStarted.pdf
+2012-02-28 23:39:00|                  |      263691|----|C:\svnroot\entityspaces_new\Code\ES2017\Documentation\ManualSetup.pdf
+2019-07-08 07:09:07|      2019.1.708.0|      637952|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\StandAlone\bin\Release\EntitySpaces.exe
+2019-07-08 07:09:04|      2019.1.708.0|      624128|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\StandAlone\bin\Release\EntitySpaces2019.AddIn.dll
+2019-07-08 07:08:55|      2019.1.708.0|      274432|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\StandAlone\bin\Release\EntitySpaces.MetadataEngine.dll
+2019-07-08 07:09:02|      2019.1.708.0|      162816|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\StandAlone\bin\Release\EntitySpaces.TemplateUI.dll
+2019-07-08 07:08:55|      2019.1.708.0|      121856|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\CommandLine\bin\Release\EntitySpaces.CommandLine.exe
+2012-01-28 11:17:10|       7.10.6030.0|      110592|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\ThirdPartyBin\adodb.dll
+2012-01-28 11:16:56|           2.8.0.0|       36864|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\StandAlone\bin\Release\Interop.ADOX.dll
+2012-01-28 11:16:56|           2.8.0.0|       36864|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\ClassLibraries\EntitySpaces.MetadataEngine\Interop.ADOX.dll
+2019-07-08 07:08:57|      2019.1.708.0|       24064|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\StandAlone\bin\Release\EntitySpaces.CodeGenerator.dll
+2019-07-08 07:09:01|      2019.1.708.0|       22016|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\StandAlone\bin\Release\EntitySpaces.MetadataEngine.SQLAzure.dll
+2019-07-08 07:08:58|      2019.1.708.0|       19968|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\StandAlone\bin\Release\EntitySpaces.MetadataEngine.SqlCe.dll
+2019-07-08 07:08:58|      2019.1.708.0|       18944|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\StandAlone\bin\Release\EntitySpaces.Common.dll
+2019-07-08 07:08:58|      2019.1.708.0|       16384|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\StandAlone\bin\Release\EntitySpaces.MetadataEngine.SQLite.dll
+2019-07-08 07:08:55|      2019.1.708.0|        8704|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\AddInInstaller\bin\Release\AddInInstaller.exe
+2019-07-08 07:08:55|      2019.1.708.0|        6656|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\esGacInstall\bin\Release\esGacInstall.exe
+2019-07-08 07:08:58|      2019.1.708.0|        5632|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\StandAlone\bin\Release\EntitySpaces.AddIn.TemplateUI.dll
+2012-02-28 23:39:09|                  |       10134|----|C:\svnroot\entityspaces_new\Code\ES2017\Installer\iexplore_32537.ico
+2012-01-28 11:18:38|                  |       37646|----|C:\svnroot\entityspaces_new\Code\ES2017\Installer\eslogo.jpg
+2019-07-02 12:48:19|                  |       21914|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\ClassLibraries\EntitySpaces.AddIn\AddIn\EntitySpaces2019.AddIn
+2012-03-27 20:17:12|                  |       17522|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\esLanguages.xml
+2019-07-02 11:21:21|                  |       57743|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\Web\Web Admin Suite (VB).est
+2019-07-02 11:21:23|                  |       56434|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\Web\Web Admin Suite (C#).est
+2019-07-02 11:21:22|                  |       30432|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\Generated\Generated - Hierarchical (VB).est
+2019-07-09 07:41:59|                  |       29902|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\Generated\Generated - Hierarchical (C#).est
+2019-07-02 11:21:23|                  |       18355|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\StoredProcedures\DotNetNuke\DotNetNuke_SQL.est
+2019-07-02 11:21:23|                  |       17906|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\StoredProcedures\Microsoft SQL.est
+2019-07-02 11:21:22|                  |       15027|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\Generated\Generated - esEntity (VB).est
+2019-07-02 11:21:22|                  |       14868|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\Generated\Generated - Metadata (VB).est
+2019-07-02 11:21:24|                  |       14410|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\Generated\Generated - Metadata (C#).est
+2019-07-02 11:21:24|                  |       14034|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\Generated\Generated - esEntity (C#).est
+2019-07-02 11:21:23|                  |       12974|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\StoredProcedures\Sybase.est
+2019-07-02 11:21:24|                  |       12272|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\WCFServices\WCF Service (C#) JSON.est
+2019-07-02 11:21:21|                  |       11852|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\WCFServices\WCF Service (VB) JSON.est
+2019-07-02 11:21:23|                  |       11815|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\JavaScript\JavaScript Classes.est
+2019-07-02 11:21:23|                  |       11449|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\StoredProcedures\MySQL.est
+2019-07-02 11:21:22|                  |       11344|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\ProxyStub\Client Side Proxy Stub (VB).est
+2019-07-02 11:21:21|                  |       10962|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\WCFServices\WCF Service (VB) Non-Proxy.est
+2019-07-02 11:21:23|                  |       10950|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\StoredProcedures\Oracle.est
+2019-07-02 11:21:21|                  |       10819|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\WCFServices\WCF Service (VB).est
+2019-07-02 11:21:22|                  |       10796|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\Generated\Generated - ProxyStub (VB).est
+2019-07-02 11:21:24|                  |       10348|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\ProxyStub\Client Side Proxy Stub (C#).est
+2019-07-02 11:21:24|                  |       10327|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\WCFServices\WCF Service (C#) Non-Proxy.est
+2019-07-02 11:21:23|                  |       10181|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\WCFServices\WCF Service (C#).est
+2019-07-02 11:21:24|                  |        9669|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\Generated\Generated - ProxyStub (C#).est
+2019-07-02 11:21:24|                  |        9501|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\RIA\RIA DomainService (C#).est
+2019-07-02 11:21:22|                  |        9329|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\RIA\RIA DomainService (VB).est
+2019-07-02 11:21:23|                  |        9201|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\StoredProcedures\PostgreSQL.est
+2019-07-02 11:21:22|                  |        7514|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\Generated\Generated - Entity (VB).est
+2019-07-02 11:21:22|                  |        7428|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\MultiProvider\MetadataMap (VB).est
+2019-07-02 11:21:24|                  |        7242|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\Generated\Generated - Entity (C#).est
+2019-07-02 11:21:24|                  |        7117|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\MultiProvider\MetadataMap (C#).est
+2019-07-02 11:21:22|                  |        6484|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\Generated\Generated - ProxyStub Collection (VB).est
+2019-07-02 11:21:24|                  |        5952|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\Generated\Generated - ProxyStub Collection (C#).est
+2019-07-02 11:21:22|                  |        5913|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\Generated\Generated - Collection (VB).est
+2019-07-02 11:21:22|                  |        5665|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\Generated\Generated - esCollection (VB).est
+2019-07-02 11:21:24|                  |        5514|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\Generated\Generated - Collection (C#).est
+2019-07-02 11:21:25|                  |        5157|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\Generated - Classes Master (C#).est
+2019-07-02 11:21:23|                  |        5157|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\Generated - Classes Master (VB).est
+2019-07-02 11:21:24|                  |        5119|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\Generated\Generated - esCollection (C#).est
+2019-07-02 11:21:21|                  |        4609|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\RIA\RIA DynamicQueries (VB).est
+2019-07-02 11:21:24|                  |        4551|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\RIA\RIA Shared Classes (C#).est
+2019-07-02 11:21:21|                  |        4519|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\RIA\RIA Shared Classes (VB).est
+2019-07-02 11:21:24|                  |        4509|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\RIA\RIA DynamicQueries (C#).est
+2019-07-02 11:21:22|                  |        4507|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\Generated\Generated - Query (VB).est
+2019-07-02 11:21:22|                  |        4457|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\Generated\Generated - esQuery (VB).est
+2019-07-02 11:21:21|                  |        4435|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\RIA\RIA Metadata Classes (VB).est
+2019-07-02 11:21:24|                  |        4407|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\RIA\RIA Metadata Classes (C#).est
+2019-07-02 11:21:24|                  |        4376|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\Generated\Generated - Query (C#).est
+2019-07-02 11:21:24|                  |        4334|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\Generated\Generated - esQuery (C#).est
+2019-07-02 11:21:23|                  |        3300|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\Custom - Classes Master (VB).est
+2019-07-02 11:21:25|                  |        3294|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\Custom - Classes Master (C#).est
+2019-07-02 11:21:25|                  |        2760|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\Custom\Custom - Collection (C#).est
+2019-07-02 11:21:23|                  |        2754|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\Custom\Custom - Collection (VB).est
+2019-07-02 11:21:23|                  |        2737|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\Custom\Custom - Entity (VB).est
+2019-07-02 11:21:23|                  |        2728|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\VB\Custom\Custom - Query (VB).est
+2019-07-02 11:21:25|                  |        2714|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\Custom\Custom - Entity (C#).est
+2019-07-02 11:21:25|                  |        2701|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\Templates\C#\Custom\Custom - Query (C#).est
+2012-01-28 11:17:10|                  |        1098|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\CustomBase\VB\CollectionBase.vb
+2012-01-28 11:17:10|                  |         803|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\CustomBase\C#\EntityBase.cs
+2012-01-28 11:17:10|                  |         802|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\CustomBase\C#\CollectionBase.cs
+2012-01-28 11:17:10|                  |         796|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\CustomBase\VB\EntityBase.vb
+2012-01-28 11:17:10|                  |         752|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\CustomBase\C#\QueryBase.cs
+2012-01-28 11:17:10|                  |         743|----|C:\svnroot\entityspaces_new\Code\ES2017\CodeGeneration\CustomBase\VB\QueryBase.vb

@@ -1,0 +1,778 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/%>
+<%@ TemplateInfo 
+    UniqueID="D864068B-C188-4e4f-9D55-BC480F364FA7"
+	UserInterfaceID="CAC5B8DE-CC72-484d-9470-C6FF652EDC80"
+    Title="DotNetNuke SQL"   
+    Description="DotNetNuke Stored Procedures" 
+    Namespace="EntitySpaces.2019.StoredProcedures.DotNetNuke" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    RequiresUI="True" %><% 
+	
+string fileName = "";
+dbEntityType EntityType = dbEntityType.Tables;
+
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------
+ArrayList entities         = esMeta.Input["Entities"] as ArrayList;
+string entityType          = (string)esMeta.Input["EntityType"];
+string databaseName        = (string)esMeta.Input["Database"];
+bool UseAlter              = (bool)esMeta.Input["UseAlter"];
+bool GenerateDocumentation = (bool)esMeta.Input["GenerateDocumentation"];
+bool SqlServer2005         = (bool)esMeta.Input["SqlServer2005"];
+
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+string comma;
+int lastOrdinal = 0;
+bool inFirst = true;
+Hashtable fKeys = new Hashtable();
+bool blnHasComputed = false;
+string strWhereClause = "";
+string strWhereAnd = "";
+string strWhereFields = "";
+string strComma = "";
+
+string allSQL = "";
+	
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------	
+ITable table = null;
+IView  view = null;
+IColumns cols = null;
+IIndex pkIndex = null;
+IDatabase database = esMeta.Databases[databaseName];
+
+foreach(string tableOrView in entities)
+{
+	string text = "";
+	
+	if(EntityType == dbEntityType.Tables)
+	{
+		table = database.Tables[tableOrView];
+		view = null;
+		cols = table.Columns;
+	}
+	else 
+	{
+		view = database.Views[tableOrView];
+		
+		table = null;
+		cols = view.Columns;
+	}
+	
+	esPluginSource source = new esPluginSource(esMeta, table, view);
+	esMeta.Input["Source"] = source;
+	
+	if(table.PrimaryKeys.Count == 0)
+	{%>
+		"-- ERROR: Table '" & objTable.Name & "' must have a primary key"<%
+		return;
+	} 
+		%>
+
+<%=BuildTableCreateAlterStatement(table.Name) %>
+		(<%
+			inFirst = true;
+			foreach(IColumn col in table.Columns)
+			{
+				if(!inFirst) {%><%=", "%><%}%>
+			<%=CreateColumnScript(col)%><%
+				inFirst = false;		
+			}
+		%>
+		)
+<%
+			pkIndex = null;
+			foreach(IForeignKey fk in table.ForeignKeys)
+			{
+				if(!fKeys.ContainsKey(fk.Name))
+				{
+					fKeys.Add(fk.Name, fk);
+				}
+				
+				if(pkIndex != null && fk.PrimaryTable.Name == table.Name)
+				{
+					pkIndex = table.Indexes[fk.PrimaryKeyName];
+				}
+			}
+
+			if(pkIndex != null)
+			{
+		%>
+				ALTER TABLE {databaseOwner}[{objectQualifier}<%=table.Name%>] WITH NOCHECK ADD 
+		CONSTRAINT [<%=pkIndex.Name%>] PRIMARY KEY  <%if(pkIndex.Clustered) {%>CLUSTERED<% } %>
+		(
+		<%
+				inFirst = true;
+				foreach(IColumn col in pkIndex.Columns)
+				{
+					if(!inFirst) {%><%=", "%><%}%>
+		 [<%=col.Name%>]<%
+					inFirst = false;	
+				}
+		%>
+		)  ON [PRIMARY] 
+		<%
+			}
+
+				foreach(IForeignKey fk in fKeys.Values)
+				{
+		%>		ALTER TABLE {databaseOwner}[{objectQualifier}<%=fk.ForeignTable.Name%>] ADD 
+		CONSTRAINT [<%=fk.Name%>] FOREIGN KEY 
+		(<%
+					inFirst = true;
+					foreach(IColumn col in fk.ForeignColumns)
+					{
+					if(!inFirst) {%><%=", "%><%}%>
+			[<%=col.Name%>]<%
+					inFirst = false;				
+					}
+				%>
+		) 
+		REFERENCES {databaseOwner}[{objectQualifier}<%=fk.PrimaryTable.Name%>] 
+		(<%
+					inFirst = true;
+					foreach(IColumn col in fk.PrimaryColumns)
+					{
+					if(!inFirst) {%><%=", "%><%}%>
+			[<%=col.Name%>]<%
+					inFirst = false;	
+					}
+				
+				%>
+		)<%
+				if(fk.DeleteRule != "NO ACTION")
+				{
+					%> ON DELETE <%=fk.DeleteRule%><%
+				}
+				if(fk.UpdateRule != "NO ACTION")
+				{
+					%> ON UPDATE <%=fk.UpdateRule%><%
+				}
+			}
+			%>
+	END
+GO
+<%
+//----------------------------------------------------------------------
+// LoadByPrimaryKey 
+//----------------------------------------------------------------------
+%>
+<%=BuildCreateAlterStatement(esMeta.esPlugIn.ProcLoadByPK(table.Name), UseAlter) %>
+(<%
+	// List all keys as parameters
+	inFirst = true;
+	comma = "";
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+	@<%=StripGarbage(col)%> <%=col.DataTypeNameComplete%><%
+		inFirst = false;
+	}
+%>
+)
+AS
+BEGIN
+	SET NOCOUNT ON
+	DECLARE @Err int
+
+	SELECT<%
+	// List all fields
+	inFirst = true;
+	comma = "";
+	foreach(IColumn col in cols)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+		[<%=col.Name%>]<%
+		inFirst = false;
+	}
+%>
+	FROM {databaseOwner}[{objectQualifier}<%=table.Name %>]
+	WHERE<%
+	// Compare keys with parameters
+	inFirst = true;
+	comma = "";
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=" AND "%><%}%>
+		([<%=col.Name%>] = @<%=StripGarbage(col)%>)<%
+		inFirst = false;
+	}
+%>
+
+	SET @Err = @@Error
+
+	RETURN @Err
+END
+GO	
+
+<%if(GenerateDocumentation) {%>
+-- Display the status of Proc creation
+IF (@@Error = 0) PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcLoadByPK(table.Name)%> Succeeded'
+ELSE PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcLoadByPK(table.Name)%> Error on Creation'
+GO <%}%>
+
+<%
+//----------------------------------------------------------------------
+// LoadAll 
+//----------------------------------------------------------------------
+%>
+<%=BuildCreateAlterStatement(esMeta.esPlugIn.ProcLoadAll(table.Name), UseAlter) %>
+AS
+BEGIN
+
+	SET NOCOUNT ON
+	DECLARE @Err int
+
+	SELECT<%
+	// List all fields
+	inFirst = true;
+	comma = "";
+	foreach(IColumn col in cols)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+		[<%=col.Name%>]<%
+		inFirst = false;
+	}
+%>
+	FROM {databaseOwner}[{objectQualifier}<%=table.Name%>]
+
+	SET @Err = @@Error
+
+	RETURN @Err
+END
+GO
+
+<%if(GenerateDocumentation) {%>
+-- Display the status of Proc creation
+IF (@@Error = 0) PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcLoadAll(table.Name)%> Succeeded'
+ELSE PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcLoadAll(table.Name)%> Error on Creation'
+GO <%}%>
+
+<%
+//----------------------------------------------------------------------
+// Update
+//----------------------------------------------------------------------
+int colCount = 0;
+
+foreach(IColumn col in cols)
+{
+	if(col.IsInPrimaryKey || col.IsComputed)
+	{
+		colCount += 1;
+	}
+}
+
+if (cols.Count == colCount)
+{%>
+
+-- -----------------------------------------
+-- NO UPDATE Stored Procedure Generated 
+-- All Columns are part of the Primary key
+-- -----------------------------------------
+
+<%}else{%>
+<%=BuildCreateAlterStatement(esMeta.esPlugIn.ProcUpdate(table.Name), UseAlter)%>
+(<%
+	// List all keys as parameters
+	inFirst = true;
+	comma = "";
+	foreach(IColumn col in cols)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+	@<%=StripGarbage(col)%> <%=col.DataTypeNameComplete%><%
+		inFirst = false;
+		
+		if(col.IsNullable || col.IsComputed){%> = NULL<%}
+		if(col.IsComputed) {%> OUTPUT<%}
+	}
+%>
+)
+AS
+BEGIN
+
+	SET NOCOUNT OFF
+	DECLARE @Err int
+
+	UPDATE [{objectQualifier}<%=table.Name%>]
+	SET<%
+	// List all fields
+	inFirst = true;
+	comma = "";
+	foreach(IColumn col in cols)
+	{
+		if(!col.IsInPrimaryKey && !col.IsAutoKey && !col.IsComputed)
+		{
+			if(!inFirst) {%><%=", "%><%}%>
+		[<%=col.Name%>] = @<%=StripGarbage(col)%><%
+			inFirst = false;
+		}
+	}
+%>
+	WHERE<%
+	// Compare keys with parameters
+	inFirst = true;
+	comma = "";
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=" AND "%><%}%>
+		([<%=col.Name%>] = @<%=StripGarbage(col)%>)<%
+		inFirst = false;
+	}
+	
+	foreach(IColumn col in table.Columns)
+	{
+		if(col.DataTypeName == "timestamp")
+		{
+			if(!SqlServer2005)
+			{%>
+		AND TSEQUAL([<%=col.Name%>],@<%=StripGarbage(col)%>)<%
+			}
+			else 
+			{%>
+		AND [<%=col.Name%>] = @<%=StripGarbage(col)%><%
+			}
+		}
+	}		
+%>
+
+	SET @Err = @@Error
+<%	
+	// Add the Logic to return computed columns if necessary 
+	blnHasComputed = false;
+	strWhereClause = "";
+	strWhereAnd = "";
+	strWhereFields = "";
+	strComma = "";
+
+	bool blnFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(col.IsComputed)
+		{
+			blnHasComputed = true;
+		}
+
+		if(col.IsInPrimaryKey)
+		{
+			strWhereClause += strWhereAnd + "[" + col.Name + "] = @" + StripGarbage(col);
+			strWhereAnd = " AND ";
+		}
+
+		if(col.IsComputed)
+		{
+			strWhereFields += strComma + "@" + StripGarbage(col) + " = [" +  col.Name + "]";
+			strComma = ", ";
+		}
+	}
+
+	if(blnHasComputed)
+	{%>
+		    SELECT <%=strWhereFields%>
+			  FROM {databaseOwner}[{objectQualifier}<%=table.Name%>]
+			 WHERE <%=strWhereClause%>
+  <%}%>
+
+	RETURN @Err
+END
+GO
+<%} // End Update %>
+
+<%if(GenerateDocumentation) {%>
+-- Display the status of Proc creation
+IF (@@Error = 0) PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcUpdate(table.Name)%> Succeeded'
+ELSE PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcUpdate(table.Name)%> Error on Creation'
+GO <%}%>
+
+<%
+//----------------------------------------------------------------------
+// Insert
+//----------------------------------------------------------------------
+%>
+<%=BuildCreateAlterStatement(esMeta.esPlugIn.ProcInsert(table.Name), UseAlter)%>
+(<%
+	// List all keys as parameters
+	inFirst = true;
+	comma = "";
+	
+	int seqCount = 0;
+	
+	string seqDeclare = "DECLARE @table_ids TABLE (";
+	string seqOutput  = "OUTPUT ";
+	string seqSelect  = "SELECT ";
+	
+	foreach(IColumn col in cols)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+	@<%=StripGarbage(col)%> <%=col.DataTypeNameComplete%><%
+		inFirst = false;
+		
+		if(col.IsNullable || col.IsComputed || col.IsAutoKey){%> = NULL<%}
+		if(col.IsComputed || col.IsAutoKey) {%> OUTPUT<%}
+		
+		if(col.DataTypeNameComplete == "uniqueidentifier")
+		{
+			string theDefault = col.Default.ToLower();
+			
+			if(theDefault.Contains("newid") || theDefault.Contains("newsequentialid")) {%> OUTPUT<%}
+			
+			if(theDefault.Contains("newsequentialid")) 
+			{
+				if(seqCount > 0)
+				{
+					seqDeclare += ", ";
+					seqOutput  += ", ";
+					seqSelect  += ", ";
+				}
+				seqCount++;
+				
+				seqDeclare += col.Name + "  uniqueidentifier";
+				seqOutput  += "INSERTED." + col.Name;
+				seqSelect  += "@" + col.Name + "=" + col.Name;
+				
+			}
+		}
+	}
+	
+	seqDeclare += ")";
+	seqOutput  += " INTO @table_ids";
+	seqSelect  += " FROM @table_ids";
+%>
+)
+AS
+BEGIN
+
+	SET NOCOUNT OFF
+	DECLARE @Err int
+	<%if(seqCount > 0) {%><%=seqDeclare%><%}%>
+<%
+	// Generate code to initialize (if necessary) for all keys of uniqueidentifier type
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(col.DataTypeNameComplete == "uniqueidentifier")
+		{
+			string theDefault = col.Default.ToLower();
+		
+			if(theDefault.Contains("newid"))
+			{%>
+	
+	IF @<%=StripGarbage(col)%> IS NULL 
+		SET @<%=StripGarbage(col)%> = NEWID()
+	
+	SET @Err = @@Error
+	
+	IF (@Err <> 0)
+		RETURN @Err
+		
+<% 
+			}
+		}
+	}
+%>
+	INSERT
+	INTO [{objectQualifier}<%=table.Name%>]
+	(<%
+		// List all fields except identity (if one exists)
+		inFirst = true;
+		comma = "";
+		foreach(IColumn col in cols)
+		{
+			if(!col.IsAutoKey && !col.IsComputed)
+			{
+				string theDefault = col.Default.ToLower();
+				if(!theDefault.Contains("newsequentialid"))
+				{
+					if(!inFirst) {%><%=", "%><%}%>
+		[<%=col.Name%>]<%
+					inFirst = false;
+				}
+			}
+		}
+%>
+	)
+	<%if(seqCount > 0) {%><%=seqOutput%><%}%>
+	VALUES
+	(<%
+		// List all fields except identity (if one exists)
+		inFirst = true;
+		comma = "";
+		foreach(IColumn col in cols)
+		{
+			if(!col.IsAutoKey && !col.IsComputed)
+			{
+				string theDefault = col.Default.ToLower();
+				if(!theDefault.Contains("newsequentialid"))
+				{
+					if(!inFirst) {%><%=", "%><%}%>
+		@<%=StripGarbage(col)%><%
+					inFirst = false;
+				}
+			}
+		}
+%>
+	)
+
+	SET @Err = @@Error
+
+<%
+	// Add the Logic to return computed columns if necessary 
+	blnHasComputed = false;
+	strWhereClause = "";
+	strWhereAnd = "";
+	strWhereFields = "";
+	strComma = "";
+
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(col.IsAutoKey)
+		{
+			%>		
+	SELECT @<%=StripGarbage(col)%> = SCOPE_IDENTITY()<%
+		}
+
+		if(col.IsComputed)
+		{
+			blnHasComputed = true;
+		}
+
+		if(col.IsInPrimaryKey)
+		{
+			strWhereClause += strWhereAnd + "[" + col.Name + "] = @" + StripGarbage(col);
+			strWhereAnd = " AND ";
+		}
+
+		if(col.IsComputed)
+		{
+			strWhereFields += strComma + "@" + StripGarbage(col) + " = [" +  col.Name + "]";
+			strComma =  ", ";
+		}
+		
+		if(col.DataTypeNameComplete.ToLower() == "uniqueidentifier")
+		{
+			string theDefault = col.Default.ToLower();
+		
+			if(theDefault.Contains("newsequentialid"))
+			{
+				strWhereFields += strWhereFields + strComma + "@" + StripGarbage(col) + " = [" +  col.Name + "]";
+				strComma =  ", "; 		
+			}
+		}
+	}
+
+	if(blnHasComputed)
+	{%>
+		    SELECT <%=strWhereFields%>
+			  FROM {databaseOwner}[{objectQualifier}<%=table.Name%>]
+			 WHERE <%=strWhereClause%>
+  <%}%>
+
+	<%if(seqCount > 0) {%><%=seqSelect%><%}%>
+
+	RETURN @Err
+END
+GO
+
+<%if(GenerateDocumentation) {%>
+-- Display the status of Proc creation
+IF (@@Error = 0) PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcInsert(table.Name)%> Succeeded'
+ELSE PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcInsert(table.Name)%> Error on Creation'
+GO <%}%>
+
+<%
+//----------------------------------------------------------------------
+// Delete
+//----------------------------------------------------------------------
+%>
+<%=BuildCreateAlterStatement(esMeta.esPlugIn.ProcDelete(table.Name), UseAlter)%>
+(<%
+	// List all keys as parameters
+	inFirst = true;
+	comma = "";
+	foreach(IColumn col in table.Columns)
+	{
+		if(col.IsInPrimaryKey || col.DataTypeName.ToLower() == "timestamp")
+		{
+			if(!inFirst) {%><%=", "%><%}%>
+	@<%=StripGarbage(col)%> <%=col.DataTypeNameComplete%><%
+			inFirst = false;
+		}
+	}
+%>
+)
+AS
+BEGIN
+
+	SET NOCOUNT OFF
+	DECLARE @Err int
+
+	DELETE
+	FROM {databaseOwner}[{objectQualifier}<%=table.Name %>]
+	WHERE<%
+	// Compare keys with parameters
+	inFirst = true;
+	comma = "";
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=" AND "%><%}%>
+		([<%=col.Name%>] = @<%=StripGarbage(col)%>)<%
+		inFirst = false;
+	}
+	
+	foreach(IColumn col in table.Columns)
+	{
+		if(col.DataTypeName == "timestamp")
+		{
+			if(!SqlServer2005)
+			{%>
+		AND TSEQUAL([<%=col.Name%>],@<%=StripGarbage(col)%>)<%
+			}
+			else 
+			{%>
+		AND [<%=col.Name%>] = @<%=StripGarbage(col)%><%
+			}
+		}
+	}		
+%>
+
+	SET @Err = @@Error
+
+	RETURN @Err
+END
+GO
+
+<%if(GenerateDocumentation) {%>
+-- Display the status of Proc creation
+IF (@@Error = 0) PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcDelete(table.Name)%> Succeeded'
+ELSE PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcDelete(table.Name)%> Error on Creation'
+GO <%}%>
+
+<% 
+	string sql = output.ToString();
+	allSQL += sql;
+	
+	this.SaveToFile(esMeta.esPlugIn.Entity(source) + "_DNN_ES_CRUD.sql", sql, false);
+	this.ClearOutput();
+} // end main for loop
+
+	this.SaveToFile("DNN_ALL_ES_CRUD_SPs.sql", allSQL, false);
+%>
+	
+<script runat="template">	
+
+private string BuildTableCreateAlterStatement(string tableName)
+{
+	string sql = "";
+	sql += "/****** Object:  Table [" + tableName + "] Script Date: " + DateTime.Now.ToString() + " ******/" + "\r\n";	
+	sql += "IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}" + tableName + "]') AND OBJECTPROPERTY(id,N'IsTable') = 1)" + "\r\n";
+	sql += "	BEGIN" + "\r\n";
+	sql += "		CREATE TABLE {databaseOwner}[{objectQualifier}" + tableName + "]";
+	 
+	return sql; 
+}
+
+private string BuildCreateAlterStatement(string procName, bool alterStatement)
+{
+	string sql = "";
+	
+	if(!alterStatement) 
+	{
+		// Drop and recreate
+		sql += "/****** Object:  StoredProcedure [" + procName + "] Script Date: " + DateTime.Now.ToString() + " ******/" + "\r\n";
+		sql += "IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}" + procName + "]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)" + "\r\n";
+		sql += "    DROP PROCEDURE {databaseOwner}[{objectQualifier}" + procName + "];" + "\r\n";
+		sql += "GO" + "\r\n" + "\r\n";
+	
+		sql += "CREATE PROCEDURE {databaseOwner}[{objectQualifier}" + procName + "]";
+	}
+	else
+	{
+		sql += "ALTER PROCEDURE {databaseOwner}[{objectQualifier}" + procName + "]";
+	}
+	 
+	return sql; 
+}
+
+private string StripGarbage(IColumn col)
+{
+	return esMeta.esPlugIn.ToPascalCase(col.Alias);
+}
+
+private string CreateColumnScript(IColumn col)
+{
+	string str = "";
+	
+	str = "[" + col.Name + "] " + col.DataTypeNameComplete;
+
+	if(col.IsAutoKey)
+	{
+		str += " IDENTITY ( " + col.AutoKeySeed.ToString() + "," + col.AutoKeyIncrement.ToString() + " )";
+	}
+	
+	if(col.HasDefault)
+	{
+		str += " DEFAULT (" + col.Default + ")";
+	}
+
+	if(col.IsNullable)
+	{
+		str += " NULL";
+	}
+	else
+	{
+		str += " NOT NULL";
+	}
+
+	return str;
+}
+	
+private string SaveToFile(string fileName, string text, bool generateSingleFile)
+{
+	if(!generateSingleFile)
+	{
+	    string path = (string)esMeta.Input["OutputPath"];
+	    
+		string fname = path;
+		if (!fname.EndsWith("\\")) 
+			fname += "\\";
+			
+		Directory.CreateDirectory(path);		
+		
+		fname += fileName;
+		
+		using (StreamWriter sw = System.IO.File.CreateText(fname)) 
+		{
+			sw.Write(text);
+		} 	
+		
+		return "";
+	}
+	else
+	{
+		return text;			
+	}
+}	
+
+</script>

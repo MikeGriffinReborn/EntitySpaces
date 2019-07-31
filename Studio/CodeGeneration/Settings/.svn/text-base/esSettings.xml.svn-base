@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<esPluginSettings>
+    <esSettings Name="esCustom">
+        <esSetting Name="Driver" Value="SQL" />
+        <esSetting Name="ConnectionString" Value="Provider=SQLOLEDB.1;Password=;User ID=sa;Initial Catalog=Northwind;Data Source=localhost" />
+        <esSetting Name="TemplatePath" Value="C:\Program Files\EntitySpaces 2009\CodeGeneration\Templates" />
+        <esSetting Name="OutputPath" Value="C:\Documents and Settings\David Parsons\My Documents" />
+        <esSetting Name="UIAssemblyPath" Value="C:\Program Files\EntitySpaces 2009\CodeGeneration\Bin" />
+        <esSetting Name="CompilerAssemblyPath" Value="C:\Program Files\EntitySpaces 2009\CodeGeneration\Bin" />
+        <esSetting Name="LanguageMappingFile" Value="C:\Program Files\EntitySpaces 2009\CodeGeneration\esLanguages.xml" />
+        <esSetting Name="UserMetadataFile" Value="C:\Documents and Settings\All Users\Application Data\EntitySpaces\ES2009\esUserData.xml" />
+        <esSetting Name="Prefix" Value="es" />
+        <esSetting Name="Entity" Value="" />
+        <esSetting Name="Collection" Value="Collection" />
+        <esSetting Name="Query" Value="Query" />
+        <esSetting Name="Metadata" Value="Metadata" />
+        <esSetting Name="ProxyStub" Value="ProxyStub" />
+        <esSetting Name="ProcPrefix" Value="proc_" />
+        <esSetting Name="ProcSuffix" Value="" />
+        <esSetting Name="ProcInsert" Value="Insert" />
+        <esSetting Name="ProcUpdate" Value="Update" />
+        <esSetting Name="ProcDelete" Value="Delete" />
+        <esSetting Name="ProcLoadAll" Value="LoadAll" />
+        <esSetting Name="ProcLoadByPK" Value="LoadByPrimaryKey" />
+        <esSetting Name="ProcVerbFirst" Value="False" />
+        <esSetting Name="OneToOnePrefix" Value="" />
+        <esSetting Name="OneToOneSeparator" Value="By" />
+        <esSetting Name="OneToOneSuffix" Value="" />
+        <esSetting Name="ManyToManyPrefix" Value="" />
+        <esSetting Name="ManyToManySeparator" Value="By" />
+        <esSetting Name="ManyToManySuffix" Value="Collection" />
+        <esSetting Name="SelfOnly" Value="False" />
+        <esSetting Name="SwapNames" Value="False" />
+        <esSetting Name="UseAssociativeName" Value="False" />
+        <esSetting Name="UseUpToPrefix" Value="True" />
+        <esSetting Name="TrimList" Value=" .-" />
+        <esSetting Name="UseRawNames" Value="False" />
+        <esSetting Name="UseNullableTypesAlways" Value="True" />
+    </esSettings>
+</esPluginSettings>

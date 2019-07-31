@@ -1,0 +1,719 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/%>
+<%@ TemplateInfo 
+    UniqueID="3D7C23A4-EC71-47a6-86DD-923B7A20AC33"
+	UserInterfaceID="14846E0F-98D3-4ca0-89E9-54A1F4B332E3"
+    Title="Microsoft SQL"   
+    Description="Microsoft SQL Stored Procedures" 
+    Namespace="EntitySpaces.2019.StoredProcedures" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    RequiresUI="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------
+ArrayList entities         = esMeta.Input["Entities"] as ArrayList;
+string entityType          = (string)esMeta.Input["EntityType"];
+string databaseName        = (string)esMeta.Input["Database"];
+bool UseAlter              = (bool)esMeta.Input["UseAlter"];
+bool GenerateDocumentation = (bool)esMeta.Input["GenerateDocumentation"];
+bool SqlServer2005         = (bool)esMeta.Input["SqlServer2005"];
+bool UseSchema             = (bool)esMeta.Input["UseSchema"];
+
+// System.Diagnostics.Debugger.Break();
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+string comma;
+int lastOrdinal = 0;
+string schemaName = "";
+
+bool blnHasComputed = false;
+string strWhereClause = "";
+string strWhereAnd = "";
+string strWhereFields = "";
+string strComma = "";
+string seqSet = string.Empty;
+
+string allSQL = "";
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------	
+ITable table = null;
+IView view = null;
+IColumns cols = null;
+
+IDatabase database = esMeta.Databases[databaseName];
+
+foreach(string tableOrView in entities)
+{
+	string text = "";
+	
+	if(entityType == dbEntityType.Tables.ToString())
+	{
+		table = database.Tables[tableOrView];
+		cols = table.Columns;
+	}
+	else 
+	{
+		break;
+	}	
+	
+	esPluginSource source = new esPluginSource(esMeta, table, view);
+	esMeta.Input["Source"] = source;
+	
+	if(table.PrimaryKeys.Count == 0)
+	{
+		this.ClearOutput();
+		continue;
+	} 
+
+	if(UseSchema)
+		schemaName = "[" + table.Schema + "].";
+	else
+		schemaName = "";
+		
+//----------------------------------------------------------------------
+// LoadByPrimaryKey 
+//----------------------------------------------------------------------%>
+USE <%="[" + database.Name + "]"%>
+GO
+
+<%=BuildCreateAlterStatement(esMeta.esPlugIn.ProcLoadByPK(table.Name), UseAlter, schemaName) %>
+(<%
+	// List all keys as parameters
+	bool inFirst = true;
+	comma = "";
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+	@<%=StripGarbage(col)%> <%=col.DataTypeNameComplete%><%
+		inFirst = false;
+	}
+%>
+)
+AS
+BEGIN
+	SET NOCOUNT ON
+	DECLARE @Err int
+
+	SELECT<%
+	// List all fields
+	inFirst = true;
+	comma = "";
+	foreach(IColumn col in cols)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+		[<%=col.Name%>]<%
+		inFirst = false;
+	}
+%>
+	FROM <%=schemaName%>[<%=table.Name %>]
+	WHERE<%
+	// Compare keys with parameters
+	inFirst = true;
+	comma = "";
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=" AND "%><%}%>
+		([<%=col.Name%>] = @<%=StripGarbage(col)%>)<%
+		inFirst = false;
+	}
+%>
+
+	SET @Err = @@Error
+
+	RETURN @Err
+END
+GO	
+
+<%if(GenerateDocumentation) {%>
+-- Display the status of Proc creation
+IF (@@Error = 0) PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcLoadByPK(table.Name)%> Succeeded'
+ELSE PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcLoadByPK(table.Name)%> Error on Creation'
+GO <%}%>
+
+<%
+//----------------------------------------------------------------------
+// LoadAll 
+//----------------------------------------------------------------------
+%>
+<%=BuildCreateAlterStatement(esMeta.esPlugIn.ProcLoadAll(table.Name), UseAlter, schemaName) %>
+AS
+BEGIN
+
+	SET NOCOUNT ON
+	DECLARE @Err int
+
+	SELECT<%
+	// List all fields
+	inFirst = true;
+	comma = "";
+	foreach(IColumn col in cols)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+		[<%=col.Name%>]<%
+		inFirst = false;
+	}
+%>
+	FROM <%=schemaName%>[<%=table.Name%>]
+
+	SET @Err = @@Error
+
+	RETURN @Err
+END
+GO
+
+<%if(GenerateDocumentation) {%>
+-- Display the status of Proc creation
+IF (@@Error = 0) PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcLoadAll(table.Name)%> Succeeded'
+ELSE PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcLoadAll(table.Name)%> Error on Creation'
+GO <%}%>
+
+<%
+//----------------------------------------------------------------------
+// Update
+//----------------------------------------------------------------------
+int colCount = 0;
+
+foreach(IColumn col in cols)
+{
+	if(col.IsInPrimaryKey || col.IsComputed)
+	{
+		colCount += 1;
+	}
+}
+
+if (cols.Count == colCount)
+{%>
+
+-- -----------------------------------------
+-- NO UPDATE Stored Procedure Generated 
+-- All Columns are part of the Primary key
+-- -----------------------------------------
+
+<%}else{%>
+<%=BuildCreateAlterStatement(esMeta.esPlugIn.ProcUpdate(table.Name), UseAlter, schemaName)%>
+(<%
+	// List all keys as parameters
+	inFirst = true;
+	seqSet = string.Empty;
+	comma = "";
+	foreach(IColumn col in cols)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+	@<%=StripGarbage(col)%> <%=col.DataTypeNameComplete%><%
+		inFirst = false;
+		
+		if(col.IsNullable || col.IsComputed){%> = NULL<%}
+		if(col.IsComputed || col.IsEntitySpacesConcurrency ||
+		  (col.IsDateModifiedColumn && col.DateModifiedType == esSettingsDriverInfo.DateType.ServerSide) || 
+  		  (col.IsModifiedByColumn && !col.UseModifiedByEventHandler)) {%> OUTPUT<%}
+	}
+%>
+)
+AS
+BEGIN
+
+	SET NOCOUNT OFF
+	DECLARE @Err int
+	
+<%	foreach(IColumn col in cols)
+	{
+		if(col.IsDateModifiedColumn && col.DateModifiedType == esSettingsDriverInfo.DateType.ServerSide)
+		{
+			seqSet += "\tSET " + "@" + col.Name + " = " + col.DateModifiedServerSideText + ";\r\n";
+		}
+		
+		if(col.IsModifiedByColumn && !col.UseModifiedByEventHandler)
+		{
+			seqSet += "\tSET " + "@" + col.Name + " = " + col.ModifiedByServerSideText + ";\r\n";		
+		}
+	}%>	
+<%=seqSet%>	
+
+	UPDATE [<%=table.Name%>]
+	SET<%
+	// List all fields
+	inFirst = true;
+	comma = "";
+	foreach(IColumn col in cols)
+	{
+		if(!col.IsInPrimaryKey && !col.IsAutoKey && !col.IsComputed)
+		{
+			if(!inFirst) {%><%=", "%><%}%><%
+			if(col.IsEntitySpacesConcurrency) {%>
+		[<%=col.Name%>] = [<%=col.Name%>] + 1<%} else {%>
+		[<%=col.Name%>] = @<%=StripGarbage(col)%><%}%><%
+			inFirst = false;
+		}
+	}
+%>
+	WHERE<%
+	// Compare keys with parameters
+	inFirst = true;
+	comma = "";
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=" AND "%><%}%>
+		([<%=col.Name%>] = @<%=StripGarbage(col)%>)<%
+		inFirst = false;
+	}
+	
+	foreach(IColumn col in table.Columns)
+	{
+		if(col.IsConcurrency || col.IsEntitySpacesConcurrency)
+		{
+			if(!SqlServer2005 && !col.IsEntitySpacesConcurrency)
+			{%>
+		AND TSEQUAL([<%=col.Name%>],@<%=StripGarbage(col)%>)<%
+			}
+			else 
+			{%>
+		AND [<%=col.Name%>] = @<%=StripGarbage(col)%><%
+			}
+		}
+	}	
+	
+	foreach(IColumn col in table.Columns)
+	{
+		if(col.IsEntitySpacesConcurrency)
+		{%>
+
+	SET @<%=StripGarbage(col)%> = @<%=StripGarbage(col)%> + 1<%
+		}
+	}
+%>
+
+	SET @Err = @@Error
+<%	
+	// Add the Logic to return computed columns if necessary 
+	blnHasComputed = false;
+	strWhereClause = "";
+	strWhereAnd = "";
+	strWhereFields = "";
+	strComma = "";
+
+	bool blnFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(col.IsComputed)
+		{
+			blnHasComputed = true;
+		}
+
+		if(col.IsInPrimaryKey)
+		{
+			strWhereClause += strWhereAnd + "[" + col.Name + "] = @" + StripGarbage(col);
+			strWhereAnd = " AND ";
+		}
+
+		if(col.IsComputed)
+		{
+			strWhereFields += strComma + "@" + StripGarbage(col) + " = [" +  col.Name + "]";
+			strComma = ", ";
+		}
+	}
+
+	if(blnHasComputed)
+	{%>
+	SELECT <%=strWhereFields%>
+	  FROM <%=schemaName%>[<%=table.Name%>]
+	 WHERE <%=strWhereClause%>
+  <%}%>
+
+	RETURN @Err
+END
+GO
+<%} // End Update %>
+
+<%if(GenerateDocumentation) {%>
+-- Display the status of Proc creation
+IF (@@Error = 0) PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcUpdate(table.Name)%> Succeeded'
+ELSE PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcUpdate(table.Name)%> Error on Creation'
+GO <%}%>
+
+<%
+//----------------------------------------------------------------------
+// Insert
+//----------------------------------------------------------------------
+%>
+<%=BuildCreateAlterStatement(esMeta.esPlugIn.ProcInsert(table.Name), UseAlter, schemaName)%>
+(<%
+	// List all keys as parameters
+	inFirst = true;
+	comma = "";
+	seqSet = string.Empty;
+	
+	int seqCount = 0;
+	
+	string seqDeclare = "DECLARE @table_ids TABLE (";
+	string seqOutput  = "OUTPUT ";
+	string seqSelect  = "SELECT ";
+	
+	foreach(IColumn col in cols)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+	@<%=StripGarbage(col)%> <%=col.DataTypeNameComplete%><%
+		inFirst = false;
+		
+		if(col.IsNullable || col.IsComputed || col.IsAutoKey){%> = NULL<%}
+		if(col.IsComputed || col.IsAutoKey || col.IsEntitySpacesConcurrency ||
+		  (col.IsDateAddedColumn && col.DateAddedType == esSettingsDriverInfo.DateType.ServerSide) ||
+		  (col.IsDateModifiedColumn && col.DateModifiedType == esSettingsDriverInfo.DateType.ServerSide) || 
+		  (col.IsAddedByColumn && !col.UseAddedByEventHandler) || 
+  		  (col.IsModifiedByColumn && !col.UseModifiedByEventHandler)
+		  ) {%> OUTPUT<%}
+		
+		if(col.DataTypeNameComplete == "uniqueidentifier")
+		{
+			string theDefault = col.Default.ToLower();
+			
+			if(theDefault.Contains("newid") || theDefault.Contains("newsequentialid")) {%> OUTPUT<%}
+			
+			if(theDefault.Contains("newsequentialid")) 
+			{
+				if(seqCount > 0)
+				{
+					seqDeclare += ", ";
+					seqOutput  += ", ";
+					seqSelect  += ", ";
+				}
+				seqCount++;
+				
+				seqDeclare += col.Name + "  uniqueidentifier";
+				seqOutput  += "INSERTED." + col.Name;
+				seqSelect  += "@" + col.Name + "=" + col.Name;
+				
+			}
+		}
+	}
+	
+	seqDeclare += ")";
+	seqOutput  += " INTO @table_ids";
+	seqSelect  += " FROM @table_ids";
+%>
+)
+AS
+BEGIN
+
+	SET NOCOUNT OFF
+	DECLARE @Err int
+<%	foreach(IColumn col in cols)
+	{
+		if(col.IsDateAddedColumn && col.DateAddedType == esSettingsDriverInfo.DateType.ServerSide)
+		{
+			seqSet += "\tSET " + "@" + col.Name + " = " + col.DateAddedServerSideText + ";\r\n";
+		}
+		
+		if(col.IsDateModifiedColumn && col.DateModifiedType == esSettingsDriverInfo.DateType.ServerSide)
+		{
+			seqSet += "\tSET " + "@" + col.Name + " = " + col.DateModifiedServerSideText + ";\r\n";
+		}
+		
+		if(col.IsAddedByColumn && !col.UseAddedByEventHandler)
+		{
+			seqSet += "\tSET " + "@" + col.Name + " = " + col.AddedByServerSideText + ";\r\n";		
+		}
+		
+		if(col.IsModifiedByColumn && !col.UseModifiedByEventHandler)
+		{
+			seqSet += "\tSET " + "@" + col.Name + " = " + col.ModifiedByServerSideText + ";\r\n";		
+		}		
+	}%>
+<%=seqSet%>	
+	<%if(seqCount > 0) {%><%=seqDeclare%><%}%><%
+	// Generate code to initialize (if necessary) for all keys of uniqueidentifier type
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(col.DataTypeNameComplete == "uniqueidentifier")
+		{
+			string theDefault = col.Default.ToLower();
+		
+			if(theDefault.Contains("newid"))
+			{%>
+	IF @<%=StripGarbage(col)%> IS NULL 
+		SET @<%=StripGarbage(col)%> = NEWID()
+	
+	SET @Err = @@Error
+	
+	IF (@Err <> 0)
+		RETURN @Err
+		
+<% 
+			}
+		}
+	}
+%>
+	INSERT
+	INTO [<%=table.Name%>]
+	(<%
+		// List all fields except identity (if one exists)
+		inFirst = true;
+		comma = "";
+		foreach(IColumn col in cols)
+		{
+			if(!col.IsAutoKey && !col.IsComputed)
+			{
+				string theDefault = col.Default.ToLower();
+				if(!theDefault.Contains("newsequentialid"))
+				{
+					if(!inFirst) {%><%=", "%><%}%>
+		[<%=col.Name%>]<%
+					inFirst = false;
+				}
+			}
+		}
+%>
+	)
+	<%if(seqCount > 0) {%><%=seqOutput%><%}%>
+	VALUES
+	(<%
+		// List all fields except identity (if one exists)
+		inFirst = true;
+		comma = "";
+		foreach(IColumn col in cols)
+		{
+			if(!col.IsAutoKey && !col.IsComputed)
+			{
+				string theDefault = col.Default.ToLower();
+				if(!theDefault.Contains("newsequentialid"))
+				{
+					if(!inFirst) {%><%=", "%><%}
+					if(col.IsEntitySpacesConcurrency) {%>
+		1<% } else {%>
+		@<%=StripGarbage(col)%><%}%><%
+					inFirst = false;
+				}
+			}
+		}
+%>
+	)
+<%	foreach(IColumn col in table.Columns)
+	{
+		if(col.IsEntitySpacesConcurrency)
+		{%>
+
+	SET @<%=StripGarbage(col)%> = 1<%
+		}
+	}%>
+
+	SET @Err = @@Error
+
+<%
+	// Add the Logic to return computed columns if necessary 
+	blnHasComputed = false;
+	strWhereClause = "";
+	strWhereAnd = "";
+	strWhereFields = "";
+	strComma = "";
+
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(col.IsAutoKey)
+		{
+			%>		
+	SELECT @<%=StripGarbage(col)%> = SCOPE_IDENTITY()<%
+		}
+
+		if(col.IsComputed)
+		{
+			blnHasComputed = true;
+		}
+
+		if(col.IsInPrimaryKey)
+		{
+			strWhereClause += strWhereAnd + "[" + col.Name + "] = @" + StripGarbage(col);
+			strWhereAnd = " AND ";
+		}
+
+		if(col.IsComputed)
+		{
+			strWhereFields += strComma + "@" + StripGarbage(col) + " = [" +  col.Name + "]";
+			strComma =  ", ";
+		}
+		
+		if(col.DataTypeNameComplete.ToLower() == "uniqueidentifier")
+		{
+			string theDefault = col.Default.ToLower();
+		
+			if(theDefault.Contains("newsequentialid"))
+			{
+				strWhereFields += strWhereFields + strComma + "@" + StripGarbage(col) + " = [" +  col.Name + "]";
+				strComma =  ", "; 		
+			}
+		}
+	}
+
+	if(blnHasComputed)
+	{%>
+	SELECT <%=strWhereFields%>
+	  FROM <%=schemaName%>[<%=table.Name%>]
+	 WHERE <%=strWhereClause%>
+  <%}%>
+
+	<%if(seqCount > 0) {%><%=seqSelect%><%}%>
+
+	RETURN @Err
+END
+GO
+
+<%if(GenerateDocumentation) {%>
+-- Display the status of Proc creation
+IF (@@Error = 0) PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcInsert(table.Name)%> Succeeded'
+ELSE PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcInsert(table.Name)%> Error on Creation'
+GO <%}%>
+
+<%
+//----------------------------------------------------------------------
+// Delete
+//----------------------------------------------------------------------
+%>
+<%=BuildCreateAlterStatement(esMeta.esPlugIn.ProcDelete(table.Name), UseAlter, schemaName)%>
+(<%
+	// List all keys as parameters
+	inFirst = true;
+	comma = "";
+	foreach(IColumn col in table.Columns)
+	{
+		if(col.IsInPrimaryKey || col.IsConcurrency || col.IsEntitySpacesConcurrency)
+		{
+			if(!inFirst) {%><%=", "%><%}%>
+	@<%=StripGarbage(col)%> <%=col.DataTypeNameComplete%><%
+			inFirst = false;
+		}
+	}
+%>
+)
+AS
+BEGIN
+
+	SET NOCOUNT OFF
+	DECLARE @Err int
+
+	DELETE
+	FROM <%=schemaName%>[<%=table.Name %>]
+	WHERE<%
+	// Compare keys with parameters
+	inFirst = true;
+	comma = "";
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=" AND "%><%}%>
+		([<%=col.Name%>] = @<%=StripGarbage(col)%>)<%
+		inFirst = false;
+	}
+	
+	foreach(IColumn col in table.Columns)
+	{
+		if(col.IsConcurrency || col.IsEntitySpacesConcurrency)
+		{
+			if(!SqlServer2005 && !col.IsEntitySpacesConcurrency)
+			{%>
+		AND TSEQUAL([<%=col.Name%>],@<%=StripGarbage(col)%>)<%
+			}
+			else 
+			{%>
+		AND [<%=col.Name%>] = @<%=StripGarbage(col)%><%
+			}
+		}
+	}		
+%>
+
+	SET @Err = @@Error
+
+	RETURN @Err
+END
+GO
+
+<%if(GenerateDocumentation) {%>
+-- Display the status of Proc creation
+IF (@@Error = 0) PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcDelete(table.Name)%> Succeeded'
+ELSE PRINT 'Procedure Creation: <%=esMeta.esPlugIn.ProcDelete(table.Name)%> Error on Creation'
+GO <%}%>
+
+<% 
+	string sql = output.ToString();
+	allSQL += sql;
+	
+	this.SaveToFile(esMeta.esPlugIn.Entity(table.Name) + ".sql", sql, false);
+	this.ClearOutput();
+} // end main for loop
+
+	this.SaveToFile("MicrosoftSQL_ALL.sql", allSQL, false);
+%>
+
+<script runat="template">
+private string SaveToFile(string fileName, string text, bool generateSingleFile)
+{
+	if(!generateSingleFile)
+	{
+	    string path = (string)esMeta.Input["OutputPath"];
+	    
+		string fname = path;
+		if (!fname.EndsWith("\\")) 
+			fname += "\\";
+			
+		Directory.CreateDirectory(path);		
+		
+		fname += fileName;
+		
+		using (StreamWriter sw = System.IO.File.CreateText(fname)) 
+		{
+			sw.Write(text);
+		} 	
+		
+		return "";
+	}
+	else
+	{
+		return text;			
+	}
+}
+
+private string BuildCreateAlterStatement(string procName, bool alterStatement, string schemaName)
+{
+	string sql = "";
+	
+	if(!alterStatement) 
+	{
+		// Drop and recreate
+		sql += "/****** Object:  StoredProcedure " + schemaName + "[" + procName + "] Script Date: " + DateTime.Now.ToString() + " ******/" + "\r\n";
+		sql += "IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'" + schemaName + "[" + procName + "]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)" + "\r\n";
+		sql += "    DROP PROCEDURE " + schemaName + "[" + procName + "];" + "\r\n";
+		sql += "GO" + "\r\n" + "\r\n";
+	
+		sql += "CREATE PROCEDURE " + schemaName + "[" + procName + "]";
+	}
+	else
+	{
+		sql += "ALTER PROCEDURE " + schemaName + "[" + procName + "]";
+	}
+	 
+	return sql; 
+}
+
+private string StripGarbage(EntitySpaces.MetadataEngine.IColumn col)
+{
+	return esMeta.esPlugIn.PropertyName(col);
+}
+</script>

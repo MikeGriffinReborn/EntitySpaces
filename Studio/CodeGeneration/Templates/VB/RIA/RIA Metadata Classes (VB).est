@@ -1,0 +1,152 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/
+%><%@ TemplateInfo 
+    UniqueID="CFD32754-3FC0-4a01-8AB7-7FC49625CA9D" 
+	UserInterfaceID="42FA9082-8ABB-4186-93DF-3A04EBB4F2E9" 
+    Title="RIA Metadata Classes" 
+    Description="RIA Metadata Classes" 
+    Namespace="EntitySpaces.2019.VB.RIA Services"
+    Author="EntitySpaces, LLC" 
+    Version="2019.0.0.0" 
+    RequiresUI="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------
+// System.Diagnostics.Debugger.Break();
+
+ArrayList entities = esMeta.Input["Entities"] as ArrayList;
+string entityType = (string)esMeta.Input["EntityType"];
+string databaseName = (string)esMeta.Input["Database"];
+string Namespace = (string)esMeta.Input["Namespace"];
+
+
+//===============================================================
+// Execute our SubTemplates ....
+//===============================================================
+
+ITable table = null;
+IView  view = null;
+IColumns cols = null;
+string attributes = null;
+
+IDatabase database = esMeta.Databases[databaseName];
+
+foreach(string tableOrView in entities)
+{
+	string text = "";
+	
+	if(entityType == dbEntityType.Tables.ToString())
+	{
+		table = database.Tables[tableOrView];
+		view = null;
+		cols = table.Columns;
+	}
+	else 
+	{
+		view = database.Views[tableOrView];
+		
+		table = null;
+		cols = view.Columns;
+	}
+	
+	esPluginSource source = new esPluginSource(esMeta, table, view);
+	esMeta.Input["Source"] = source;
+
+%>'===============================================================================
+'                   EntitySpaces Studio by EntitySpaces, LLC
+'            Persistence Layer and Business Objects for Microsoft .NET
+'            EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+'                         http://www.entityspaces.net
+'===============================================================================
+' EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+' EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+' Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+'===============================================================================
+
+Imports System
+Imports System.ComponentModel.DataAnnotations
+
+Namespace <%=Namespace%>
+
+	<MetadataType(GetType(<%=source.Entity%>Validation))> _
+	Public Partial Class <%=source.Entity%>
+
+	End Class
+
+    Friend Class <%=source.Entity%>Validation
+    <% foreach(IColumn col in source.Columns)
+		{
+			attributes = "";
+			
+			if(col.IsInPrimaryKey)
+			{
+				attributes += "\r\n\t\t<KeyAttribute()> _";
+				
+				if(col.IsAutoKey)
+				{
+					attributes += "\r\n\t\t<Editable(false)> _";
+				}
+			}
+			if(col.NullableType == "System.String")
+			{
+				attributes += "\r\n\t\t<StringLength(" + col.CharacterMaxLength + ")> _";
+			}
+			
+			if(!col.IsNullable && !col.HasDefault && !col.IsAutoKey)
+			{
+				attributes += "\r\n\t\t<Required> _";
+			}
+			%>
+<%=attributes%>
+		Public Property <%=col.PropertyName%> As <%=col.NullableTypeVB%><%}%>
+    
+	End Class
+End Namespace<% 
+// Write out the Service Interface
+string filepath = source.Entity + ".Validation" + ".vb";
+this.SaveToFile(filepath, output.ToString(), false);
+this.ClearOutput();
+%><%}%> 
+<script runat="template">
+private string SaveToFile(string fileName, string text, bool generateSingleFile)
+{
+	if(!generateSingleFile)
+	{
+	    string path = (string)esMeta.Input["OutputPath"];
+	    
+		string fname = path;
+		if (!fname.EndsWith("\\")) 
+			fname += "\\";
+			
+		Directory.CreateDirectory(path);		
+		
+		fname += fileName;
+		
+		using (StreamWriter sw = System.IO.File.CreateText(fname)) 
+		{
+			sw.Write(text);
+		} 	
+		
+		return "";
+	}
+	else
+	{
+		return text;			
+	}
+}
+</script>

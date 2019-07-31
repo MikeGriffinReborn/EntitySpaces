@@ -1,0 +1,400 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/
+%><%@ TemplateInfo 
+    UniqueID="8A4823EB-1330-421e-B8FD-25CA78A2C6A4" 
+    Title="Generated - Metadata (C#)"   
+    Description="The Metadata Class" 
+    Namespace="EntitySpaces.2019.C#.Generated" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    IsSubTemplate="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------	
+bool TargetTheCompactFramework = (bool)esMeta.Input["TargetTheCompactFramework"];
+string Namespace = (string)esMeta.Input["Namespace"];
+bool GenerateSingleFile = (bool)esMeta.Input["GenerateSingleFile"];
+bool UseDnnObjectQualifier = (bool)esMeta.Input["UseDnnObjectQualifier"];
+bool MetadataClassShouldIgnoreSchema = (bool)esMeta.Input["MetadataClassShouldIgnoreSchema"];
+bool MetadataClassShouldIgnoreCatalog = (bool)esMeta.Input["MetadataClassShouldIgnoreCatalog"];
+string TargetMultipleDatabases = ((bool)esMeta.Input["TargetMultipleDatabases"]) ? "true" : "false";
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+EntitySpaces.MetadataEngine.IPropertyCollection props;	
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------	
+ITable table = (ITable)esMeta.Input["Table"];
+IView view = (IView)esMeta.Input["View"];			
+IColumns cols = (IColumns)esMeta.Input["Columns"];
+esPluginSource source = (esPluginSource)esMeta.Input["Source"];
+
+if(table != null)
+{
+	props = table.Properties;
+}
+else
+{
+	props = view.Properties;
+}
+
+if(!GenerateSingleFile){ %>/*
+===============================================================================
+                    EntitySpaces Studio by EntitySpaces, LLC
+             Persistence Layer and Business Objects for Microsoft .NET
+             EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+                          http://www.entityspaces.net
+===============================================================================
+EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+===============================================================================
+*/
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Data;
+
+using EntitySpaces.Core;
+using EntitySpaces.Interfaces;
+using EntitySpaces.DynamicQuery;
+
+<%if(UseDnnObjectQualifier){%>
+using DotNetNuke.Framework.Providers;
+<%}%>
+
+namespace <%=Namespace%>
+{<%}%>
+<%if(!TargetTheCompactFramework){%>
+	[Serializable]<%}%>
+	public partial class <%=source.Metadata%> : esMetadata, IMetadata
+	{
+		#region Protected Constructor
+		protected <%=source.Metadata%>()
+		{
+			m_columns = new esColumnMetadataCollection();
+			esColumnMetadata c;
+<% 
+			IProperty prop;
+			int i = 0;
+			foreach(IColumn col in cols)
+			{%>
+			c = new esColumnMetadata(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>, <%=i.ToString()%>, typeof(<%=col.CSharpToSystemType%>), <%=col.esSystemType%>);
+			c.PropertyName = <%=source.Metadata%>.PropertyNames.<%=col.PropertyName%>;<%
+				if(col.IsInPrimaryKey) %><%="\r\n\t\t\tc.IsInPrimaryKey = true;"%><%
+				if(col.IsAutoKey) %><%="\r\n\t\t\tc.IsAutoIncrement = true;"%><%
+				if(col.AutoKeyText != null && col.AutoKeyText != String.Empty) %><%="\r\n\t\t\tc.AutoKeyText = \"" + col.AutoKeyText + "\";"%><%				
+				if(col.CharacterMaxLength > 0) {%><%="\r\n\t\t\tc.CharacterMaxLength = " + col.CharacterMaxLength.ToString() + ";"%><%}
+				if(col.NumericPrecision > 0) {%><%="\r\n\t\t\tc.NumericPrecision = " + col.NumericPrecision.ToString() + ";"%><%}
+				if(col.NumericScale > 0) {%><%="\r\n\t\t\tc.NumericScale = " + col.NumericScale + ";"%><%}
+				if(col.HasDefault)
+				{
+					%><%="\r\n\t\t\tc.HasDefault = true;"%><%
+					%><%="\r\n\t\t\tc.Default = @\"" + col.Default.Replace("\"", "\"\"") + "\";"%><%
+				}
+				if(col.Description.Length > 0) %><%="\r\n\t\t\tc.Description = \"" + col.Description.Replace("\r\n", " ").Replace("\n", " ").Replace("\\", "\\\\").Replace("\"", "\\\"") + "\";"%><%
+				if(col.IsNullable) %><%="\r\n\t\t\tc.IsNullable = true;"%><% 			
+				if(col.IsComputed) %><%="\r\n\t\t\tc.IsComputed = true;"%><%
+				if(col.IsEntitySpacesConcurrency) %><%="\r\n\t\t\tc.IsEntitySpacesConcurrency = true;"%><%
+				if(col.IsConcurrency) %><%="\r\n\t\t\tc.IsConcurrency = true;"%><% 	
+				if(col.Alias != col.Name) %><%="\r\n\t\t\tc.Alias = \"" + col.Alias + "\";"%><%
+				%>
+			m_columns.Add(c);
+				<% 
+				i++;
+			}
+			
+			foreach(IColumn col in cols)
+			{
+				if(col.IsDateAddedColumn)
+				{
+					%><%="\r\n\t\t\tm_columns.DateAdded = new esColumnMetadataCollection.SpecialDate();"%><%
+					%><%="\r\n\t\t\tm_columns.DateAdded.ColumnName = \"" + col.Name + "\";"%><%
+					%><%="\r\n\t\t\tm_columns.DateAdded.IsEnabled = true;"%><%					
+					if(col.DateAddedType == esSettingsDriverInfo.DateType.ServerSide)
+					{
+						%><%="\r\n\t\t\tm_columns.DateAdded.Type = DateType.ServerSide;"%><%
+					}
+					else
+					{
+						%><%="\r\n\t\t\tm_columns.DateAdded.Type = DateType.ClientSide;"%><%
+						if(col.DateAddedClientType == esSettingsDriverInfo.ClientType.Now)
+						{
+							%><%="\r\n\t\t\tm_columns.DateAdded.ClientType = ClientType.Now;"%><%
+						}
+						else
+						{
+							%><%="\r\n\t\t\tm_columns.DateAdded.ClientType = ClientType.UtcNow;"%><%
+						}
+					}
+					%><%="\r\n"%><%
+				}
+				else if(col.IsDateModifiedColumn)
+				{
+					%><%="\r\n\t\t\tm_columns.DateModified = new esColumnMetadataCollection.SpecialDate();"%><%
+					%><%="\r\n\t\t\tm_columns.DateModified.ColumnName = \"" + col.Name + "\";"%><%
+					%><%="\r\n\t\t\tm_columns.DateModified.IsEnabled = true;"%><%					
+					if(col.DateModifiedType == esSettingsDriverInfo.DateType.ServerSide)
+					{
+						%><%="\r\n\t\t\tm_columns.DateModified.Type = DateType.ServerSide;"%><%
+					}
+					else
+					{
+						%><%="\r\n\t\t\tm_columns.DateModified.Type = DateType.ClientSide;"%><%
+						if(col.DateModifiedClientType == esSettingsDriverInfo.ClientType.Now)
+						{
+							%><%="\r\n\t\t\tm_columns.DateModified.ClientType = ClientType.Now;"%><%
+						}
+						else
+						{
+							%><%="\r\n\t\t\tm_columns.DateModified.ClientType = ClientType.UtcNow;"%><%
+						}
+					}
+					%><%="\r\n"%><%
+				}
+				else if(col.IsAddedByColumn)
+				{
+					%><%="\r\n\t\t\tm_columns.AddedBy = new esColumnMetadataCollection.AuditingInfo();"%><%
+					%><%="\r\n\t\t\tm_columns.AddedBy.ColumnName = \"" + col.Name + "\";"%><%					
+					%><%="\r\n\t\t\tm_columns.AddedBy.IsEnabled = true;"%><%
+					%><%="\r\n\t\t\tm_columns.AddedBy.UseEventHandler = " + col.UseAddedByEventHandler.ToString().ToLower() + ";"%><%	
+					%><%="\r\n"%><%					
+				}
+				else if(col.IsModifiedByColumn)
+				{
+					%><%="\r\n\t\t\tm_columns.ModifiedBy = new esColumnMetadataCollection.AuditingInfo();"%><%
+					%><%="\r\n\t\t\tm_columns.ModifiedBy.ColumnName = \"" + col.Name + "\";"%><%					
+					%><%="\r\n\t\t\tm_columns.ModifiedBy.IsEnabled = true;"%><%
+					%><%="\r\n\t\t\tm_columns.ModifiedBy.UseEventHandler = " + col.UseModifiedByEventHandler.ToString().ToLower() + ";"%><%
+					%><%="\r\n"%><%
+				}			
+			}
+		%>
+		}
+		#endregion	
+	
+		static public <%=source.Metadata%> Meta()
+		{
+			return meta;
+		}	
+		
+		public Guid DataID
+		{
+			get { return base.m_dataID; }
+		}	
+		
+		public bool MultiProviderMode
+		{
+			get { return <%=TargetMultipleDatabases%>; }
+		}		
+
+		public esColumnMetadataCollection Columns
+		{
+			get	{ return base.m_columns; }
+		}
+		
+		#region ColumnNames
+		public class ColumnNames
+		{ <% 
+			 foreach(IColumn col in cols)
+			 {%>
+			 public const string <%=col.PropertyName%> = "<%=col.Name%>";<%
+			 } %>
+		}
+		#endregion	
+		
+		#region PropertyNames
+		public class PropertyNames
+		{ <% 
+			 foreach(IColumn col in cols)
+			 {%>
+			 public const string <%=col.PropertyName%> = "<%=col.PropertyName%>";<%
+			 } %>
+		}
+		#endregion	
+
+		public esProviderSpecificMetadata GetProviderMetadata(string mapName)
+		{
+			MapToMeta mapMethod = mapDelegates[mapName];
+
+			if (mapMethod != null)
+				return mapMethod(mapName);
+			else
+				return null;
+		}
+		
+		#region MAP esDefault
+		
+		static private int RegisterDelegateesDefault()
+		{
+			// This is only executed once per the life of the application
+			lock (typeof(<%=source.Metadata%>))
+			{
+				if(<%=source.Metadata%>.mapDelegates == null)
+				{
+					<%=source.Metadata%>.mapDelegates = new Dictionary<string,MapToMeta>();
+				}
+				
+				if (<%=source.Metadata%>.meta == null)
+				{
+					<%=source.Metadata%>.meta = new <%=source.Metadata%>();
+				}
+				
+				MapToMeta mapMethod = new MapToMeta(meta.esDefault);
+				mapDelegates.Add("esDefault", mapMethod);
+				mapMethod("esDefault");
+			}
+			return 0;
+		}			
+
+		private esProviderSpecificMetadata esDefault(string mapName)
+		{
+			if(!m_providerMetadataMaps.ContainsKey(mapName))
+			{
+				esProviderSpecificMetadata meta = new esProviderSpecificMetadata();			
+<% 
+		foreach(IColumn col in cols)
+		{
+			if(col.AutoKeyText != null && col.AutoKeyText.Length > 0)
+			{
+				%><%="\r\n\t\t\t\tmeta[\"AutoKeyText\"] = \"" + col.AutoKeyText + "\""%>;<%
+			}
+			else
+			{
+				if(col.IsAutoKey && esMeta.DriverString == esMetaDrivers.PostgreSQL)
+				{
+				%><%="\r\n\r\n\t\t\t\tmeta[\"AutoKeyText\"] = @\"" + col.Default.Replace("\"", "\"\"") + "\""%>;<%
+				}
+			}
+			if(col.IsDateAddedColumn)
+			{
+				if(col.DateAddedType == esSettingsDriverInfo.DateType.ServerSide)
+				{
+				%><%="\r\n\r\n\t\t\t\tmeta[\"DateAdded.ServerSideText\"] = \"" + col.DateAddedServerSideText + "\""%>;<%
+				}
+			}
+			else if(col.IsDateModifiedColumn)
+			{
+				if(col.DateModifiedType == esSettingsDriverInfo.DateType.ServerSide)
+				{
+				%><%="\r\n\r\n\t\t\t\tmeta[\"DateModified.ServerSideText\"] = \"" + col.DateModifiedServerSideText + "\""%>;<%
+				}
+			}
+			else if(col.IsAddedByColumn)
+			{
+				if(col.UseAddedByEventHandler == false)
+				{
+				%><%="\r\n\r\n\t\t\t\tmeta[\"AddedBy.ServerSideText\"] = \"" + col.AddedByServerSideText + "\""%>;<%
+				}
+			}
+			else if(col.IsModifiedByColumn)
+			{
+				if(col.UseModifiedByEventHandler == false)
+				{
+				%><%="\r\n\r\n\t\t\t\tmeta[\"ModifiedBy.ServerSideText\"] = \"" + col.ModifiedByServerSideText + "\""%>;<%
+				}
+			}			
+		}
+%>
+<%		
+		foreach(IColumn col in cols)
+		{ 
+			%><%="\r\n\t\t\t\tmeta.AddTypeMap(\"" + col.PropertyName + "\", new esTypeMap(\"" + col.DataTypeName + "\", \"" + col.CSharpToSystemType + "\"));"%><%
+		}
+%>			
+				<%if(!MetadataClassShouldIgnoreCatalog && source.Catalog.Length > 0){%>meta.Catalog = "<%=source.Catalog%>";<%}%>
+				<%if(!MetadataClassShouldIgnoreSchema && source.Schema.Length > 0) { %>meta.Schema = "<%=source.Schema%>";<%}%>
+				<%
+				
+				if(UseDnnObjectQualifier){%>
+				ProviderConfiguration providerConfiguration = ProviderConfiguration.GetProviderConfiguration("data");
+				Provider provider = (Provider)providerConfiguration.Providers[providerConfiguration.DefaultProvider];
+
+				string objectQualifier = provider.Attributes["objectQualifier"];
+
+				if ((objectQualifier != string.Empty) && (objectQualifier.EndsWith("_") == false))
+				{
+					objectQualifier += "_";
+				}
+
+				if (objectQualifier != string.Empty)
+				{
+					meta.Source = objectQualifier + "<%=source.PhysicalName%>";
+					meta.Destination = objectQualifier + "<%=source.PhysicalName%>";
+					
+					meta.spInsert = objectQualifier + "<%=esMeta.esPlugIn.ProcInsert(source)%>";				
+					meta.spUpdate = objectQualifier + "<%=esMeta.esPlugIn.ProcUpdate(source)%>";		
+					meta.spDelete = objectQualifier + "<%=esMeta.esPlugIn.ProcDelete(source)%>";
+					meta.spLoadAll = objectQualifier + "<%=esMeta.esPlugIn.ProcLoadAll(source)%>";
+					meta.spLoadByPrimaryKey = objectQualifier + "<%=esMeta.esPlugIn.ProcLoadByPK(source)%>";
+				}
+				else
+				{
+					meta.Source = "<%=source.PhysicalName%>";
+					meta.Destination = "<%=source.PhysicalName%>";
+									
+					meta.spInsert = "<%=esMeta.esPlugIn.ProcInsert(source)%>";				
+					meta.spUpdate = "<%=esMeta.esPlugIn.ProcUpdate(source)%>";		
+					meta.spDelete = "<%=esMeta.esPlugIn.ProcDelete(source)%>";
+					meta.spLoadAll = "<%=esMeta.esPlugIn.ProcLoadAll(source)%>";
+					meta.spLoadByPrimaryKey = "<%=esMeta.esPlugIn.ProcLoadByPK(source)%>";
+				}
+				<%}
+				else
+				{%>
+				meta.Source = "<%=source.PhysicalName%>";
+				meta.Destination = "<%=source.PhysicalName%>";
+				<%if(esMeta.DriverString != "SQLCE")
+				{%>
+				meta.spInsert = "<%=esMeta.esPlugIn.ProcInsert(source)%>";				
+				meta.spUpdate = "<%=esMeta.esPlugIn.ProcUpdate(source)%>";		
+				meta.spDelete = "<%=esMeta.esPlugIn.ProcDelete(source)%>";
+				meta.spLoadAll = "<%=esMeta.esPlugIn.ProcLoadAll(source)%>";
+				meta.spLoadByPrimaryKey = "<%=esMeta.esPlugIn.ProcLoadByPK(source)%>";<%}%><%}%>
+				
+				this.m_providerMetadataMaps["esDefault"] = meta;
+			}
+			
+			return this.m_providerMetadataMaps["esDefault"];
+		}
+
+		#endregion
+
+		static private <%=source.Metadata%> meta;
+		static protected Dictionary<string, MapToMeta> mapDelegates;
+		static private int _esDefault = RegisterDelegateesDefault();
+	}
+}
+<script runat="template">
+
+public string GetFileName()
+{
+	return esMeta.esPlugIn.Metadata((esPluginSource)esMeta.Input["Source"]) + ".cs";
+}
+
+public EntitySpaces.MetadataEngine.Root TheMetaData
+{
+	get { return esMeta;  }
+	set { esMeta = value; }	
+}
+
+</script>

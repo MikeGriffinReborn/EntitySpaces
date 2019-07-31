@@ -1,0 +1,501 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/
+%><%@ TemplateInfo 
+    UniqueID="949B0959-A083-4732-9978-38EC3DF47494" 
+    Title="Generated - esEntity (C#).cst"   
+    Description="The Abstract Entity Class" 
+    Namespace="EntitySpaces.2019.C#.Generated" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    IsSubTemplate="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------	
+bool TargetTheCompactFramework = (bool)esMeta.Input["TargetTheCompactFramework"];
+string Namespace = (string)esMeta.Input["Namespace"];
+bool GenerateSingleFile = (bool)esMeta.Input["GenerateSingleFile"];
+bool SelectedTablesOnly = (bool)esMeta.Input["GenerateHierarchicalModelSelectedTablesOnly"];
+bool UseDnnObjectQualifier = (bool)esMeta.Input["UseDnnObjectQualifier"];
+bool UseCustomBaseClass = (bool)esMeta.Input["UseCustomBaseClass"];
+bool GenerateStrProperties = esMeta.GetInput<bool>("GenerateStrProperties", true);
+bool RiaServicesSupport = esMeta.GetInput<bool>("GenerateHierarchicalRiaServicesSupport", false);
+bool DataContractSupportHierachical = esMeta.GetInput<bool>("GenerateHierarchicalDataContracts", false);
+bool GenerateHierarchicalModel = (bool)esMeta.Input["GenerateHierarchicalModel"];
+ArrayList entities = esMeta.Input["Entities"] as ArrayList;
+
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+string comma;
+string upToPrefix = "";
+
+if(esMeta.esPlugIn.UseUpToPrefix)
+{
+	upToPrefix = esMeta.esPlugIn.sUpToPrefix;
+}
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------	
+ITable table = (ITable)esMeta.Input["Table"];
+IView view = (IView)esMeta.Input["View"];			
+IColumns cols = (IColumns)esMeta.Input["Columns"];
+esPluginSource source = (esPluginSource)esMeta.Input["Source"];
+
+if(!GenerateSingleFile){ %>/*
+===============================================================================
+                    EntitySpaces Studio by EntitySpaces, LLC
+             Persistence Layer and Business Objects for Microsoft .NET
+             EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+                          http://www.entityspaces.net
+===============================================================================
+EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+===============================================================================
+*/
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+using System.Data;
+using System.ComponentModel;
+
+using EntitySpaces.Core;
+using EntitySpaces.Interfaces;
+using EntitySpaces.DynamicQuery;
+
+namespace <%=Namespace%>
+{<%}%><%if(!TargetTheCompactFramework){%>
+	[DataContract]
+	[Serializable]<%} if (UseCustomBaseClass) {%>
+	abstract public partial class <%=source.esEntity%> : EntityBase<%}else{%>
+	abstract public partial class <%=source.esEntity%> : esEntity<%}%>
+	{
+		public <%=source.esEntity%>()
+		{
+
+		}
+		
+		#region LoadByPrimaryKey
+		<% if(table != null) 
+		{
+		comma = "";
+	%>public virtual bool LoadByPrimaryKey(<%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%=col.CSharpToSystemType + " " + col.ParameterName%><%
+			comma = ", ";
+		}%>)
+		{
+			if(this.es.Connection.SqlAccessType == esSqlAccessType.DynamicSQL)
+				return LoadByPrimaryKeyDynamic(<%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%=col.ParameterName%><%
+			comma = ", ";
+
+		}%>);
+			else
+				return LoadByPrimaryKeyStoredProcedure(<%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%=col.ParameterName%><%
+			comma = ", ";
+		}%>);
+		}<%
+		comma = "";
+		%>
+
+		public virtual bool LoadByPrimaryKey(esSqlAccessType sqlAccessType, <%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%=col.CSharpToSystemType + " " + col.ParameterName%><%
+			comma = ", ";
+		}%>)
+		{
+			if (sqlAccessType == esSqlAccessType.DynamicSQL)
+				return LoadByPrimaryKeyDynamic(<%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%=col.ParameterName%><%
+			comma = ", ";
+
+		}%>);
+			else
+				return LoadByPrimaryKeyStoredProcedure(<%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%=col.ParameterName%><%
+			comma = ", ";
+		}%>);
+		}
+
+		private bool LoadByPrimaryKeyDynamic(<%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%=col.CSharpToSystemType + " " + col.ParameterName%><%
+			comma = ", ";
+		}%>)
+		{
+			<%=source.Query%> query = new <%=source.Query%>();
+			query.Where(<%
+		comma = "";	
+		
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma + "query." + col.PropertyName + " == " + col.ParameterName%><%
+			comma = ", ";
+		}%>);
+			return this.Load(query);
+		}
+
+		private bool LoadByPrimaryKeyStoredProcedure(<%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%=col.CSharpToSystemType + " " + col.ParameterName%><%
+			comma = ", ";
+		}%>)
+		{
+			esParameters parms = new esParameters();
+<%
+		comma = "";	
+		
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%>			<%="parms.Add(\"" + esMeta.esPlugIn.ToPascalCase(col.Alias) + "\", " + col.ParameterName + ");"%><%
+		}%>
+			return this.Load(esQueryType.StoredProcedure, this.es.spLoadByPrimaryKey, parms);
+		}<%}%>
+		#endregion
+		
+		#region Properties
+		<%if(RiaServicesSupport) {%>
+		// For Ria Services Only
+		[DataMember(EmitDefaultValue=false)]
+		[Display(AutoGenerateField=false)]
+		public string esExtendedData 
+		{ 
+			get { return GetExtraColumnsSerialized(); }
+			private set { }
+		}<%}%>
+		
+		<% 
+			string objName = "";
+			string objType = "";
+			foreach(IColumn col in cols)
+			{
+				objName = "";
+				if(col.ForeignKeys.Count > 0 && table != null && GenerateHierarchicalModel)
+				{
+					foreach(IForeignKey fk in col.ForeignKeys )
+					{
+						EntitySpaces.MetadataEngine.TableRelation tr = new EntitySpaces.MetadataEngine.TableRelation(table, fk);
+						
+						if(SelectedTablesOnly)
+						{
+							if(!entities.Contains(tr.PrimaryTable.FullName) || !entities.Contains(tr.ForeignTable.FullName))
+							{
+								continue;
+							}
+						}
+						
+						if(tr.IsManyToOne && !(col.IsInPrimaryKey && tr.IsSelfReference))
+						{
+							objName = upToPrefix + esMeta.esPlugIn.EntityRelationName(tr.ForeignTable, tr.PrimaryColumns[0], tr.IsSelfReference);
+						}
+					}
+				}%>
+		/// <summary>
+		<% 
+				if(col.Description == "")
+					%><%="/// Maps to " + source.PhysicalName + "." + col.Name%><%
+				else	
+					%><%="/// " + col.Description.Replace("\r\n", " ").Replace("\n", " ")%>
+		/// </summary><%if(!col.IsNonSystemType){ if(!TargetTheCompactFramework) {%>
+		[DataMember(EmitDefaultValue=false)]<%}%>
+		virtual public <%=col.NullableType%> <%=col.PropertyName%>
+		{
+			get
+			{
+				return base.<%=col.GetRowAccessor%>(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>);
+			}
+			
+			set
+			{
+				if(base.<%=col.SetRowAccessor%>(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>, value))
+				{<%if(objName.Length > 0 && GenerateHierarchicalModel){%>
+					this._<%=objName%> = null;
+					this.OnPropertyChanged("<%=objName%>");<%}%>
+					OnPropertyChanged(<%=source.Metadata%>.PropertyNames.<%=col.PropertyName%>);
+				}
+			}
+		}<% } else { if(!TargetTheCompactFramework) {%>%>
+		[DataMember(EmitDefaultValue=false)]<%}%>		
+		virtual public <%=col.LanguageType%> <%=col.PropertyName%>
+		{
+			get
+			{
+				return (<%=col.LanguageType%>)base.GetSystemObject(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>);
+			}
+			
+			set
+			{
+				if(base.SetSystemObject(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>, value))
+				{
+					OnPropertyChanged(<%=source.Metadata%>.PropertyNames.<%=col.PropertyName%>);
+				}
+			}
+		}<%}%>		
+		<%
+			} // next col
+			
+			objName = "";
+			objType = "";
+			if(table != null && GenerateHierarchicalModel)
+			{
+				foreach(IForeignKey fk in table.ForeignKeys )
+				{
+					EntitySpaces.MetadataEngine.TableRelation tr = new EntitySpaces.MetadataEngine.TableRelation(table, fk);
+					
+					if(SelectedTablesOnly)
+					{
+						if(!entities.Contains(tr.PrimaryTable.FullName) || !entities.Contains(tr.ForeignTable.FullName))
+						{
+							continue;
+						}
+					}
+					
+					if(tr.IsManyToOne)
+					{
+						objName = upToPrefix + esMeta.esPlugIn.EntityRelationName(tr.ForeignTable, tr.PrimaryColumns[0], tr.IsSelfReference);
+						objType = esMeta.esPlugIn.Entity(tr.ForeignTable);%>
+		[CLSCompliant(false)]<%if(DataContractSupportHierachical) {%>
+		[DataMember(EmitDefaultValue=false)]<%}%>
+		internal protected <%=objType%> _<%=objName%>;<%
+					}
+				}
+			}%>
+		#endregion<%if(GenerateStrProperties) {%>	
+
+		#region .str() Properties
+		
+		public override void SetProperties(IDictionary values)
+		{
+			foreach (string propertyName in values.Keys)
+			{
+				this.SetProperty(propertyName, values[propertyName]);
+			}
+		}
+		
+		public override void SetProperty(string name, object value)
+		{
+			esColumnMetadata col = this.Meta.Columns.FindByPropertyName(name);
+			if (col != null)
+			{
+				if(value == null || value is System.String)
+				{				
+					// Use the strongly typed property
+					switch (name)
+					{<% foreach(IColumn col in cols)
+						{
+							if(!col.IsArrayType && !col.IsObjectType && !col.IsNonSystemType){%>							
+						case "<%=col.PropertyName%>": this.str().<%=col.PropertyName%> = (string)value; break;<% }
+					}%>
+					}
+				}
+				else
+				{
+					switch (name)
+					{<% foreach(IColumn col in cols) 
+						{
+							if(col.IsNonSystemType) continue;
+						
+							if(col.CSharpToSystemType != "System.String"){%>	
+						case "<%=col.PropertyName%>":
+						
+							if (value == null || value is <%=col.CSharpToSystemType%>)
+								this.<%=col.PropertyName%> = (<%=col.NullableType%>)value;
+								OnPropertyChanged(<%=source.Metadata%>.PropertyNames.<%=col.PropertyName%>);
+							break;
+					<%}}%>
+
+						default:
+							break;
+					}
+				}
+			}
+            else if (this.ContainsColumn(name))
+            {
+                this.SetColumn(name, value);
+            }
+			else
+			{
+				throw new Exception("SetProperty Error: '" + name + "' not found");
+			}
+		}		
+
+		public esStrings str()
+		{
+			if (esstrings == null)
+			{
+				esstrings = new esStrings(this);
+			}
+			return esstrings;
+		}
+
+		sealed public class esStrings
+		{
+			public esStrings(<%=source.esEntity%> entity)
+			{
+				this.entity = entity;
+			}
+			
+<%			foreach(IColumn col in cols)
+			{
+				if(!col.IsArrayType && !col.IsObjectType && !col.IsNonSystemType)
+				{
+					if(esMeta.esPlugIn.UseNullableTypesAlways || col.IsNullable)
+					{%>	
+			public System.String <%=col.PropertyName%>
+			{
+				get
+				{
+					<%=col.NullableType%> data = entity.<%=col.PropertyName%>;
+					return (data == null) ? String.Empty : <%=esMeta.esPlugIn.GetStringConversion(col, "data")%>;
+				}
+
+				set
+				{
+					if (value == null || value.Length == 0) entity.<%=col.PropertyName%> = null;
+					else entity.<%=col.PropertyName%> = <%=esMeta.esPlugIn.SetStringConversion(col, "value")%>;
+				}
+			}
+			<% 
+					}
+					else
+					{%>
+			public System.String <%=col.PropertyName%>
+			{
+				get
+				{
+					return <%=esMeta.esPlugIn.GetStringConversion(col, "entity." + col.PropertyName)%>;
+				}
+
+				set
+				{
+					entity.<%=col.PropertyName%> = <%=esMeta.esPlugIn.SetStringConversion(col, "value")%>;
+				}
+			}
+<%				
+					}
+				}
+		  }%>
+
+			private <%=source.esEntity%> entity;
+		}
+		
+		[NonSerialized]
+		private esStrings esstrings;		
+		
+		#endregion<%}%>
+		
+		#region Housekeeping methods
+
+		override protected IMetadata Meta
+		{
+			get
+			{
+				return <%=source.Metadata%>.Meta();
+			}
+		}
+
+		#endregion		
+		
+		#region Query Logic
+
+		public <%=source.Query%> Query
+		{
+			get
+			{
+				if (this.query == null)
+				{
+					this.query = new <%=source.Query%>();
+					InitQuery(this.query);
+				}
+
+				return this.query;
+			}
+		}
+
+		public bool Load(<%=source.Query%> query)
+		{
+			this.query = query;
+			InitQuery(this.query);
+			return this.Query.Load();
+		}
+		
+		protected void InitQuery(<%=source.Query%> query)
+		{
+			query.OnLoadDelegate = this.OnQueryLoaded;
+			
+			if (!query.es2.HasConnection)
+			{
+				query.es2.Connection = ((IEntity)this).Connection;
+			}			
+		}
+
+		#endregion
+		
+        <%if(!TargetTheCompactFramework){%>[IgnoreDataMember]<%}%>
+		private <%=source.Query%> query;		
+	}
+<%if(!GenerateSingleFile){ %>
+}<%}%>
+<script runat="template">
+
+public string GetFileName()
+{
+	return esMeta.esPlugIn.esEntity((esPluginSource)esMeta.Input["Source"]) + ".cs";
+}
+
+public EntitySpaces.MetadataEngine.Root TheMetaData
+{
+	get { return esMeta;  }
+	set { esMeta = value; }	
+}
+
+</script>	

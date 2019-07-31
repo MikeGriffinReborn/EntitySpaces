@@ -1,0 +1,420 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/%>
+<%@ TemplateInfo 
+    UniqueID="26AF598A-4CF9-4b24-BB01-A71565959C0E"
+	UserInterfaceID="D08B0E66-E1C9-446a-A40E-1DDA5DE00777"
+    Title="PostgreSQL"   
+    Description="PostgreSQL Stored Procedures" 
+    Namespace="EntitySpaces.2019.StoredProcedures" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    RequiresUI="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------
+ArrayList entities = esMeta.Input["Entities"] as ArrayList;
+string entityType = (string)esMeta.Input["EntityType"];
+string databaseName = (string)esMeta.Input["Database"];
+
+//System.Diagnostics.Debugger.Break();
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+int lastOrdinal = 0;
+
+ITable table = null;
+IView  view = null;
+IColumns cols = null;
+string returnType = "void";
+
+string allSQL = "";
+
+IDatabase database = esMeta.Databases[databaseName];
+
+foreach(string tableOrView in entities)
+{
+	string text = "";
+	
+	if(entityType == dbEntityType.Tables.ToString())
+	{
+		table = database.Tables[tableOrView];
+		view = null;
+		cols = table.Columns;
+	}
+	else 
+	{
+		view = database.Views[tableOrView];
+		
+		table = null;
+		cols = view.Columns;
+	}
+	
+	EntitySpaces.MetadataEngine.esPluginSource source = new EntitySpaces.MetadataEngine.esPluginSource(esMeta, table, view);
+	esMeta.Input["Source"] = source;
+	
+	if(table.PrimaryKeys.Count == 0)
+	{
+		this.ClearOutput();
+		continue;
+	} 	
+
+//----------------------------------------------------------------------
+// LoadByPrimaryKey 
+//----------------------------------------------------------------------
+%>
+<%= BuildCreateAlterStatement(esMeta.esPlugIn.ProcLoadByPK(table.Name)) %>
+(<%
+	// List all keys as parameters
+	bool inFirst = true;
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=", "%><%}%>		
+	 <%=col.DataTypeNameComplete%> <%
+		inFirst = false;
+	}
+%>
+)
+RETURNS SETOF "<%=table.Name%>" AS '
+	SELECT
+	<%
+	// List all fields
+	inFirst = true;
+	foreach(IColumn col in table.Columns)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+		 "<%=col.Name%>"<%
+		inFirst = false;
+	}	
+%>	
+	FROM "<%=table.Name%>"
+	WHERE
+	<%
+	// Compare keys with parameters
+	int intParamPos = 1;
+	inFirst = true;
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=" AND "%><%}%>
+		 "<%=col.Name%>" = $<%=intParamPos++.ToString()%><%
+		inFirst = false;
+	}
+%>;
+
+' LANGUAGE 'SQL' STABLE;
+
+<%
+//----------------------------------------------------------------------
+// LoadAll 
+//----------------------------------------------------------------------
+%>
+<%= BuildCreateAlterStatement(esMeta.esPlugIn.ProcLoadAll(table.Name)) %>()
+RETURNS SETOF "<%=table.Name%>" AS '
+	SELECT
+<%
+	// List all fields
+	inFirst = true;
+	foreach(IColumn col in table.Columns)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+	 "<%=col.Name%>"<%
+		inFirst = false;
+	}
+%>
+	FROM "<%=table.Name%>";
+' LANGUAGE 'SQL' STABLE;
+
+<%
+
+//----------------------------------------------------------------------
+// Update
+//----------------------------------------------------------------------
+int colCount = 0;
+returnType = "void";
+
+foreach(IColumn col in table.Columns)
+{
+	if(col.IsInPrimaryKey || col.IsComputed)
+	{
+		colCount++;
+	}
+}
+
+if(table.Columns.Count == colCount)
+{%>
+
+	-------------------------------------------
+	-- NO UPDATE Stored Procedure Generated    
+	-- All Columns are part of the Primary key 
+	-------------------------------------------
+	
+<%		
+}
+else
+{
+%>
+<%= BuildCreateAlterStatement(esMeta.esPlugIn.ProcUpdate(table.Name)) %>
+(<%
+	// List all keys as parameters
+	inFirst = true;
+	foreach(IColumn col in table.Columns)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+	 <%=col.DataTypeNameComplete%><%
+		inFirst = false;
+		
+		if(col.IsEntitySpacesConcurrency)
+		{
+			returnType = table.Name;
+		}
+	}
+%>
+)
+RETURNS "<%=returnType%>" AS '
+	UPDATE "<%=table.Name%>"
+	SET<%
+	inFirst = true;
+	intParamPos = 1;	
+	
+	foreach(IColumn col in table.Columns)
+	{	
+		if(!col.IsInPrimaryKey && !col.IsAutoKey)
+		{
+			if(!inFirst) {%><%=", "%><%}%><%
+			if(col.IsEntitySpacesConcurrency) {%>
+		"<%=col.Name%>" = $<%=intParamPos.ToString()%> + 1<%} else {%>			
+		"<%=col.Name%>" = $<%=intParamPos.ToString()%><%}%><% 
+			inFirst = false;			
+		}
+		
+		intParamPos++;
+	}%>	
+	WHERE<%
+	inFirst = true;
+	intParamPos = 1;
+	
+	foreach(IColumn col in table.Columns)
+	{	
+		if(col.IsInPrimaryKey || col.IsEntitySpacesConcurrency)
+		{
+			if(!inFirst) {%> AND <%}%>	
+		 "<%=col.Name%>" = $<%=intParamPos++.ToString()%><%
+			inFirst = false;			
+		}
+		else
+		{
+			intParamPos++;
+		}
+	}%>;<% 
+	
+	intParamPos = 1;	
+	inFirst = true;
+	if(returnType != "void")
+	{%>
+	
+	SELECT * FROM "<%=table.Name%>" WHERE <%
+		foreach(IColumn col in table.Columns)
+		{	
+			if(col.IsInPrimaryKey)
+			{
+			if(!inFirst) {%> AND <%}%>	
+		 "<%=col.Name%>" = $<%=intParamPos++.ToString()%><%
+			inFirst = false;
+			}
+			else
+			{
+				intParamPos++;
+			}			
+		}
+	}		
+	
+%>;
+' LANGUAGE 'SQL' VOLATILE;
+
+<%}%>
+<%
+
+//----------------------------------------------------------------------
+// Insert
+//---------------------------------------------------------------------
+string autoCol = "";
+returnType = "void";
+
+%>
+<%= BuildCreateAlterStatement(esMeta.esPlugIn.ProcInsert(table.Name)) %>
+(<%
+	inFirst = true;
+	foreach(IColumn col in table.Columns)
+	{	
+		if(!col.IsAutoKey)
+		{
+			if(!inFirst) {%>,<%}%>				
+	 <%=col.DataTypeNameComplete%><%		
+			inFirst = false;		
+		}
+		else
+		{
+			autoCol = col.Name;
+			returnType = table.Name;
+		}
+	}
+%>
+)
+RETURNS "<%=returnType%>" AS '
+	INSERT INTO "<%=table.Name%>"
+	(
+<%
+	inFirst = true;
+	foreach(IColumn col in table.Columns)
+	{	
+		if(!col.IsAutoKey)
+		{
+			if(!inFirst) {%><%=", "%><%}%>
+		 "<%=col.Name%>"<%
+			inFirst = false;			
+		}
+	}
+%>
+	)
+	VALUES
+	(
+<%
+	intParamPos = 1;
+	inFirst = true;
+	foreach(IColumn col in table.Columns)
+	{	
+		if(!col.IsAutoKey)
+		{
+			if(!inFirst) {%>,<%}%><%
+			if(col.IsEntitySpacesConcurrency) {intParamPos++;%>		
+		1<%} else {%>			
+		$<%=intParamPos++.ToString()%><%}%><%
+			inFirst = false;				
+		}
+	}	
+%>
+	);
+<%
+	//Return currval from sequence if any is used
+	if(returnType != "void" && autoCol != "" )
+	{
+		foreach(IColumn col in table.Columns)
+		{
+			if(col.IsAutoKey)
+			{%>
+	SELECT * FROM "<%=table.Name%>" WHERE "<%=col.Name%>" = lastval();<%
+				break;
+			}
+		}
+	}
+%>
+' LANGUAGE 'SQL' VOLATILE;
+
+<%
+//----------------------------------------------------------------------
+// Delete
+//----------------------------------------------------------------------
+%>
+<%= BuildCreateAlterStatement(esMeta.esPlugIn.ProcDelete(table.Name)) %>
+(<%
+	// List all keys as parameters
+	inFirst = true;
+	foreach(IColumn col in table.Columns)
+	{
+		if(col.IsInPrimaryKey || col.IsEntitySpacesConcurrency)
+		{
+			if(!inFirst) {%><%=", "%><%}%>
+	 <%=col.DataTypeNameComplete%><%
+		inFirst = false;
+		}
+	}
+%>
+)
+RETURNS void AS '
+	DELETE FROM "<%= table.Name %>"
+	WHERE
+<%
+	// Compare keys with parameters
+	intParamPos = 1;
+	inFirst = true;
+	foreach(IColumn col in table.Columns)
+	{
+		if(col.IsInPrimaryKey || col.IsEntitySpacesConcurrency)
+		{
+			if(!inFirst) {%><%=" AND "%><%}%>
+		 "<%=col.Name%>" = $<%=intParamPos++.ToString()%><%
+			inFirst = false;
+		}
+	}
+%>;
+' LANGUAGE 'SQL' VOLATILE;
+
+<%
+	string sql = output.ToString();
+	allSQL += sql;
+	
+	this.SaveToFile(table.Name + ".sql", sql, false);
+	this.ClearOutput();	
+} // end main for loop
+
+	this.SaveToFile("PostgreSQL_ALL.sql", allSQL, false);
+%>
+
+<script runat="template">
+
+private string SaveToFile(string fileName, string text, bool generateSingleFile)
+{
+	if(!generateSingleFile)
+	{
+	    string path = (string)esMeta.Input["OutputPath"];
+	    
+		string fname = path;
+		if (!fname.EndsWith("\\")) 
+			fname += "\\";
+			
+		Directory.CreateDirectory(path);		
+		
+		fname += fileName;
+		
+		using (StreamWriter sw = System.IO.File.CreateText(fname)) 
+		{
+			sw.Write(text);
+		} 	
+		
+		return "";
+	}
+	else
+	{
+		return text;			
+	}
+}
+
+private string BuildCreateAlterStatement(string procName)
+{
+	// Drop and recreate
+	return "CREATE OR REPLACE FUNCTION \"" + procName + "\"";
+}
+
+private string StripGarbage(IColumn col)
+{
+	return esMeta.esPlugIn.ToPascalCase(col.Alias);
+}
+
+
+
+</script>

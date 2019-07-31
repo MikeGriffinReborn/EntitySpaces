@@ -1,0 +1,387 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/
+%><%@ TemplateInfo 
+    UniqueID="A56B59E7-3F21-4D1B-9FCD-D074E52B72EC" 
+	UserInterfaceID="FB6B68B7-03E7-4fbe-8B6E-34A6274B37BB" 
+    Title="WCF Service (JSON)" 
+    Description="The WCF JSON Service" 
+    Namespace="EntitySpaces.2019.C#.WCFService"
+    Author="EntitySpaces, LLC" 
+    Version="2019.0.0.0" 
+    RequiresUI="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------
+// System.Diagnostics.Debugger.Break();
+
+string upToPrefix = "";
+if(esMeta.esPlugIn.UseUpToPrefix)
+{
+	upToPrefix = esMeta.esPlugIn.sUpToPrefix;
+}
+
+ArrayList entities = esMeta.Input["Entities"] as ArrayList;
+string entityType = (string)esMeta.Input["EntityType"];
+string databaseName = (string)esMeta.Input["Database"];
+string EntitySpacesNamespace = (string)esMeta.Input["EntitySpacesNamespace"];
+string WCFServiceClassNamespace = (string)esMeta.Input["WCFServiceClassNamespace"];
+string WCFServiceClassName = (string)esMeta.Input["WCFServiceClassName"];
+bool SingleFile = (bool)esMeta.Input["GenerateSingleFile"];
+bool HierarchicalSelectedOnly = (bool)esMeta.Input["GenerateHierarchicalModelSelectedTablesOnly"];
+bool HierarchicalLazyLoad = (bool)esMeta.Input["GenerateHierarchicalLazyLoadSupport"];
+
+//===============================================================
+// Execute our SubTemplates ....
+//===============================================================
+
+ITable table = null;
+IView  view = null;
+IColumns cols = null;
+bool first = true;
+ArrayList list = null;
+
+IDatabase database = esMeta.Databases[databaseName];
+
+foreach(string tableOrView in entities)
+{
+	if(entityType == dbEntityType.Tables.ToString())
+	{
+		table = database.Tables[tableOrView];
+		view = null;
+		cols = table.Columns;
+	}
+	else 
+	{
+		view = database.Views[tableOrView];
+		
+		table = null;
+		cols = view.Columns;
+	}
+	
+	esPluginSource source = new esPluginSource(esMeta, table, view);
+	esMeta.Input["Source"] = source;
+
+	if(first) 
+	{
+%>/*
+===============================================================================
+                    EntitySpaces Studio by EntitySpaces, LLC
+             Persistence Layer and Business Objects for Microsoft .NET
+             EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+                          http://www.entityspaces.net
+===============================================================================
+EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+===============================================================================
+*/
+
+using System;
+using System.ServiceModel;
+using System.ServiceModel.Activation;
+using System.ServiceModel.Web;
+using EntitySpaces.Interfaces;
+using EntitySpaces.js;
+using EntitySpaces.Loader;
+
+using <%=EntitySpacesNamespace%>;
+
+namespace <%=WCFServiceClassNamespace%>
+{
+	[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
+	[ServiceContract()]
+	public partial class <%=WCFServiceClassName%>
+	{
+		public <%=WCFServiceClassName%>()
+		{
+			esProviderFactory.Factory = new esDataProviderFactory();
+		}
+<% 	} // first
+ 
+    first = false;
+%>		
+		#region I<%=source.Entity%> Members
+		
+		[WebInvoke(ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]	
+		public jsResponse<<%=source.Collection%>, <%=source.Entity%>> <%=source.Collection%>_LoadAll()
+		{
+			jsResponse<<%=source.Collection%>, <%=source.Entity%>> response = new jsResponse<<%=source.Collection%>, <%=source.Entity%>>();
+
+			try
+			{
+				<%=source.Collection%> collection = new <%=source.Collection%>();
+				collection.LoadAll();
+				response.collection = collection;
+			}
+			catch (Exception ex)
+			{
+				response.exception = ex.Message;
+			}
+
+			return response;
+		}
+
+		[WebInvoke(ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
+		public jsResponse<<%=source.Collection%>, <%=source.Entity%>> <%=source.Collection%>_Save(<%=source.Collection%> collection)
+		{
+			jsResponse<<%=source.Collection%>, <%=source.Entity%>> response = new jsResponse<<%=source.Collection%>, <%=source.Entity%>>();
+
+			try
+			{
+				collection.Save();
+				response.collection = collection;
+			}
+			catch (Exception ex)
+			{
+				response.exception = ex.Message;
+			}
+
+			return response;
+		}
+		
+		[WebInvoke(ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.<%=(table.PrimaryKeys.Count > 1) ? "WrappedRequest" : "Bare"%>)]
+		public jsResponse<<%=source.Collection%>, <%=source.Entity%>> <%=source.Entity%>_LoadByPrimaryKey(<%
+		string comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%=col.CSharpToSystemType + " " + col.ParameterName%><%
+			comma = ", ";
+		}%>)
+		{
+			jsResponse<<%=source.Collection%>, <%=source.Entity%>> response = new jsResponse<<%=source.Collection%>, <%=source.Entity%>>();
+
+			try
+			{
+				<%=source.Entity%> entity = new <%=source.Entity%>();
+				if (entity.LoadByPrimaryKey(<% 
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%=col.ParameterName%><%
+			comma = ", ";
+		}%>))
+				{
+					response.entity = entity;
+				}
+			}
+			catch (Exception ex)
+			{
+				response.exception = ex.Message;
+			}
+
+			return response;
+		}
+
+		[WebInvoke(ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
+		public jsResponse<<%=source.Collection%>, <%=source.Entity%>> <%=source.Entity%>_Save(<%=source.Entity%> entity)
+		{
+			jsResponse<<%=source.Collection%>, <%=source.Entity%>> response = new jsResponse<<%=source.Collection%>, <%=source.Entity%>>();
+
+			try
+			{
+				entity.Save();
+				response.entity = entity;
+			}
+			catch (Exception ex)
+			{
+				response.exception = ex.Message;
+			}
+
+			return response;
+		}
+		<% if(HierarchicalLazyLoad == true) {%>
+		// Hierarchical Data Access Methods Start Here ...<%
+		list = GetHierarchicalProperties(table, entities, HierarchicalSelectedOnly, upToPrefix); foreach(HierarchicalProperty prop in list) {%>
+		[WebInvoke(ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.<%=(table.PrimaryKeys.Count > 1) ? "WrappedRequest" : "Bare"%>)]
+		public jsResponse<<%=esMeta.esPlugIn.Collection(prop.theType)%>, <%=esMeta.esPlugIn.Entity(prop.theType)%>> <%=source.Entity%>_<%=prop.theName%>(<%
+		comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%><%
+			%><%=col.CSharpToSystemType + " " + col.ParameterName%><%
+			comma = ", ";
+		}%>)
+		{
+			jsResponse<<%=esMeta.esPlugIn.Collection(prop.theType)%>, <%=esMeta.esPlugIn.Entity(prop.theType)%>> response = new jsResponse<<%=esMeta.esPlugIn.Collection(prop.theType)%>, <%=esMeta.esPlugIn.Entity(prop.theType)%>>();
+
+			try
+			{
+				<%=source.Entity%> entity = new <%=source.Entity%>();<% foreach(IColumn col in table.PrimaryKeys){%>
+				entity.<%=col.PropertyName%> = <%=col.ParameterName%>;<%}%>
+				response.<%=prop.entityOrCollection%> = entity.<%=prop.theName%>;
+			}
+			catch (Exception ex)
+			{
+				response.exception = ex.Message;
+			}
+
+			return response;		
+		}
+		<%}}%>		
+		
+		#endregion
+<%
+} // foreach %>
+	}
+}
+<% 
+// Write out the Service Interface
+string filepath = WCFServiceClassName + ".svc.cs";
+this.SaveToFile(filepath, output.ToString(), false);
+this.ClearOutput();
+%><%="<%@ "%> ServiceHost Language="C#" Debug="true" Service="<%=WCFServiceClassNamespace + "." + WCFServiceClassName%>" Factory="System.ServiceModel.Activation.WebServiceHostFactory" %><% 
+// Write out the Service Interface
+filepath = WCFServiceClassName + ".svc";
+this.SaveToFile(filepath, output.ToString(), false);
+this.ClearOutput();
+%>
+<script runat="template">
+private string SaveToFile(string fileName, string text, bool generateSingleFile)
+{
+	if(!generateSingleFile)
+	{
+	    string path = (string)esMeta.Input["OutputPath"];
+	    
+		string fname = path;
+		if (!fname.EndsWith("\\")) 
+			fname += "\\";
+			
+		Directory.CreateDirectory(path);		
+		
+		fname += fileName;
+		
+		using (StreamWriter sw = System.IO.File.CreateText(fname)) 
+		{
+			sw.Write(text);
+		} 	
+		
+		return "";
+	}
+	else
+	{
+		return text;			
+	}
+}
+
+public class HierarchicalProperty
+{
+	public HierarchicalProperty(string type, string name, bool isCollection)
+	{
+		this.theType = type;
+		this.theName = name;
+		
+		entityOrCollection = isCollection ? "collection" : "entity"; 
+	}
+	
+	public string theType;
+	public string theName;
+	public string entityOrCollection;
+}
+
+private bool IsBinaryManyToMany(EntitySpaces.MetadataEngine.TableRelation tr)
+{
+	if(tr.IsManyToMany)
+	{
+		if(tr.ForeignTable.PrimaryKeys.Count == 2)
+		{
+			return true;
+		}
+		
+		if(tr.ForeignTable.ForeignKeys.Count == 2)
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+private ArrayList GetHierarchicalProperties(ITable table, ArrayList entities, bool selectedTablesOnly, string upToPrefix)
+{
+	ArrayList hierarchicalProperties = new ArrayList();
+
+	foreach(IForeignKey fk in table.ForeignKeys )
+	{
+		EntitySpaces.MetadataEngine.TableRelation tr = new EntitySpaces.MetadataEngine.TableRelation(table, fk);
+		
+		if(selectedTablesOnly)
+		{
+			if(!entities.Contains(tr.PrimaryTable.FullName) || !entities.Contains(tr.ForeignTable.FullName))
+			{
+				continue;
+			}
+		}
+
+		// One to One with primary table
+		if(tr.IsOneToOne && !tr.IsDirect)
+		{
+			string objName = esMeta.esPlugIn.EntityRelationName(tr.ForeignTable);
+			
+			// HERE
+			hierarchicalProperties.Add(new HierarchicalProperty(tr.ForeignTable.Alias, objName, false));
+		}
+		// One to One with foreign table
+		if(tr.IsOneToOne && tr.IsDirect)
+		{
+			string objName = upToPrefix + esMeta.esPlugIn.EntityRelationName(tr.ForeignTable);
+			
+			// HERE
+			hierarchicalProperties.Add(new HierarchicalProperty(tr.ForeignTable.Alias, objName, false));
+		}
+		// Many to Many
+		if ((IsBinaryManyToMany(tr) && !selectedTablesOnly) ||
+			(IsBinaryManyToMany(tr) && selectedTablesOnly && 
+			 entities.Contains(tr.CrossReferenceTable.FullName)))
+		{
+			string objName = upToPrefix + esMeta.esPlugIn.CollectionRelationName(tr.CrossReferenceTable, tr.ForeignTable);
+			string manyName = esMeta.esPlugIn.CollectionRelationName(tr.PrimaryTable, tr.ForeignTable);
+			
+			// HERE
+			hierarchicalProperties.Add(new HierarchicalProperty(tr.CrossReferenceTable.Alias, objName, true));				
+		}
+		// Zero to Many
+		if(tr.IsZeroToMany)
+		{
+			string objName = "";
+			if(tr.IsSelfReference)
+			{
+				objName = esMeta.esPlugIn.CollectionRelationName(tr.ForeignTable, tr.PrimaryColumns[0], tr.IsSelfReference);
+			}
+			else
+			{
+				objName = esMeta.esPlugIn.CollectionRelationName(tr.ForeignTable, tr.ForeignColumns[0], tr.IsSelfReference);
+			}
+			
+			// HERE
+			hierarchicalProperties.Add(new HierarchicalProperty(tr.ForeignTable.Alias, objName, true));				
+		}
+		// Many to One
+		if(tr.IsManyToOne)
+		{
+			string objName = upToPrefix + esMeta.esPlugIn.EntityRelationName(tr.ForeignTable, tr.PrimaryColumns[0], tr.IsSelfReference);
+			
+			// HERE
+			hierarchicalProperties.Add(new HierarchicalProperty(tr.ForeignTable.Alias, objName, false));				
+		}
+	}
+
+	return hierarchicalProperties;
+}
+
+</script>

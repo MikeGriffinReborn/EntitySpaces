@@ -1,0 +1,908 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/
+%><%@ TemplateInfo 
+    UniqueID="EC679532-AF8F-410d-99AD-DDC25C3F907F" 
+    Title="Generated - Hierarchical (C#)"   
+    Description="The Template Generates the Hierarchical Model" 
+    Namespace="EntitySpaces.2019.C#.Generated" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    IsSubTemplate="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------	
+bool TargetTheCompactFramework = (bool)esMeta.Input["TargetTheCompactFramework"];
+string Namespace = (string)esMeta.Input["Namespace"];
+bool GenerateSingleFile = (bool)esMeta.Input["GenerateSingleFile"];
+bool SelectedTablesOnly = (bool)esMeta.Input["GenerateHierarchicalModelSelectedTablesOnly"];
+bool RiaServicesSupport = esMeta.GetInput<bool>("GenerateHierarchicalRiaServicesSupport", false);
+bool DataContractSupport = esMeta.GetInput<bool>("GenerateHierarchicalDataContracts", false);
+bool SupportINotifyChanged = (bool)esMeta.Input["SupportINotifyChanged"];
+ArrayList entities = esMeta.Input["Entities"] as ArrayList;
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+string comma;
+
+ArrayList hierarchicalBindings = new ArrayList();
+ArrayList prefetchCandidates = new ArrayList();
+ArrayList preSaveItemList = new ArrayList();
+PreSaveItem preItem = new PreSaveItem();
+ArrayList postSaveItemList = new ArrayList();
+PostSaveItem postItem = new PostSaveItem();
+ArrayList postOneSaveItemList = new ArrayList();
+PostOneSaveItem postOneItem = new PostOneSaveItem();
+System.Collections.Generic.Dictionary<string, int> knownTypes = new System.Collections.Generic.Dictionary<string, int>();
+
+string upToPrefix = "";
+
+if(esMeta.esPlugIn.UseUpToPrefix)
+{
+	upToPrefix = esMeta.esPlugIn.sUpToPrefix;
+}
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------
+ITable table = (ITable)esMeta.Input["Table"];
+IView view = (IView)esMeta.Input["View"];			
+IColumns cols = (IColumns)esMeta.Input["Columns"];
+esPluginSource source = (esPluginSource)esMeta.Input["Source"];
+
+if(table == null) return;
+
+if(!GenerateSingleFile){ %>/*
+===============================================================================
+                    EntitySpaces Studio by EntitySpaces, LLC
+             Persistence Layer and Business Objects for Microsoft .NET
+             EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+                          http://www.entityspaces.net
+===============================================================================
+EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+===============================================================================
+*/
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Data;
+using System.ComponentModel;
+<%if(!TargetTheCompactFramework){%>
+using System.Xml.Serialization;<%} if(RiaServicesSupport) {%>
+using System.ServiceModel.DomainServices.Server;
+using System.ComponentModel.DataAnnotations;<%}%>
+
+using EntitySpaces.Core;
+using EntitySpaces.Interfaces;
+using EntitySpaces.DynamicQuery;
+
+namespace <%=Namespace%>
+{<%}%>
+	<% /*Summary();*/ %>
+	public partial class <%=source.Entity%> : <%=source.esEntity%>
+	{
+<%
+		foreach(IForeignKey fk in table.ForeignKeys )
+		{
+			EntitySpaces.MetadataEngine.TableRelation tr = new EntitySpaces.MetadataEngine.TableRelation(table, fk);
+			
+			if(SelectedTablesOnly)
+			{
+				if(!entities.Contains(tr.PrimaryTable.FullName) || !entities.Contains(tr.ForeignTable.FullName))
+				{
+					continue;
+				}
+			}
+			
+
+
+			// One to One with primary table
+			if(tr.IsOneToOne && !tr.IsDirect)
+			{
+				string nullTest = "";
+				string objName = esMeta.esPlugIn.EntityRelationName(tr.ForeignTable);
+				if(HasAutoIncrement(tr.PrimaryTable))
+				{
+					postOneItem.objName = objName;
+					postOneItem.primaryColumn = esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[0]);
+					postOneItem.foreignColumn = esMeta.esPlugIn.PropertyName(tr.ForeignColumns[0]);
+					postOneItem.objType = esMeta.esPlugIn.Entity(tr.ForeignTable);
+					postOneSaveItemList.Add(postOneItem);
+				}%>
+				
+				
+		#region <%=objName%> - One To One
+		/// <summary>
+		/// One to One
+		/// Foreign Key Name - <%=tr.Name%>
+		/// </summary>
+<%if(!TargetTheCompactFramework){%>
+		[XmlIgnore]<%}%>
+		public <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> <%=objName%>
+		{
+			get
+			{
+				if (this.es.IsLazyLoadDisabled) return null;
+				
+				if(this._<%=objName%> == null)
+				{
+					this._<%=objName%> = new <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%>();
+					this._<%=objName%>.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostOneSave("<%=objName%>", this._<%=objName%>);<%
+				string concat = "";
+				for(int i = 0; i < tr.ColumnCount; i++)
+				{
+					nullTest += concat + "this." + esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i]) + " != null";
+					concat = " && ";
+				}%>
+				
+					if(<%=nullTest%>)
+					{<%
+				for(int i = 0; i < tr.ColumnCount; i++)
+				{%>
+						this._<%=objName%>.Query.Where(this._<%=objName%>.Query.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%> == this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>);<%
+				}%>
+						this._<%=objName%>.Query.Load();
+					}
+				}
+
+				return this._<%=objName%>;
+			}
+			
+			set 
+			{ 
+				if (value != null) throw new Exception("'value' Must be null"); 
+			 
+				if (this._<%=objName%> != null) 
+				{ 
+					this.RemovePostOneSave("<%=objName%>"); 
+					this._<%=objName%> = null;
+					<%if(SupportINotifyChanged){%>this.OnPropertyChanged("<%=objName%>");<%}%>
+				} 
+			}          			
+		}
+		<%if(DataContractSupport){ knownTypes[esMeta.esPlugIn.Entity(tr.ForeignTable)] = 1;%>
+        // For DataContract Serialization Only
+        [DataMember(Name="<%=objName%>", EmitDefaultValue = false)]
+        private <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> __<%=objName%>
+        {
+            get 
+			{ 
+				return this._<%=objName%>; 
+			}
+			
+            set
+            {
+                this._<%=objName%> = value;
+                this.SetPostOneSave("<%=objName%>", this._<%=objName%>);
+            }
+        }<%}%>
+		
+		private <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> _<%=objName%>;
+		#endregion
+<%			}
+			// One to One with foreign table
+			if(tr.IsOneToOne && tr.IsDirect)
+			{
+				string objName = upToPrefix + esMeta.esPlugIn.EntityRelationName(tr.ForeignTable);
+				
+				if(HasAutoIncrement(tr.ForeignTable))
+				{
+					preItem.objName = objName;
+					preItem.primaryColumn = esMeta.esPlugIn.PropertyName(tr.ForeignColumns[0]);
+					preItem.foreignColumn = esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[0]);
+					preSaveItemList.Add(preItem);
+				}%>
+				
+			
+		#region <%=objName%> - One To One
+		/// <summary>
+		/// One to One
+		/// Foreign Key Name - <%=tr.Name%>
+		/// </summary>
+<%if(!TargetTheCompactFramework){%>
+		[XmlIgnore]<%}%>
+		public <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> <%=objName%>
+		{
+			get
+			{
+				if (this.es.IsLazyLoadDisabled) return null;
+			
+				if(this._<%=objName%> == null<%	for(int i = 0; i < tr.ColumnCount; i++)
+				{%><%=" && " + esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i]) + " != null"%><%}%>)
+				{
+					this._<%=objName%> = new <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%>();
+					this._<%=objName%>.es.Connection.Name = this.es.Connection.Name;
+					this.SetPreSave("<%=objName%>", this._<%=objName%>);<%
+				for(int i = 0; i < tr.ColumnCount; i++)
+				{%>
+					this._<%=objName%>.Query.Where(this._<%=objName%>.Query.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%> == this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>);<%
+				}%>
+					this._<%=objName%>.Query.Load();
+				}
+
+				return this._<%=objName%>;
+			}
+			
+			set 
+			{ 
+				this.RemovePreSave("<%=objName%>");
+
+				if(value == null)
+				{
+					this._<%=objName%> = null;
+				}
+				else
+				{
+					this._<%=objName%> = value;
+					this.SetPreSave("<%=objName%>", this._<%=objName%>);
+				}
+				
+				<%if(SupportINotifyChanged){%>this.OnPropertyChanged("<%=objName%>");<%}%>
+			} 
+		}
+		<%if(DataContractSupport){ knownTypes[esMeta.esPlugIn.Entity(tr.ForeignTable)] = 1;%>
+        // For DataContract Serialization Only
+        [DataMember(Name="<%=objName%>", EmitDefaultValue = false)]
+        private <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> __<%=objName%>
+        {
+            get 
+			{ 
+				return this._<%=objName%>; 
+			}
+			
+            set
+            {
+                this._<%=objName%> = value;
+                this.SetPreSave("<%=objName%>", this._<%=objName%>);
+            }
+        }<%}%>		
+		
+		private <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> _<%=objName%>;
+		#endregion
+<%			}
+			// Many to Many
+            if ((IsBinaryManyToMany(tr) && !SelectedTablesOnly) ||
+                (IsBinaryManyToMany(tr) && SelectedTablesOnly && 
+                 entities.Contains(tr.CrossReferenceTable.FullName)))
+			{
+				string objName = upToPrefix + esMeta.esPlugIn.CollectionRelationName(tr.CrossReferenceTable, tr.ForeignTable);
+				string manyName = esMeta.esPlugIn.CollectionRelationName(tr.PrimaryTable, tr.ForeignTable);
+					if(HasAutoIncrement(tr.PrimaryTable))
+					{
+						postItem.objName = esMeta.esPlugIn.Collection(tr.ForeignTable);
+						postItem.primaryColumn = esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[0]);
+						postItem.foreignColumn = esMeta.esPlugIn.PropertyName(tr.ForeignColumns[0]);
+						postItem.objType = esMeta.esPlugIn.Entity(tr.ForeignTable);
+						postSaveItemList.Add(postItem);
+					}%>
+					
+			
+		#region <%=objName%> - Many To Many
+		/// <summary>
+		/// Many to Many
+		/// Foreign Key Name - <%=tr.Name%>
+		/// </summary>
+<%if(!TargetTheCompactFramework){%>
+		[XmlIgnore]<%}%>
+		public <%=esMeta.esPlugIn.Collection(tr.CrossReferenceTable)%> <%=objName%>
+		{
+			get
+			{
+				if(this._<%=objName%> == null)
+				{
+					this._<%=objName%> = new <%=esMeta.esPlugIn.Collection(tr.CrossReferenceTable)%>();
+					this._<%=objName%>.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("<%=objName%>", this._<%=objName%>);
+					if (!this.es.IsLazyLoadDisabled && this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[0])%> != null)
+					{
+						<%=esMeta.esPlugIn.Query(tr.CrossReferenceTable)%> m = new <%=esMeta.esPlugIn.Query(tr.CrossReferenceTable)%>("m");
+						<%=esMeta.esPlugIn.Query(tr.ForeignTable)%> j = new <%=esMeta.esPlugIn.Query(tr.ForeignTable)%>("j");
+						m.Select(m);
+						m.InnerJoin(j).On(<%string conj = "";
+                        for(int i = 0; i < tr.CrossReferenceColumnCount; i++)
+                        {%><%=conj%>m.<%=esMeta.esPlugIn.PropertyName(tr.CrossReferenceColumns[i])%> == j.<%=esMeta.esPlugIn.PropertyName(tr.LinkingColumns[i])%><%conj = " && ";}%>);<%
+						for(int i = 0; i < tr.ColumnCount; i++){%>
+                        m.Where(j.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%> == this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>);<%
+                        }%>
+
+						this._<%=objName%>.Load(m);
+					}
+				}
+
+				return this._<%=objName%>;
+			}
+			
+			set 
+			{ 
+				if (value != null) throw new Exception("'value' Must be null"); 
+			 
+				if (this._<%=objName%> != null) 
+				{ 
+					this.RemovePostSave("<%=objName%>"); 
+					this._<%=objName%> = null;
+					<%if(SupportINotifyChanged){%>this.OnPropertyChanged("<%=objName%>");<%}%>
+				} 
+			}  			
+		}
+<%			string linkingObjectName = esMeta.esPlugIn.Collection(tr.ForeignTable);
+			string assocObjectName = esMeta.esPlugIn.CollectionRelationName(tr.CrossReferenceTable, tr.ForeignTable);%>
+		/// <summary>
+		/// Many to Many Associate
+		/// Foreign Key Name - <%=tr.Name%>
+		/// </summary>
+		public void Associate<%=assocObjectName%>(<%=esMeta.esPlugIn.Entity(tr.CrossReferenceTable)%> entity)
+		{
+			if (this._<%=linkingObjectName%> == null)
+			{
+				this._<%=linkingObjectName%> = new <%=esMeta.esPlugIn.Collection(tr.ForeignTable)%>();
+				this._<%=linkingObjectName%>.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("<%=linkingObjectName%>", this._<%=linkingObjectName%>);
+			}
+
+			<%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> obj = this._<%=linkingObjectName%>.AddNew();<%
+            for(int i = 0; i < tr.ColumnCount; i++)
+            {%>
+			obj.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%> = this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>;<%
+            }
+            for(int i = 0; i < tr.CrossReferenceColumnCount; i++)
+            {%>
+			obj.<%=esMeta.esPlugIn.PropertyName(tr.LinkingColumns[i])%> = entity.<%=esMeta.esPlugIn.PropertyName(tr.CrossReferenceTable.PrimaryKeys[i])%>;<%
+            }%>
+		}
+
+		/// <summary>
+		/// Many to Many Dissociate
+		/// Foreign Key Name - <%=tr.Name%>
+		/// </summary>
+		public void Dissociate<%=assocObjectName%>(<%=esMeta.esPlugIn.Entity(tr.CrossReferenceTable)%> entity)
+		{
+			if (this._<%=linkingObjectName%> == null)
+			{
+				this._<%=linkingObjectName%> = new <%=esMeta.esPlugIn.Collection(tr.ForeignTable)%>();
+				this._<%=linkingObjectName%>.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("<%=linkingObjectName%>", this._<%=linkingObjectName%>);
+			}
+
+			<%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> obj = this._<%=linkingObjectName%>.AddNew();<%
+            for(int i = 0; i < tr.ColumnCount; i++)
+            {%>
+			obj.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%> = this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>;<%
+            }
+			for(int i = 0; i < tr.CrossReferenceColumnCount; i++)
+            {%>
+            obj.<%=esMeta.esPlugIn.PropertyName(tr.LinkingColumns[i])%> = entity.<%=esMeta.esPlugIn.PropertyName(tr.CrossReferenceTable.PrimaryKeys[i])%>;<%
+            }%>
+			obj.AcceptChanges();
+			obj.MarkAsDeleted();
+		}
+
+		private <%=esMeta.esPlugIn.Collection(tr.CrossReferenceTable)%> _<%=objName%>;
+		private <%=esMeta.esPlugIn.Collection(tr.ForeignTable)%> _<%=linkingObjectName%>;
+		#endregion
+<%			}
+			// Zero to Many
+			if(tr.IsZeroToMany)
+			{
+				string nullTest = "";
+				string objName = "";
+				if(tr.IsSelfReference)
+				{
+					objName = esMeta.esPlugIn.CollectionRelationName(tr.ForeignTable, tr.PrimaryColumns[0], tr.IsSelfReference);
+					if(HasAutoIncrement(tr.PrimaryTable))
+					{
+						postItem.objName = objName;
+						postItem.primaryColumn = esMeta.esPlugIn.PropertyName(tr.ForeignColumns[0]);
+						postItem.foreignColumn = esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[0]);
+						postItem.objType = esMeta.esPlugIn.Entity(tr.ForeignTable);
+						postSaveItemList.Add(postItem);
+					}
+				}
+				else
+				{
+					objName = esMeta.esPlugIn.CollectionRelationName(tr.ForeignTable, tr.ForeignColumns[0], tr.IsSelfReference);
+					if(HasAutoIncrement(tr.PrimaryTable))
+					{
+						postItem.objName = objName;
+						postItem.primaryColumn = esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[0]);
+						postItem.foreignColumn = esMeta.esPlugIn.PropertyName(tr.ForeignColumns[0]);
+						postItem.objType = esMeta.esPlugIn.Entity(tr.ForeignTable);
+						postSaveItemList.Add(postItem);
+					}
+				}
+				prefetchCandidates.Add(objName);
+				hierarchicalBindings.Add("this, \"" + objName + "\", typeof(" + esMeta.esPlugIn.Collection(tr.ForeignTable) + "), new " + esMeta.esPlugIn.Entity(tr.ForeignTable) + "())");
+				
+				string thisColumns = string.Empty;
+				string thisProperties = string.Empty;
+				string parentColumns = string.Empty;
+				string parentProperties = string.Empty;
+				string isMultiPartKey = tr.ForeignColumns.Count > 1 ? "true" : "false";
+				
+				comma = "";
+				foreach(IColumn col in tr.ForeignColumns)
+				{
+					thisColumns += comma + col.Alias;
+					thisProperties += comma + col.PropertyName;
+					comma = ",";
+				}
+				
+				comma = "";
+				foreach(IColumn col in tr.PrimaryColumns)
+				{
+					parentColumns += comma + col.Alias;
+					parentProperties += comma + col.PropertyName;
+					comma = ",";
+				}%>
+		#region <%=objName%> - Zero To Many
+		
+		static public esPrefetchMap Prefetch_<%=objName%>
+		{
+			get
+			{
+				esPrefetchMap map = new esPrefetchMap();
+				map.PrefetchDelegate = <%=Namespace%>.<%=source.Entity%>.<%=objName%>_Delegate;
+				map.PropertyName = "<%=objName%>";
+				map.MyColumnName = "<%=thisColumns%>";
+				map.ParentColumnName = "<%=parentColumns%>";
+				map.IsMultiPartKey = <%=isMultiPartKey%>;
+				return map;
+			}
+		}		
+		
+		static private void <%=objName%>_Delegate(esPrefetchParameters data)
+		{
+			<%=esMeta.esPlugIn.Query(tr.PrimaryTable)%> parent = new <%=esMeta.esPlugIn.Query(tr.PrimaryTable)%>(data.NextAlias());
+
+			<%=esMeta.esPlugIn.Query(tr.ForeignTable)%> me = data.You != null ? data.You as <%=esMeta.esPlugIn.Query(tr.ForeignTable)%> : new <%=esMeta.esPlugIn.Query(tr.ForeignTable)%>(data.NextAlias());
+
+			if (data.Root == null)
+			{
+				data.Root = me;
+			}
+			
+			data.Root.InnerJoin(parent).On(<% 
+			string and = string.Empty;
+			for(int i = 0; i < tr.ColumnCount; i++)
+			{
+				%><%=and%>parent.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%> == me.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%><%
+				and = " && ";
+			}%>);
+
+			data.You = parent;
+		}	
+		
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerialize<%=objName%>()
+		{
+		    if(this._<%=objName%> != null && this._<%=objName%>.Count > 0)
+				return true;
+            else
+				return false;
+		}	
+		
+		/// <summary>
+		/// Zero to Many
+		/// Foreign Key Name - <%=tr.Name%>
+		/// </summary>
+		
+<%if(!TargetTheCompactFramework){%>
+		[XmlIgnore]<%}
+if(RiaServicesSupport) {%>		
+		[Include]
+		[System.ComponentModel.DataAnnotations.Association("<%=source.Entity%>.<%=objName%>", "<%=parentProperties%>", "<%=thisProperties%>")]<%}%>
+		[DataMember]
+		public <%=esMeta.esPlugIn.Collection(tr.ForeignTable)%> <%=objName%>
+		{
+			get
+			{
+				if(this._<%=objName%> == null)
+				{
+					this._<%=objName%> = new <%=esMeta.esPlugIn.Collection(tr.ForeignTable)%>();
+					this._<%=objName%>.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("<%=objName%>", this._<%=objName%>);<%
+				string concat = "";
+				for(int i = 0; i < tr.ColumnCount; i++)
+				{
+					if(tr.IsSelfReference)
+					{
+						nullTest += concat + "this." + esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i]) + " != null";
+						concat = " && ";
+					}
+					else
+					{
+						nullTest += concat + "this." + esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i]) + " != null";
+						concat = " && ";
+					}
+				}%>
+				
+					if (<%=nullTest%>)
+					{
+						if (!this.es.IsLazyLoadDisabled)
+						{<%
+				for(int i = 0; i < tr.ColumnCount; i++)
+				{
+					if(tr.IsSelfReference)
+					{%>
+							this._<%=objName%>.Query.Where(this._<%=objName%>.Query.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%> == this.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%>);<%
+					}
+					else
+					{%>
+							this._<%=objName%>.Query.Where(this._<%=objName%>.Query.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%> == this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>);<%
+					}
+				}%>
+							this._<%=objName%>.Query.Load();
+						}
+
+						// Auto-hookup Foreign Keys<%
+				for(int i = 0; i < tr.ColumnCount; i++)
+				{
+					if(tr.IsSelfReference)
+					{%>
+						this._<%=objName%>.fks.Add(<%=esMeta.esPlugIn.Metadata(tr.ForeignTable)%>.ColumnNames.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>, this.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%>);<%
+					}
+					else
+					{%>
+						this._<%=objName%>.fks.Add(<%=esMeta.esPlugIn.Metadata(tr.ForeignTable)%>.ColumnNames.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%>, this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>);<%
+					}
+				}%>
+					}
+				}
+
+				return this._<%=objName%>;
+			}
+			
+			set 
+			{ 
+				if (value != null) throw new Exception("'value' Must be null"); 
+			 
+				if (this._<%=objName%> != null) 
+				{ 
+					this.RemovePostSave("<%=objName%>"); 
+					this._<%=objName%> = null;
+					<%if(SupportINotifyChanged){%>this.OnPropertyChanged("<%=objName%>");<%}%>
+				} 
+			} 			
+		}
+		
+
+		
+		<%if(DataContractSupport){ knownTypes[esMeta.esPlugIn.Entity(tr.ForeignTable)] = 1;%>
+        // For DataContract Serialization Only
+        [DataMember(Name="<%=objName%>", EmitDefaultValue = false)]
+        private <%=esMeta.esPlugIn.Collection(tr.ForeignTable)%> __<%=objName%>
+        {
+            get 
+			{ 
+                if (this._<%=objName%> != null)
+                {
+                    this._<%=objName%>.CombineDeletedEntities();
+                }			
+				return this._<%=objName%>; 
+			}
+			
+            set
+            {
+                this._<%=objName%> = value;
+				this._<%=objName%>.SeparateDeletedEntities();
+                this.SetPostSave("<%=objName%>", this._<%=objName%>);
+				
+				if (<%=nullTest%>)
+				{
+					// Auto-hookup Foreign Keys<%
+				for(int i = 0; i < tr.ColumnCount; i++)
+				{
+					if(tr.IsSelfReference)
+					{%>
+					this._<%=objName%>.fks.Add(<%=esMeta.esPlugIn.Metadata(tr.ForeignTable)%>.ColumnNames.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>, this.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%>);<%
+					}
+					else
+					{%>
+					this._<%=objName%>.fks.Add(<%=esMeta.esPlugIn.Metadata(tr.ForeignTable)%>.ColumnNames.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%>, this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>);<%
+					}
+				}%>
+				}
+            }
+        }<%}%>	
+		
+		private <%=esMeta.esPlugIn.Collection(tr.ForeignTable)%> _<%=objName%>;
+		#endregion
+<%			}
+			// Many to One
+			if(tr.IsManyToOne)
+			{
+				string objName = upToPrefix + esMeta.esPlugIn.EntityRelationName(tr.ForeignTable, tr.PrimaryColumns[0], tr.IsSelfReference);
+				if(HasAutoIncrement(tr.ForeignTable))
+				{
+					preItem.objName = objName;
+					preItem.primaryColumn = esMeta.esPlugIn.PropertyName(tr.ForeignColumns[0]);
+					preItem.foreignColumn = esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[0]);
+					preSaveItemList.Add(preItem);
+				}%>
+				
+				
+		#region <%=objName%> - Many To One
+		/// <summary>
+		/// Many to One
+		/// Foreign Key Name - <%=tr.Name%>
+		/// </summary>
+<%if(!TargetTheCompactFramework){%>
+		[XmlIgnore]<%}%>
+		<%if(DataContractSupport){ knownTypes[esMeta.esPlugIn.Entity(tr.ForeignTable)] = 1; }%>			
+		public <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> <%=objName%>
+		{
+			get
+			{
+				if (this.es.IsLazyLoadDisabled) return null;
+				
+				if(this._<%=objName%> == null<% 
+				for(int i = 0; i < tr.ColumnCount; i++)
+				{%><%=" && " + esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i]) + " != null"%><%
+				}%>)
+				{
+					this._<%=objName%> = new <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%>();
+					this._<%=objName%>.es.Connection.Name = this.es.Connection.Name;
+					this.SetPreSave("<%=objName%>", this._<%=objName%>);<% 
+				for(int i = 0; i < tr.ColumnCount; i++)
+				{%>
+					this._<%=objName%>.Query.Where(this._<%=objName%>.Query.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%> == this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>);<%
+				}%>
+					this._<%=objName%>.Query.Load();
+				}	
+				return this._<%=objName%>;
+			}
+			
+			set
+			{
+				this.RemovePreSave("<%=objName%>");
+				<%if(SupportINotifyChanged){ %>
+				bool changed = this._<%=objName%> != value;<%}%>
+
+				if(value == null)
+				{<%
+				for(int i = 0; i < tr.ColumnCount; i++)
+				{%>
+					this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%> = null;<%
+				}%>
+					this._<%=objName%> = null;
+				}
+				else
+				{<%
+				for(int i = 0; i < tr.ColumnCount; i++)
+				{%>
+					this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%> = value.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%>;<%
+				}%>
+					this._<%=objName%> = value;
+					this.SetPreSave("<%=objName%>", this._<%=objName%>);
+				}
+				<%if(SupportINotifyChanged){ %>
+				if( changed )
+				{
+					this.OnPropertyChanged("<%=objName%>");
+				}<%}%>
+			}
+		}
+		#endregion
+		
+<%			}
+		} // next fk%>
+		<% if(prefetchCandidates.Count > 0) {%>
+		protected override esEntityCollectionBase CreateCollectionForPrefetch(string name)
+		{
+			esEntityCollectionBase coll = null;
+
+			switch (name)
+			{<% 
+				foreach(string prefetch in prefetchCandidates)
+				{%>
+				case "<%=prefetch%>":
+					coll = this.<%=prefetch%>;
+					break;<%}%>	
+			}
+
+			return coll;
+		}<%}
+		
+		if(hierarchicalBindings.Count > 0) {%>		
+		/// <summary>
+		/// Used internally by the entity's hierarchical properties.
+		/// </summary>
+		protected override List<esPropertyDescriptor> GetHierarchicalProperties()
+		{
+			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
+			<%
+			foreach(string hier in hierarchicalBindings)
+			{%>
+			props.Add(new esPropertyDescriptor(<%=hier%>);<%}%>
+		
+			return props;
+		}<%}
+		
+		if(preSaveItemList.Count > 0) {%>
+		/// <summary>
+		/// Used internally for retrieving AutoIncrementing keys
+		/// during hierarchical PreSave.
+		/// </summary>
+		protected override void ApplyPreSaveKeys()
+		{<%
+		foreach(PreSaveItem item in preSaveItemList)
+		{%>
+			if(!this.es.IsDeleted && this._<%=item.objName%> != null)
+			{
+				this.<%=item.foreignColumn%> = this._<%=item.objName%>.<%=item.primaryColumn%>;
+			}<%
+		}%>
+		}<%}
+
+		if(postSaveItemList.Count > 0) {%>
+		
+		/// <summary>
+		/// Called by ApplyPostSaveKeys 
+		/// </summary>
+		/// <param name="coll">The collection to enumerate over</param>
+		/// <param name="key">"The column name</param>
+		/// <param name="value">The column value</param>
+		private void Apply(esEntityCollectionBase coll, string key, object value)
+		{
+			foreach (esEntity obj in coll)
+			{
+				if (obj.es.IsAdded)
+				{
+					obj.SetProperty(key, value);
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Used internally for retrieving AutoIncrementing keys
+		/// during hierarchical PostSave.
+		/// </summary>
+		protected override void ApplyPostSaveKeys()
+		{<%
+		foreach(PostSaveItem item in postSaveItemList)
+		{%>
+			if(this._<%=item.objName%> != null)
+			{
+				Apply(this._<%=item.objName%>, "<%=item.foreignColumn%>", this.<%=item.primaryColumn%>);
+			}<%
+		}%>
+		}<%}
+		
+		if(postOneSaveItemList.Count > 0) {%>
+		/// <summary>
+		/// Used internally for retrieving AutoIncrementing keys
+		/// during hierarchical PostOneToOneSave.
+		/// </summary>
+		protected override void ApplyPostOneSaveKeys()
+		{<%
+		foreach(PostOneSaveItem item in postOneSaveItemList)
+		{%>
+			if(this._<%=item.objName%> != null)
+			{
+				if(this._<%=item.objName%>.es.IsAdded)
+				{
+					this._<%=item.objName%>.<%=item.foreignColumn%> = this.<%=item.primaryColumn%>;
+				}
+			}<%
+		}%>
+		}<%}%>
+		
+	}
+	<%if(knownTypes.Count > 0) 
+	{ 
+		foreach(string type in knownTypes.Keys)
+		{%>
+	[KnownType(typeof(<%=type%>))]<%}%>	
+	public partial class <%=source.Entity%> : <%=source.esEntity%>
+	{
+	
+	}<%}%>
+<%if(!GenerateSingleFile){ %>
+}<%}%>
+<script runat="template">
+
+public string GetFileName()
+{
+	return esMeta.esPlugIn.Entity((esPluginSource)esMeta.Input["Source"]) + "Hierarchical.cs";
+}
+
+public EntitySpaces.MetadataEngine.Root TheMetaData
+{
+	get { return esMeta;  }
+	set { esMeta = value; }	
+}
+
+struct PreSaveItem
+{
+	public string objName;
+	public string primaryColumn;
+	public string foreignColumn;
+}
+
+struct PostSaveItem
+{
+	public string objName;
+	public string primaryColumn;
+	public string foreignColumn;
+	public string objType;
+}
+
+struct PostOneSaveItem
+{
+	public string objName;
+	public string primaryColumn;
+	public string foreignColumn;
+	public string objType;
+}
+
+private bool HasAutoIncrement(EntitySpaces.MetadataEngine.ITable table)
+{
+	EntitySpaces.MetadataEngine.IColumn col = table.PrimaryKeys[0];
+	EntitySpaces.MetadataEngine.IPropertyCollection props = table.Properties;
+	
+	if(col.IsAutoKey)
+	{
+		return true;
+	}
+	
+	switch(esMeta.DriverString)
+	{
+		case "ORACLE":
+			EntitySpaces.MetadataEngine.IProperty prop = props["AUTOKEY:" + col.Name];
+			if(prop != null)
+			{
+				return true;
+			}
+			break;
+		
+		case "SQL":
+			if(col.HasDefault && col.Default == "(newid())")
+			{
+				return true;
+			}
+			break;
+			
+		default:
+			break;
+	}
+	
+	return false;
+}
+
+private bool IsBinaryManyToMany(EntitySpaces.MetadataEngine.TableRelation tr)
+{
+	if(tr.IsManyToMany)
+	{
+		if(tr.ForeignTable.PrimaryKeys.Count == 2)
+		{
+			return true;
+		}
+        
+		if(tr.ForeignTable.ForeignKeys.Count == 2)
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+</script>	

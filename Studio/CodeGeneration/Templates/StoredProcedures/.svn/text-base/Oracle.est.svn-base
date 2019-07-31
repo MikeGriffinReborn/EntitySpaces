@@ -1,0 +1,480 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/%>
+<%@ TemplateInfo 
+    UniqueID="D70AB57A-E524-4103-9F88-CB2D612405E8"
+	UserInterfaceID="BCB3B598-9264-40dc-B497-1D872D9E324E"
+    Title="Oracle"   
+    Description="Oracle Stored Procedures" 
+    Namespace="EntitySpaces.2019.StoredProcedures" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    RequiresUI="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------
+ArrayList entities = esMeta.Input["Entities"] as ArrayList;
+string entityType = (string)esMeta.Input["EntityType"];
+string databaseName = (string)esMeta.Input["Database"];
+
+//System.Diagnostics.Debugger.Break();
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+bool packageDeclared = false;
+bool bHasConcurrency = false;
+string concurrencyColumn = "";
+string dir = "";
+
+string allSQL = "";
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------	
+ITable table = null;
+IColumns cols = null;
+
+IDatabase database = esMeta.Databases[databaseName];
+
+foreach(string tableOrView in entities)
+{
+	bHasConcurrency = false;
+	
+	if(entityType == dbEntityType.Tables.ToString())
+	{
+		table = database.Tables[tableOrView];
+		cols = table.Columns;
+	}
+	else 
+	{
+		break;
+	}
+	
+	esPluginSource source = new esPluginSource(esMeta, table, null);
+	esMeta.Input["Source"] = source;
+
+	if(table.PrimaryKeys.Count == 0)
+	{
+		this.ClearOutput();
+		continue;
+	} 	
+	
+	if(!packageDeclared)
+	{%>
+-- Create the Package if it hasn't been already
+DECLARE n VARCHAR(256);
+BEGIN
+SELECT OBJECT_NAME INTO n FROM SYS.ALL_OBJECTS WHERE OBJECT_NAME = 'ENTITYSPACES' AND OWNER = '<%=database.Name%>';
+EXCEPTION
+WHEN NO_DATA_FOUND THEN
+EXECUTE IMMEDIATE 'CREATE PACKAGE <%=database.Name%>.ENTITYSPACES IS TYPE sqlcur IS REF CURSOR; END ENTITYSPACES;';
+END;
+/
+
+<%		packageDeclared = true;
+	}
+	
+//----------------------------------------------------------------------
+// LoadByPrimaryKey 
+//----------------------------------------------------------------------
+%>
+CREATE OR REPLACE PROCEDURE "<%=table.Schema%>"."<%=esMeta.esPlugIn.ProcLoadByPK(table.Name)%>"
+(<%
+	// List all keys as parameters
+	bool inFirst = true;
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+	p<%=StripGarbage(col) + " IN \"" + table.Name + "\".\"" + col.Name + "\"%type"%><%
+		inFirst = false;
+	}
+%>,
+	outCursor OUT "<%=database.Name%>".ENTITYSPACES.sqlcur
+)
+IS
+BEGIN
+    OPEN outCursor FOR
+	SELECT<%
+	// List all fields
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+		"<%=col.Name%>"<%
+		inFirst = false;
+	}
+%>
+	FROM "<%=table.Name%>"
+	WHERE<%
+	// Compare keys with parameters
+	inFirst = true;
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=" AND "%><%}%>
+		"<%=col.Name%>" = p<%=StripGarbage(col)%><%
+		inFirst = false;
+	}
+%>;
+END;
+/
+
+<%
+//----------------------------------------------------------------------
+// LoadAll 
+//----------------------------------------------------------------------
+%>
+CREATE OR REPLACE PROCEDURE "<%=table.Schema%>"."<%=esMeta.esPlugIn.ProcLoadAll(table.Name)%>"
+(
+    outCursor OUT "<%=database.Name%>".ENTITYSPACES.sqlcur
+)
+IS
+BEGIN
+    OPEN outCursor FOR
+	SELECT<%
+	// List all fields
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(!inFirst) {%><%=", "%><%}%>
+		"<%=col.Name%>"<%
+		inFirst = false;
+	}
+%>
+	FROM "<%=table.Name%>";
+
+END;
+/
+
+<% 
+//----------------------------------------------------------------------
+// Update
+//----------------------------------------------------------------------
+// This is a sample of the UPDATE stored proc when concurrency is involved
+//----------------------------------------------------------------------
+//
+//	CREATE PROCEDURE "MYGENERATION"."proc_SeqTestUpdate" ( 
+//		pID IN "SeqTest"."ID"%type, 
+//		pTimeStamp IN OUT "SeqTest"."TimeStamp"%type, 
+//		pData IN "SeqTest"."Data"%type 
+//	) 
+//	IS 
+//		pConcurrency "SeqTest"."TimeStamp"%type := pTimeStamp;      
+//	
+//	BEGIN 
+//		UPDATE "SeqTest" 
+//		SET 
+//			"TimeStamp" = "TimeStamp" + 1, 
+//			"Data"  = pData 
+//		WHERE 
+//			"ID" = pID 
+//		AND "TimeStamp" = pConcurrency 
+//	; 
+//	
+//		IF SQL%ROWCOUNT = 1 THEN 
+//		 pTimeStamp := (pConcurrency + 1); 
+//		ELSE 
+//		 Raise_application_error(01403, //NO RECORDS WERE UPDATED//); 
+//		};  
+//		 
+//	END ;
+
+
+//----------------------------------------------------------------------
+// Update
+//----------------------------------------------------------------------
+int colCount = 0;
+
+foreach(IColumn col in cols)
+{
+	if(col.IsInPrimaryKey || col.IsComputed)
+	{
+		colCount += 1;
+	}
+}
+
+if (cols.Count == colCount)
+{%>
+
+-- -----------------------------------------
+-- NO UPDATE Stored Procedure Generated 
+-- All Columns are part of the Primary key
+-- -----------------------------------------
+
+<%}else{%>
+CREATE OR REPLACE PROCEDURE "<%=table.Schema%>"."<%=esMeta.esPlugIn.ProcUpdate(table.Name)%>"
+(<%
+	// List all keys as parameters
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(!inFirst) {%><%=", "%><%}%><%
+		inFirst = false;
+		
+		dir = " IN ";
+		if(col.IsEntitySpacesConcurrency)
+		{
+			dir = " IN OUT ";
+			bHasConcurrency = true;
+			concurrencyColumn = col.Name;
+		}		
+		%>
+	p<%=StripGarbage(col) + dir + "\"" + table.Name + "\".\"" + col.Name + "\"%type"%><%		
+		
+		if((col.IsNullable || col.IsComputed) && dir == " IN ")
+		{
+			// " default  NULL"
+		}
+	}
+%>
+)
+IS<%if(bHasConcurrency) { %>
+	pConcurrency "<%=table.Name%>"."<%=concurrencyColumn%>"%type := p<%=concurrencyColumn%>; 	
+<%}%>
+BEGIN
+	UPDATE "<%=table.Name%>"
+	SET<%
+	// List all fields
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(!col.IsAutoKey && !col.IsComputed)
+		{
+			if(!inFirst) {%><%=", "%><%}%><%
+			inFirst = false;
+			
+			if(col.IsEntitySpacesConcurrency)
+			{%>
+		"<%=col.Name%>" = "<%=col.Name%>" + 1<%
+			}
+			else
+			{%>
+		"<%=col.Name%>" = p<%=StripGarbage(col)%><%				
+			}
+		}
+	}
+%>
+	WHERE<%
+	// Compare keys with parameters
+	inFirst = true;
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=" AND "%><%}%>
+		"<%=col.Name%>" = p<%=StripGarbage(col)%><%
+		inFirst = false;
+	}
+	
+	if(bHasConcurrency)
+	{%>
+    AND "<%=concurrencyColumn%>" = pConcurrency<%
+	}	
+	%>;<%
+	if(bHasConcurrency) { %>
+	
+	IF SQL%ROWCOUNT = 1 THEN   
+	    p<%=concurrencyColumn%> := (pConcurrency + 1);
+	ELSE  
+	    Raise_application_error(-20101, 'NO RECORDS WERE UPDATED');  
+	END IF;
+<%
+	}
+%>	
+	
+END;
+/
+<%}%>
+
+<% 
+//----------------------------------------------------------------------
+// Insert
+//----------------------------------------------------------------------
+%>
+CREATE OR REPLACE PROCEDURE "<%=table.Schema%>"."<%=esMeta.esPlugIn.ProcInsert(table.Name)%>"
+(<%
+	// List all keys as parameters
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if(!inFirst) {%><%=", "%><%}%><%
+		
+		dir = " IN ";
+		if(col.IsAutoKey || col.IsEntitySpacesConcurrency)
+		{
+			dir = " OUT ";
+		}
+		%>
+	p<%=StripGarbage(col) + dir + "\"" + table.Name + "\".\"" + col.Name + "\"%type"%><%		
+		
+		inFirst = false;
+		
+		if((col.IsNullable || col.IsComputed) && dir == " IN ")
+		{
+			%><%=" default NULL"%><%
+		}	
+	}
+%>
+)
+IS
+BEGIN
+<%
+	foreach(IColumn col in cols)
+	{
+		if(col.IsAutoKey)	
+		{%>
+	SELECT "<%=col.AutoKeyText%>".NextVal INTO p<%=StripGarbage(col)%> FROM DUAL;<%
+		}
+		
+		if(col.IsEntitySpacesConcurrency)
+		{%>
+	p<%=StripGarbage(col)%> := 1;<%
+		}
+	}
+%>
+
+	INSERT
+	INTO "<%=table.Name%>"
+	(<%
+		// List all fields except identity (if one exists)
+		inFirst = true;
+		foreach(IColumn col in cols)
+		{
+			if(!col.IsComputed)
+			{
+				if(!inFirst) {%><%=", "%><%}%>
+		"<%=col.Name%>"<%
+				inFirst = false;
+			}
+		}
+%>
+	)
+	VALUES
+	(<%
+		// List all fields except identity (if one exists)
+		inFirst = true;
+		foreach(IColumn col in cols)
+		{
+			if(!col.IsComputed)
+			{
+				if(!inFirst) {%><%=", "%><%}%>
+		p<%=StripGarbage(col)%><%
+				inFirst = false;
+			}
+		}
+%>	
+	);
+END;
+/
+<% 
+//----------------------------------------------------------------------
+// Delete
+//----------------------------------------------------------------------
+%>
+CREATE OR REPLACE PROCEDURE "<%=table.Schema%>"."<%=esMeta.esPlugIn.ProcDelete(table.Name)%>"
+(<%
+	dir = " IN ";
+	// List all keys as parameters
+	inFirst = true;
+	foreach(IColumn col in cols)
+	{
+		if((concurrencyColumn == col.Name) || col.IsInPrimaryKey)
+		{
+			if(!inFirst) {%><%=", "%><%}%>
+	p<%=StripGarbage(col) + dir + "\"" + table.Name + "\".\"" + col.Name + "\"%type"%><%				
+			inFirst = false;
+		}
+	}
+%>
+)
+IS
+BEGIN
+
+	DELETE FROM "<%=table.Name%>"
+	WHERE<%
+	// Compare keys with parameters
+	inFirst = true;
+	foreach(IColumn col in table.PrimaryKeys)
+	{
+		if(!inFirst) {%><%=" AND "%><%}%>
+		"<%=col.Name%>" = p<%=StripGarbage(col)%><%
+		inFirst = false;
+	}
+	
+	if(bHasConcurrency)
+	{%>
+		AND "<%=concurrencyColumn%>" = p<%=concurrencyColumn%><%
+	}		
+	
+	%>;<%
+	
+	if(bHasConcurrency) 
+	{%>
+	
+	IF SQL%ROWCOUNT <> 1 THEN   
+	    Raise_application_error(-20101, 'NO RECORDS WERE UPDATED');  
+	END IF;
+<%
+	}	
+%>
+
+END;
+/
+<%
+	string sql = output.ToString();
+	allSQL += sql;
+	
+	this.SaveToFile(table.Name + ".sql", sql, false);
+	this.ClearOutput();	
+} // end main for loop
+
+	this.SaveToFile("Oracle_ALL.sql", allSQL, false);
+%>
+
+<script runat="template">
+
+private string SaveToFile(string fileName, string text, bool generateSingleFile)
+{
+	if(!generateSingleFile)
+	{
+	    string path = (string)esMeta.Input["OutputPath"];
+	    
+		string fname = path;
+		if (!fname.EndsWith("\\")) 
+			fname += "\\";
+			
+		Directory.CreateDirectory(path);		
+		
+		fname += fileName;
+		
+		using (StreamWriter sw = System.IO.File.CreateText(fname)) 
+		{
+			sw.Write(text);
+		} 	
+		
+		return "";
+	}
+	else
+	{
+		return text;			
+	}
+}
+
+private string StripGarbage(IColumn col)
+{
+	return esMeta.esPlugIn.ToPascalCase(col.Alias);
+}
+
+</script>

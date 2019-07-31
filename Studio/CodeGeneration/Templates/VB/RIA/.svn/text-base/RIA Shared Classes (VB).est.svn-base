@@ -1,0 +1,153 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/
+%><%@ TemplateInfo 
+    UniqueID="8E7B2FC3-AD65-48BB-A6C6-D437039DAA01" 
+	UserInterfaceID="D00047A0-8318-4e16-9264-0DC6EBBA1818" 
+    Title="RIA Shared Classes" 
+    Description="RIA Shared Classes" 
+    Namespace="EntitySpaces.2019.VB.RIA Services"
+    Author="EntitySpaces, LLC" 
+    Version="2019.0.0.0" 
+    RequiresUI="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------
+// System.Diagnostics.Debugger.Break();
+
+ArrayList entities = esMeta.Input["Entities"] as ArrayList;
+string entityType = (string)esMeta.Input["EntityType"];
+string databaseName = (string)esMeta.Input["Database"];
+string Namespace = (string)esMeta.Input["Namespace"];
+
+
+//===============================================================
+// Execute our SubTemplates ....
+//===============================================================
+
+ITable table = null;
+IView  view = null;
+IColumns cols = null;
+string attributes = null;
+
+IDatabase database = esMeta.Databases[databaseName];
+
+foreach(string tableOrView in entities)
+{
+	string text = "";
+	
+	if(entityType == dbEntityType.Tables.ToString())
+	{
+		table = database.Tables[tableOrView];
+		view = null;
+		cols = table.Columns;
+	}
+	else 
+	{
+		view = database.Views[tableOrView];
+		
+		table = null;
+		cols = view.Columns;
+	}
+	
+	esPluginSource source = new esPluginSource(esMeta, table, view);
+	esMeta.Input["Source"] = source;
+
+%>'===============================================================================
+'                   EntitySpaces Studio by EntitySpaces, LLC
+'            Persistence Layer and Business Objects for Microsoft .NET
+'            EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+'                         http://www.entityspaces.net
+'===============================================================================
+' EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+' EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+' Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+'===============================================================================
+
+Imports System
+Imports System.Collections.Generic
+Imports System.ComponentModel
+Imports System.ComponentModel.DataAnnotations
+Imports System.Linq
+Imports System.Runtime.Serialization
+
+Imports EntitySpaces.DynamicQuery
+
+Namespace <%=Namespace%>
+
+	Public Partial Class <%=source.Entity%>
+
+#If (SILVERLIGHT) Then
+
+		<Display(AutoGenerateField:=False)> _
+		Public ReadOnly Property esExtraColumns() As Dictionary(Of String, Object)
+			Get
+				If _esExtraColumns Is Nothing Then
+					If Me.esExtendedData IsNot Nothing Then
+						_esExtraColumns = TryCast(esDataContractSerializer.FromXml(Me.esExtendedData, GetType(Dictionary(Of String, Object))), Dictionary(Of String, Object))
+					Else
+						_esExtraColumns = New Dictionary(Of String, Object)()
+					End If
+				End If
+
+				Return _esExtraColumns
+			End Get
+		End Property
+		Private _esExtraColumns As Dictionary(Of String, Object)
+
+#End If
+
+	End Class
+
+End Namespace
+<% 
+// Write out the Service Interface
+string filepath = source.Entity + ".Shared" + ".vb";
+this.SaveToFile(filepath, output.ToString(), false);
+this.ClearOutput();
+%><%}%> 
+<script runat="template">
+private string SaveToFile(string fileName, string text, bool generateSingleFile)
+{
+	if(!generateSingleFile)
+	{
+	    string path = (string)esMeta.Input["OutputPath"];
+	    
+		string fname = path;
+		if (!fname.EndsWith("\\")) 
+			fname += "\\";
+		
+		if(!File.Exists(fname))
+		{
+			Directory.CreateDirectory(path);
+			
+			fname += fileName;
+			
+			using (StreamWriter sw = System.IO.File.CreateText(fname)) 
+			{
+				sw.Write(text);
+			}
+		}		
+		
+		return "";
+	}
+	else
+	{
+		return text;
+	}
+}
+</script>

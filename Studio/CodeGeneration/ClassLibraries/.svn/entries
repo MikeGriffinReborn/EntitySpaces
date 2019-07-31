@@ -1,0 +1,67 @@
+10
+
+dir
+2169
+https://wush.net/svn/entityspaces_new/Code/ES2012/CodeGeneration/ClassLibraries
+https://wush.net/svn/entityspaces_new
+
+
+
+2012-03-16T00:45:33.239023Z
+2150
+Mike.Griffin
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+6f50cfa6-96cc-4403-a8b4-161f88c3093d
+
+EntitySpaces.MetadataEngine.VistaDB4
+dir
+
+EntitySpaces.MetadataEngine
+dir
+
+EntitySpaces.MetadataEngine.SQLite
+dir
+
+EntitySpaces.AddIn.TemplateUI
+dir
+
+EntitySpaces.Common
+dir
+
+EntitySpaces.MetadataEngine.EffiProz
+dir
+
+EntitySpaces.TemplateUI
+dir
+
+EntitySpaces.MetadataEngine.SQLAzure
+dir
+
+EntitySpaces.MetadataEngine.Sybase
+dir
+
+EntitySpaces.MetadataEngine.SqlCe
+dir
+
+EntitySpaces.AddIn
+dir
+
+EntitySpaces.CodeGenerator
+dir
+
+EntitySpaces.MetadataEngine.VistaDB
+dir
+

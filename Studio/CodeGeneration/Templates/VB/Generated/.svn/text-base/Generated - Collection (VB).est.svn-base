@@ -1,0 +1,154 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/%><%@ TemplateInfo 
+    UniqueID="ADC19102-C21B-47a9-8F63-DACD9C924554" 
+    Title="Generated - Collection (VB)"   
+    Description="The Collection Class" 
+    Namespace="EntitySpaces.2019.VB.Generated" 
+    Author="EntitySpaces, LLC" 
+    Version="2019.0.0.0"
+    IsSubTemplate="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------	
+bool TargetTheCompactFramework = (bool)esMeta.Input["TargetTheCompactFramework"];
+string Namespace = (string)esMeta.Input["Namespace"];
+bool GenerateSingleFile = (bool)esMeta.Input["GenerateSingleFile"];
+bool GenerateProxyStubs = (bool)esMeta.Input["GenerateProxyStub"];
+bool DebuggerDisplay = (bool)esMeta.Input["DebuggerDisplay"];
+bool DebugVisualizer = (bool)esMeta.Input["DebugVisualizer"];
+string ConnectionName = (string)esMeta.Input["ConnectionName"];
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+string comma = "";
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------
+ITable table = (ITable)esMeta.Input["Table"];
+IView view = (IView)esMeta.Input["View"];			
+IColumns cols = (IColumns)esMeta.Input["Columns"];
+esPluginSource source = (esPluginSource)esMeta.Input["Source"];
+
+if(!GenerateSingleFile){ %>'===============================================================================
+'                   EntitySpaces Studio by EntitySpaces, LLC
+'            Persistence Layer and Business Objects for Microsoft .NET
+'            EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+'                         http://www.entityspaces.net
+'===============================================================================
+' EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+' EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+' Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+'===============================================================================
+
+Imports System
+Imports System.Collections
+Imports System.Collections.Generic
+Imports System.Text
+Imports System.Data
+Imports System.ComponentModel
+<%if(DebuggerDisplay) {%>Imports System.Diagnostics<%}%>
+<%if(!TargetTheCompactFramework){ %>Imports System.Xml.Serialization<%}%>	
+
+Imports EntitySpaces.Interfaces
+Imports EntitySpaces.Core
+'Return MyBase.SingleOrDefault(Function(e) e.CategoryID.Value = categoryID)
+NameSpace <%=Namespace%>
+<%}%>
+<%if(!TargetTheCompactFramework){ if(DebuggerDisplay) {%> 
+	<DebuggerDisplay("Count = {Count}")> _<%} if(DebugVisualizer) {%> 
+	<DebuggerVisualizer(GetType(EntitySpaces.DebuggerVisualizer.esVisualizer))> _<%}%> 
+	<Serializable> _
+	<CollectionDataContract> _
+	<XmlType("<%=source.Collection%>")> _<%}%>
+	Partial Public Class <%=source.Collection%>
+		Inherits <%=source.esCollection%>
+		Implements IEnumerable(Of <%=source.Entity%>)
+	<%if(table != null && table.PrimaryKeys.Count > 0)
+		{
+			comma = "";	%>
+		Public Function FindByPrimaryKey(<%
+			comma = "";
+			foreach(IColumn col in table.PrimaryKeys)
+			{
+				%><%=comma%><%
+				%><%="ByVal " + col.ParameterName + " As " + col.CSharpToSystemType%><%
+				comma = ", ";
+			}%>) As <%=source.Entity%>
+			Return MyBase.SingleOrDefault(Function(e) <%
+			comma = "";
+			foreach(IColumn col in table.PrimaryKeys)
+			{
+				%><%=comma%><%
+				%><%=col.IsNullableType ? "e." + col.PropertyName + ".HasValue AndAlso " : ""%>e.<%=col.PropertyName%><%= col.IsNullableType ? ".Value" : ""%> = <%=col.ParameterName%><%
+				comma = " And ";
+			}%>)
+		End Function<%}%>
+<%if(!TargetTheCompactFramework && GenerateProxyStubs){%>
+        #Region "Implicit Casts"
+		
+        Public Shared Widening Operator CType(ByVal coll As <%=source.Collection%>) As <%=source.ProxyStubCollection%>
+            Return New <%=source.ProxyStubCollection%>(coll)
+        End Operator
+        
+		#End Region<%}%>
+
+		<%if(!TargetTheCompactFramework){%>		
+		#Region "WCF Service Class"
+
+		<DataContract> _
+		<KnownType(GetType(<%=source.Entity%>))> _
+		Public Class <%=source.Collection%>WCFPacket
+			Inherits esCollectionWCFPacket(Of <%=source.Collection%>)
+			
+			Public Shared Widening Operator CType(packet As <%=source.Collection%>WCFPacket) As <%=source.Collection%>
+				Return packet.Collection
+			End Operator
+
+			Public Shared Widening Operator CType(collection As <%=source.Collection%>) As <%=source.Collection%>WCFPacket
+				Return New <%=source.Collection%>WCFPacket()  With {.Collection = collection}
+			End Operator
+			
+		End Class
+
+		#End Region<%}%>
+		
+		<%if(ConnectionName != null && ConnectionName.Length > 0) {%>
+		Protected Overrides Function GetConnectionName() As String
+			Return "<%=ConnectionName%>"
+		End Function
+		<%}%>	
+		
+	End Class
+<%if(!GenerateSingleFile){ %>	
+End NameSpace<%}%>
+<script runat="template">
+
+public string GetFileName()
+{
+	return esMeta.esPlugIn.Collection((esPluginSource)esMeta.Input["Source"]) + ".cs";
+}
+
+public EntitySpaces.MetadataEngine.Root TheMetaData
+{
+	get { return esMeta;  }
+	set { esMeta = value; }	
+}
+
+</script>

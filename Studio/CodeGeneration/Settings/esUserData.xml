@@ -1,0 +1,247 @@
+<esUserData Version="2009.2.0831.0">
+  <Drivers>
+    <Driver Name="SQL">
+      <Databases>
+        <Database Name="AggregateDb">
+          <Views>
+            <View Name="FullNameView">
+              <Columns>
+                <Column Name="FullName" Alias="FullName" />
+              </Columns>
+            </View>
+          </Views>
+          <Tables>
+            <Table Name="AggregateTest">
+              <Columns>
+                <Column Name="ID" Alias="ID" />
+              </Columns>
+            </Table>
+            <Table Name="Naming.Test" Alias="Naming.Test">
+              <Columns>
+                <Column Name="GuidKey" Alias="GuidKeyAlias" />
+                <Column Name="Test AliasSpace" Alias="Test Alias Space" />
+                <Column Name="Test_AliasUnderscore" Alias="Test_Alias_Underscore" />
+                <Column Name="TestAliasPascal" Alias="TestAlias" />
+              </Columns>
+            </Table>
+          </Tables>
+        </Database>
+        <Database Name="Northwind.add">
+          <Tables>
+            <Table Name="Customers">
+              <Columns>
+                <Column Name="ContactName" Alias="ContactName" />
+              </Columns>
+            </Table>
+          </Tables>
+        </Database>
+        <Database Name="Northwind">
+          <Tables>
+            <Table Name="Employees">
+              <Columns>
+                <Column Name="EmployeeID" Alias="EmployeeID" />
+              </Columns>
+            </Table>
+            <Table Name="Order Details" Alias="Order Details" />
+            <Table Name="Categories">
+              <Columns>
+                <Column Name="CategoryID" Alias="CategoryID" />
+              </Columns>
+            </Table>
+          </Tables>
+        </Database>
+        <Database Name="MYGENERATION">
+          <Tables>
+            <Table Name="AggregateTest" Alias="AggregateTest">
+              <Columns>
+                <Column Name="ID" Alias="ID" IsAutoKey="True" AutoKeyText="SEQ_ID">
+                </Column>
+              </Columns>
+            </Table>
+            <Table Name="OracleTest" Alias="OracleTest">
+              <Columns>
+                <Column Name="ConcurrencyCheck" Alias="ConcurrencyCheck" IsEntitySpacesConcurrency="True" />
+                <Column Name="Id" IsAutoKey="True" AutoKeyText="seq_OracleId" />
+              </Columns>
+            </Table>
+            <Table Name="OracleTest2">
+              <Columns>
+                <Column IsEntitySpacesConcurrency="True" />
+              </Columns>
+            </Table>
+            <Table Name="TB_LINKMAN" Alias="Linkman">
+              <Columns>
+                <Column Name="ID" IsAutoKey="True" AutoKeyText="seq_LinkManId" />
+                <Column IsEntitySpacesConcurrency="True" />
+              </Columns>
+            </Table>
+          </Tables>
+        </Database>
+        <Database Name="aggregatedb">
+          <Tables>
+            <Table Name="realtablename" Alias=" AliasedTableName" />
+            <Table Name="aggregatetest" Alias="AggregateTest" />
+            <Table Name="computedtest" Alias="ComputedTest" />
+            <Table Name="mysqlunicodetest" Alias="MySqlUnicodeTest" />
+          </Tables>
+          <Views>
+            <View Name="fullnameview" Alias="FullNameView" />
+          </Views>
+        </Database>
+        <Database Name="HIERARCHICAL">
+          <Tables>
+            <Table Name="Employee">
+              <Columns>
+                <Column Name="EmployeeID" IsAutoKey="True" AutoKeyText="seq_Employee" />
+              </Columns>
+            </Table>
+            <Table Name="Territory">
+              <Columns>
+                <Column Name="TerritoryID" IsAutoKey="True" AutoKeyText="seq_Territory" />
+              </Columns>
+            </Table>
+            <Table Name="Product">
+              <Columns>
+                <Column Name="ProductID" IsAutoKey="True" AutoKeyText="seq_Product" />
+              </Columns>
+            </Table>
+            <Table Name="Order" Alias="Order">
+              <Columns>
+                <Column Name="OrderID" IsAutoKey="True" AutoKeyText="seq_Order" />
+              </Columns>
+            </Table>
+          </Tables>
+        </Database>
+        <Database Name="ForeignKeyTest">
+          <Tables>
+            <Table Name="Customer" Alias="Customer" />
+          </Tables>
+        </Database>
+        <Database Name="TestTemp">
+          <Tables>
+            <Table Name="Penalty">
+              <Columns>
+                <Column Name="Type_Of" Alias="Type _Of" />
+              </Columns>
+            </Table>
+            <Table Name="Table_1" Alias="Table_1" />
+            <Table Name="Table1_Table2" Alias="Table1_Table2" />
+            <Table Name="User" Alias="User" />
+          </Tables>
+        </Database>
+        <Database Name="foreignkeytest">
+          <Tables>
+            <Table Name="customergroup" Alias="CustomerGroup" />
+            <Table Name="employeeterritory" Alias="EmployeeTerritory" />
+            <Table Name="orderitem" Alias="OrderItem" />
+            <Table Name="referredemployee" Alias="ReferredEmployee" />
+            <Table Name="territoryex" Alias="TerritoryEx" />
+          </Tables>
+        </Database>
+        <Database Name="DnpTestDb">
+          <Tables>
+            <Table Name="RECORD_TYPES_FIELDS" Alias="RecType" />
+          </Tables>
+        </Database>
+        <Database Name="EntitySpaces">
+          <Tables>
+            <Table Name="Sequential">
+              <Columns>
+                <Column Name="esConcurrency" IsEntitySpacesConcurrency="True" />
+              </Columns>
+            </Table>
+            <Table Name="CrazyNames">
+              <Columns>
+                <Column Name="_ALIAS_ME_#$%" Alias="AliasMe" />
+              </Columns>
+            </Table>
+            <Table Name="Crazy Names # 123 !(*">
+              <Columns>
+                <Column Name="_ALIAS_ME_#$%" Alias="MyAlias" />
+              </Columns>
+            </Table>
+          </Tables>
+        </Database>
+      </Databases>
+    </Driver>
+    <Driver Name="VISTADB">
+      <Databases>
+        <Database Name="Northwind.vdb3">
+          <Tables>
+            <Table Name="esConcurrentTest">
+              <Columns>
+                <Column Name="esConcurrency" IsEntitySpacesConcurrency="True" />
+              </Columns>
+            </Table>
+          </Tables>
+        </Database>
+      </Databases>
+    </Driver>
+    <Driver Name="SYBASE">
+      <Databases>
+        <Database Name="AggregateDB">
+          <Tables>
+            <Table Name="esConcurrencyTest">
+              <Columns>
+                <Column Name="esConcurrency" IsEntitySpacesConcurrency="True" />
+              </Columns>
+            </Table>
+          </Tables>
+        </Database>
+      </Databases>
+    </Driver>
+    <Driver Name="ACCESS">
+      <Databases>
+        <Database Name="nwind.mdb">
+          <Tables>
+            <Table Name="Employees">
+              <Columns>
+                <Column Name="esConcurrency" IsEntitySpacesConcurrency="True" />
+              </Columns>
+            </Table>
+          </Tables>
+        </Database>
+      </Databases>
+    </Driver>
+    <Driver Name="POSTGRESQL">
+      <Databases>
+        <Database Name="AggregateDB">
+          <Tables>
+            <Table Name="esConcurrencyTest">
+              <Columns>
+                <Column Name="esConcurrency" IsEntitySpacesConcurrency="True" />
+              </Columns>
+            </Table>
+          </Tables>
+        </Database>
+      </Databases>
+    </Driver>
+    <Driver Name="ORACLE">
+      <Databases>
+        <Database Name="MYGENERATION">
+          <Tables>
+            <Table Name="OracleTest2">
+              <Columns>
+                <Column Name="ConcurrencyCheck" IsEntitySpacesConcurrency="True" IsAutoKey="False" />
+                <Column Name="Id" IsAutoKey="True" AutoKeyText="SEQ_ID" />
+              </Columns>
+            </Table>
+          </Tables>
+        </Database>
+      </Databases>
+    </Driver>
+    <Driver Name="MYSQL">
+      <Databases>
+        <Database Name="test">
+          <Tables>
+            <Table Name="esconcurrencytest">
+              <Columns>
+                <Column Name="esConcurrency" IsEntitySpacesConcurrency="True" />
+              </Columns>
+            </Table>
+          </Tables>
+        </Database>
+      </Databases>
+    </Driver>
+  </Drivers>
+</esUserData>

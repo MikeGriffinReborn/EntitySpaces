@@ -1,0 +1,98 @@
+10
+
+dir
+2169
+https://wush.net/svn/entityspaces_new/Code/ES2012/CodeGeneration
+https://wush.net/svn/entityspaces_new
+
+
+
+2012-03-16T02:48:42.425217Z
+2153
+David.Parsons
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+6f50cfa6-96cc-4403-a8b4-161f88c3093d
+
+Settings
+dir
+
+ClassLibraries
+dir
+
+ThirdPartyBin
+dir
+
+CustomBase
+dir
+
+CommandLine
+dir
+
+StrongNameKey
+dir
+
+StandAlone
+dir
+
+SharedFiles
+dir
+
+esGacInstall
+dir
+
+AddInInstaller
+dir
+
+Dotfuscator
+dir
+
+esLanguages.xml
+file
+
+
+
+
+2012-03-28T00:17:12.674979Z
+a88d0beaae0099b71bdb2ba1a2b9e449
+2012-03-16T02:48:42.425217Z
+2153
+David.Parsons
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+17522
+
+Templates
+dir
+

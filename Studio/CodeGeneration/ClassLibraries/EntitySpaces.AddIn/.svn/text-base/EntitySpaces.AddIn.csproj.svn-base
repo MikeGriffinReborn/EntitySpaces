@@ -1,0 +1,332 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{72548163-B3F2-407A-88C2-DD1DED62005D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <StartupObject>
+    </StartupObject>
+    <NoStandardLibraries>false</NoStandardLibraries>
+    <AssemblyName>EntitySpaces2012.AddIn</AssemblyName>
+    <RootNamespace>EntitySpaces.AddIn</RootNamespace>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\StrongNameKey\EntitySpaces.snk</AssemblyOriginatorKeyFile>
+    <ApplicationIcon>default.ico</ApplicationIcon>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <IncrementalBuild>false</IncrementalBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DefineConstants>TRACE</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <IncrementalBuild>false</IncrementalBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;TRIAL</DefineConstants>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;TRIAL__</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedFiles\Crypto.cs">
+      <Link>Crypto.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedFiles\Licensing.cs">
+      <Link>Licensing.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedFiles\NativeMethods.cs">
+      <Link>NativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedFiles\SecurityTest.cs">
+      <Link>SecurityTest.cs</Link>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CommandBar.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CommandBar.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Connect.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="esMetaCreator.cs" />
+    <Compile Include="MostRecentlyUsedList.cs" />
+    <Compile Include="Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="TemplateUICollection.cs" />
+    <Compile Include="TemplateDisplaySurface.cs" />
+    <Compile Include="UserControls\esUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MainWindow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MainWindow.Designer.cs">
+      <DependentUpon>MainWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\PopupSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserControls\PopupSettings.Designer.cs">
+      <DependentUpon>PopupSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucMappings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucMappings.Designer.cs">
+      <DependentUpon>ucMappings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucMetadata.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucMetadata.Designer.cs">
+      <DependentUpon>ucMetadata.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucMetadataProperties.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucMetadataProperties.Designer.cs">
+      <DependentUpon>ucMetadataProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucProjects.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucProjects.Designer.cs">
+      <DependentUpon>ucProjects.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucSettings.Designer.cs">
+      <DependentUpon>ucSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucTemplateControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucTemplates.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucTemplates.Designer.cs">
+      <DependentUpon>ucTemplates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucWhatsNew.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucWhatsNew.Designer.cs">
+      <DependentUpon>ucWhatsNew.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CommandBar.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CommandBar.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindow.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\PopupSettings.resx">
+      <DependentUpon>PopupSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucMappings.resx">
+      <DependentUpon>ucMappings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucMetadata.resx">
+      <DependentUpon>ucMetadata.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucMetadataProperties.resx">
+      <DependentUpon>ucMetadataProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucProjects.resx">
+      <DependentUpon>ucProjects.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucSettings.resx">
+      <DependentUpon>ucSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucTemplateControl.resx">
+      <DependentUpon>ucTemplateControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucTemplates.resx">
+      <DependentUpon>ucTemplates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucWhatsNew.resx">
+      <DependentUpon>ucWhatsNew.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="EnvDTE">
+      <Guid>{80CC9F66-E7D8-4DDD-85B6-D9E6CD0E93E2}</Guid>
+      <VersionMajor>8</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="EnvDTE80">
+      <Guid>{1A31287A-4D7D-413E-8E32-3B374931BD89}</Guid>
+      <VersionMajor>8</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="EnvDTE90">
+      <Guid>{2CE2370E-D744-4936-A090-3FFFE667B0E1}</Guid>
+      <VersionMajor>9</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="Microsoft.VisualStudio.CommandBars">
+      <Guid>{1CBA492E-7263-47BB-87FE-639000619B15}</Guid>
+      <VersionMajor>8</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="stdole">
+      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AddIn\EntitySpaces2012.AddIn" />
+    <Content Include="default.ico" />
+    <Content Include="esIcon.ico" />
+    <Content Include="Icons\background.png" />
+    <Content Include="Icons\blog.png" />
+    <None Include="Icons\check.png" />
+    <Content Include="Icons\column_many.png" />
+    <Content Include="Icons\column_single.png" />
+    <Content Include="Icons\column_single_with_key.png" />
+    <Content Include="Icons\database_many.png" />
+    <Content Include="Icons\database_single.png" />
+    <Content Include="Icons\document_site.png" />
+    <Content Include="Icons\earth.png" />
+    <Content Include="Icons\EntitySpacesD22baR01bP01ZL.png" />
+    <Content Include="Icons\error.png" />
+    <Content Include="Icons\execute_template.png" />
+    <Content Include="Icons\execute_template_cache.png" />
+    <Content Include="Icons\fk_many.png" />
+    <Content Include="Icons\fk_single.png" />
+    <Content Include="Icons\folder_closed.png" />
+    <Content Include="Icons\folder_open.png" />
+    <Content Include="Icons\gear_many.png" />
+    <Content Include="Icons\gear_single.png" />
+    <Content Include="Icons\help.png" />
+    <Content Include="Icons\house.png" />
+    <Content Include="Icons\index_many.png" />
+    <Content Include="Icons\index_single.png" />
+    <None Include="Icons\info.png" />
+    <Content Include="Icons\key_many.png" />
+    <Content Include="Icons\key_single.png" />
+    <Content Include="Icons\load_default_settings.png" />
+    <Content Include="Icons\load_named_settings.png" />
+    <Content Include="Icons\microphone.png" />
+    <Content Include="Icons\move_down.png" />
+    <Content Include="Icons\move_up.png" />
+    <Content Include="Icons\news.png" />
+    <Content Include="Icons\open_folder.png" />
+    <Content Include="Icons\parameter_many.png" />
+    <Content Include="Icons\parameter_single.png" />
+    <Content Include="Icons\refresh.png" />
+    <Content Include="Icons\result_column_many.png" />
+    <Content Include="Icons\result_column_single.png" />
+    <Content Include="Icons\save.png" />
+    <Content Include="Icons\save_as_named_settings.png" />
+    <Content Include="Icons\save_default_settings.png" />
+    <Content Include="Icons\support.png" />
+    <Content Include="Icons\table_many.png" />
+    <Content Include="Icons\table_single.png" />
+    <Content Include="Icons\template.png" />
+    <Content Include="Icons\template_selected.png" />
+    <Content Include="Icons\view_many.png" />
+    <Content Include="Icons\view_single.png" />
+    <Content Include="Icons\view_template.png" />
+    <Content Include="Icons\WhatsNew.png" />
+    <None Include="Resources\nav_down.png" />
+    <None Include="Resources\nav_up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\StrongNameKey\EntitySpaces.snk">
+      <Link>EntitySpaces.snk</Link>
+    </None>
+    <None Include="Icons\Thumbs.db" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EntitySpaces.AddIn.TemplateUI\EntitySpaces.AddIn.TemplateUI.csproj">
+      <Project>{60B3C557-01AB-4099-82C8-616E8BBF20E7}</Project>
+      <Name>EntitySpaces.AddIn.TemplateUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EntitySpaces.CodeGenerator\EntitySpaces.CodeGenerator.csproj">
+      <Project>{4DEB54D3-804F-452A-8B60-BE78DCF06B16}</Project>
+      <Name>EntitySpaces.CodeGenerator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EntitySpaces.Common\EntitySpaces.Common.csproj">
+      <Project>{45017924-1B54-46C2-A945-1B78ACBA5362}</Project>
+      <Name>EntitySpaces.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EntitySpaces.MetadataEngine\EntitySpaces.MetadataEngine.csproj">
+      <Project>{72BEAB1C-B55F-4F0E-89AF-17F71E74A452}</Project>
+      <Name>EntitySpaces.MetadataEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

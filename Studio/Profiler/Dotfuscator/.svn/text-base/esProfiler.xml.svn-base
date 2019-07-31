@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE dotfuscator SYSTEM "http://www.preemptive.com/dotfuscator/dtd/dotfuscator_v2.3.dtd">
+<dotfuscator version="2.3">
+  <!--This is application generated code. Do not edit manually.-->
+  <input>
+    <loadpaths />
+    <asmlist>
+      <inputassembly refid="37c49253-530c-4006-9625-f6cf21f4565a">
+        <option>honoroas</option>
+        <option>stripoa</option>
+        <file dir="C:\svnroot\Code\ES2012\Profiler\bin\Release" name="esProfiler.exe" />
+      </inputassembly>
+      <inputassembly refid="744813bc-d566-4969-94d2-ee7f29f299ab">
+        <option>honoroas</option>
+        <option>stripoa</option>
+        <option>library</option>
+        <file dir="C:\svnroot\Code\ES2012\Profiler\bin\Release" name="XDMessaging.dll" />
+      </inputassembly>
+    </asmlist>
+  </input>
+  <output>
+    <file dir="C:\svnroot\Code\ES2012\Profiler\Dotfuscator" />
+  </output>
+  <renaming>
+    <option>xmlserialization</option>
+    <excludelist>
+      <namespace name="EntitySpaces.ProfilerApplication.Properties" />
+      <type name="&lt;PrivateImplementationDetails&gt;{26E1D99D-1CF3-4E9D-A070-6BD4BAEE14E1}" />
+      <type name="EntitySpaces.ProfilerApplication.esParameter" excludetype="false">
+        <propertymember name="AfterValue" />
+        <propertymember name="BeforeValue" />
+        <propertymember name="Direction" />
+        <propertymember name="Name" />
+        <propertymember name="ParamType" />
+      </type>
+      <type name="EntitySpaces.ProfilerApplication.esTracePacket" excludetype="false">
+        <propertymember name="Action" />
+        <propertymember name="ApplicationName" />
+        <propertymember name="CallStack" />
+        <propertymember name="Duration" />
+        <propertymember name="Exception" />
+        <propertymember name="HasException" />
+        <propertymember name="ObjectType" />
+        <propertymember name="PacketOrder" />
+        <propertymember name="Sql" />
+        <propertymember name="SqlParameters" />
+        <propertymember name="Syntax" />
+        <propertymember name="ThreadId" />
+        <propertymember name="Ticks" />
+        <propertymember name="TraceChannel" />
+        <propertymember name="TransactionId" />
+      </type>
+      <type name="EntitySpaces.ProfilerApplication.ProfilerWindow/&lt;&gt;c__DisplayClass10">
+        <method name="&lt;FlushIncomingPackets&gt;b__e" signature="void()" />
+        <field name="&lt;&gt;4__this" signature="EntitySpaces.ProfilerApplication.ProfilerWindow" />
+        <field name="channel" signature="EntitySpaces.ProfilerApplication.ProfilerWindow/Channel" />
+      </type>
+      <type name="EntitySpaces.ProfilerApplication.ProfilerWindow/&lt;&gt;c__DisplayClassc">
+        <method name="&lt;AddEntryToList&gt;b__a" signature="void()" />
+        <field name="&lt;&gt;4__this" signature="EntitySpaces.ProfilerApplication.ProfilerWindow" />
+        <field name="channel" signature="EntitySpaces.ProfilerApplication.ProfilerWindow/Channel" />
+      </type>
+      <type name="EntitySpaces.ProfilerApplication.ProfilerWindow/Channels">
+        <field name="Channel_1" signature="string" />
+        <field name="Channel_10" signature="string" />
+        <field name="Channel_2" signature="string" />
+        <field name="Channel_3" signature="string" />
+        <field name="Channel_4" signature="string" />
+        <field name="Channel_5" signature="string" />
+        <field name="Channel_6" signature="string" />
+        <field name="Channel_7" signature="string" />
+        <field name="Channel_8" signature="string" />
+        <field name="Channel_9" signature="string" />
+      </type>
+      <type name="EntitySpaces.ProfilerApplication.SortableBindingList`1&lt;T&gt;">
+        <method name="&lt;.ctor&gt;b__0" signature="void(EntitySpaces.ProfilerApplication.SortableBindingList`1&lt;!0&gt;, System.Collections.Generic.List`1&lt;!0&gt;)" />
+        <method name="&lt;.ctor&gt;b__2" signature="void(EntitySpaces.ProfilerApplication.SortableBindingList`1&lt;!0&gt;, System.Collections.Generic.List`1&lt;!0&gt;)" />
+        <method name="&lt;.ctor&gt;b__4" signature="void(EntitySpaces.ProfilerApplication.SortableBindingList`1&lt;!0&gt;, System.Collections.Generic.List`1&lt;!0&gt;)" />
+        <method name="ApplySortCore" signature="void(System.ComponentModel.PropertyDescriptor, System.ComponentModel.ListSortDirection)" />
+        <method name="OnListChanged" signature="void(System.ComponentModel.ListChangedEventArgs)" />
+        <method name="RemoveSortCore" signature="void()" />
+        <method name="ResetItems" signature="void(System.Collections.Generic.List`1&lt;!0&gt;)" />
+        <field name="CS$&lt;&gt;9__CachedAnonymousMethodDelegate1" signature="System.Action`2&lt;EntitySpaces.ProfilerApplication.SortableBindingList`1&lt;!0&gt;,System.Collections.Generic.List`1&lt;!0&gt;&gt;" />
+        <field name="CS$&lt;&gt;9__CachedAnonymousMethodDelegate3" signature="System.Action`2&lt;EntitySpaces.ProfilerApplication.SortableBindingList`1&lt;!0&gt;,System.Collections.Generic.List`1&lt;!0&gt;&gt;" />
+        <field name="CS$&lt;&gt;9__CachedAnonymousMethodDelegate5" signature="System.Action`2&lt;EntitySpaces.ProfilerApplication.SortableBindingList`1&lt;!0&gt;,System.Collections.Generic.List`1&lt;!0&gt;&gt;" />
+        <field name="originalList" signature="System.Collections.Generic.List`1&lt;!0&gt;" />
+        <field name="populateBaseList" signature="System.Action`2&lt;EntitySpaces.ProfilerApplication.SortableBindingList`1&lt;!0&gt;,System.Collections.Generic.List`1&lt;!0&gt;&gt;" />
+        <field name="sortDirection" signature="System.ComponentModel.ListSortDirection" />
+        <field name="sortProperty" signature="System.ComponentModel.PropertyDescriptor" />
+        <propertymember name="SortDirectionCore" />
+        <propertymember name="SortPropertyCore" />
+        <propertymember name="SupportsSortingCore" />
+      </type>
+      <type name="EntitySpaces.ProfilerApplication.SortableBindingList`1/PropertyCompare&lt;T&gt;">
+        <method name="Compare" signature="int32(!0, !0)" />
+        <field name="_direction" signature="System.ComponentModel.ListSortDirection" />
+        <field name="_property" signature="System.ComponentModel.PropertyDescriptor" />
+      </type>
+    </excludelist>
+    <mapping>
+      <mapoutput overwrite="false">
+        <file dir="${configdir}\Dotfuscated" name="Map.xml" />
+      </mapoutput>
+    </mapping>
+    <referencerulelist>
+      <referencerule rulekey="{6655B10A-FD58-462d-8D4F-5B1316DFF0FF}" />
+      <referencerule rulekey="{229FD6F8-5BCC-427b-8F72-A7A413ECDF1A}" />
+      <referencerule rulekey="{2B7E7C8C-A39A-4db8-9DFC-6AFD38509061}" />
+      <referencerule rulekey="{89769974-93E9-4e71-8D92-BE70E855ACFC}" />
+      <referencerule rulekey="{7D9C8B02-2383-420f-8740-A9760394C2C1}" />
+    </referencerulelist>
+  </renaming>
+  <controlflow level="high" />
+  <removal>
+    <option>disable</option>
+    <option>constonly</option>
+    <referencerulelist />
+  </removal>
+  <signing>
+    <resign>
+      <option>dontuseattributes</option>
+      <key>
+        <file dir="C:\svnroot\Code\ES2012\EntitySpaces\StrongNameKey" name="EntitySpaces.snk" />
+      </key>
+    </resign>
+  </signing>
+  <sos mergeruntime="true" />
+  <smartobfuscation>
+    <smartobfuscationreport verbosity="all" overwrite="false" />
+  </smartobfuscation>
+</dotfuscator>

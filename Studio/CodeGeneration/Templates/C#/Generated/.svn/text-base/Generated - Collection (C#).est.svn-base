@@ -1,0 +1,157 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/
+%><%@ TemplateInfo 
+    UniqueID="30FB6C37-C9B4-431c-8B43-03D0318AEBD8" 
+    Title="Generated - Collection (C#)"   
+    Description="The Collection Class" 
+    Namespace="EntitySpaces.2019.C#.Generated" 
+    Author="EntitySpaces, LLC" 
+    Version="2019.0.0.0"
+    IsSubTemplate="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------	
+bool TargetTheCompactFramework = (bool)esMeta.Input["TargetTheCompactFramework"];
+string Namespace = (string)esMeta.Input["Namespace"];
+bool GenerateSingleFile = (bool)esMeta.Input["GenerateSingleFile"];
+bool GenerateProxyStubs = (bool)esMeta.Input["GenerateProxyStub"];
+bool DebuggerDisplay = (bool)esMeta.Input["DebuggerDisplay"];
+bool DebugVisualizer = (bool)esMeta.Input["DebugVisualizer"];
+string ConnectionName = (string)esMeta.Input["ConnectionName"];
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+string comma = "";
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------
+ITable table = (ITable)esMeta.Input["Table"];
+IView view = (IView)esMeta.Input["View"];
+IColumns cols = (IColumns)esMeta.Input["Columns"];
+esPluginSource source = (esPluginSource)esMeta.Input["Source"];
+
+if(!GenerateSingleFile){ %>/*===============================================================================
+                    EntitySpaces Studio by EntitySpaces, LLC
+             Persistence Layer and Business Objects for Microsoft .NET
+             EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+                          http://www.entityspaces.net
+===============================================================================
+EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+===============================================================================
+*/
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data;
+using System.ComponentModel;
+<%if(DebuggerDisplay) {%>using System.Diagnostics;<%}%>
+<%if(!TargetTheCompactFramework){%>using System.Xml.Serialization;<%}%>
+
+using EntitySpaces.Core;
+using EntitySpaces.Interfaces;
+using EntitySpaces.DynamicQuery;
+
+namespace <%=Namespace%>
+{<%}%>
+<%if(!TargetTheCompactFramework){ if(DebuggerDisplay) {%>
+    [DebuggerDisplay("Count = {Count}")]<%} if(DebugVisualizer) {%>
+	[DebuggerVisualizer(typeof(EntitySpaces.DebuggerVisualizer.esVisualizer))]<%}%>
+	[Serializable]
+	[CollectionDataContract]
+	[XmlType("<%=source.Collection%>")]<%}%>
+	public partial class <%=source.Collection%> : <%=source.esCollection%>, IEnumerable<<%=source.Entity%>>
+	{<%	if(table != null && table.PrimaryKeys.Count > 0)
+		{
+			comma = "";	%>
+		public <%=source.Entity%> FindByPrimaryKey(<%
+			comma = "";
+			foreach(IColumn col in table.PrimaryKeys)
+			{
+				%><%=comma%><%
+				%><%=col.CSharpToSystemType + " " + col.ParameterName%><%
+				comma = ", ";
+			}%>)
+		{
+			return this.SingleOrDefault(e => <%
+			comma = "";
+			foreach(IColumn col in table.PrimaryKeys)
+			{
+				%><%=comma%><%
+				%>e.<%=col.PropertyName%> == <%=col.ParameterName%><%
+				comma = " && ";
+			}%>);
+		}<%		}%>
+<%if(!TargetTheCompactFramework && GenerateProxyStubs){%>
+		#region Implicit Casts
+		
+		public static implicit operator <%=source.ProxyStubCollection%>(<%=source.Collection%> coll)
+		{
+			return new <%=source.ProxyStubCollection%>(coll);
+		}
+		
+		#endregion<%}%>
+		
+		<%if(!TargetTheCompactFramework){%>
+		#region WCF Service Class
+		
+		[DataContract]
+		[KnownType(typeof(<%=source.Entity%>))]
+		public class <%=source.Collection%>WCFPacket : esCollectionWCFPacket<<%=source.Collection%>>
+		{
+			public static implicit operator <%=source.Collection%>(<%=source.Collection%>WCFPacket packet)
+			{
+				return packet.Collection;
+			}
+
+			public static implicit operator <%=source.Collection%>WCFPacket(<%=source.Collection%> collection)
+			{
+				return new <%=source.Collection%>WCFPacket() { Collection = collection };
+			}
+		}
+		
+		#endregion<%}%>
+		
+		<%if(ConnectionName != null && ConnectionName.Length > 0) {%>
+		override protected string GetConnectionName()
+		{
+			return "<%=ConnectionName%>";
+		}<%}%>		
+	}
+<%if(!GenerateSingleFile){ %>
+}<%}%>
+<script runat="template">
+
+public string GetFileName()
+{
+	return esMeta.esPlugIn.Collection((esPluginSource)esMeta.Input["Source"]) + ".cs";
+}
+
+public EntitySpaces.MetadataEngine.Root TheMetaData
+{
+	get { return esMeta;  }
+	set { esMeta = value; }	
+}
+
+</script>

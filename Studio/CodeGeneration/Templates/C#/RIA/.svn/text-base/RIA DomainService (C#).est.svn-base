@@ -1,0 +1,305 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/
+%><%@ TemplateInfo 
+    UniqueID="A8B43474-F00E-4a1c-B0E1-C3A688574278" 
+	UserInterfaceID="1A69A6BE-C83D-434b-BE65-3E8714AFD00B" 
+    Title="RIA DomainService" 
+    Description="RIA DomainService" 
+    Namespace="EntitySpaces.2019.C#.RIA Services" 
+    Author="EntitySpaces, LLC" 
+    Version="2019.0.0.0" 
+    RequiresUI="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------
+// System.Diagnostics.Debugger.Break();
+
+ArrayList entities = esMeta.Input["Entities"] as ArrayList;
+string entityType = (string)esMeta.Input["EntityType"];
+string databaseName = (string)esMeta.Input["Database"];
+string Namespace = (string)esMeta.Input["Namespace"];
+string DomainServiceNamespace = (string)esMeta.Input["DomainServiceNamespace"];
+bool supportDynamicQueries = (bool)esMeta.Input["SupportDynamicQueries"];
+
+//===============================================================
+// Execute our SubTemplates ....
+//===============================================================
+
+ITable table = null;
+IView  view = null;
+IColumns cols = null;
+string attributes = null;
+string comma = "";
+
+IDatabase database = esMeta.Databases[databaseName];
+%>/*===============================================================================
+                    EntitySpaces Studio by EntitySpaces, LLC
+             Persistence Layer and Business Objects for Microsoft .NET
+             EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+                          http://www.entityspaces.net
+===============================================================================
+EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+===============================================================================
+*/
+
+namespace <%=DomainServiceNamespace%>
+{
+	using System;
+	using System.Collections.Generic;
+	using System.ComponentModel;
+	using System.ComponentModel.DataAnnotations;
+	using System.Linq;
+	using System.ServiceModel.DomainServices.Hosting;
+	using System.ServiceModel.DomainServices.Server;
+	using System.Text.RegularExpressions;
+
+	using EntitySpaces.Core;
+	using EntitySpaces.Interfaces;
+	using EntitySpaces.DynamicQuery;
+	using <%=Namespace%>;
+	
+	<%if(entityType == dbEntityType.Tables.ToString()) {%>[EnableClientAccess()]<%}%>
+	public partial class esDomainService : DomainService
+	{<% 
+foreach(string tableOrView in entities)
+{
+	string text = "";
+	
+	if(entityType == dbEntityType.Tables.ToString())
+	{
+		table = database.Tables[tableOrView];
+		view = null;
+		cols = table.Columns;
+	}
+	else 
+	{
+		view = database.Views[tableOrView];
+		
+		table = null;
+		cols = view.Columns;
+	}
+
+	esPluginSource source = new esPluginSource(esMeta, table, view);
+	esMeta.Input["Source"] = source;%>
+		#region <%=source.Entity%>
+		public <%=source.Collection%> <%=source.Entity%>_LoadAll()
+		{
+			<%=source.Collection%> coll = new <%=source.Collection%>();
+			coll.es.IsLazyLoadDisabled = true;
+			coll.LoadAll();
+			return coll;
+		}
+		<%if(supportDynamicQueries) {%>
+		[Query(HasSideEffects = true)] 
+		public <%=source.Collection%> <%=source.Entity%>_LoadByDynamic(string serializedQuery)
+		{
+			<%=source.Query%> query = <%=source.Query%>.SerializeHelper.FromXml(
+				serializedQuery, typeof(<%=source.Query%>), AllKnownTypes) as <%=source.Query%>;
+
+			<%=source.Collection%> coll = new <%=source.Collection%>();
+			coll.es.IsLazyLoadDisabled = true;
+			coll.Load(query);
+			return coll;
+		}
+		
+		[Invoke(HasSideEffects = true)]
+		public int <%=source.Entity%>_GetCount(string serializedQuery)
+		{
+			<%=source.Query%> query = <%=source.Query%>.SerializeHelper.FromXml(
+				serializedQuery, typeof(<%=source.Query%>), AllKnownTypes) as <%=source.Query%>;
+
+			return query.ExecuteScalar<int>();
+		}<%}%>
+		<%if(table != null) {%>
+        [Insert]
+		public void Insert<%=source.Entity%>(<%=Namespace%>.<%=source.Entity%> obj)
+		{
+			obj.RowState = EntitySpaces.Interfaces.esDataRowState.Added;
+            obj.Save();
+		}
+		
+        [Update]
+		public void Update<%=source.Entity%>(<%=Namespace%>.<%=source.Entity%> obj) 
+		{
+			obj.AcceptChanges();
+			obj.MarkAllColumnsAsDirty(EntitySpaces.Interfaces.esDataRowState.Modified);
+			obj.Save();
+		}
+		
+        [Delete]
+		public void Delete<%=source.Entity%>(<%=Namespace%>.<%=source.Entity%> obj) 
+		{
+			<%=Namespace%>.<%=source.Entity%>.Delete(<% comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%>obj.<%=col.PropertyName%><%=col.IsNullableType ? ".Value" : ""%><%	comma = ", ";}%>);
+		}<%}%>
+		#endregion
+<% 
+} if(table != null) {%>	
+		#region EntitySpaces Support Routines
+		
+		/// <summary>
+		/// Used to Save the data to the database
+		/// </summary>
+		/// <returns>True if Successful</returns>
+        public override bool Submit(ChangeSet changeSet)
+        {
+            try
+            {
+                using (esTransactionScope scope = new esTransactionScope())
+                {
+                    bool success= base.Submit(changeSet);
+
+                    if (success)
+                    {
+                        scope.Complete();
+                    }
+
+                    return success;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (!HandleError(ex))
+                {
+                    throw;
+                }
+
+                return true;
+            }
+        }
+		
+		static private List<Type> AllKnownTypes = GetAllKnownTypes();
+
+		static List<Type> GetAllKnownTypes()
+		{
+			List<Type> types = new List<Type>();
+			<% 
+			foreach(string tableOrView in entities)
+			{
+				string text = "";
+				
+				if(entityType == dbEntityType.Tables.ToString())
+				{
+					table = database.Tables[tableOrView];
+					view = null;
+					cols = table.Columns;
+				}
+				else 
+				{
+					view = database.Views[tableOrView];
+					
+					table = null;
+					cols = view.Columns;
+				}
+
+				esPluginSource source = new esPluginSource(esMeta, table, view);
+				esMeta.Input["Source"] = source;%>		
+			types.Add(typeof(<%=source.Query%>));<%}%>
+
+			return types;
+		}
+		
+		#endregion<%}%>
+	}
+}<% 
+// Write out the Service Interface
+string filepath = "";
+if(table != null)
+{
+	filepath = "esDomainService.cs";
+}
+else
+{
+	filepath = "esDomainService.Views.cs";
+}
+this.SaveToFile(filepath, output.ToString(), true);
+this.ClearOutput();%>
+/*===============================================================================
+                    EntitySpaces 2010 by EntitySpaces, LLC
+             Persistence Layer and Business Objects for Microsoft .NET
+             EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+                          http://www.entityspaces.net
+===============================================================================
+EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+===============================================================================*/
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.ServiceModel.DomainServices.Hosting;
+using System.ServiceModel.DomainServices.Server;
+
+using EntitySpaces.Core;
+using EntitySpaces.Interfaces;
+using EntitySpaces.DynamicQuery;
+using <%=Namespace%>;
+
+namespace <%=DomainServiceNamespace%>
+{
+	// Add Custom Methods here, this file will not be ovewrriten
+	public partial class esDomainService
+	{
+		/// <summary>
+		/// Give you a chance to handle any error during PersistChangeSet()
+		/// </summary>
+		/// <param name="ex">The Exception</param>
+		/// <returns>True if handle, otherwise the Exception is rethrown and bubbled up</returns>
+		private bool HandleError(Exception ex)
+		{
+			return false;
+		}
+	}
+}
+<% 
+// Write out the Service Interface
+filepath = "esDomainService.Custom.cs";
+this.SaveToFile(filepath, output.ToString(), false);
+this.ClearOutput();
+%>
+<script runat="template">
+private string SaveToFile(string fileName, string text, bool overwrite)
+{
+	string path = (string)esMeta.Input["OutputPath"];
+	
+	string fname = path;
+	if (!fname.EndsWith("\\")) 
+		fname += "\\";
+		
+	fname += fileName;	
+		
+	if(overwrite == true || !File.Exists(fname))
+	{
+		Directory.CreateDirectory(path);
+		
+		using (StreamWriter sw = System.IO.File.CreateText(fname)) 
+		{
+			sw.Write(text);
+		}
+	}
+	
+	return "";
+}
+</script>

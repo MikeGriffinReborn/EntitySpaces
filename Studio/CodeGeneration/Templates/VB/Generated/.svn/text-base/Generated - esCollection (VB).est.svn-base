@@ -1,0 +1,160 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/%><%@ TemplateInfo 
+    UniqueID="4B7AFBD4-69AB-4210-A8B5-BEF6E2DA836F" 
+    Title="Generated - esCollection (VB)"   
+    Description="The Abstract Collection Class" 
+    Namespace="EntitySpaces.2019.VB.Generated" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    IsSubTemplate="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------	
+bool TargetTheCompactFramework = (bool)esMeta.Input["TargetTheCompactFramework"];
+string Namespace = (string)esMeta.Input["Namespace"];
+bool GenerateSingleFile = (bool)esMeta.Input["GenerateSingleFile"];
+bool UseDnnObjectQualifier = (bool)esMeta.Input["UseDnnObjectQualifier"];
+bool UseCustomBaseClass = (bool)esMeta.Input["UseCustomBaseClass"];
+bool SerializableQueries = (bool)esMeta.Input["SerializableQueries"];
+bool WcfSupport = (bool)esMeta.Input["WcfSupport"];
+bool LINQtoSQL = (bool)esMeta.Input["LINQtoSQL"];
+bool GenerateProxyStubs = (bool)esMeta.Input["GenerateProxyStub"];
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+string comma;
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------	
+ITable table = (ITable)esMeta.Input["Table"];
+IView view = (IView)esMeta.Input["View"];			
+IColumns cols = (IColumns)esMeta.Input["Columns"];
+esPluginSource source = (esPluginSource)esMeta.Input["Source"];
+if(!GenerateSingleFile){ %>
+'===============================================================================
+'                   EntitySpaces Studio by EntitySpaces, LLC
+'            Persistence Layer and Business Objects for Microsoft .NET
+'            EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+'                         http://www.entityspaces.net
+'===============================================================================
+' EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+' EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+' Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+'===============================================================================
+
+Imports System
+Imports System.Collections
+Imports System.Collections.Generic
+Imports System.Text
+Imports System.Data<%if(LINQtoSQL) {%>
+Imports System.Data.Linq
+Imports System.Data.Linq.Mapping<%}%>
+Imports System.ComponentModel
+<%if(!TargetTheCompactFramework){ %>Imports System.Xml.Serialization<%}%>
+<%if(WcfSupport || SerializableQueries){ %>Imports System.Runtime.Serialization<%}%>
+
+Imports EntitySpaces.Interfaces
+Imports EntitySpaces.Core
+
+<%if(UseDnnObjectQualifier){%> 
+Imports DotNetNuke.Framework.Providers
+<%}%> 
+Namespace <%=Namespace%>
+<%}%>
+<%if(!TargetTheCompactFramework){%>
+	<Serializable()> _<%}%>
+	MustInherit Public Partial Class <%=source.esCollection%><%if (UseCustomBaseClass) {%>
+		Inherits CollectionBase(Of <%=source.Entity%>)<%}else{%>
+		Inherits esEntityCollection(Of <%=source.Entity%>)<%}%>
+		
+		#Region "Housekeeping methods"
+		Protected Overloads Overrides ReadOnly Property Meta() As IMetadata
+			Get
+				Return <%=source.Metadata%>.Meta()
+			End Get
+		End Property
+		
+		Protected Overloads Overrides Function GetCollectionName() As String
+			Return "<%=source.Collection%>"
+		End Function
+		
+		#End Region
+		
+		#Region "Query Logic"
+		
+<%if(!TargetTheCompactFramework){%>
+		<BrowsableAttribute(False)> _ <%}%>
+		Public ReadOnly Property Query() As <%=source.Query%>
+			Get
+				If Me.m_query Is Nothing Then
+					Me.m_query = New <%=source.Query%>()
+					InitQuery(Me.m_query)
+				End If
+				
+				Return Me.m_query
+			End Get
+		End Property
+		
+		Public Overloads Function Load(ByVal query As <%=source.Query%>) As Boolean
+			Me.m_query = query
+			InitQuery(Me.m_query)
+			Return Query.Load()
+		End Function
+		
+		Protected Overloads Overrides Function GetDynamicQuery() As esDynamicQuery
+			If Me.m_query Is Nothing Then
+				Me.m_query = New <%=source.Query%>()
+				Me.InitQuery(m_query)
+			End If
+			Return Me.m_query
+		End Function
+		
+		Protected Sub InitQuery(ByVal query As <%=source.Query%>)
+			query.OnLoadDelegate = AddressOf OnQueryLoaded
+			
+			If Not query.es2.HasConnection Then
+				query.es2.Connection = DirectCast(Me, IEntityCollection).Connection
+			End If
+		End Sub
+		
+		Protected Overloads Overrides Sub HookupQuery(ByVal query As esDynamicQuery)
+			Me.InitQuery(DirectCast(query, <%=source.Query%>))
+		End Sub
+		
+		#End Region
+						
+		Private m_query As <%=source.Query%>
+	End Class
+<%if(!GenerateSingleFile){ %>	
+End Namespace<%}%>
+<script runat="template">
+
+public string GetFileName()
+{
+	return esMeta.esPlugIn.esCollection((esPluginSource)esMeta.Input["Source"]) + ".vb";
+}
+
+public EntitySpaces.MetadataEngine.Root TheMetaData
+{
+	get { return esMeta;  }
+	set { esMeta = value; }	
+}
+
+</script>

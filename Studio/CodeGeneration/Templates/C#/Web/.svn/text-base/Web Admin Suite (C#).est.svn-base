@@ -1,0 +1,1840 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/%>
+<%@ TemplateInfo 
+    UniqueID="F3F4669B-6339-409e-967E-2C882C8F1CE2" 
+	UserInterfaceID="D4CCF86A-2911-4598-AB11-B4B39A0ABF9A"
+    Title="Web Admin Suite (C#)"   
+    Description="The ASPX Admin Grids Template" 
+    Namespace="EntitySpaces.2019.C#.Web" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    RequiresUI="True" %>
+<%@ Property Name="outputBuffer" Type="System.String" %>
+<%@ Property Name="databaseName" Type="System.String" %>
+<%@ Property Name="RawName" Type="System.String" %>
+<%@ Property Name="nameSpace" Type="System.String" %>
+<%@ Property Name="dataKeyNames" Type="System.String" Default="" %>
+<%@ Property Name="comma" Type="System.String" Default="" %>
+<%@ Property Name="colEnglishNames" Type="Hashtable" %>
+<%@ Property Name="tabEnglishNames" Type="Hashtable" %>
+<%@ Property Name="tabPermissionsNames" Type="Hashtable" %>
+<%@ Property Name="ESName" Type="System.String" %>
+<%@ Property Name="table" Type="ITable" %>
+<%@ Property Name="browseView" Type="IView" %>
+<%@ Property Name="database" Type="IDatabase" %>
+<%@ Property Name="pageSize" Type="System.String" Default="20"%>
+<%@ Property Name="AllowAdd" Type="System.Boolean" Default="true" %>
+<%@ Property Name="AllowEdit" Type="System.Boolean" Default="true" %>
+<%@ Property Name="AllowDelete" Type="System.Boolean" Default="true" %>
+<%@ Property Name="IsForDnn" Type="System.Boolean" Default="false" %>
+<%@ Property Name="entityName" Type="System.String" Default="" %>
+<%@ Property Name="source" Type="esPluginSource" Default="null" %>
+<%@ Property Name="lookupColumns" Type="LookupColumns" %>
+<%@ Property Name="detailGridSortInfo" Type="DetailGridSortInfoCollection" %>
+<%@ Property Name="detailGridsinfo" Type="DetailGridInfo" %>
+<%@ Property Name="browseColumns" Type="ArrayList" %>
+<%@ Property Name="detailColumns" Type="ArrayList" %>
+<%@ Property Name="editColumns" Type="ArrayList" %>
+<%@ Property Name="searchColumns" Type="ArrayList" %>
+<%@ Property Name="detailTitleColumns" Type="ArrayList" %>
+<%@ Property Name="ttemp" Type="System.String" %><% 
+
+lookupColumns = new LookupColumns();
+detailGridSortInfo = new DetailGridSortInfoCollection();
+detailGridsinfo = new DetailGridInfo();
+
+browseColumns = new ArrayList();
+detailColumns = new ArrayList();
+editColumns = new ArrayList();
+searchColumns = new ArrayList();	
+detailTitleColumns = new ArrayList();
+
+object o = esMeta.Input["chkRawNames"];
+if(o != null)
+{
+	ttemp = o.ToString();
+	//esPlugIn.UseRawNames = Convert.ToBoolean(ttemp);
+}
+
+o = esMeta.Input["IsForDnn"];
+if(o != null)
+{
+	ttemp = o.ToString();
+	IsForDnn = Convert.ToBoolean(ttemp);
+}		
+
+pageSize = esMeta.Input["pageSize"].ToString();
+
+//-------------------------------------------------------
+// BEGINNING OF MAIN BODY OF EXECUTION
+//-------------------------------------------------------		
+nameSpace        = esMeta.Input["namespace"].ToString();
+databaseName     = esMeta.Input["database"].ToString();	
+string tableName = esMeta.Input["table"].ToString();
+
+database = esMeta.Databases[databaseName];
+IColumns cols;
+
+table = database.Tables[tableName];
+this.RawName    = table.Name;
+cols = table.Columns;
+
+ttemp = esMeta.Input["browseView"] as string;
+if(ttemp != null && ttemp.Length > 0)
+{
+	browseView = database.Views[ttemp];
+}
+
+foreach(IColumn col in table.PrimaryKeys)
+{
+	dataKeyNames += comma;
+	dataKeyNames += esMeta.esPlugIn.PropertyName(col);
+	comma = ",";
+}
+
+string temp = esMeta.Input["browseColumns"].ToString();
+PopulateColumns(temp, browseColumns); 
+
+temp = esMeta.Input["detailColumns"].ToString();
+PopulateColumns(temp, detailColumns);
+
+temp = esMeta.Input["editColumns"].ToString();
+PopulateColumns(temp, editColumns); 
+
+temp = esMeta.Input["searchColumns"] as string;
+if(temp != null && temp.Length > 0)
+{
+	PopulateColumns(temp, searchColumns); 
+}
+
+temp = esMeta.Input["detailTitleColumns"].ToString();
+PopulateColumns(temp, detailTitleColumns); 		
+
+temp = esMeta.Input["detailGridsinfo"].ToString();
+detailGridsinfo.FromString(temp);
+
+temp = esMeta.Input["detailGridSortInfo"].ToString();
+detailGridSortInfo.FromString(temp);
+
+temp = esMeta.Input["lookupColumns"].ToString();
+lookupColumns.FromString(temp);	
+
+//=======================================================================
+// BEGIN ASCX Control
+//=======================================================================
+ { %><<%="%"%>@ Control Language="C#" AutoEventWireup="true" CodeFile="<%=esMeta.esPlugIn.Entity(table)%>_admin.ascx.cs" Inherits="<%=esMeta.esPlugIn.Entity(table)%>_admin" %>
+	<div class="es_page">
+		<asp:MultiView ID="mv" runat="server" ActiveViewIndex="0">
+			<%//------------------------------------------------------------------------
+			  // BROWSE BROWSE BROWSE BROWSE BROWSE BROWSE BROWSE BROWSE BROWSE BROWSE
+			  //------------------------------------------------------------------------%>
+			<asp:View ID="vBrowse" runat="server">
+			  <span class="es_title">All <%=esMeta.esPlugIn.Entity(table)%> Records <%=GetDescriptionImageHelp(table)%></span>
+			  <div class="es_float_right">
+				<asp:Button ID="bnNew" runat="server" CssClass="es_button" Text="New <%=esMeta.esPlugIn.Entity(table)%>" OnClick="bnNew_Click" Visible="<%=CanAdd().ToString()%>"  />&nbsp;&nbsp;	
+				<asp:Button ID="bnShowAll" runat="server" CssClass="es_button" Text="Show All" OnClick="bnShowAll_Click"  />&nbsp;&nbsp;
+				<asp:Button ID="bnSearchPage" runat="server" CssClass="es_button" Text="Search" OnClick="bnSearchPage_Click" />&nbsp;&nbsp;
+				<asp:Button ID="bnClearSearchCriteria" runat="server" CssClass="es_button" Text="Clear Search" OnClick="bnClearSearchCriteria_Click" Visible="False" />					
+			  </div>		
+			  <div class="es_clear">			  
+				<div><br /><asp:Label id="lblRecords" Text="" runat="server" CssClass="es_pager_count"/>
+				</div>         
+					<asp:GridView ID="gvBrowse" runat="server" AllowPaging="True" AutoGenerateColumns="False" PageSize="<%=pageSize%>" Width="100%" DataKeyNames="<%=dataKeyNames%>" OnSelectedIndexChanged="gvBrowse_SelectedIndexChanged" AllowSorting="True" OnSorting="gvBrowse_Sorting" OnPageIndexChanging="gvBrowse_PageIndexChanging" CssClass="es_grid" BorderWidth="0" CellSpacing="1" PagerStyle-CssClass="es_grid_pager" >
+						<AlternatingRowStyle CssClass="es_grid_odd" />
+						<RowStyle CssClass="es_grid_even"></RowStyle>
+						<HeaderStyle CssClass="es_grid_header" HorizontalAlign="Left"></HeaderStyle>
+						<Columns>
+							<asp:CommandField ShowSelectButton="True" >
+								<ItemStyle Width="50px" />
+							</asp:CommandField><%
+							if(browseView != null) cols = browseView.Columns;
+							foreach(string colName in browseColumns)
+							{
+								IColumn col = cols[colName];
+								if(!col.IsAutoKey && !esMeta.esPlugIn.IsArrayType(col))
+								{%>
+							<asp:BoundField DataField="<%=esMeta.esPlugIn.PropertyName(col)%>" HeaderText="<%=esMeta.esPlugIn.PropertyName(col)%>" SortExpression="<%=col.Name%>" />	<%
+								}
+							}
+							cols = table.Columns;
+							%>
+						</Columns>
+						<PagerSettings Mode="NumericFirstLast" Position="TopAndBottom" />
+					</asp:GridView>
+				</div>
+			</asp:View>
+			<%//------------------------------------------------------------------------
+			  // DETAIL DETAIL DETAIL DETAIL DETAIL DETAIL DETAIL DETAIL DETAIL DETAIL 
+			  //------------------------------------------------------------------------%>
+			<asp:View ID="vDetail" runat="server">
+				<span class="es_title"><asp:Label ID="lblDetailHeader" runat="server"></asp:Label> <%=GetDescriptionImageHelp(table)%></span>
+				<div class="es_float_right">
+					<asp:Label ID="lblDeleteError" runat="server" CssClass="es_error_label" EnableViewState="false"></asp:Label><br/>			  
+					<asp:Button id="bnBrowse" runat="server" Text="<%=esMeta.esPlugIn.Entity(table)%> List" CssClass="es_button" OnClick="bnBrowse_Click"></asp:Button>					
+				</div>
+				<div class="es_clear">				
+					<table class="es_grid_detail" border="0" cellspacing="2" cellpadding="0">
+						<% 
+						foreach(string colName in detailColumns)
+						{	
+							IColumn col = cols[colName];
+							ESName = GetColumnEnglishName(col);
+							if(!col.IsAutoKey && !esMeta.esPlugIn.IsArrayType(col)){%>
+						<tr>
+							<th scope="row"><%=esMeta.esPlugIn.PropertyName(col)%>:&nbsp;<%=GetDescriptionImageHelp(col)%></th>
+								<%if(!lookupColumns.ContainsLookup(col.Name)) {%>
+							<td><asp:Label id="vlbl<%=esMeta.esPlugIn.PropertyName(col)%>" runat="server"></asp:Label></td>
+								<%} else {%>
+							<td><asp:HyperLink id="vlnk<%=esMeta.esPlugIn.PropertyName(col)%>" runat="server"></asp:HyperLink></td><%}%>
+						</tr><%}
+						}%>	
+					</table>
+				</div>
+				<asp:Button id="bnEdit" runat="server" Text="Edit" CssClass="es_button" Visible="<%=CanEdit().ToString()%>" OnClick="bnEdit_Click" ></asp:Button>&nbsp;&nbsp;
+				<asp:Button id="bnDelete" runat="server" Text="Delete" CssClass="es_button" Visible="<%=CanDelete().ToString()%>" OnClick="bnDelete_Click"></asp:Button>
+				<br /><br />
+<% 			if(esMeta.Input["Link1_Name"] != null){ %>
+				<br /><br />
+<% }
+ 			foreach(string grid in detailGridsinfo.Grids)
+			{
+				string fkName = detailGridsinfo.GridToForeignKeyName(grid);
+				IForeignKey fk = table.ForeignKeys[fkName];
+				
+				ArrayList gridColumns = detailGridsinfo.GridToColumns(grid);
+				EntitySpaces.MetadataEngine.TableRelation tr = new EntitySpaces.MetadataEngine.TableRelation(table, fk);
+				
+				string dkn = fk.ForeignTable.PrimaryKeys[0].Name;%>
+				<span class="es_title"><%=GetTableEnglishName(fk.ForeignTable)%><%=GetDescriptionImageHelp(fk.ForeignTable)%></span>
+				<div class="es_float_right">
+					<asp:Button id="bnNew<%=fkName%>" runat="server" Visible="<%=CanAdd().ToString()%>" CssClass="es_button" Text="New <%=GetTableEnglishName(fk.ForeignTable)%>" OnClick="bnNew<%=fkName%>_Click"></asp:Button>&nbsp;&nbsp;
+					<asp:Button ID="bnShowAll<%=fkName%>" runat="server" CssClass="es_button" Text="Show All" OnClick="bnShowAll<%=fkName%>_Click"  />
+				</div>
+				<div class="es_clear">					
+					<asp:GridView ID="gd<%=fkName%>" runat="server" AllowPaging="True" AutoGenerateColumns="False" PageSize="10" Width="100%" DataKeyNames="<%=GetDataKeysForTable(fk.ForeignTable)%>" OnSelectedIndexChanged="gd<%=fkName%>_SelectedIndexChanged" AllowSorting="True" OnSorting="gd<%=fkName%>Sort" OnPageIndexChanging="gd<%=fkName%>_PageIndexChanging" CssClass="es_grid" BorderWidth="0" CellSpacing="1" PagerStyle-CssClass="es_grid_pager">
+						<AlternatingRowStyle CssClass="es_grid_odd" />
+						<RowStyle CssClass="es_grid_even"></RowStyle>
+						<HeaderStyle CssClass="es_grid_header" HorizontalAlign="Left"></HeaderStyle>
+						<Columns>
+							<asp:CommandField ShowSelectButton="True" >
+								<ItemStyle Width="50px" />
+							</asp:CommandField><%
+							IColumns theCols = fk.ForeignTable.Columns;
+							if(detailGridsinfo.IsGridSourceNameView(grid))
+							{
+								string viewName = detailGridsinfo.GridToViewName(grid);
+								theCols = this.database.Views[viewName].Columns;
+							}
+
+							foreach(string colName in gridColumns)
+							{
+								IColumn col = theCols[colName];
+								ESName = GetColumnEnglishName(col); %>
+							<asp:BoundField DataField="<%=esMeta.esPlugIn.PropertyName(col)%>" HeaderText="<%=esMeta.esPlugIn.PropertyName(col)%>" SortExpression="<%=col.Name%>" /><%
+							}
+							%>
+						</Columns>
+					</asp:GridView>
+				</div>
+			<%}%>
+			</asp:View>
+			<%//------------------------------------------------------------------------
+			  // EDIT EDIT EDIT EDIT EDIT EDIT EDIT EDIT EDIT EDIT EDIT EDIT EDIT EDIT 
+			  //------------------------------------------------------------------------%>
+			<asp:View ID="vEdit" runat="server">
+				<div class="es_title"><asp:Label id="lblEditHeader" runat="server"></asp:Label><%=GetDescriptionImageHelp(table)%></div>
+				<div class="es_float_right">
+					<asp:Label ID="lblSaveError" runat="server" CssClass="es_error_label" EnableViewState="false"></asp:Label><br/>			  
+				</div>
+				<div class="es_clear">	
+					<table class="grid_detail" border="0" cellspacing="2" cellpadding="0" width="100%">
+						<%
+						int id = 1;
+						foreach(string colName in editColumns)
+						{
+							IColumn col = cols[colName];
+							ESName = GetColumnEnglishName(col);
+							
+							if(lookupColumns.ContainsLookup(col.Name))
+							{%>
+						<tr>
+							<th width="1%" <%if(!col.IsNullable) { %>class="es_requiredfield"<%}%>><%=esMeta.esPlugIn.PropertyName(col)%>:&nbsp;<%=GetDescriptionImageHelp(col)%></th>
+							<td>
+								<asp:DropDownList id="ddl<%=esMeta.esPlugIn.PropertyName(col)%>" runat="server" width="380"></asp:DropDownList>
+							</td>
+						</tr><%						
+							}
+							else if(!col.IsAutoKey && !col.IsComputed && !esMeta.esPlugIn.IsArrayType(col))
+							{%>
+						<tr>
+							<th width="1%" <%if(!col.IsNullable) { %>class="es_requiredfield"<%}%>><%=esMeta.esPlugIn.PropertyName(col)%>:&nbsp;</th>
+							<td><%
+								switch(col.LanguageType)
+								{
+									case "string":
+							%><asp:TextBox id="txt<%=esMeta.esPlugIn.PropertyName(col)%>" runat="server" width="380"<%
+										if(col.CharacterMaxLength > 255)
+										{
+							%> TextMode="MultiLine" Columns="40" Rows="5"<%
+										}
+							%> MaxLength="<%=col.CharacterMaxLength.ToString()%>"></asp:TextBox><%
+										if(!col.IsNullable) {%>
+							 <asp:RequiredFieldValidator ID="R<%=id++.ToString()%>" runat="server" ControlToValidate="txt<%=esMeta.esPlugIn.PropertyName(col)%>" ErrorMessage="Required" CssClass="es_error_label"></asp:RequiredFieldValidator><%}
+										break;
+									
+								case "bool":
+						   %><asp:CheckBox id="cb<%=esMeta.esPlugIn.PropertyName(col)%>" runat="server" width="380"></asp:CheckBox><% 
+									break;
+									
+								default:
+						   %><asp:TextBox id="txt<%=esMeta.esPlugIn.PropertyName(col)%>" runat="server" width="380" MaxLength="<%=col.CharacterMaxLength.ToString()%>"></asp:TextBox><%=GetDescriptionImageHelp(col)%><%if(!col.IsNullable) {%>
+							 <asp:RequiredFieldValidator ID="R<%=id++.ToString()%>" runat="server" ControlToValidate="txt<%=esMeta.esPlugIn.PropertyName(col)%>" ErrorMessage="Required" CssClass="es_error_label"></asp:RequiredFieldValidator><%}
+									break;
+								}%>
+							</td>
+						</tr><%
+							}
+						}%>
+					</table>
+				</div>
+				<asp:Button id="bnSave" runat="server" CssClass="es_button" Text="Save" OnClick="bnSave_Click"></asp:Button>&nbsp;
+				<asp:Button id="bnSaveNew" runat="server" CssClass="es_button" Text="Save &amp; New" OnClick="bnSaveNew_Click"></asp:Button>&nbsp;
+				<asp:Button id="bnCancel" runat="server" CssClass="es_button" Text="Cancel" OnClick="bnCancel_Click" CausesValidation="False"></asp:Button>
+			</asp:View>
+			<%//------------------------------------------------------------------------
+			  // SEARCH  SEARCH SEARCH SEARCH SEARCH SEARCH SEARCH SEARCH SEARCH SEARCH 
+			  //------------------------------------------------------------------------%>			
+			<asp:View ID="vSearch" runat="server">
+				<div class="es_title"><asp:Label id="lblSearchHeader" runat="server"></asp:Label><%=GetDescriptionImageHelp(table)%></div>
+				<div class="es_float_right">
+				<asp:Button id="bnSearchBrowse" runat="server" Text="Back To List" CssClass="es_button" OnClick="bnBrowse_Click"></asp:Button>
+				</div>
+				<div class="es_clear">			
+				<table class="grid_detail" border="0" cellspacing="2" cellpadding="0">
+			<%	if(browseView != null) cols = browseView.Columns;
+				int vID = 1;
+				foreach(string colName in searchColumns)
+				{
+					IColumn col = cols[colName];			
+					if(!col.IsAutoKey && !esMeta.esPlugIn.IsArrayType(col))
+					{%>
+					<tr>
+						<th scope="row"><%=esMeta.esPlugIn.PropertyName(col)%>:</th>
+						<td>
+						<% if(browseColumns.Contains(col.Name)) {%>
+							<asp:CheckBox ID="vc<%=vID.ToString()%>" Checked="True" Enabled="False" runat="server" />&nbsp;<% } else { %>
+							<asp:CheckBox ID="vc<%=vID.ToString()%>" Checked="False" Enabled="False" runat="server" />&nbsp;<%}%>
+							<asp:DropDownList ID="vd<%=esMeta.esPlugIn.PropertyName(col)%>" runat="server"></asp:DropDownList>
+					 <% if(col.LanguageType == "DateTime") {%>
+							<asp:TextBox ID="vt<%=esMeta.esPlugIn.PropertyName(col)%>" runat="server"></asp:TextBox><% } else { %>
+							<asp:TextBox ID="vt<%=esMeta.esPlugIn.PropertyName(col)%>" runat="server"></asp:TextBox><%}%>
+						</td>
+					</tr><% 
+					}
+					vID++;
+				}
+				cols = table.Columns;%>
+				</table><br />
+			</div>
+			&nbsp;&nbsp;&nbsp;&nbsp;<asp:Button id="bnSearch" runat="server" CssClass="es_button" Text="Perform Search" OnClick="bnSearch_Click"></asp:Button>&nbsp;&nbsp;
+			<asp:Button id="bnResetSearchCriteria" runat="server" CssClass="es_button" Text="Reset Search Criteria"  OnClick="bnResetSearchCriteria_Click"></asp:Button>
+			</asp:View>
+		</asp:MultiView>
+	</div>
+<%}%>
+<% 
+		string filepath = esMeta.Input["outputPath"].ToString();
+		if (!filepath.EndsWith("\\") ) filepath += "\\";
+		this.SaveToFile(filepath + esMeta.esPlugIn.Entity(table) + "_admin.ascx", output.ToString());
+		ClearOutput();
+
+//=======================================================================
+// BEGIN Code Behind PAGE
+//=======================================================================
+%>
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.ComponentModel;
+<% if(IsForDnn){%>
+using DotNetNuke.Entities.Modules;<%}%>
+
+using EntitySpaces.DynamicQuery;
+using EntitySpaces.Interfaces;
+
+using <%=nameSpace%>;
+
+public partial class <%=esMeta.esPlugIn.Entity(table)%>_admin : GridBase
+{
+	private <%=esMeta.esPlugIn.Entity(table)%> entity;
+	private string theTitle = "<%=esMeta.esPlugIn.Entity(table)%>";
+	private bool allowAdd = <%=AllowAdd.ToString().ToLower()%>;
+	
+	#region Virtual Properties
+	protected override GridView BrowseGrid
+	{
+		get
+		{
+			return this.gvBrowse;
+		}
+	}
+
+	protected override MultiView MultiView
+	{
+		get
+		{
+			return this.mv;
+		}
+	}
+
+	protected override Button ShowAllButton
+	{
+		get
+		{
+			return this.bnShowAll;
+		}
+	}
+
+	protected override Button ClearSearchCriteriaButton 
+	{
+		get
+		{
+			return this.bnClearSearchCriteria;
+		}
+	}
+
+	protected override Label DeleteErrorLabel 
+	{
+		get
+		{
+			return this.lblDeleteError;
+		}
+	}
+
+	protected override Label SaveErrorLabel
+	{
+		get
+		{
+			return this.lblSaveError;
+		}
+	}
+
+	protected override Label EditHeaderLabel 
+	{
+		get
+		{
+			return this.lblEditHeader;
+		}
+	}
+
+	protected override string PageTitle
+	{
+		get
+		{
+			return this.theTitle;
+		}
+	}
+	
+	protected override void ClearSelectedKeys()
+	{<%	foreach(IColumn col in table.PrimaryKeys)
+		{%>
+		this.<%=esMeta.esPlugIn.PropertyName(col)%> = null;<%}%>
+	}
+
+	protected override bool HasSelectedKeys()
+	{<%	foreach(IColumn col in table.PrimaryKeys)
+		{%>
+		if(this.<%=esMeta.esPlugIn.PropertyName(col)%> != null)<% break; }%>
+			return true;
+		else 
+			return false;
+	}	
+	#endregion	
+
+	#region DataKeys
+<%	foreach(IColumn col in table.PrimaryKeys)
+	{%>
+	protected object <%=esMeta.esPlugIn.PropertyName(col)%>
+	{
+		get
+		{
+			return this.ViewState["<%=esMeta.esPlugIn.PropertyName(col)%>"];
+		}
+
+		set
+		{
+			this.ViewState["<%=esMeta.esPlugIn.PropertyName(col)%>"] = value;
+		}
+	}
+	<%}%>
+	#endregion	
+	<% if(IsForDnn){%>
+	protected override void OnInit(EventArgs e)
+	{
+		base.OnInit(e);
+		PortalModuleBase ModuleBase = ((PortalModuleBase)(this.Parent.Parent));
+
+		if (!(ModuleBase == null))
+		{
+			this.ModuleConfiguration = ModuleBase.ModuleConfiguration;
+		}
+
+		//this.LocalResourceFile = this.TemplateSourceDirectory + "/App_LocalResources/MyResourceFile.ascx.resx";
+	}
+	<%}%>
+	protected void Page_Load(object sender, EventArgs e)
+	{
+		if (!this.Page.IsPostBack)
+		{<%	if(esMeta.Input["browseSortCol"].ToString() != "")	{%>
+			this.SetSortExpression("gvBrowse", "<%=esMeta.Input["browseSortCol"].ToString()%>");
+			this.SetSortDirection("gvBrowse", "<%=esMeta.Input["browseSortDir"].ToString()%>");<%}%>
+			
+			if (Request.QueryString["mode"] == null)
+			{	<%	foreach(IColumn col in table.PrimaryKeys) { %>
+				if (Request.QueryString["<%=esMeta.esPlugIn.PropertyName(col)%>"] == null)<% break;}%>			
+				{
+					LoadGrid();
+				}
+				else
+				{<%	foreach(IColumn col in table.PrimaryKeys) { %>
+					this.<%=esMeta.esPlugIn.PropertyName(col)%>  = Request.QueryString["<%=esMeta.esPlugIn.PropertyName(col)%>"];<%}%>
+					this.mv.ActiveViewIndex = DetailView;
+					this.DisplayDetailView();
+				}
+			}
+			else
+			{
+				if (this.allowAdd && Request.QueryString["mode"] == "new")
+				{
+					this.mv.ActiveViewIndex = EditView;
+					this.DisplayAddView();
+				}
+				else
+				{
+					LoadGrid();
+				}
+			}			
+		}
+	}
+
+	protected void bnSave_Click(object sender, EventArgs e)
+	{
+		try
+		{
+			Save();
+			<%	foreach(IColumn col in table.PrimaryKeys)
+			{ 
+				if(col.LanguageType == "Guid") {%>
+			this.<%=esMeta.esPlugIn.PropertyName(col)%> = this.entity.<%=esMeta.esPlugIn.PropertyName(col)%>.ToString();<%} else {%>
+			this.<%=esMeta.esPlugIn.PropertyName(col)%> = this.entity.<%=esMeta.esPlugIn.PropertyName(col)%>;<%}
+			}%>					
+
+			
+			this.mv.ActiveViewIndex = DetailView;
+			DisplayDetailView();
+		}
+		catch(Exception ex)
+		{
+			this.lblSaveError.Text = ex.Message;
+		}		
+	}
+	
+	protected void bnClearSearchCriteria_Click(object sender, EventArgs e)
+	{
+		if (this.SearchHasBeenLoaded)
+		{
+			this.bnResetSearchCriteria_Click(null, e);
+			LoadGrid();
+		}
+	}	
+
+	protected void bnResetSearchCriteria_Click(object sender, EventArgs e)
+	{
+<%	if(browseView != null) cols = browseView.Columns;
+	foreach(string colName in searchColumns)
+	{
+		IColumn col = cols[colName];	
+		if(!col.IsAutoKey && !esMeta.esPlugIn.IsArrayType(col))
+		{%>
+		this.vd<%=esMeta.esPlugIn.PropertyName(col)%>.SelectedIndex = 0;
+		this.vt<%=esMeta.esPlugIn.PropertyName(col)%>.Text = "";
+<% 		}
+	}
+	cols = table.Columns;%>
+		this.bnClearSearchCriteria.Visible = false;	
+	}	
+
+	<% 
+	if(browseView == null)
+		source = new EntitySpaces.MetadataEngine.esPluginSource(esMeta, table, null); 
+	else
+		source = new EntitySpaces.MetadataEngine.esPluginSource(esMeta, null, browseView);
+	%>	
+	private void LoadEntityForSeach(<%=esMeta.esPlugIn.Collection(source)%> coll)
+	{
+		<%=esMeta.esPlugIn.esQuery(source)%> q = coll.Query;
+
+<%	if(browseView != null) cols = browseView.Columns;
+	foreach(string colName in searchColumns)
+	{
+		IColumn col = cols[colName];	
+		if(!col.IsAutoKey && !esMeta.esPlugIn.IsArrayType(col))
+		{%>
+		if(this.vd<%=esMeta.esPlugIn.PropertyName(col)%>.SelectedValue != "")
+		{
+			esComparisonOperand op = (esComparisonOperand)Enum.Parse(typeof(esComparisonOperand), vd<%=esMeta.esPlugIn.PropertyName(col)%>.SelectedValue);
+			q.Where(q.<%=esMeta.esPlugIn.PropertyName(col)%>.OP(op, this.vt<%=esMeta.esPlugIn.PropertyName(col)%>.Text, null));
+		}
+<% 		}
+	}
+	cols = table.Columns;%>	
+	}	
+
+	<% 
+	if(browseView == null)
+		source = new EntitySpaces.MetadataEngine.esPluginSource(esMeta, table, null); 
+	else
+		source = new EntitySpaces.MetadataEngine.esPluginSource(esMeta, null, browseView);
+	%>	
+	protected override void LoadGrid()
+	{
+		<%=esMeta.esPlugIn.Collection(source)%> coll = new <%=esMeta.esPlugIn.Collection(source)%>();
+		<% if(browseView != null){%>coll.Query.es.QuerySource = "<%=browseView.Name%>";<%}%>		
+		if (this.GetSortExpression("gvBrowse") != null && this.GetSortExpression("gvBrowse").Length > 0)
+		{
+			if (this.GetSortDirection("gvBrowse") == "Ascending")
+				coll.Query.OrderBy(this.GetSortExpression("gvBrowse"), esOrderByDirection.Ascending);
+			else
+				coll.Query.OrderBy(this.GetSortExpression("gvBrowse"), esOrderByDirection.Descending);
+		}
+		
+		if (this.SearchHasBeenLoaded)
+		{
+			LoadEntityForSeach(coll);
+		}		
+		
+		if (!coll.Query.Load())
+		{
+			// Force it to show headers but disable "Select"
+			coll.AddNew();
+			this.gvBrowse.Columns[0].Visible = false;
+			this.lblRecords.Text = "0 Records Found";
+		}
+		else
+		{
+			if (this.gvBrowse.AllowPaging)
+			{
+				int pageStart = (this.gvBrowse.PageIndex * this.gvBrowse.PageSize) + 1;
+				int pageEnd = Math.Min(pageStart + this.gvBrowse.PageSize - 1, coll.Count);
+				this.lblRecords.Text = "Record " + pageStart.ToString() + " to " + pageEnd.ToString() + " of " + coll.Count.ToString();
+			}
+			else
+			{
+				this.lblRecords.Text = "Record 1 through " + coll.Count.ToString();
+			}
+		}	
+
+		this.gvBrowse.DataSource = coll;
+		this.gvBrowse.DataBind();
+	}
+	
+	<% source = new EntitySpaces.MetadataEngine.esPluginSource(esMeta, table, null); %>	
+	private bool LoadSelectedEntity()
+	{
+		this.entity = new <%=esMeta.esPlugIn.Entity(table)%>();<%
+		foreach(IColumn col in table.PrimaryKeys)
+		{ 
+			if(col.LanguageType == "Guid"){%>
+		this.entity.Query.Where(entity.Query.<%=esMeta.esPlugIn.PropertyName(col)%> == new Guid(this.<%=esMeta.esPlugIn.PropertyName(col)%> as string));<%}
+		    else {%>
+		this.entity.Query.Where(entity.Query.<%=esMeta.esPlugIn.PropertyName(col)%> == this.<%=esMeta.esPlugIn.PropertyName(col)%>);<%}
+		}%>
+		return this.entity.Query.Load();
+	}	
+
+	private void CreateNewEntity()
+	{
+		this.entity = new <%=esMeta.esPlugIn.Entity(table)%>();
+	}
+
+	protected override void DisplayDetailView()
+	{
+	<%if (IsForDnn){ %>
+		if(!LoadSelectedEntity())
+		{
+			Response.Redirect(EntitySpaces.Modules.GridLoader.Utilities.ConstructUrl("pagename", "<%=esMeta.esPlugIn.Entity(table)%>"));
+			return;
+		}
+	<%} else { %>
+		if(!LoadSelectedEntity())
+		{
+			Response.Redirect(EntitySpaces.Websites.GridLoader.Utilities.ConstructUrl("pagename", "<%=esMeta.esPlugIn.Entity(table)%>"));
+			return;
+		}
+	<% } %>
+		this.bnDelete.Attributes.Add("onclick", "if(confirm('Are you sure to delete?')){}else{return false}");
+		
+		this.lblDetailHeader.Text = theTitle + " : " + FetchHeader(entity);		
+<% 		// Non Lookups
+		foreach(string colName in detailColumns)					
+		{	
+			IColumn col = cols[colName];
+		
+			if(!col.IsAutoKey && !esMeta.esPlugIn.IsArrayType(col))
+			{
+				if(!lookupColumns.ContainsLookup(col.Name)){%>		
+		this.vlbl<%=esMeta.esPlugIn.PropertyName(col)%>.Text = entity.str.<%=esMeta.esPlugIn.PropertyName(col)%>;<%
+				}
+			}
+		}
+		
+		// Lookups
+		%><%=Environment.NewLine%><%
+		foreach(string colName in detailColumns)					
+		{	
+			IColumn col = cols[colName];
+			
+			if(!col.IsAutoKey && !esMeta.esPlugIn.IsArrayType(col))
+			{
+				if(lookupColumns.ContainsLookup(col.Name))
+				{
+					ArrayList list = lookupColumns[col.Name] as ArrayList;
+					
+					string fkName = list[0] as string;
+					IForeignKey fk = table.ForeignKeys[fkName];	
+
+					EntitySpaces.MetadataEngine.TableRelation tr = new EntitySpaces.MetadataEngine.TableRelation(table, fk);
+				%>
+		this.vlnk<%=esMeta.esPlugIn.PropertyName(col)%>.Text = <%=tr.LookupName%>(entity.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[0])%>);
+		
+		<%if (IsForDnn){ %>
+		this.vlnk<%=esMeta.esPlugIn.PropertyName(col)%>.NavigateUrl = 
+		     EntitySpaces.Modules.GridLoader.Utilities.ConstructUrl("pagename", "<%=esMeta.esPlugIn.Entity(tr.ForeignTable)%>", "<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[0])%>", entity.str.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[0])%>);
+		<%} else { %>	 
+				this.vlnk<%=esMeta.esPlugIn.PropertyName(col)%>.NavigateUrl = 
+		     EntitySpaces.Websites.GridLoader.Utilities.ConstructUrl("pagename=", "<%=esMeta.esPlugIn.Entity(tr.ForeignTable)%>&", "<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[0])%>=", entity.str.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[0])%>);	 
+		<% } %>
+		
+			 <%			 
+				}
+			}
+		}
+		
+		// Call our DetailGridBinder methods
+		%><%=Environment.NewLine%><%
+		ArrayList grids = detailGridsinfo.Grids;
+		foreach(string grid in grids)
+		{
+			string key = detailGridsinfo.GridToForeignKeyName(grid);%>
+		gd<%=key%>Load();<%}%>
+	}
+
+	protected override void DisplayEditView()
+	{
+		this.IsNew = false;
+		this.ResetEditFields();
+
+		LoadSelectedEntity();
+		
+		this.lblEditHeader.Text = theTitle + " Edit : " + FetchHeader(entity);	
+		
+		this.LoadEditModeComboboxes();		
+<% 						
+		foreach(string colName in editColumns)					
+		{	
+			IColumn col = cols[colName];
+			
+			if(lookupColumns.ContainsLookup(col.Name))
+			{%>
+		this.ddl<%=esMeta.esPlugIn.PropertyName(col)%>.SelectedValue = entity.str.<%=esMeta.esPlugIn.PropertyName(col)%>;<% 
+			}
+			else
+			{				
+				if(!col.IsAutoKey && !col.IsComputed && !esMeta.esPlugIn.IsArrayType(col))
+				{
+					switch(col.LanguageType)
+					{
+						case "string":%>		
+		this.txt<%=esMeta.esPlugIn.PropertyName(col)%>.Text = entity.str.<%=esMeta.esPlugIn.PropertyName(col)%>;<%
+							break;
+							
+						case "bool":%>		
+		this.cb<%=esMeta.esPlugIn.PropertyName(col)%>.Checked = entity.<%=esMeta.esPlugIn.PropertyName(col)%> == null ? false : entity.<%=esMeta.esPlugIn.PropertyName(col)%>.Value;<%
+							break;
+							
+						default:%>		
+		this.txt<%=esMeta.esPlugIn.PropertyName(col)%>.Text = entity.str.<%=esMeta.esPlugIn.PropertyName(col)%>;<%
+							break;						
+					}
+				}
+			}
+		}%>
+	}
+
+	protected override void DisplayAddView()
+	{
+		this.lblEditHeader.Text = "New " + theTitle;
+		this.IsNew = true;
+		this.ResetEditFields();
+		this.LoadEditModeComboboxes();
+	}
+	
+	protected override void DisplaySearchView()
+	{
+		if (!this.SearchHasBeenLoaded)
+		{	
+			this.lblSearchHeader.Text = theTitle + " Search";
+			
+			ListItem[] items = PopulateSearchItemList();
+<%	if(browseView != null) cols = browseView.Columns;
+	foreach(string colName in searchColumns)
+	{
+		 IColumn col = cols[colName];	
+		if(!col.IsAutoKey && !esMeta.esPlugIn.IsArrayType(col)){%>		
+			this.vd<%=esMeta.esPlugIn.PropertyName(col)%>.Items.AddRange(items);<%}
+	}
+	cols = table.Columns;%>	
+		}	
+	}
+
+	protected override void Save()
+	{
+		if (this.IsNew)
+			this.CreateNewEntity();
+		else
+			this.LoadSelectedEntity();
+<% 
+		foreach(string colName in editColumns)					
+		{	
+			 IColumn col = cols[colName];
+					
+			if(lookupColumns.ContainsLookup(col.Name))
+			{%>
+		entity.str.<%=esMeta.esPlugIn.PropertyName(col)%> = this.ddl<%=esMeta.esPlugIn.PropertyName(col)%>.SelectedValue;<% 
+			}
+			else
+			{						
+				if(!col.IsAutoKey && !col.IsComputed && !esMeta.esPlugIn.IsArrayType(col))
+				{
+					switch(col.LanguageType)
+					{
+						case "string":%>		
+		this.entity.str.<%=esMeta.esPlugIn.PropertyName(col)%> = this.txt<%=esMeta.esPlugIn.PropertyName(col)%>.Text;<%
+							break;
+							
+						case "bool":%>		
+		this.entity.str.<%=esMeta.esPlugIn.PropertyName(col)%> = this.cb<%=esMeta.esPlugIn.PropertyName(col)%>.Checked.ToString();<%
+							break;
+							
+						default:%>		
+		this.entity.str.<%=esMeta.esPlugIn.PropertyName(col)%> = this.txt<%=esMeta.esPlugIn.PropertyName(col)%>.Text;<%
+							break;						
+					}			
+				}
+			}
+		}%>	
+		
+		this.entity.Save();
+	}
+
+	protected override void Delete()
+	{
+		if (this.IsNew) return;
+
+		this.LoadSelectedEntity();
+		this.entity.MarkAsDeleted();
+		this.entity.Save();
+	}
+
+	protected override void ResetEditFields()
+	{<%	
+		foreach(string colName in editColumns)					
+		{	
+			 IColumn col = cols[colName];
+			
+			if(lookupColumns.ContainsLookup(col.Name))
+			{%>
+		this.ddl<%=esMeta.esPlugIn.PropertyName(col)%>.SelectedIndex = -1;<%
+			}
+			else if(!col.IsAutoKey && !col.IsComputed && !esMeta.esPlugIn.IsArrayType(col))
+			{
+				switch(col.LanguageType)
+				{
+					case "string":%>		
+		this.txt<%=esMeta.esPlugIn.PropertyName(col)%>.Text = "";<%
+						break;
+						
+					case "bool":%>		
+		this.cb<%=esMeta.esPlugIn.PropertyName(col)%>.Checked = false;<%
+						break;
+						
+					default:%>		
+		this.txt<%=esMeta.esPlugIn.PropertyName(col)%>.Text = "";<%
+						break;						
+				}			
+			}				
+		}%>	
+	}
+
+<% 
+	//----------------------------------------------------------------------
+	// Now we begin the hard work of providing all of the ForeignKey logic
+	//----------------------------------------------------------------------	
+	
+	// First we build our lookup methods that we use when during 'Detail' mode
+	// Below is an example of what we are about to build
+	
+	/*
+	protected string LookupEmployeesAsEmployeeID(System.Int32? employeeID)
+	{
+		if(employeeID != null)
+		{
+			Employees obj = new Employees();
+			obj.Query.Select
+			(
+				obj.Query.FirstName,
+				obj.Query.LastName
+			).Where(obj.Query.EmployeeID.Equal(employeeID));
+			
+			obj.Query.Load();
+			
+			return obj.str.FirstName + " " + obj.str.LastName;
+		}
+		else
+		{
+			return "";
+		}
+	}
+	*/
+	
+	string retValue = "";
+	string str = "";
+	
+	foreach(string key in lookupColumns.Keys)
+	{
+		ArrayList list = lookupColumns[key] as ArrayList;
+		
+		if(list.Count > 0)
+		{
+			string fkName = list[0] as string;
+			IForeignKey fk = table.ForeignKeys[fkName];
+	
+			EntitySpaces.MetadataEngine.TableRelation tr = new EntitySpaces.MetadataEngine.TableRelation(table, fk); 
+			
+			IColumn pkColumn = tr.PrimaryColumns[0];
+			IColumn fkColumn = tr.ForeignColumns[0];
+			%>
+			
+	protected string <%=tr.LookupName%>(<%=esMeta.esPlugIn.NullableType(pkColumn)%> <%=esMeta.esPlugIn.ParameterName(pkColumn)%>)
+	{
+		if(<%=esMeta.esPlugIn.ParameterName(pkColumn)%> != null)
+		{
+			<%=esMeta.esPlugIn.Entity(fk.PrimaryTable)%> obj = new <%=esMeta.esPlugIn.Entity(fk.PrimaryTable)%>();
+			obj.Query.Select
+			(<% 
+				for(int i = 1; i < list.Count; i++)
+				{%>
+				obj.Query.<%=esMeta.esPlugIn.PropertyName(tr.ForeignTable.Columns[list[i]])%><%if(i+1 < list.Count) {%>,<%} }%>
+			).Where(obj.Query.<%=esMeta.esPlugIn.PropertyName(fkColumn)%>.Equal(<%=esMeta.esPlugIn.ParameterName(pkColumn)%>));
+			
+			obj.Query.Load();
+			<% 
+				retValue = "";
+				str = "";
+				for(int i = 1; i < list.Count; i++)
+				{
+					retValue += str;
+					retValue += "obj.str." + esMeta.esPlugIn.PropertyName(tr.ForeignTable.Columns[list[i]]);
+					str = " + \" \" + ";
+				}%>
+			return <%=retValue%>;
+		}
+		else
+		{
+			return "";
+		}
+	}<% 
+		}
+	}
+	
+	//------------------------------------------------------------------------
+	// Now let's Build our FetchHeader for the Detail/Edit Title
+	//------------------------------------------------------------------------
+	IColumn pkc = table.PrimaryKeys[0];
+	
+	if(detailTitleColumns.Count > 0)
+	{
+%>			
+	protected string FetchHeader(<%=esMeta.esPlugIn.Entity(table)%> obj)
+	{
+		if(obj != null)
+		{<% 
+				retValue = "";
+				str = "";
+				for(int i = 0; i < detailTitleColumns.Count; i++)
+				{
+					retValue += str;
+					retValue += "obj.str.";
+					retValue += esMeta.esPlugIn.PropertyName(detailTitleColumns[i] as string);
+					str = " + \" \" + ";
+				}%>
+			return <%=retValue%>;
+		}
+		else
+		{
+			return "";
+		}
+	}<% 
+	}
+	else  // If they didn't define one lets compile clean
+	{%>
+	protected string FetchHeader(<%=esMeta.esPlugIn.Entity(table)%> obj)
+	{
+		return "";
+	}	
+	<%}
+	//------------------------------------------------------------------------
+	// Now let's create the code that bind's the Edit Comboboxes
+	//------------------------------------------------------------------------
+%>
+
+	protected void LoadEditModeComboboxes()
+	{
+		string idName = "";
+		string idValue = "";
+		
+		if(this.Request["idname"] != null)
+		{
+			idName  = this.Request["idname"];
+			idValue = this.Request["idvalue"];
+		}	
+	<%	
+	foreach(string key in lookupColumns.Keys)
+	{
+		ArrayList list = lookupColumns[key] as ArrayList;
+		
+		if(list.Count > 0)
+		{
+			string fkName = list[0] as string;
+			IForeignKey fk = table.ForeignKeys[fkName];
+	
+			EntitySpaces.MetadataEngine.TableRelation tr = new EntitySpaces.MetadataEngine.TableRelation(table, fk);
+			
+			string ddlName = esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[0]); 
+			
+			if(!this.editColumns.Contains(key)) continue;
+%>
+		<%=esMeta.esPlugIn.Collection(tr.ForeignTable)%> <%=ddlName%>Coll = new <%=esMeta.esPlugIn.Collection(tr.ForeignTable)%>();
+		<%=ddlName%>Coll.Query.Select
+		(
+			<%=ddlName%>Coll.Query.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[0])%>,
+			<%
+			if(list.Count > 2)
+			{
+				string sep = "";
+				string select = "<";
+				for(int i = 1; i < list.Count; i++)
+				{
+					select += sep;
+					select += list[i];
+					sep = " + ' ' + ";
+				}
+				select += " as 'SpecialBinder'>";
+		%>"<%=select%>"<%
+			}
+			else
+			{
+		%><%=ddlName%>Coll.Query.<%=esMeta.esPlugIn.PropertyName(tr.ForeignTable.Columns[list[1]])%><%
+			}%>
+		)<%if(list.Count > 2) {%>		
+		.OrderBy("SpecialBinder", esOrderByDirection.Ascending);<%} else {%>
+		.OrderBy(<%=ddlName%>Coll.Query.<%=esMeta.esPlugIn.PropertyName(tr.ForeignTable.Columns[list[1]])%>.Ascending);<%}%>
+		<%=ddlName%>Coll.Query.Load();
+		<%if(list.Count > 2) {%>
+		ddl<%=ddlName%>.DataTextField = "SpecialBinder";<%} else {%>
+		ddl<%=ddlName%>.DataTextField = <%=esMeta.esPlugIn.Metadata(tr.ForeignTable)%>.PropertyNames.<%=esMeta.esPlugIn.PropertyName(tr.ForeignTable.Columns[list[1]])%>;<%}%>
+		ddl<%=ddlName%>.DataValueField = <%=esMeta.esPlugIn.Metadata(tr.ForeignTable)%>.PropertyNames.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[0])%>;
+		ddl<%=ddlName%>.DataSource = <%=ddlName%>Coll;
+		ddl<%=ddlName%>.DataBind();<%if(tr.PrimaryColumns[0].IsNullable) {%>
+		ddl<%=ddlName%>.Items.Insert(0, new ListItem("", string.Empty));<%}
+		}
+	}%>
+	
+		switch (idName)
+		{<% 
+			foreach(string key in lookupColumns.Keys)
+			{
+				ArrayList list = lookupColumns[key] as ArrayList;			
+				if(list.Count > 0)
+				{
+					IForeignKey fk = table.ForeignKeys[list[0] as string];
+					EntitySpaces.MetadataEngine.TableRelation tr = new EntitySpaces.MetadataEngine.TableRelation(table, fk);
+					string ddlName = esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[0]);
+					if(!this.editColumns.Contains(key)) continue; %>
+			case "<%=ddlName%>":
+				this.ddl<%=ddlName%>.SelectedValue = idValue;
+				break; <% 
+				}
+			}%>
+			
+			default:
+				break;
+		}		
+	}
+<% 
+	foreach(string grid in detailGridsinfo.Grids)
+	{
+		ArrayList gridColumns = detailGridsinfo.GridToColumns(grid);
+		string fkName = detailGridsinfo.GridToForeignKeyName(grid);
+		
+		IForeignKey fk = table.ForeignKeys[fkName];
+		EntitySpaces.MetadataEngine.TableRelation tr = new EntitySpaces.MetadataEngine.TableRelation(table, fk);
+		string fTable = fk.ForeignTable.Name; 
+		
+		string pkid = "";
+		entityName = "";
+		if(detailGridsinfo.IsGridSourceNameView(grid))
+		{
+			pkid = detailGridsinfo.GridToViewPrimaryKey(grid);
+			entityName = detailGridsinfo.GridToViewName(grid);
+		}
+		else
+		{
+			pkid = fk.ForeignColumns[0].Name;
+			entityName = fk.ForeignTable.Name;			
+		}
+		%>
+		
+	#region <%=fkName%>
+	
+	protected void bnNew<%=fkName%>_Click(object sender, EventArgs e)
+	{<% string url = esMeta.esPlugIn.Entity(fk.PrimaryTable) + "_admin.ascx/";
+		foreach(IColumn col in table.PrimaryKeys){%>
+		string idValue = this.<%=esMeta.esPlugIn.PropertyName(col)%>.ToString();<%}%>	
+		<%if (IsForDnn){ %>
+		Response.Redirect(EntitySpaces.Modules.GridLoader.Utilities.ConstructUrl("pagename", "<%=esMeta.esPlugIn.Entity(fk.ForeignTable)%>", "mode", "new", "idvalue", idValue, "idname", "<%=esMeta.esPlugIn.PropertyName(pkid)%>", "return", "pagename", "<%=esMeta.esPlugIn.Entity(fk.PrimaryTable) %>", "<%=esMeta.esPlugIn.PropertyName(pkid)%>", idValue));
+		<%} else { %>
+		Response.Redirect(EntitySpaces.Websites.GridLoader.Utilities.ConstructUrl("pagename=", "<%=esMeta.esPlugIn.Entity(fk.ForeignTable)%>", "&mode=", "new", "&idvalue=", idValue, "&idname=", "<%=esMeta.esPlugIn.PropertyName(pkid)%>", "&return=", "Index.aspx?pagename=", "<%=esMeta.esPlugIn.Entity(fk.PrimaryTable) %>", "&<%=esMeta.esPlugIn.PropertyName(pkid)%>=", idValue));
+		<% } %>
+	}
+	
+	protected void bnShowAll<%=fkName%>_Click(object sender, EventArgs e)
+	{
+		if(this.gd<%=fkName%>.AllowPaging)
+		{
+			this.gd<%=fkName%>.AllowPaging = false;
+			this.bnShowAll<%=fkName%>.Text = "10 Rows";
+		}
+		else
+		{
+			this.gd<%=fkName%>.AllowPaging = true;
+			this.bnShowAll<%=fkName%>.Text = "Show All";			
+		}
+		gd<%=fkName%>Load();
+	}	
+	
+	protected void gd<%=fkName%>_SelectedIndexChanged(object sender, EventArgs e)
+	{
+		this.SelectedIndexChanged(this.gd<%=fkName%>, "<%=esMeta.esPlugIn.Entity(fk.ForeignTable)%>");
+	}
+
+	protected void gd<%=fkName%>Sort(object sender, GridViewSortEventArgs e)
+	{
+		this.SetSortInformation("<%=fkName%>", e.SortExpression);
+		gd<%=fkName%>Load();
+	}	
+	
+	protected void gd<%=fkName%>_PageIndexChanging(object sender, GridViewPageEventArgs e)
+	{
+		this.gd<%=fkName%>.PageIndex = e.NewPageIndex;
+		gd<%=fkName%>Load();
+	}	
+	
+	private void gd<%=fkName%>Load()
+	{
+		<% source = new EntitySpaces.MetadataEngine.esPluginSource(esMeta, fk.ForeignTable, null); %>
+		<%=esMeta.esPlugIn.Collection(source)%> obj = new <%=esMeta.esPlugIn.Collection(source)%>();
+		<% if(detailGridsinfo.IsGridSourceNameView(grid)){%>obj.Query.es.QuerySource = "<%=detailGridsinfo.GridToViewName(grid)%>";<%}%>
+		obj.Query.Select
+		(<% ArrayList theCols = new ArrayList();
+			
+			foreach(IColumn col in fk.ForeignTable.PrimaryKeys) 
+			{
+				 theCols.Add(esMeta.esPlugIn.PropertyName(col));
+			}
+			
+			for(int i = 0; i < gridColumns.Count; i++)
+			{
+				if(fk.ForeignTable.PrimaryKeys[gridColumns[i].ToString()] == null)
+				{
+					theCols.Add(esMeta.esPlugIn.PropertyName(gridColumns[i].ToString()));
+				}
+			}
+			
+			for(int n = 0; n < theCols.Count; n++)
+			{
+				if(fk.ForeignTable.Columns[theCols[n].ToString()] == null)
+				{%>
+				"<<%=theCols[n].ToString()%>>"<%if(n+1 < theCols.Count) {%>,<%}%><%} else {%>
+				obj.Query.<%=theCols[n].ToString()%><%if(n+1 < theCols.Count) {%>,<%}%><%}
+			}%>
+		)<%if(fk.ForeignTable.Columns[pkid].LanguageType != "Guid") {%>
+		.Where(obj.Query.<%=esMeta.esPlugIn.PropertyName(pkid)%>.Equal(this.<%=esMeta.esPlugIn.PropertyName(fk.PrimaryTable.PrimaryKeys[0].Name)%>));
+		<%} else {%>
+		.Where(obj.Query.<%=esMeta.esPlugIn.PropertyName(pkid)%>  == new Guid(this.<%=esMeta.esPlugIn.PropertyName(fk.PrimaryTable.PrimaryKeys[0].Name)%> as string));<%}%>		
+		
+		string sortExpression = this.GetSortExpression("<%=fkName%>");
+		if (sortExpression != "")
+			obj.Query.OrderBy(sortExpression, GetSortDirectionEnum("<%=fkName%>"));<% 
+		DetailGridSortInfoItem sortItem = detailGridSortInfo[grid];
+		if(sortItem != null)
+		{%>
+		else
+			obj.Query.OrderBy(obj.Query.<%=esMeta.esPlugIn.PropertyName(sortItem.Column)%>.<%=sortItem.Direction%>);<%}%>
+		
+		if (!obj.Query.Load())
+		{
+			// Force it to show headers but disable "Select"
+			obj.AddNew();
+			this.gd<%=fkName%>.Columns[0].Visible = false;
+		}			
+
+		this.gd<%=fkName%>.DataSource = obj;
+		this.gd<%=fkName%>.DataBind();
+	}	
+	
+	#endregion
+	<%}%>
+}
+<% 		
+		filepath = esMeta.Input["outputPath"].ToString();
+		if (!filepath.EndsWith("\\") ) filepath += "\\";
+		this.SaveToFile(filepath + esMeta.esPlugIn.Entity(table) + "_admin.ascx.cs", output.ToString());
+	}
+	
+	private void SaveToFile(string fileName, string text)
+	{
+		using (StreamWriter sw = System.IO.File.CreateText(fileName)) 
+		{
+			sw.Write(text);
+		} 	
+	}	
+		
+	private string GetDataKeysForTable(EntitySpaces.MetadataEngine.ITable table)
+	{
+		string comma = "";
+		string dataKeyNames = "";
+		
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			dataKeyNames += comma;
+			dataKeyNames += esMeta.esPlugIn.PropertyName(col);
+			comma = ",";
+		}	
+		
+		return dataKeyNames;
+	}
+	
+	//--------------------------------------------------------------------------------------
+	// Takes a comma deliminated string like "EmployeeID,FirstName,LastName" and populates
+	// the ArrayList from it
+	//--------------------------------------------------------------------------------------	
+	private void PopulateColumns(string data, ArrayList columns)
+	{
+		if(data.Length != 0)
+		{
+			string[] array = data.Split(new char[] {'|'});
+			foreach(string col in array)
+			{
+				columns.Add(col.Trim());
+			}
+		}
+	}
+	
+	private string GetDescription(IColumn col)
+	{
+		string desc = "";
+		if(col.Description != "")
+		{
+			desc = col.Description;
+		}
+		else if(col.Alias != col.Name)
+		{
+			desc = col.Alias;
+		}	
+		else
+		{
+			desc = esMeta.esPlugIn.PropertyName(col);
+		}
+		return desc;
+	}
+	
+	private string GetColumnEnglishName(IColumn col)
+	{
+		if(col.Name == col.Alias)
+		{
+			return col.Alias;
+		}
+		else
+		{
+			return col.Name;
+		}
+	}	
+		
+	private string GetTableEnglishName(EntitySpaces.MetadataEngine.ITable table)
+	{
+		if(table.Name == table.Alias)
+		{
+			return table.Alias;
+		}
+		else
+		{
+			return table.Name;
+		}
+	}
+	
+	private bool CanEdit()
+	{
+		return true;
+	}	
+	
+	private bool CanAdd()
+	{
+		return true;
+	}		
+	
+	private bool CanDelete()
+	{
+		return true;
+	}		
+	
+	private string GetDescriptionImageHelp(IColumn col)
+	{
+		Guid g;
+		g = Guid.NewGuid();
+		string idString = g.ToString().Replace("-", "");
+		
+		string desc = "";
+		if(col.Description != "")
+		{
+			//desc = "&nbsp;&nbsp;<img src=\"question.gif\" alt=\"" + col.Description + "\" style=\"vertical-align:middle\" />&nbsp;&nbsp;";
+			if (IsForDnn){
+			desc = "&nbsp;&nbsp;<asp:Image id=\"" + "img" + idString +  "\"" + " runat=\"server\" ImageUrl=\"~/DesktopModules/GridLoader/question.gif\" AlternateText=\"" + col.Description + "\" />&nbsp;&nbsp;"; 
+			} else {
+			desc = "&nbsp;&nbsp;<asp:Image id=\"" + "img" + idString + "\"" + " runat=\"server\" ImageUrl=\"~/question.gif\" AlternateText=\"" + col.Description + "\" />&nbsp;&nbsp;"; 
+			}
+		}
+		return desc;
+	}
+	
+	private string GetDescriptionImageHelp(EntitySpaces.MetadataEngine.ITable table)
+	{
+		Guid g;
+		g = Guid.NewGuid();
+		string idString = g.ToString().Replace("-", "");
+		
+		string desc = "";
+		if(table.Description != "")
+		{
+			//desc = "&nbsp;&nbsp;<img src=\"question.gif\" alt=\"" + table.Description + "\" style=\"vertical-align:middle\" />&nbsp;&nbsp;";
+			if (IsForDnn){
+			desc = "&nbsp;&nbsp;<asp:Image id=\"" + "img" + idString + "\"" + " runat=\"server\" ImageUrl=\"~/DesktopModules/GridLoader/question.gif\" AlternateText=\"" + table.Description + "\" />&nbsp;&nbsp;"; 
+			} else {
+			desc = "&nbsp;&nbsp;<asp:Image id=\"" + "img" + idString + "\"" + " runat=\"server\" ImageUrl=\"~/question.gif\" AlternateText=\"" + table.Description + "\" />&nbsp;&nbsp;"; 
+			}
+		}
+		return desc;
+	}	
+}
+
+public class DetailGridSortInfoCollection 
+{
+	public DetailGridSortInfoItem this[string key]
+	{
+		get
+		{
+			return sortInfo[key] as DetailGridSortInfoItem;
+		}
+
+		set
+		{
+			sortInfo[key] = value;
+		}
+	}
+
+	public override string ToString()
+	{
+		string sep = "";
+		string data = "";
+		DetailGridSortInfoItem item;
+
+		foreach(string key in sortInfo.Keys)
+		{
+			item = sortInfo[key] as DetailGridSortInfoItem;
+
+			if(item.Column != "")  // Filter out the user change of mind
+			{
+				data += sep + " |" + key + "|" + item.Column + "|" + item.Direction;
+				sep = "^";
+			}
+		}
+
+		return data;
+	}
+
+	public void FromString(string data)
+	{
+		if(data != null && data.Length > 0)
+		{
+			sortInfo = new Hashtable();
+			string[] records = data.Split(new char[] {'^'});
+
+			foreach(string rec in records)
+			{
+				string[] fields = rec.Split(new char[] {'|'});
+
+				DetailGridSortInfoItem item = new DetailGridSortInfoItem();
+				item.Column = fields[2];
+				item.Direction = fields[3];
+
+				this.sortInfo[fields[1]] = item;
+			}
+		}
+	}
+
+	private Hashtable sortInfo = new Hashtable();
+}
+
+public class DetailGridSortInfoItem
+{
+	public string Column;
+	public string Direction;
+}
+
+public class LookupColumns
+{
+	public ICollection Keys
+	{
+		get
+		{
+			return this.lookupColumns.Keys;
+		}
+	}
+
+	public bool ContainsLookup(string key)
+	{
+		bool contains = false;
+
+		if(lookupColumns.Contains(key))
+		{
+			contains = true;
+		}
+
+		return contains;
+	}
+
+	public ArrayList this[string key]
+	{
+		get
+		{
+			return lookupColumns[key] as ArrayList;
+		}
+
+		set
+		{
+			if(value == null)
+			{
+				if(lookupColumns.Contains(key))
+				{
+					lookupColumns.Remove(key);
+				}
+			}
+		}
+	}
+
+	public bool Add(string key, string column)
+	{
+		bool wasAdded = false;
+
+		ArrayList list = this.lookupColumns[key] as ArrayList;
+		if(list == null)
+		{
+			list = new ArrayList();
+			this.lookupColumns[key] = list;
+		}
+
+		if(!list.Contains(column))
+		{
+			list.Add(column);
+			wasAdded = true;
+		}
+
+		return wasAdded;
+	}
+
+	public bool Remove(string key, string column)
+	{
+		bool wasRemoved = false;
+
+		ArrayList list = this.lookupColumns[key] as ArrayList;
+		if(list == null) return false;
+
+		if(list.Contains(column))
+		{
+			list.Remove(column);
+			wasRemoved = true;
+		}
+
+		return wasRemoved;
+	}
+
+
+	public override string ToString()
+	{
+		string sep = "";
+		string data = "";
+		ArrayList list;
+
+		foreach(string key in this.lookupColumns.Keys)
+		{
+			list = this.lookupColumns[key] as ArrayList;
+
+			if(list.Count > 0)
+			{
+				data += sep + "|" + key;
+				foreach(string colName in list)
+				{
+					data += "|" + colName;
+				}
+
+				sep = "^";
+			}
+		}		
+
+		return data;
+	}
+
+	public void FromString(string data)
+	{
+		if(data != null && data.Length > 0)
+		{
+			lookupColumns = new Hashtable();
+			string[] records = data.Split(new char[] {'^'});
+
+			foreach(string rec in records)
+			{
+				string[] fields = rec.Split(new char[] {'|'});
+
+				ArrayList list = new ArrayList();
+
+				for(int i = 2; i < fields.Length; i++)
+				{
+					list.Add(fields[i]);
+				}
+
+				this.lookupColumns[fields[1]] = list;
+			}
+		}
+	}
+
+	private Hashtable lookupColumns = new Hashtable();
+}
+
+
+public class DetailGridInfo
+{
+	public ArrayList Grids
+	{
+		get
+		{
+			return this.gridList;
+		}
+	}
+
+	public void Clear()
+	{
+		gridList.Clear();
+		gridHash.Clear();
+		columns.Clear();
+	}
+
+	public string GridToSourceName(string grid)
+	{
+		return this.gridHash[grid] as string;
+	}
+
+	public bool IsGridSourceNameView(string grid)
+	{
+		string sourceName = this.gridHash[grid] as string;
+
+		if(sourceName.StartsWith("[v]"))
+			return true;
+		else
+			return false;
+	}
+
+	public ArrayList GridToColumns(string grid)
+	{
+		return this.columns[grid] as ArrayList;
+	}
+
+	public string GridToViewName(string grid)
+	{
+		string sourceName = this.gridHash[grid] as string;
+
+		if(sourceName.StartsWith("[v]"))
+		{
+			int index = sourceName.IndexOf(',', 3);
+			if(index != -1)
+			{
+				sourceName = sourceName.Substring(3, index - 3);
+			}
+		}
+
+		return sourceName;
+	}
+	
+	public string GridToForeignKeyName(string grid)
+	{
+		string sourceName = this.gridHash[grid] as string;
+
+		if(sourceName.StartsWith("[v]"))
+		{
+			int index = sourceName.IndexOf(',', 3);
+			if(index != -1)
+			{
+				sourceName = sourceName.Substring(index + 1);
+			}
+		}
+
+		return sourceName;
+	}	
+
+	public string GridToViewPrimaryKey(string grid)
+	{
+		return this.viewPK[grid] as string;
+	}
+
+	public bool AddGrid(string grid, string sourceName)
+	{
+		// sourceName prefix "[v]" = view, otherwise it's a foriegnkey
+		bool wasAdded = false;
+
+		if(!this.gridList.Contains(grid))
+		{
+			this.gridList.Add(grid);
+			this.gridHash[grid] = sourceName;
+			wasAdded = true;
+		}
+
+		return wasAdded;
+	}
+
+	public bool RemoveGrid(string grid)
+	{
+		bool wasRemoved = false;
+
+		if(this.gridList.Contains(grid))
+		{
+			this.gridList.Remove(grid);
+			this.gridHash.Remove(grid);
+
+			if(this.columns.ContainsKey(grid))
+			{
+				this.columns.Remove(grid);
+			}
+			wasRemoved = true;
+		}
+
+		return wasRemoved;
+	}
+
+	public bool SwapGrid(string grid, string sourceName)
+	{
+		// sourceName prefix "[v]" = view, otherwise it's a foriegnkey
+		bool wasSwapped = false;
+
+		if(this.gridList.Contains(grid))
+		{
+			ArrayList list = this.columns[grid] as ArrayList;
+			if(list != null)
+			{
+				list.Clear();
+			}
+
+			this.viewPK[grid] = "";
+
+			if(sourceName.StartsWith("[v]"))
+			{
+				string currentSourceName = this.gridHash[grid] as string;
+
+				if(currentSourceName.StartsWith("[v]"))
+				{
+					string[] fkInfo = currentSourceName.Split(new char[] {','});
+					sourceName += "," + fkInfo[1];
+				}
+				else
+				{
+					// We tack on the fk.Name
+					sourceName += "," + this.gridHash[grid];
+				}
+			}
+			this.gridHash[grid] = sourceName;
+			wasSwapped = true;
+		}
+
+		return wasSwapped;
+	}
+
+	public void SetViewPrimaryKey(string grid, string primarykey)
+	{
+		this.viewPK[grid] = primarykey;
+	}
+
+	public bool AddColumn(string grid, string column)
+	{
+		bool wasAdded = false;
+
+		ArrayList list = this.columns[grid] as ArrayList;
+		if(list == null)
+		{
+			list = new ArrayList();
+			this.columns[grid] = list;
+		}
+
+		if(!list.Contains(column))
+		{
+			list.Add(column);
+			wasAdded = true;
+		}
+
+		return wasAdded;
+	}
+
+	public bool RemoveColumn(string grid, string column)
+	{
+		bool wasRemoved = false;
+
+		ArrayList list = this.columns[grid] as ArrayList;
+		if(list == null) return false;
+
+		if(list.Contains(column))
+		{
+			list.Remove(column);
+			wasRemoved = true;
+		}
+
+		return wasRemoved;
+	}
+
+	public void TheseGridsOnly(ArrayList list)
+	{
+		this.gridList = list;
+	}
+
+	public override string ToString()
+	{
+		string sep = "";
+		string data = "";
+		string sourceName = "";
+		string viewPK = "";
+		ArrayList list;
+
+		foreach(string grid in this.gridList)
+		{
+			sourceName = this.gridHash[grid] as string;
+			list       = this.columns[grid] as ArrayList;
+			viewPK     = this.viewPK[grid] as string;
+
+			if(list != null && list.Count > 0)
+			{
+				data += sep + "|" + grid + "|" + sourceName;
+				if(viewPK != null && viewPK.Length > 0)
+				{
+					data += "+" + viewPK;
+				}
+
+				foreach(string colName in list)
+				{
+					data += "|" + colName;
+				}
+
+				sep = "^";
+			}
+		}		
+
+		return data;		
+	}
+
+	public void FromString(string data)
+	{
+		if(data != null && data.Length > 0)
+		{
+			gridList = new ArrayList();
+			gridHash = new Hashtable();
+			columns = new Hashtable();
+
+			string grid = "";
+
+			string[] records = data.Split(new char[] {'^'});
+
+			foreach(string rec in records)
+			{
+				try
+				{
+					string[] fields = rec.Split(new char[] {'|'});
+	
+					grid = fields[1];
+	
+					if(fields[2].StartsWith("[v]"))
+					{
+						string[] viewInfo = fields[2].Split(new char[] {'+'});
+						
+						this.AddGrid(grid, viewInfo[0]);
+						this.SetViewPrimaryKey(grid, viewInfo[1]);
+					}
+					else
+					{
+						this.AddGrid(grid, fields[2]);
+					}
+	
+					for(int i = 3; i < fields.Length; i++)
+					{
+						this.AddColumn(grid, fields[i]);
+					}
+				}
+				catch
+				{
+					this.RemoveGrid(grid);
+				}
+			}
+		}
+	}
+
+	private ArrayList gridList = new ArrayList();
+	private Hashtable gridHash = new Hashtable();
+	private Hashtable columns = new Hashtable();
+	private Hashtable viewPK = new Hashtable();
+%>

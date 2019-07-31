@@ -1,0 +1,398 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/%><%@ TemplateInfo 
+    UniqueID="DCDD67EC-7604-45c3-9C95-6E0D4B73FC43" 
+    Title="Generated - Metadata (VB)"   
+    Description="The Metadata Class" 
+    Namespace="EntitySpaces.2019.VB.Generated" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    IsSubTemplate="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------	
+bool TargetTheCompactFramework = (bool)esMeta.Input["TargetTheCompactFramework"];
+string Namespace = (string)esMeta.Input["Namespace"];
+bool GenerateSingleFile = (bool)esMeta.Input["GenerateSingleFile"];
+bool UseDnnObjectQualifier = (bool)esMeta.Input["UseDnnObjectQualifier"];
+bool MetadataClassShouldIgnoreSchema = (bool)esMeta.Input["MetadataClassShouldIgnoreSchema"];
+bool MetadataClassShouldIgnoreCatalog = (bool)esMeta.Input["MetadataClassShouldIgnoreCatalog"];
+string TargetMultipleDatabases = ((bool)esMeta.Input["TargetMultipleDatabases"]) ? "true" : "false";
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+EntitySpaces.MetadataEngine.IPropertyCollection props;	
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------	
+ITable table = (ITable)esMeta.Input["Table"];
+IView view = (IView)esMeta.Input["View"];			
+IColumns cols = (IColumns)esMeta.Input["Columns"];
+esPluginSource source = (esPluginSource)esMeta.Input["Source"];
+
+if(table != null)
+{
+	props = table.Properties;
+}
+else
+{
+	props = view.Properties;
+}
+
+if(!GenerateSingleFile){ %>'===============================================================================
+'                   EntitySpaces Studio by EntitySpaces, LLC
+'            Persistence Layer and Business Objects for Microsoft .NET
+'            EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+'                         http://www.entityspaces.net
+'===============================================================================
+' EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+' EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+' Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+'===============================================================================
+
+Imports System
+Imports System.Collections.Generic
+Imports System.Text
+Imports System.Data
+
+Imports EntitySpaces.Core
+Imports EntitySpaces.Interfaces
+Imports EntitySpaces.DynamicQuery
+
+<%if(UseDnnObjectQualifier){%> 
+Imports DotNetNuke.Framework.Providers
+<%}%> 
+Namespace <%=Namespace%>
+<%}%>
+<%if(!TargetTheCompactFramework){%>
+	<Serializable> _<%}%>
+	Partial Public Class <%=source.Metadata%> 
+		Inherits esMetadata
+		Implements IMetadata
+		
+#Region "Protected Constructor"
+		Protected Sub New()
+			m_columns = New esColumnMetadataCollection()
+			Dim c as esColumnMetadata
+<% 
+			EntitySpaces.MetadataEngine.IProperty prop;
+			int i = 0;
+			foreach(IColumn col in cols)
+			{%>
+			c = New esColumnMetadata(<%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>, <%=i.ToString()%>, GetType(<%=col.VBToSystemType%>), <%=col.esSystemType%>)	
+			c.PropertyName = <%=source.Metadata%>.PropertyNames.<%=col.PropertyName%><% 
+				if(col.IsInPrimaryKey) %><%="\r\n\t\t\tc.IsInPrimaryKey = True"%><%
+				if(col.IsAutoKey) %><%="\r\n\t\t\tc.IsAutoIncrement = True"%><%
+				if(col.AutoKeyText != null && col.AutoKeyText != String.Empty) %><%="\r\n\t\t\tc.AutoKeyText = \"" + col.AutoKeyText + "\""%><%				
+				if(col.CharacterMaxLength > 0) {%><%="\r\n\t\t\tc.CharacterMaxLength = " + col.CharacterMaxLength.ToString()%><%}
+				if(col.NumericPrecision > 0) {%><%="\r\n\t\t\tc.NumericPrecision = " + col.NumericPrecision.ToString()%><%}
+				if(col.NumericScale > 0) {%><%="\r\n\t\t\tc.NumericScale = " + col.NumericScale%><%}
+				if(col.HasDefault)
+				{
+					%><%="\r\n\t\t\tc.HasDefault = True"%><%
+					%><%="\r\n\t\t\tc.Default = \"" + col.Default.Replace("\r\n", " ").Replace("\"", "\"\"") + "\""%><%
+				}
+				if(col.Description.Length > 0) %><%="\r\n\t\t\tc.Description = \"" + col.Description.Replace("\r\n", " ").Replace("\n", " ").Replace("\"", "\"\"") + "\""%><%
+				if(col.IsNullable) %><%="\r\n\t\t\tc.IsNullable = True"%><% 			
+				if(col.IsComputed) %><%="\r\n\t\t\tc.IsComputed = True"%><%
+				if(col.IsEntitySpacesConcurrency) %><%="\r\n\t\t\tc.IsEntitySpacesConcurrency = True"%><%
+				if(col.IsConcurrency) %><%="\r\n\t\t\tc.IsConcurrency = True"%><% 				
+				if(col.Alias != col.Name) %><%="\r\n\t\t\tc.Alias = \"" + col.Alias + "\""%>
+			m_columns.Add(c)
+				<% 
+				i++;
+			}
+			
+			foreach(IColumn col in cols)
+			{
+				if(col.IsDateAddedColumn)
+				{
+					%><%="\r\n\t\t\tm_columns.DateAdded = New esColumnMetadataCollection.SpecialDate()"%><%
+					%><%="\r\n\t\t\tm_columns.DateAdded.ColumnName = \"" + col.Name + "\""%><%
+					%><%="\r\n\t\t\tm_columns.DateAdded.IsEnabled = True"%><%					
+					if(col.DateAddedType == esSettingsDriverInfo.DateType.ServerSide)
+					{
+						%><%="\r\n\t\t\tm_columns.DateAdded.Type = DateType.ServerSide"%><%
+					}
+					else
+					{
+						%><%="\r\n\t\t\tm_columns.DateAdded.Type = DateType.ClientSide"%><%
+						if(col.DateAddedClientType == esSettingsDriverInfo.ClientType.Now)
+						{
+							%><%="\r\n\t\t\tm_columns.DateAdded.ClientType = ClientType.Now"%><%
+						}
+						else
+						{
+							%><%="\r\n\t\t\tm_columns.DateAdded.ClientType = ClientType.UtcNow"%><%
+						}
+					}
+					%><%="\r\n"%><%
+				}
+				else if(col.IsDateModifiedColumn)
+				{
+					%><%="\r\n\t\t\tm_columns.DateModified = New esColumnMetadataCollection.SpecialDate()"%><%
+					%><%="\r\n\t\t\tm_columns.DateModified.ColumnName = \"" + col.Name + "\""%><%
+					%><%="\r\n\t\t\tm_columns.DateModified.IsEnabled = True"%><%					
+					if(col.DateModifiedType == esSettingsDriverInfo.DateType.ServerSide)
+					{
+						%><%="\r\n\t\t\tm_columns.DateModified.Type = DateType.ServerSide"%><%
+					}
+					else
+					{
+						%><%="\r\n\t\t\tm_columns.DateModified.Type = DateType.ClientSide"%><%
+						if(col.DateModifiedClientType == esSettingsDriverInfo.ClientType.Now)
+						{
+							%><%="\r\n\t\t\tm_columns.DateModified.ClientType = ClientType.Now"%><%
+						}
+						else
+						{
+							%><%="\r\n\t\t\tm_columns.DateModified.ClientType = ClientType.UtcNow"%><%
+						}
+					}
+					%><%="\r\n"%><%
+				}
+				else if(col.IsAddedByColumn)
+				{
+					%><%="\r\n\t\t\tm_columns.AddedBy = New esColumnMetadataCollection.AuditingInfo()"%><%
+					%><%="\r\n\t\t\tm_columns.AddedBy.ColumnName = \"" + col.Name + "\""%><%					
+					%><%="\r\n\t\t\tm_columns.AddedBy.IsEnabled = True"%><%
+					%><%="\r\n\t\t\tm_columns.AddedBy.UseEventHandler = " + col.UseAddedByEventHandler.ToString().ToLower()%><%	
+					%><%="\r\n"%><%					
+				}
+				else if(col.IsModifiedByColumn)
+				{
+					%><%="\r\n\t\t\tm_columns.ModifiedBy = New esColumnMetadataCollection.AuditingInfo()"%><%
+					%><%="\r\n\t\t\tm_columns.ModifiedBy.ColumnName = \"" + col.Name + "\""%><%					
+					%><%="\r\n\t\t\tm_columns.ModifiedBy.IsEnabled = True"%><%
+					%><%="\r\n\t\t\tm_columns.ModifiedBy.UseEventHandler = " + col.UseModifiedByEventHandler.ToString().ToLower()%><%
+					%><%="\r\n"%><%
+				}			
+			}			
+		%>
+		End Sub
+#End Region	
+	
+		Shared Public Function Meta() As <%=source.Metadata%>
+			Return _meta
+		End Function
+		
+		Public ReadOnly Property DataID() As System.Guid Implements IMetadata.DataID
+			Get
+				Return MyBase.m_dataID
+			End Get
+		End Property
+
+		Public ReadOnly Property MultiProviderMode() As Boolean Implements IMetadata.MultiProviderMode
+			Get
+				Return <%=TargetMultipleDatabases%>
+			End Get
+		End Property
+
+		Public ReadOnly Property Columns() As esColumnMetadataCollection Implements IMetadata.Columns
+			Get
+				Return MyBase.m_columns
+			End Get
+		End Property
+
+#Region "ColumnNames"
+		Public Class ColumnNames<% 
+			 foreach(IColumn col in cols)
+			 {%>
+			 Public Const <%=col.PropertyName%> As String = "<%=col.Name%>"<%
+			 } %>
+		End Class
+#End Region	
+		
+#Region "PropertyNames"
+		Public Class  PropertyNames<% 
+			 foreach(IColumn col in cols)
+			 {%>
+			 Public Const <%=col.PropertyName%> As String = "<%=col.PropertyName%>"<%
+			 } %>
+		End Class
+#End Region	
+
+		Public Function GetProviderMetadata(ByVal mapName As String) As esProviderSpecificMetadata _
+			Implements IMetadata.GetProviderMetadata
+
+			Dim mapMethod As MapToMeta = mapDelegates(mapName)
+
+			If (Not mapMethod = Nothing) Then
+				Return mapMethod(mapName)
+			Else
+				Return Nothing
+			End If
+
+		End Function
+		
+#Region "MAP esDefault"
+
+		Private Shared Function RegisterDelegateesDefault() As Integer
+		
+			' This is only executed once per the life of the application
+			SyncLock GetType(<%=source.Metadata%>)
+			
+				If <%=source.Metadata%>.mapDelegates Is Nothing Then
+					<%=source.Metadata%>.mapDelegates = New Dictionary(Of String, MapToMeta)
+				End If			
+
+				If <%=source.Metadata%>._meta Is Nothing Then
+					<%=source.Metadata%>._meta = New <%=source.Metadata%>()
+				End If
+
+				Dim mapMethod As New MapToMeta(AddressOf _meta.esDefault)
+				mapDelegates.Add("esDefault", mapMethod)
+				mapMethod("esDefault")
+				Return 0
+
+			End SyncLock
+			
+		End Function
+
+		Private Function esDefault(ByVal mapName As String) As esProviderSpecificMetadata
+
+			If (Not m_providerMetadataMaps.ContainsKey(mapName)) Then
+			
+				Dim meta As esProviderSpecificMetadata = New esProviderSpecificMetadata()
+<% 
+		foreach(IColumn col in cols)
+		{
+			if(col.AutoKeyText != null && col.AutoKeyText.Length > 0)
+			{
+				%><%="\r\n\t\t\t\tmeta(\"AutoKeyText\") = \"" + col.AutoKeyText + "\""%><%
+			}
+			else
+			{
+				if(col.IsAutoKey && esMeta.DriverString == esMetaDrivers.PostgreSQL)
+				{
+				%><%="\r\n\r\n\t\t\t\tmeta(\"AutoKeyText\") = @\"" + col.Default.Replace("\"", "\"\"") + "\""%><%
+				}
+			}
+			if(col.IsDateAddedColumn)
+			{
+				if(col.DateAddedType == esSettingsDriverInfo.DateType.ServerSide)
+				{
+				%><%="\r\n\r\n\t\t\t\tmeta(\"DateAdded.ServerSideText\") = \"" + col.DateAddedServerSideText + "\""%><%
+				}
+			}
+			else if(col.IsDateModifiedColumn)
+			{
+				if(col.DateModifiedType == esSettingsDriverInfo.DateType.ServerSide)
+				{
+				%><%="\r\n\r\n\t\t\t\tmeta(\"DateModified.ServerSideText\") = \"" + col.DateModifiedServerSideText + "\""%><%
+				}
+			}
+			else if(col.IsAddedByColumn)
+			{
+				if(col.UseAddedByEventHandler == false)
+				{
+				%><%="\r\n\r\n\t\t\t\tmeta(\"AddedBy.ServerSideText\") = \"" + col.AddedByServerSideText + "\""%><%
+				}
+			}
+			else if(col.IsModifiedByColumn)
+			{
+				if(col.UseModifiedByEventHandler == false)
+				{
+				%><%="\r\n\r\n\t\t\t\tmeta(\"ModifiedBy.ServerSideText\") = \"" + col.ModifiedByServerSideText + "\""%><%
+				}
+			}			
+		}
+%>				
+
+<% 
+		foreach(IColumn col in cols)
+		{ 
+			%><%="\r\n\t\t\t\tmeta.AddTypeMap(\"" + col.PropertyName + "\", new esTypeMap(\"" + col.DataTypeName + "\", \"" + col.VBToSystemType + "\"))"%><%
+		}
+%>			
+				<%if(!MetadataClassShouldIgnoreCatalog && source.Catalog.Length > 0){%>meta.Catalog = "<%=source.Catalog%>"<%}%>
+				<%if(!MetadataClassShouldIgnoreSchema && source.Schema.Length > 0) { %>meta.Schema = "<%=source.Schema%>"<%}%>
+				<%
+				if(UseDnnObjectQualifier){%>
+				Dim providerConfiguration As ProviderConfiguration = ProviderConfiguration.GetProviderConfiguration("data")
+				Dim provider As Provider = CType(providerConfiguration.Providers(providerConfiguration.DefaultProvider), Provider)
+				Dim objectQualifier As String = provider.Attributes("objectQualifier")
+
+				If (Not (objectQualifier = String.Empty)) AndAlso (objectQualifier.EndsWith("_") = False) Then
+					objectQualifier += "_"
+				End If
+
+				If Not (objectQualifier = String.Empty) Then
+					meta.Source = objectQualifier & "<%=source.PhysicalName%>"
+					meta.Destination = objectQualifier & "<%=source.PhysicalName%>"
+					
+					meta.spInsert = objectQualifier & "<%=esMeta.esPlugIn.ProcInsert(source)%>"
+					meta.spUpdate = objectQualifier & "<%=esMeta.esPlugIn.ProcUpdate(source)%>"
+					meta.spDelete = objectQualifier & "<%=esMeta.esPlugIn.ProcDelete(source)%>"
+					meta.spLoadAll = objectQualifier & "<%=esMeta.esPlugIn.ProcLoadAll(source)%>"
+					meta.spLoadByPrimaryKey = objectQualifier & "<%=esMeta.esPlugIn.ProcLoadByPK(source)%>"
+				Else
+					meta.Source = "<%=source.PhysicalName%>"
+					meta.Destination = "<%=source.PhysicalName%>"
+					
+					meta.spInsert = "<%=esMeta.esPlugIn.ProcInsert(source)%>"
+					meta.spUpdate = "<%=esMeta.esPlugIn.ProcUpdate(source)%>"
+					meta.spDelete = "<%=esMeta.esPlugIn.ProcDelete(source)%>"
+					meta.spLoadAll = "<%=esMeta.esPlugIn.ProcLoadAll(source)%>"
+					meta.spLoadByPrimaryKey = "<%=esMeta.esPlugIn.ProcLoadByPK(source)%>"
+				End If
+				<%} 
+				else 
+				{%> 
+				meta.Source = "<%=source.PhysicalName%>"
+				meta.Destination = "<%=source.PhysicalName%>"
+				<%if(esMeta.DriverString != "SQLCE")
+				{%>
+				meta.spInsert = "<%=esMeta.esPlugIn.ProcInsert(source)%>"
+				meta.spUpdate = "<%=esMeta.esPlugIn.ProcUpdate(source)%>"
+				meta.spDelete = "<%=esMeta.esPlugIn.ProcDelete(source)%>"
+				meta.spLoadAll = "<%=esMeta.esPlugIn.ProcLoadAll(source)%>"
+				meta.spLoadByPrimaryKey = "<%=esMeta.esPlugIn.ProcLoadByPK(source)%>"<%}%><%}%>
+				
+				Me.m_providerMetadataMaps.Add("esDefault", meta)
+
+			End If
+
+			Return Me.m_providerMetadataMaps("esDefault")
+
+		End Function
+		
+#End Region	
+		
+        Private Shared _meta As <%=source.Metadata%>
+        Protected Shared mapDelegates As Dictionary(Of String, MapToMeta)
+		Private Shared _esDefault As Integer = RegisterDelegateesDefault()	
+		
+	End Class
+	
+End Namespace
+<script runat="template">
+
+public string GetFileName()
+{
+	return esMeta.esPlugIn.Metadata((esPluginSource)esMeta.Input["Source"]) + ".vb";
+}
+
+public EntitySpaces.MetadataEngine.Root TheMetaData
+{
+	get { return esMeta;  }
+	set { esMeta = value; }	
+}
+
+</script>

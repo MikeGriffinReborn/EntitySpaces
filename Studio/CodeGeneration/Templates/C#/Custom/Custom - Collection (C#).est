@@ -1,0 +1,80 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/%><%@ TemplateInfo 
+    UniqueID="038A7D2C-D23B-45fb-A914-162D74944317" 
+    Title="Custom - Collection (C#)"   
+    Description="The Concrete Collection Class" 
+    Namespace="EntitySpaces.2019.C#.Custom" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    IsSubTemplate="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------	
+string Namespace = (string)esMeta.Input["Namespace"];
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------	
+esPluginSource source = (esPluginSource)esMeta.Input["Source"];
+%>/*
+===============================================================================
+                    EntitySpaces Studio by EntitySpaces, LLC
+             Persistence Layer and Business Objects for Microsoft .NET
+             EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+                          http://www.entityspaces.net
+===============================================================================
+EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+===============================================================================
+*/
+
+using System;
+
+using EntitySpaces.Core;
+using EntitySpaces.Interfaces;
+using EntitySpaces.DynamicQuery;
+
+namespace <%=Namespace%>
+{
+	public partial class <%=source.Collection%> : <%=source.esCollection%>
+	{
+		public <%=source.Collection%>()
+		{
+		
+		}
+	}
+}
+<script runat="template">
+
+public string GetFileName()
+{
+	return esMeta.esPlugIn.Collection((EntitySpaces.MetadataEngine.esPluginSource)esMeta.Input["Source"]) + ".cs";
+}
+
+public EntitySpaces.MetadataEngine.Root TheMetaData
+{
+	get { return esMeta;  }
+	set { esMeta = value; }	
+}
+
+</script>

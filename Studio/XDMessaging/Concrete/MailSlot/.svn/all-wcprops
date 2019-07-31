@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/XDMessaging/Concrete/MailSlot
+END
+XDMailSlotBroadcast.cs
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/XDMessaging/Concrete/MailSlot/XDMailSlotBroadcast.cs
+END
+Native.cs
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/XDMessaging/Concrete/MailSlot/Native.cs
+END
+XDMailSlotListener.cs
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/XDMessaging/Concrete/MailSlot/XDMailSlotListener.cs
+END
+MailSlotThreadInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/entityspaces_new/!svn/ver/1965/Code/ES2012/XDMessaging/Concrete/MailSlot/MailSlotThreadInfo.cs
+END

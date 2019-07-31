@@ -1,0 +1,202 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/%><%@ TemplateInfo 
+    UniqueID="01ca6b35-d7a8-4ed6-a103-9c888cc8be21" 
+    Title="Generated - Entity (VB)"   
+    Description="The Abstract Collection Class" 
+    Namespace="EntitySpaces.2019.VB.Generated" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    IsSubTemplate="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------	
+bool TargetTheCompactFramework = (bool)esMeta.Input["TargetTheCompactFramework"];
+string Namespace = (string)esMeta.Input["Namespace"];
+bool GenerateSingleFile = (bool)esMeta.Input["GenerateSingleFile"];
+bool RiaServicesSupport = esMeta.GetInput<bool>("GenerateHierarchicalRiaServicesSupport", false);
+bool UseDnnObjectQualifier = (bool)esMeta.Input["UseDnnObjectQualifier"];
+bool UseCustomBaseClass = (bool)esMeta.Input["UseCustomBaseClass"];
+bool SerializableQueries = (bool)esMeta.Input["SerializableQueries"];
+bool WcfSupport = (bool)esMeta.Input["WcfSupport"];
+bool LINQtoSQL = (bool)esMeta.Input["LINQtoSQL"];
+bool GenerateProxyStubs = (bool)esMeta.Input["GenerateProxyStub"];
+bool DebuggerDisplay = (bool)esMeta.Input["DebuggerDisplay"];
+string ConnectionName = (string)esMeta.Input["ConnectionName"];
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+string comma = "";
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------	
+ITable table = (ITable)esMeta.Input["Table"];
+IView view = (IView)esMeta.Input["View"];			
+IColumns cols = (IColumns)esMeta.Input["Columns"];
+esPluginSource source = (esPluginSource)esMeta.Input["Source"];
+
+comma = "";%>
+'===============================================================================
+'                   EntitySpaces Studio by EntitySpaces, LLC
+'            Persistence Layer and Business Objects for Microsoft .NET
+'            EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+'                         http://www.entityspaces.net
+'===============================================================================
+' EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+' EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+' Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+'===============================================================================
+
+Imports System
+Imports System.Collections
+Imports System.Collections.Generic
+Imports System.Diagnostics
+Imports System.Text
+Imports System.Linq
+Imports System.Data<%if(LINQtoSQL) {%>
+Imports System.Data.Linq
+Imports System.Data.Linq.Mapping<%}%>
+Imports System.ComponentModel
+<%if(!TargetTheCompactFramework){ %>Imports System.Xml.Serialization
+Imports System.Runtime.Serialization<%} if(RiaServicesSupport) {%>
+Imports System.ServiceModel.DomainServices.Server
+Imports System.ComponentModel.DataAnnotations<%}%>
+
+Imports EntitySpaces.Core
+Imports EntitySpaces.Interfaces
+Imports EntitySpaces.DynamicQuery
+
+<% if(UseDnnObjectQualifier){%>
+Import DotNetNuke.Framework.Providers
+<%}%>
+
+Namespace <%=Namespace%>
+<% 
+		if(table != null)
+		{%>
+	' <summary>
+	<% 		if(table.Description == "")
+				%><%="' Encapsulates the '" + table.Name + "' table"%><%
+			else	
+				%><%="' " + table.Description.Replace("\r\n", " ").Replace("\n", " ")%>
+	' </summary><%
+		}
+		else
+		{%>
+	' <summary>
+	<% 		if(view.Description == "")
+				%><%="' Encapsulates the '" + view.Name + "' view"%><%
+			else
+				%><%="' " + view.Description.Replace("\r\n", " ").Replace("\n", " ")%>
+	' </summary><%
+		}%>
+<%if(!TargetTheCompactFramework){ if(DebuggerDisplay){%>
+	<System.Diagnostics.DebuggerDisplay("Data = {Debug}")> _<%}%> 
+	<Serializable> _
+	<DataContract> _
+	<KnownType(GetType(<%=source.Entity%>))> _
+	<XmlType("<%=source.Entity%>")> _<%} if(LINQtoSQL) {%> 
+	<Table(Name:="<%=source.Entity%>")> _<%}%>	
+	Partial Public Class <%=source.Entity%> 
+		Inherits <%=source.esEntity%>
+	<%if(!TargetTheCompactFramework){%>	
+		<DebuggerBrowsable(DebuggerBrowsableState.RootHidden Or DebuggerBrowsableState.Never)> _<%}%>		
+		Protected Overrides ReadOnly Property Debug() As esEntityDebuggerView()
+			Get
+				Return MyBase.Debug
+			End Get
+		End Property
+		
+		Public Overrides Function CreateInstance() as esEntity
+			Return New <%=source.Entity%>()
+		End Function
+		
+		#Region "Static Quick Access Methods"
+		<% if(table != null && table.PrimaryKeys.Count > 0) 
+		{
+	  %>Public Shared Sub Delete(<% comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%>ByVal <%=col.ParameterName%> As <%=col.CSharpToSystemType%><%comma = ", ";}%>)
+			Dim obj As New <%=source.Entity%>()<%foreach(IColumn col in table.PrimaryKeys){%>
+			obj.<%=col.PropertyName%> = <%=col.ParameterName%><%}%>
+			obj.AcceptChanges()
+			obj.MarkAsDeleted()
+			obj.Save()
+		End Sub
+
+		Public Shared Sub Delete(<% comma = "";
+		foreach(IColumn col in table.PrimaryKeys)
+		{
+			%><%=comma%>ByVal <%=col.ParameterName%> As <%=col.CSharpToSystemType%><%comma = ", ";}%>, ByVal sqlAccessType As esSqlAccessType)
+			Dim obj As New <%=source.Entity%>()<%foreach(IColumn col in table.PrimaryKeys){%>
+			obj.<%=col.PropertyName%> = <%=col.ParameterName%><%}%>
+			obj.AcceptChanges()
+			obj.MarkAsDeleted()
+			obj.Save(sqlAccessType)
+		End Sub<%}%>
+		#End Region		
+	<%if(!TargetTheCompactFramework && GenerateProxyStubs){%>			
+		#Region "Implicit Casts"
+
+		Public Shared Widening Operator CType(ByVal entity As <%=source.Entity%>) As <%=source.ProxyStub%>
+			Return New <%=source.ProxyStub%>(entity)
+		End Operator
+
+		#End Region<%}%>
+		<%if(ConnectionName != null && ConnectionName.Length > 0) {%>
+		Protected Overrides Function GetConnectionName() As String
+			Return "<%=ConnectionName%>"
+		End Function
+		<%}%>
+<%		if(LINQtoSQL)
+		{%>
+		#Region "LINQtoSQL overrides (shame but we must do this)"
+<%		
+			foreach(IColumn col in cols) 
+			{%>
+		<Column(IsPrimaryKey: = <%=col.IsInPrimaryKey.ToString().ToLower()%>, CanBeNull: = <%=col.IsNullable.ToString().ToLower()%>)> _
+		Public Overrides Property <%=esMeta.esPlugIn.PropertyName(col)%> As <%=esMeta.esPlugIn.NullableTypeVB(col)%>
+			Get
+				Return MyBase.<%=esMeta.esPlugIn.PropertyName(col)%>
+			End Get
+			Set
+				MyBase.<%=esMeta.esPlugIn.PropertyName(col)%> = value
+			End Set
+		End Property
+<%			}%>			
+		#End Region
+<%		}%>			
+	End Class
+<%if(!GenerateSingleFile){ %>	
+End Namespace<%}%>
+<script runat="template">
+
+public string GetFileName()
+{
+	return esMeta.esPlugIn.Entity((esPluginSource)esMeta.Input["Source"]) + ".vb";
+}
+
+public EntitySpaces.MetadataEngine.Root TheMetaData
+{
+	get { return esMeta;  }
+	set { esMeta = value; }	
+}
+
+</script>

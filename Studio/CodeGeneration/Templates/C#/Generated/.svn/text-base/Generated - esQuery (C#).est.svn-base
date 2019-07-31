@@ -1,0 +1,127 @@
+<% 
+/*
+=========================================================================
+    
+    EntitySpaces 2010 
+    Persistence Layer and Business Objects for Microsoft .NET 
+    Copyright 2005 - 2010 EntitySpaces, LLC 
+    EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC 
+    http://www.entityspaces.net 
+
+    This template is bound by the EntitySpaces License Agreement which 
+    is located here:
+
+    http://www.entityspaces.net/portal/License/tabid/97/Default.aspx
+    
+=========================================================================
+*/
+%><%@ TemplateInfo 
+    UniqueID="CF8AC9E3-AFEE-452a-B361-41C8607E96A5" 
+    Title="Generated - esQuery (C#)"   
+    Description="The Abstract Query Class" 
+    Namespace="EntitySpaces.2019.C#.Generated" 
+    Author="EntitySpaces, LLC"
+    Version="2019.0.0.0"
+    IsSubTemplate="True" %><%
+//-------------------------------------------------------
+// Extract the UI choices that we need
+//-------------------------------------------------------	
+bool TargetTheCompactFramework = (bool)esMeta.Input["TargetTheCompactFramework"];
+string Namespace = (string)esMeta.Input["Namespace"];
+bool GenerateSingleFile = (bool)esMeta.Input["GenerateSingleFile"];
+bool UseDnnObjectQualifier = (bool)esMeta.Input["UseDnnObjectQualifier"];
+bool UseCustomBaseClass = (bool)esMeta.Input["UseCustomBaseClass"];
+bool SupportINotifyChanged = (bool)esMeta.Input["SupportINotifyChanged"];
+bool GenerateHierarchicalModel = (bool)esMeta.Input["GenerateHierarchicalModel"];
+
+//-------------------------------------------------------
+// Create Local Variables
+//-------------------------------------------------------	
+string comma;
+
+//-------------------------------------------------------
+// Begin Execution
+//-------------------------------------------------------	
+ITable table = (ITable)esMeta.Input["Table"];
+IView view = (IView)esMeta.Input["View"];			
+IColumns cols = (IColumns)esMeta.Input["Columns"];
+esPluginSource source = (esPluginSource)esMeta.Input["Source"];
+
+if(!GenerateSingleFile){ %>/*
+===============================================================================
+                    EntitySpaces Studio by EntitySpaces, LLC
+             Persistence Layer and Business Objects for Microsoft .NET
+             EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
+                          http://www.entityspaces.net
+===============================================================================
+EntitySpaces Version : <%=esMeta.esPlugIn.esVersion%>
+EntitySpaces Driver  : <%=esMeta.esPlugIn.esDriver%><%if(!esMeta.esPlugIn.TurnOffDateTimeInClassHeaders){%>
+Date Generated       : <%=DateTime.Now.ToString()%><%}%>
+===============================================================================
+*/
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Data;
+
+using EntitySpaces.Core;
+using EntitySpaces.Interfaces;
+using EntitySpaces.DynamicQuery;
+
+namespace <%=Namespace%>
+{<%}%>
+<%if(!TargetTheCompactFramework){%>
+	[Serializable]<%} if (UseCustomBaseClass) {%>
+	abstract public partial class <%=source.esQuery%> : QueryBase<%}else{%>
+	abstract public partial class <%=source.esQuery%> : esDynamicQuery<%}%>
+	{
+		override protected IMetadata Meta
+		{
+			get
+			{
+				return <%=source.Metadata%>.Meta();
+			}
+		}	
+		
+		#region QueryItemFromName
+		
+        protected override esQueryItem QueryItemFromName(string name)
+        {
+            switch (name)
+            {<%foreach(IColumn col in cols){%>
+				case "<%=col.PropertyName%>": return this.<%=col.PropertyName%>;<%}%>
+
+                default: return null;
+            }
+        }		
+		
+		#endregion
+		
+		#region esQueryItems
+<%		foreach(IColumn col in cols)
+		{%>
+		public esQueryItem <%=col.PropertyName%>
+		{
+			get { return new esQueryItem(this, <%=source.Metadata%>.ColumnNames.<%=col.PropertyName%>, <%=col.esSystemType%>); }
+		} 
+		<%}%>
+		#endregion
+		
+	}
+<%if(!GenerateSingleFile){ %>
+}<%}%>
+<script runat="template">
+
+public string GetFileName()
+{
+	return esMeta.esPlugIn.esQuery((esPluginSource)esMeta.Input["Source"]) + ".cs";
+}
+
+public EntitySpaces.MetadataEngine.Root TheMetaData
+{
+	get { return esMeta;  }
+	set { esMeta = value; }	
+}
+
+</script>		
