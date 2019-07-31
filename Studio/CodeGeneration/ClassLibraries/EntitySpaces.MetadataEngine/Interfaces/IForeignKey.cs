@@ -61,21 +61,32 @@ namespace EntitySpaces.MetadataEngine
         /// </summary>
         string PrimaryTableName { get; }
 
-		/// <summary>
-		/// The foreign key table of this foreign key
-		/// </summary>
-		ITable ForeignTable { get; }
+        // Objects
+        /// <summary>
+        /// The parent key table's 'Alias' of this foreign key
+        /// </summary>
+        string PrimaryTableNameAlias { get; }
+
+        /// <summary>
+        /// The foreign key table of this foreign key
+        /// </summary>
+        ITable ForeignTable { get; }
 
         /// <summary>
         /// The foreign key table's 'Name' of this foreign key
         /// </summary>
         string ForeignTableName { get; }
 
-		// Collections
-		/// <summary>
-		/// A collection of columns that are in the foreign table (not in this table) that make up the key
-		/// </summary>
-		IColumns ForeignColumns { get; }
+        /// <summary>
+        /// The foreign key table's 'Alias' of this foreign key
+        /// </summary>
+        string ForeignTableNameAlias { get; }
+
+        // Collections
+        /// <summary>
+        /// A collection of columns that are in the foreign table (not in this table) that make up the key
+        /// </summary>
+        IColumns ForeignColumns { get; }
 
 		/// <summary>
 		/// A collection of columns that are in the parent table that make up the key

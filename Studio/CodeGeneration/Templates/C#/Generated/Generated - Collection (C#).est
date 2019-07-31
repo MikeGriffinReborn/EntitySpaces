@@ -113,26 +113,6 @@ namespace <%=Namespace%>
 		
 		#endregion<%}%>
 		
-		<%if(!TargetTheCompactFramework){%>
-		#region WCF Service Class
-		
-		[DataContract]
-		[KnownType(typeof(<%=source.Entity%>))]
-		public class <%=source.Collection%>WCFPacket : esCollectionWCFPacket<<%=source.Collection%>>
-		{
-			public static implicit operator <%=source.Collection%>(<%=source.Collection%>WCFPacket packet)
-			{
-				return packet.Collection;
-			}
-
-			public static implicit operator <%=source.Collection%>WCFPacket(<%=source.Collection%> collection)
-			{
-				return new <%=source.Collection%>WCFPacket() { Collection = collection };
-			}
-		}
-		
-		#endregion<%}%>
-		
 		<%if(ConnectionName != null && ConnectionName.Length > 0) {%>
 		override protected string GetConnectionName()
 		{

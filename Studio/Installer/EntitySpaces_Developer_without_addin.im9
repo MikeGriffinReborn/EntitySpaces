@@ -285,10 +285,10 @@ project Flags=0x20 {
 			str Value: Default=EntitySpaces_2019_Developer;
 		}
 		var BuildDate: Flags=0x5, Type=0, Description="Build date as YYYYMMDD" {
-			str Value: Default=20190725;
+			str Value: Default=20190730;
 		}
 		var BuildDayNo: Flags=0x5, Type=0, Description="Build day number, starting from 1 January 2000" {
-			str Value: Default=7146;
+			str Value: Default=7151;
 		}
 		var BuildFolder: Flags=0x5, Type=1, Description="Folder containing the build target" {
 			str Value: Default="C:\\svnroot\\entityspaces_new\\Code\\ES2017\\Installer\\EntitySpaces_Developer_without_addin\\Developer";
@@ -303,7 +303,7 @@ project Flags=0x20 {
 			str Value: Default="C:\\svnroot\\entityspaces_new\\Code\\ES2017\\Installer\\EntitySpaces_Developer_without_addin\\Developer\\EntitySpaces_2019_Developer.exe";
 		}
 		var BuildTime: Flags=0x5, Type=0, Description="Build time as HHMMSS" {
-			str Value: Default=042142;
+			str Value: Default=205234;
 		}
 		var BuildType: Flags=0x5, Type=0, Description="Build type: always TSU" {
 			str Value: Default=TSU;
@@ -609,7 +609,7 @@ project Flags=0x20 {
 			str Value: Default="<MSOfficeDir14=MSOfficeDir12=MSOfficeDir11=MSOfficeDir10=MSOfficeDir9=MSOfficeDir8=!<ProgramFilesFolder>\\Microsoft Office\\Office>";
 		}
 		var PackageCode: Flags=0x205, Type=0, Description="Distribution package GUID" {
-			str Value: Default="{6D7A8580-3454-4C32-BE42-003070DA8977}";
+			str Value: Default="{D8638819-A4B9-4B33-B943-90DDC5C384EE}";
 		}
 		var PersonalFolder: Flags=0x244, Type=1, Description="Current User Documents folder" {
 			str Value: Default="<$shpath(5)=@<ShellFoldersCU>\\Personal=_LocPersonalFolder>";
@@ -776,7 +776,7 @@ project Flags=0x20 {
 			str Value: Default="<$sysval(4)>";
 		}
 		var SessionID: Flags=0x204, Type=0, Description="Pseudo-random 8-character session identifier" {
-			str Value: Default=B026169B;
+			str Value: Default="4C4FE93B";
 		}
 		var ShellFoldersCU: Flags=0x20C, Type=2, Description="Current User Shell folders registry key" {
 			str Value: Default="<HKCU>\\<WinCurVer>\\Explorer\\Shell Folders";
@@ -3323,7 +3323,7 @@ project Flags=0x20 {
 			}
 			assembly esQuerySandbox_2012.1.0.0_L_e1dc7b577f244146_MSIL_FC7F353E61529691: Flags=0x0, Platforms=0x7FFFFFFF, Packaging=0, Languages="0=", State0=3, State1=3, ExtraSize=0, AssemblyType=2 {
 			}
-			assembly EntitySpaces2012.AddIn_2012.1.229.0_127bcb8ceedbe220_x8_9FF9EB7AB51919EF: Flags=0x0, Platforms=0x7FFFFFFF, Packaging=0, Languages="0=", State0=3, State1=3, ExtraSize=0, AssemblyType=2, Manifest=EntitySpaces2012.AddIn.dll_F13CCEEC0B8D57B4, AIType=win32, AIName=EntitySpaces2019.AddIn, AIVersion="2019.1.724.0", AIPublicKey="127bcb8ceedbe220", AIProcessor=MSIL {
+			assembly EntitySpaces2012.AddIn_2012.1.229.0_127bcb8ceedbe220_x8_9FF9EB7AB51919EF: Flags=0x0, Platforms=0x7FFFFFFF, Packaging=0, Languages="0=", State0=3, State1=3, ExtraSize=0, AssemblyType=2, Manifest=EntitySpaces2012.AddIn.dll_F13CCEEC0B8D57B4, AIType=win32, AIName=EntitySpaces2019.AddIn, AIVersion="2019.1.725.0", AIPublicKey="127bcb8ceedbe220", AIProcessor=MSIL {
 			}
 			assembly ADODB_7.0.3300.0_b03f5f7f11d50a3a_39F0633C1267CAF5: Flags=0x0, Platforms=0x7FFFFFFF, Packaging=0, Languages="0=", State0=3, State1=3, ExtraSize=0, AssemblyType=2, Manifest=adodb.dll_E76289E4D480FF4C, AIType=win32, AIName=ADODB, AIVersion="7.0.3300.0", AIPublicKey=b03f5f7f11d50a3a {
 			}
@@ -3686,34 +3686,34 @@ project Flags=0x20 {
 						file adodb.dll_E76289E4D480FF4C: Flags=0x0, Component=ADODB_7.0.3300.0_b03f5f7f11d50a3a_39F0633C1267CAF5, Path="..\\..\\..\\..\\..\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\IDE\\PublicAssemblies\\adodb.dll", Attributes=0x0, InstallAction=5, RemoveAction=2, Registration=0, RegOrder=400, Packaging=0 {
 							str Name: Default=adodb.dll;
 						}
-						file EntitySpaces.AddIn.TemplateUI.dll_537914AB97CB6C20: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces.AddIn.TemplateUI.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
+						file EntitySpaces.AddIn.TemplateUI.dll_537914AB97CB6C20: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces.AddIn.TemplateUI.dll", Attributes=0x0, InstallAction=5, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
 							str Name: Default=EntitySpaces.AddIn.TemplateUI.dll;
 						}
-						file EntitySpaces.CodeGenerator.dll_9545B512A31E2CD5: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\CommandLine\\bin\\Release\\EntitySpaces.CommandLine.exe", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
+						file EntitySpaces.CodeGenerator.dll_9545B512A31E2CD5: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\CommandLine\\bin\\Release\\EntitySpaces.CommandLine.exe", Attributes=0x0, InstallAction=5, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
 							str Name: Default=EntitySpaces.CommandLine.exe;
 						}
-						file EntitySpaces.CommandLine.exe_5F5C5F5889B376EF: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces.CodeGenerator.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=2000, Packaging=0 {
+						file EntitySpaces.CommandLine.exe_5F5C5F5889B376EF: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces.CodeGenerator.dll", Attributes=0x0, InstallAction=5, RemoveAction=2, Registration=0, RegOrder=2000, Packaging=0 {
 							str Name: Default=EntitySpaces.CodeGenerator.dll;
 						}
-						file EntitySpaces.Common.dll_39D6BB476B290BCF: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces.Common.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
+						file EntitySpaces.Common.dll_39D6BB476B290BCF: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces.Common.dll", Attributes=0x0, InstallAction=5, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
 							str Name: Default=EntitySpaces.Common.dll;
 						}
-						file EntitySpaces.exe_376C2EA91B61C2EB: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces.exe", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=2000, Packaging=0 {
+						file EntitySpaces.exe_376C2EA91B61C2EB: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces.exe", Attributes=0x0, InstallAction=5, RemoveAction=2, Registration=0, RegOrder=2000, Packaging=0 {
 							str Name: Default=EntitySpaces.exe;
 						}
-						file EntitySpaces.MetadataEngine.dll_5125E3B61CEA6E1E: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces.MetadataEngine.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
+						file EntitySpaces.MetadataEngine.dll_5125E3B61CEA6E1E: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces.MetadataEngine.dll", Attributes=0x0, InstallAction=5, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
 							str Name: Default=EntitySpaces.MetadataEngine.dll;
 						}
-						file EntitySpaces.MetadataEngine.SQLAzure.dll_2045E4303730C65D: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces.MetadataEngine.SQLAzure.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
+						file EntitySpaces.MetadataEngine.SQLAzure.dll_2045E4303730C65D: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces.MetadataEngine.SQLAzure.dll", Attributes=0x0, InstallAction=5, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
 							str Name: Default=EntitySpaces.MetadataEngine.SQLAzure.dll;
 						}
-						file EntitySpaces.MetadataEngine.SqlCe.dll_3B43674C0253B7EC: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces.MetadataEngine.SqlCe.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
+						file EntitySpaces.MetadataEngine.SqlCe.dll_3B43674C0253B7EC: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces.MetadataEngine.SqlCe.dll", Attributes=0x0, InstallAction=5, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
 							str Name: Default=EntitySpaces.MetadataEngine.SqlCe.dll;
 						}
-						file EntitySpaces.MetadataEngine.SQLite.dll_3B08E8AE1EDD4F2D: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces.MetadataEngine.SQLite.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
+						file EntitySpaces.MetadataEngine.SQLite.dll_3B08E8AE1EDD4F2D: Flags=0x0, Component=EntitySpaces, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces.MetadataEngine.SQLite.dll", Attributes=0x0, InstallAction=5, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
 							str Name: Default=EntitySpaces.MetadataEngine.SQLite.dll;
 						}
-						file EntitySpaces2012.AddIn.dll_F13CCEEC0B8D57B4: Flags=0x0, Component=EntitySpaces2012.AddIn_2012.1.229.0_127bcb8ceedbe220_x8_9FF9EB7AB51919EF, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces2019.AddIn.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
+						file EntitySpaces2012.AddIn.dll_F13CCEEC0B8D57B4: Flags=0x0, Component=EntitySpaces2012.AddIn_2012.1.229.0_127bcb8ceedbe220_x8_9FF9EB7AB51919EF, Path="..\\CodeGeneration\\StandAlone\\bin\\Release\\EntitySpaces2019.AddIn.dll", Attributes=0x0, InstallAction=5, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
 							str Name: Default=EntitySpaces2019.AddIn.dll;
 						}
 						folder Folder17_A613ECA8BE8F5714: Flags=0x0, Component=EntitySpaces, Traits=0x80000000, InstallAction=0, RemoveAction=1 {

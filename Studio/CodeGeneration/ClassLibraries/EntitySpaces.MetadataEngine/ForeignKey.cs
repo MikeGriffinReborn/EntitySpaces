@@ -55,6 +55,37 @@ namespace EntitySpaces.MetadataEngine
             }
         }
 
+        [Category("Tables")]
+        public string PrimaryTableNameAlias
+        {
+            get
+            {
+                XmlNode node = null;
+                if (this.GetXmlNode(out node, false))
+                {
+                    string niceName = null;
+
+                    if (this.GetUserData(node, "PrimaryTableNameAlias", out niceName))
+                    {
+                        if (string.Empty != niceName)
+                            return niceName;
+                    }
+                }
+
+                // There was no nice name
+                return this.PrimaryTableName;
+            }
+
+            set
+            {
+                XmlNode node = null;
+                if (this.GetXmlNode(out node, true))
+                {
+                    this.SetUserData(node, "PrimaryTableNameAlias", value);
+                }
+            }
+        }
+
         [Browsable(false)]
 		virtual public ITable ForeignTable
 		{
@@ -96,10 +127,41 @@ namespace EntitySpaces.MetadataEngine
             }
         }
 
-		#endregion
+        [Category("Tables")]
+        public string ForeignTableNameAlias
+        {
+            get
+            {
+                XmlNode node = null;
+                if (this.GetXmlNode(out node, false))
+                {
+                    string niceName = null;
 
-		#region Properties
-		override public string Alias
+                    if (this.GetUserData(node, "ForeignTableNameAlias", out niceName))
+                    {
+                        if (string.Empty != niceName)
+                            return niceName;
+                    }
+                }
+
+                // There was no nice name
+                return this.ForeignTableName;
+            }
+
+            set
+            {
+                XmlNode node = null;
+                if (this.GetXmlNode(out node, true))
+                {
+                    this.SetUserData(node, "ForeignTableNameAlias", value);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Properties
+        override public string Alias
 		{
 			get
 			{

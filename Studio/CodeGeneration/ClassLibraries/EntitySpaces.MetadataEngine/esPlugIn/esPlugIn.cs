@@ -2507,11 +2507,10 @@ namespace EntitySpaces.MetadataEngine
 
             if (this.SwapNames)
             {
-                return this.sOnePrefix + this.PropertyName(col) +
-                    this.sOneSep + this.Entity(table) + suffix;
+                return this.sOnePrefix + this.PropertyName(col) + this.sOneSep + this.Entity(table) + suffix;
             }
-            return this.sOnePrefix + this.Entity(table) + suffix +
-                this.sOneSep + this.PropertyName(col);
+
+            return this.sOnePrefix + this.Entity(table); // + suffix + this.sOneSep + this.PropertyName(col);
         }
 
         /// <summary>
@@ -2534,8 +2533,7 @@ namespace EntitySpaces.MetadataEngine
 
             if (this.UseAssociativeName)
             {
-                return this.sManyPrefix + this.Entity(table) + suffix +
-                    this.sManySep + this.Entity(associativeTable);
+                return this.sManyPrefix + this.Entity(table) + suffix + this.sManySep + this.Entity(associativeTable);
             }
             else
             {
@@ -2584,11 +2582,10 @@ namespace EntitySpaces.MetadataEngine
 
             if (this.SwapNames)
             {
-                return this.sManyPrefix + this.PropertyName(col) +
-                    this.sManySep + this.Entity(table) + suffix;
+                return this.sManyPrefix + this.PropertyName(col) + this.sManySep + this.Entity(table) + suffix;
             }
-            return this.sManyPrefix + this.Entity(table) + suffix +
-                this.sManySep + this.PropertyName(col);
+
+            return this.sManyPrefix + this.Entity(table) + suffix;// + this.sManySep + this.PropertyName(col);
         }
 
         /// <summary>

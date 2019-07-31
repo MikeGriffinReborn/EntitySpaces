@@ -135,7 +135,7 @@ namespace <%=Namespace%>
 		/// Foreign Key Name - <%=tr.Name%>
 		/// </summary>
 <%if(!TargetTheCompactFramework){%>
-		[XmlIgnore]<%}%>
+	    [DataMember(Name="<%=objName%>", EmitDefaultValue = false)]<%}%>
 		public <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> <%=objName%>
 		{
 			get
@@ -219,7 +219,7 @@ namespace <%=Namespace%>
 		/// Foreign Key Name - <%=tr.Name%>
 		/// </summary>
 <%if(!TargetTheCompactFramework){%>
-		[XmlIgnore]<%}%>
+		[DataMember(Name="<%=objName%>", EmitDefaultValue = false)]<%}%>
 		public <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> <%=objName%>
 		{
 			get
@@ -302,7 +302,7 @@ namespace <%=Namespace%>
 		/// Foreign Key Name - <%=tr.Name%>
 		/// </summary>
 <%if(!TargetTheCompactFramework){%>
-		[XmlIgnore]<%}%>
+		[DataMember(Name="<%=objName%>", EmitDefaultValue = false)]<%}%>
 		public <%=esMeta.esPlugIn.Collection(tr.CrossReferenceTable)%> <%=objName%>
 		{
 			get
@@ -351,14 +351,14 @@ namespace <%=Namespace%>
 		/// </summary>
 		public void Associate<%=assocObjectName%>(<%=esMeta.esPlugIn.Entity(tr.CrossReferenceTable)%> entity)
 		{
-			if (this._<%=linkingObjectName%> == null)
+			if (this._many_<%=linkingObjectName%> == null)
 			{
-				this._<%=linkingObjectName%> = new <%=esMeta.esPlugIn.Collection(tr.ForeignTable)%>();
-				this._<%=linkingObjectName%>.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("<%=linkingObjectName%>", this._<%=linkingObjectName%>);
+				this._many_<%=linkingObjectName%> = new <%=esMeta.esPlugIn.Collection(tr.ForeignTable)%>();
+				this._many_<%=linkingObjectName%>.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("<%=linkingObjectName%>", this._many_<%=linkingObjectName%>);
 			}
 
-			<%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> obj = this._<%=linkingObjectName%>.AddNew();<%
+			<%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> obj = this._many_<%=linkingObjectName%>.AddNew();<%
             for(int i = 0; i < tr.ColumnCount; i++)
             {%>
 			obj.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%> = this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>;<%
@@ -375,14 +375,14 @@ namespace <%=Namespace%>
 		/// </summary>
 		public void Dissociate<%=assocObjectName%>(<%=esMeta.esPlugIn.Entity(tr.CrossReferenceTable)%> entity)
 		{
-			if (this._<%=linkingObjectName%> == null)
+			if (this._many_<%=linkingObjectName%> == null)
 			{
-				this._<%=linkingObjectName%> = new <%=esMeta.esPlugIn.Collection(tr.ForeignTable)%>();
-				this._<%=linkingObjectName%>.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("<%=linkingObjectName%>", this._<%=linkingObjectName%>);
+				this._many_<%=linkingObjectName%> = new <%=esMeta.esPlugIn.Collection(tr.ForeignTable)%>();
+				this._many_<%=linkingObjectName%>.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("<%=linkingObjectName%>", this._many_<%=linkingObjectName%>);
 			}
 
-			<%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> obj = this._<%=linkingObjectName%>.AddNew();<%
+			<%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> obj = this._many_<%=linkingObjectName%>.AddNew();<%
             for(int i = 0; i < tr.ColumnCount; i++)
             {%>
 			obj.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%> = this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>;<%
@@ -396,7 +396,7 @@ namespace <%=Namespace%>
 		}
 
 		private <%=esMeta.esPlugIn.Collection(tr.CrossReferenceTable)%> _<%=objName%>;
-		private <%=esMeta.esPlugIn.Collection(tr.ForeignTable)%> _<%=linkingObjectName%>;
+		private <%=esMeta.esPlugIn.Collection(tr.ForeignTable)%> _many_<%=linkingObjectName%>;
 		#endregion
 <%			}
 			// Zero to Many
@@ -505,11 +505,10 @@ namespace <%=Namespace%>
 		/// </summary>
 		
 <%if(!TargetTheCompactFramework){%>
-		[XmlIgnore]<%}
+		[DataMember(Name="<%=objName%>", EmitDefaultValue = false)]<%}
 if(RiaServicesSupport) {%>		
 		[Include]
 		[System.ComponentModel.DataAnnotations.Association("<%=source.Entity%>.<%=objName%>", "<%=parentProperties%>", "<%=thisProperties%>")]<%}%>
-		[DataMember]
 		public <%=esMeta.esPlugIn.Collection(tr.ForeignTable)%> <%=objName%>
 		{
 			get
@@ -645,7 +644,7 @@ if(RiaServicesSupport) {%>
 		/// Foreign Key Name - <%=tr.Name%>
 		/// </summary>
 <%if(!TargetTheCompactFramework){%>
-		[XmlIgnore]<%}%>
+		[DataMember(Name="<%=objName%>", EmitDefaultValue = false)]<%}%>
 		<%if(DataContractSupport){ knownTypes[esMeta.esPlugIn.Entity(tr.ForeignTable)] = 1; }%>			
 		public <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> <%=objName%>
 		{
