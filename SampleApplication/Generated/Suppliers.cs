@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0725.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/25/2019 4:41:37 PM
+Date Generated       : 7/31/2019 10:51:55 AM
 ===============================================================================
 */
 
@@ -92,26 +92,6 @@ namespace BusinessObjects
 			return this.SingleOrDefault(e => e.SupplierID == supplierID);
 		}
 
-		
-		
-		#region WCF Service Class
-		
-		[DataContract]
-		[KnownType(typeof(Suppliers))]
-		public class SuppliersCollectionWCFPacket : esCollectionWCFPacket<SuppliersCollection>
-		{
-			public static implicit operator SuppliersCollection(SuppliersCollectionWCFPacket packet)
-			{
-				return packet.Collection;
-			}
-
-			public static implicit operator SuppliersCollectionWCFPacket(SuppliersCollection collection)
-			{
-				return new SuppliersCollectionWCFPacket() { Collection = collection };
-			}
-		}
-		
-		#endregion
 		
 				
 	}
@@ -673,15 +653,15 @@ namespace BusinessObjects
 	public partial class Suppliers : esSuppliers
 	{
 
-		#region ProductsCollectionBySupplierID - Zero To Many
+		#region ProductsCollection - Zero To Many
 		
-		static public esPrefetchMap Prefetch_ProductsCollectionBySupplierID
+		static public esPrefetchMap Prefetch_ProductsCollection
 		{
 			get
 			{
 				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Suppliers.ProductsCollectionBySupplierID_Delegate;
-				map.PropertyName = "ProductsCollectionBySupplierID";
+				map.PrefetchDelegate = BusinessObjects.Suppliers.ProductsCollection_Delegate;
+				map.PropertyName = "ProductsCollection";
 				map.MyColumnName = "SupplierID";
 				map.ParentColumnName = "SupplierID";
 				map.IsMultiPartKey = false;
@@ -689,7 +669,7 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void ProductsCollectionBySupplierID_Delegate(esPrefetchParameters data)
+		static private void ProductsCollection_Delegate(esPrefetchParameters data)
 		{
 			SuppliersQuery parent = new SuppliersQuery(data.NextAlias());
 
@@ -706,9 +686,9 @@ namespace BusinessObjects
 		}	
 		
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeProductsCollectionBySupplierID()
+		public bool ShouldSerializeProductsCollection()
 		{
-		    if(this._ProductsCollectionBySupplierID != null && this._ProductsCollectionBySupplierID.Count > 0)
+		    if(this._ProductsCollection != null && this._ProductsCollection.Count > 0)
 				return true;
             else
 				return false;
@@ -720,42 +700,41 @@ namespace BusinessObjects
 		/// </summary>
 		
 
-		[XmlIgnore]
-		[DataMember]
-		public ProductsCollection ProductsCollectionBySupplierID
+		[DataMember(Name="ProductsCollection", EmitDefaultValue = false)]
+		public ProductsCollection ProductsCollection
 		{
 			get
 			{
-				if(this._ProductsCollectionBySupplierID == null)
+				if(this._ProductsCollection == null)
 				{
-					this._ProductsCollectionBySupplierID = new ProductsCollection();
-					this._ProductsCollectionBySupplierID.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("ProductsCollectionBySupplierID", this._ProductsCollectionBySupplierID);
+					this._ProductsCollection = new ProductsCollection();
+					this._ProductsCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("ProductsCollection", this._ProductsCollection);
 				
 					if (this.SupplierID != null)
 					{
 						if (!this.es.IsLazyLoadDisabled)
 						{
-							this._ProductsCollectionBySupplierID.Query.Where(this._ProductsCollectionBySupplierID.Query.SupplierID == this.SupplierID);
-							this._ProductsCollectionBySupplierID.Query.Load();
+							this._ProductsCollection.Query.Where(this._ProductsCollection.Query.SupplierID == this.SupplierID);
+							this._ProductsCollection.Query.Load();
 						}
 
 						// Auto-hookup Foreign Keys
-						this._ProductsCollectionBySupplierID.fks.Add(ProductsMetadata.ColumnNames.SupplierID, this.SupplierID);
+						this._ProductsCollection.fks.Add(ProductsMetadata.ColumnNames.SupplierID, this.SupplierID);
 					}
 				}
 
-				return this._ProductsCollectionBySupplierID;
+				return this._ProductsCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._ProductsCollectionBySupplierID != null) 
+				if (this._ProductsCollection != null) 
 				{ 
-					this.RemovePostSave("ProductsCollectionBySupplierID"); 
-					this._ProductsCollectionBySupplierID = null;
+					this.RemovePostSave("ProductsCollection"); 
+					this._ProductsCollection = null;
 					
 				} 
 			} 			
@@ -765,7 +744,7 @@ namespace BusinessObjects
 		
 			
 		
-		private ProductsCollection _ProductsCollectionBySupplierID;
+		private ProductsCollection _ProductsCollection;
 		#endregion
 
 		
@@ -775,8 +754,8 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "ProductsCollectionBySupplierID":
-					coll = this.ProductsCollectionBySupplierID;
+				case "ProductsCollection":
+					coll = this.ProductsCollection;
 					break;	
 			}
 
@@ -789,7 +768,7 @@ namespace BusinessObjects
 		{
 			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
 			
-			props.Add(new esPropertyDescriptor(this, "ProductsCollectionBySupplierID", typeof(ProductsCollection), new Products()));
+			props.Add(new esPropertyDescriptor(this, "ProductsCollection", typeof(ProductsCollection), new Products()));
 		
 			return props;
 		}
@@ -817,9 +796,9 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPostSaveKeys()
 		{
-			if(this._ProductsCollectionBySupplierID != null)
+			if(this._ProductsCollection != null)
 			{
-				Apply(this._ProductsCollectionBySupplierID, "SupplierID", this.SupplierID);
+				Apply(this._ProductsCollection, "SupplierID", this.SupplierID);
 			}
 		}
 		

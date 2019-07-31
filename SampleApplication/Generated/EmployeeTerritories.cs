@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0725.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/25/2019 4:41:35 PM
+Date Generated       : 7/31/2019 10:51:52 AM
 ===============================================================================
 */
 
@@ -94,26 +94,6 @@ namespace BusinessObjects
 			return this.SingleOrDefault(e => e.EmployeeID == employeeID && e.TerritoryID == territoryID);
 		}
 
-		
-		
-		#region WCF Service Class
-		
-		[DataContract]
-		[KnownType(typeof(EmployeeTerritories))]
-		public class EmployeeTerritoriesCollectionWCFPacket : esCollectionWCFPacket<EmployeeTerritoriesCollection>
-		{
-			public static implicit operator EmployeeTerritoriesCollection(EmployeeTerritoriesCollectionWCFPacket packet)
-			{
-				return packet.Collection;
-			}
-
-			public static implicit operator EmployeeTerritoriesCollectionWCFPacket(EmployeeTerritoriesCollection collection)
-			{
-				return new EmployeeTerritoriesCollectionWCFPacket() { Collection = collection };
-			}
-		}
-		
-		#endregion
 		
 				
 	}
@@ -211,8 +191,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemInt32(EmployeeTerritoriesMetadata.ColumnNames.EmployeeID, value))
 				{
-					this._UpToEmployeesByEmployeeID = null;
-					this.OnPropertyChanged("UpToEmployeesByEmployeeID");
+					this._UpToEmployees = null;
+					this.OnPropertyChanged("UpToEmployees");
 					OnPropertyChanged(EmployeeTerritoriesMetadata.PropertyNames.EmployeeID);
 				}
 			}
@@ -233,17 +213,17 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemString(EmployeeTerritoriesMetadata.ColumnNames.TerritoryID, value))
 				{
-					this._UpToTerritoriesByTerritoryID = null;
-					this.OnPropertyChanged("UpToTerritoriesByTerritoryID");
+					this._UpToTerritories = null;
+					this.OnPropertyChanged("UpToTerritories");
 					OnPropertyChanged(EmployeeTerritoriesMetadata.PropertyNames.TerritoryID);
 				}
 			}
 		}		
 		
 		[CLSCompliant(false)]
-		internal protected Employees _UpToEmployeesByEmployeeID;
+		internal protected Employees _UpToEmployees;
 		[CLSCompliant(false)]
-		internal protected Territories _UpToTerritoriesByTerritoryID;
+		internal protected Territories _UpToTerritories;
 		#endregion
 		
 		#region Housekeeping methods
@@ -425,46 +405,46 @@ namespace BusinessObjects
 
 				
 				
-		#region UpToEmployeesByEmployeeID - Many To One
+		#region UpToEmployees - Many To One
 		/// <summary>
 		/// Many to One
 		/// Foreign Key Name - FK_EmployeeTerritories_Employees
 		/// </summary>
 
-		[XmlIgnore]
+		[DataMember(Name="UpToEmployees", EmitDefaultValue = false)]
 					
-		public Employees UpToEmployeesByEmployeeID
+		public Employees UpToEmployees
 		{
 			get
 			{
 				if (this.es.IsLazyLoadDisabled) return null;
 				
-				if(this._UpToEmployeesByEmployeeID == null && EmployeeID != null)
+				if(this._UpToEmployees == null && EmployeeID != null)
 				{
-					this._UpToEmployeesByEmployeeID = new Employees();
-					this._UpToEmployeesByEmployeeID.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToEmployeesByEmployeeID", this._UpToEmployeesByEmployeeID);
-					this._UpToEmployeesByEmployeeID.Query.Where(this._UpToEmployeesByEmployeeID.Query.EmployeeID == this.EmployeeID);
-					this._UpToEmployeesByEmployeeID.Query.Load();
+					this._UpToEmployees = new Employees();
+					this._UpToEmployees.es.Connection.Name = this.es.Connection.Name;
+					this.SetPreSave("UpToEmployees", this._UpToEmployees);
+					this._UpToEmployees.Query.Where(this._UpToEmployees.Query.EmployeeID == this.EmployeeID);
+					this._UpToEmployees.Query.Load();
 				}	
-				return this._UpToEmployeesByEmployeeID;
+				return this._UpToEmployees;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToEmployeesByEmployeeID");
+				this.RemovePreSave("UpToEmployees");
 				
 
 				if(value == null)
 				{
 					this.EmployeeID = null;
-					this._UpToEmployeesByEmployeeID = null;
+					this._UpToEmployees = null;
 				}
 				else
 				{
 					this.EmployeeID = value.EmployeeID;
-					this._UpToEmployeesByEmployeeID = value;
-					this.SetPreSave("UpToEmployeesByEmployeeID", this._UpToEmployeesByEmployeeID);
+					this._UpToEmployees = value;
+					this.SetPreSave("UpToEmployees", this._UpToEmployees);
 				}
 				
 			}
@@ -474,46 +454,46 @@ namespace BusinessObjects
 
 				
 				
-		#region UpToTerritoriesByTerritoryID - Many To One
+		#region UpToTerritories - Many To One
 		/// <summary>
 		/// Many to One
 		/// Foreign Key Name - FK_EmployeeTerritories_Territories
 		/// </summary>
 
-		[XmlIgnore]
+		[DataMember(Name="UpToTerritories", EmitDefaultValue = false)]
 					
-		public Territories UpToTerritoriesByTerritoryID
+		public Territories UpToTerritories
 		{
 			get
 			{
 				if (this.es.IsLazyLoadDisabled) return null;
 				
-				if(this._UpToTerritoriesByTerritoryID == null && TerritoryID != null)
+				if(this._UpToTerritories == null && TerritoryID != null)
 				{
-					this._UpToTerritoriesByTerritoryID = new Territories();
-					this._UpToTerritoriesByTerritoryID.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToTerritoriesByTerritoryID", this._UpToTerritoriesByTerritoryID);
-					this._UpToTerritoriesByTerritoryID.Query.Where(this._UpToTerritoriesByTerritoryID.Query.TerritoryID == this.TerritoryID);
-					this._UpToTerritoriesByTerritoryID.Query.Load();
+					this._UpToTerritories = new Territories();
+					this._UpToTerritories.es.Connection.Name = this.es.Connection.Name;
+					this.SetPreSave("UpToTerritories", this._UpToTerritories);
+					this._UpToTerritories.Query.Where(this._UpToTerritories.Query.TerritoryID == this.TerritoryID);
+					this._UpToTerritories.Query.Load();
 				}	
-				return this._UpToTerritoriesByTerritoryID;
+				return this._UpToTerritories;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToTerritoriesByTerritoryID");
+				this.RemovePreSave("UpToTerritories");
 				
 
 				if(value == null)
 				{
 					this.TerritoryID = null;
-					this._UpToTerritoriesByTerritoryID = null;
+					this._UpToTerritories = null;
 				}
 				else
 				{
 					this.TerritoryID = value.TerritoryID;
-					this._UpToTerritoriesByTerritoryID = value;
-					this.SetPreSave("UpToTerritoriesByTerritoryID", this._UpToTerritoriesByTerritoryID);
+					this._UpToTerritories = value;
+					this.SetPreSave("UpToTerritories", this._UpToTerritories);
 				}
 				
 			}
@@ -528,9 +508,9 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPreSaveKeys()
 		{
-			if(!this.es.IsDeleted && this._UpToEmployeesByEmployeeID != null)
+			if(!this.es.IsDeleted && this._UpToEmployees != null)
 			{
-				this.EmployeeID = this._UpToEmployeesByEmployeeID.EmployeeID;
+				this.EmployeeID = this._UpToEmployees.EmployeeID;
 			}
 		}
 		

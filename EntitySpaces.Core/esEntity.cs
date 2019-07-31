@@ -553,7 +553,13 @@ namespace EntitySpaces.Core
         [EditorBrowsable(EditorBrowsableState.Never)]
         virtual public void SetProperties(IDictionary values)
         {
-
+            if(values != null && values.Keys.Count > 0)
+            {
+                foreach(string name in values.Keys)
+                {
+                    this.SetValue(name, values[name]);
+                }
+            }
         }
 
         /// <summary>
@@ -564,7 +570,7 @@ namespace EntitySpaces.Core
         [EditorBrowsable(EditorBrowsableState.Never)]
         virtual public void SetProperty(string name, object value)
         {
-
+            this.SetValue(name, value);
         }
 
         /// <summary>

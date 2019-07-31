@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0725.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/25/2019 4:41:37 PM
+Date Generated       : 7/31/2019 10:51:55 AM
 ===============================================================================
 */
 
@@ -92,26 +92,6 @@ namespace BusinessObjects
 			return this.SingleOrDefault(e => e.ShipperID == shipperID);
 		}
 
-		
-		
-		#region WCF Service Class
-		
-		[DataContract]
-		[KnownType(typeof(Shippers))]
-		public class ShippersCollectionWCFPacket : esCollectionWCFPacket<ShippersCollection>
-		{
-			public static implicit operator ShippersCollection(ShippersCollectionWCFPacket packet)
-			{
-				return packet.Collection;
-			}
-
-			public static implicit operator ShippersCollectionWCFPacket(ShippersCollection collection)
-			{
-				return new ShippersCollectionWCFPacket() { Collection = collection };
-			}
-		}
-		
-		#endregion
 		
 				
 	}
@@ -439,15 +419,15 @@ namespace BusinessObjects
 	public partial class Shippers : esShippers
 	{
 
-		#region OrdersCollectionByShipVia - Zero To Many
+		#region OrdersCollection - Zero To Many
 		
-		static public esPrefetchMap Prefetch_OrdersCollectionByShipVia
+		static public esPrefetchMap Prefetch_OrdersCollection
 		{
 			get
 			{
 				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Shippers.OrdersCollectionByShipVia_Delegate;
-				map.PropertyName = "OrdersCollectionByShipVia";
+				map.PrefetchDelegate = BusinessObjects.Shippers.OrdersCollection_Delegate;
+				map.PropertyName = "OrdersCollection";
 				map.MyColumnName = "ShipVia";
 				map.ParentColumnName = "ShipperID";
 				map.IsMultiPartKey = false;
@@ -455,7 +435,7 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void OrdersCollectionByShipVia_Delegate(esPrefetchParameters data)
+		static private void OrdersCollection_Delegate(esPrefetchParameters data)
 		{
 			ShippersQuery parent = new ShippersQuery(data.NextAlias());
 
@@ -472,9 +452,9 @@ namespace BusinessObjects
 		}	
 		
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeOrdersCollectionByShipVia()
+		public bool ShouldSerializeOrdersCollection()
 		{
-		    if(this._OrdersCollectionByShipVia != null && this._OrdersCollectionByShipVia.Count > 0)
+		    if(this._OrdersCollection != null && this._OrdersCollection.Count > 0)
 				return true;
             else
 				return false;
@@ -486,42 +466,41 @@ namespace BusinessObjects
 		/// </summary>
 		
 
-		[XmlIgnore]
-		[DataMember]
-		public OrdersCollection OrdersCollectionByShipVia
+		[DataMember(Name="OrdersCollection", EmitDefaultValue = false)]
+		public OrdersCollection OrdersCollection
 		{
 			get
 			{
-				if(this._OrdersCollectionByShipVia == null)
+				if(this._OrdersCollection == null)
 				{
-					this._OrdersCollectionByShipVia = new OrdersCollection();
-					this._OrdersCollectionByShipVia.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("OrdersCollectionByShipVia", this._OrdersCollectionByShipVia);
+					this._OrdersCollection = new OrdersCollection();
+					this._OrdersCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("OrdersCollection", this._OrdersCollection);
 				
 					if (this.ShipperID != null)
 					{
 						if (!this.es.IsLazyLoadDisabled)
 						{
-							this._OrdersCollectionByShipVia.Query.Where(this._OrdersCollectionByShipVia.Query.ShipVia == this.ShipperID);
-							this._OrdersCollectionByShipVia.Query.Load();
+							this._OrdersCollection.Query.Where(this._OrdersCollection.Query.ShipVia == this.ShipperID);
+							this._OrdersCollection.Query.Load();
 						}
 
 						// Auto-hookup Foreign Keys
-						this._OrdersCollectionByShipVia.fks.Add(OrdersMetadata.ColumnNames.ShipVia, this.ShipperID);
+						this._OrdersCollection.fks.Add(OrdersMetadata.ColumnNames.ShipVia, this.ShipperID);
 					}
 				}
 
-				return this._OrdersCollectionByShipVia;
+				return this._OrdersCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._OrdersCollectionByShipVia != null) 
+				if (this._OrdersCollection != null) 
 				{ 
-					this.RemovePostSave("OrdersCollectionByShipVia"); 
-					this._OrdersCollectionByShipVia = null;
+					this.RemovePostSave("OrdersCollection"); 
+					this._OrdersCollection = null;
 					
 				} 
 			} 			
@@ -531,7 +510,7 @@ namespace BusinessObjects
 		
 			
 		
-		private OrdersCollection _OrdersCollectionByShipVia;
+		private OrdersCollection _OrdersCollection;
 		#endregion
 
 		
@@ -541,8 +520,8 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "OrdersCollectionByShipVia":
-					coll = this.OrdersCollectionByShipVia;
+				case "OrdersCollection":
+					coll = this.OrdersCollection;
 					break;	
 			}
 
@@ -555,7 +534,7 @@ namespace BusinessObjects
 		{
 			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
 			
-			props.Add(new esPropertyDescriptor(this, "OrdersCollectionByShipVia", typeof(OrdersCollection), new Orders()));
+			props.Add(new esPropertyDescriptor(this, "OrdersCollection", typeof(OrdersCollection), new Orders()));
 		
 			return props;
 		}
@@ -583,9 +562,9 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPostSaveKeys()
 		{
-			if(this._OrdersCollectionByShipVia != null)
+			if(this._OrdersCollection != null)
 			{
-				Apply(this._OrdersCollectionByShipVia, "ShipVia", this.ShipperID);
+				Apply(this._OrdersCollection, "ShipVia", this.ShipperID);
 			}
 		}
 		

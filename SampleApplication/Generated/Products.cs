@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0725.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/25/2019 4:41:36 PM
+Date Generated       : 7/31/2019 10:51:53 AM
 ===============================================================================
 */
 
@@ -92,26 +92,6 @@ namespace BusinessObjects
 			return this.SingleOrDefault(e => e.ProductID == productID);
 		}
 
-		
-		
-		#region WCF Service Class
-		
-		[DataContract]
-		[KnownType(typeof(Products))]
-		public class ProductsCollectionWCFPacket : esCollectionWCFPacket<ProductsCollection>
-		{
-			public static implicit operator ProductsCollection(ProductsCollectionWCFPacket packet)
-			{
-				return packet.Collection;
-			}
-
-			public static implicit operator ProductsCollectionWCFPacket(ProductsCollection collection)
-			{
-				return new ProductsCollectionWCFPacket() { Collection = collection };
-			}
-		}
-		
-		#endregion
 		
 				
 	}
@@ -249,8 +229,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemInt32(ProductsMetadata.ColumnNames.SupplierID, value))
 				{
-					this._UpToSuppliersBySupplierID = null;
-					this.OnPropertyChanged("UpToSuppliersBySupplierID");
+					this._UpToSuppliers = null;
+					this.OnPropertyChanged("UpToSuppliers");
 					OnPropertyChanged(ProductsMetadata.PropertyNames.SupplierID);
 				}
 			}
@@ -271,8 +251,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemInt32(ProductsMetadata.ColumnNames.CategoryID, value))
 				{
-					this._UpToCategoriesByCategoryID = null;
-					this.OnPropertyChanged("UpToCategoriesByCategoryID");
+					this._UpToCategories = null;
+					this.OnPropertyChanged("UpToCategories");
 					OnPropertyChanged(ProductsMetadata.PropertyNames.CategoryID);
 				}
 			}
@@ -399,9 +379,9 @@ namespace BusinessObjects
 		}		
 		
 		[CLSCompliant(false)]
-		internal protected Categories _UpToCategoriesByCategoryID;
+		internal protected Categories _UpToCategories;
 		[CLSCompliant(false)]
-		internal protected Suppliers _UpToSuppliersBySupplierID;
+		internal protected Suppliers _UpToSuppliers;
 		#endregion
 		
 		#region Housekeeping methods
@@ -637,7 +617,7 @@ namespace BusinessObjects
 		/// Foreign Key Name - FK_Order_Details_Products
 		/// </summary>
 
-		[XmlIgnore]
+		[DataMember(Name="UpToOrdersCollection", EmitDefaultValue = false)]
 		public OrdersCollection UpToOrdersCollection
 		{
 			get
@@ -681,14 +661,14 @@ namespace BusinessObjects
 		/// </summary>
 		public void AssociateOrdersCollection(Orders entity)
 		{
-			if (this._OrderDetailsCollection == null)
+			if (this._many_OrderDetailsCollection == null)
 			{
-				this._OrderDetailsCollection = new OrderDetailsCollection();
-				this._OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("OrderDetailsCollection", this._OrderDetailsCollection);
+				this._many_OrderDetailsCollection = new OrderDetailsCollection();
+				this._many_OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("OrderDetailsCollection", this._many_OrderDetailsCollection);
 			}
 
-			OrderDetails obj = this._OrderDetailsCollection.AddNew();
+			OrderDetails obj = this._many_OrderDetailsCollection.AddNew();
 			obj.ProductID = this.ProductID;
 			obj.OrderID = entity.OrderID;
 		}
@@ -699,14 +679,14 @@ namespace BusinessObjects
 		/// </summary>
 		public void DissociateOrdersCollection(Orders entity)
 		{
-			if (this._OrderDetailsCollection == null)
+			if (this._many_OrderDetailsCollection == null)
 			{
-				this._OrderDetailsCollection = new OrderDetailsCollection();
-				this._OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("OrderDetailsCollection", this._OrderDetailsCollection);
+				this._many_OrderDetailsCollection = new OrderDetailsCollection();
+				this._many_OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("OrderDetailsCollection", this._many_OrderDetailsCollection);
 			}
 
-			OrderDetails obj = this._OrderDetailsCollection.AddNew();
+			OrderDetails obj = this._many_OrderDetailsCollection.AddNew();
 			obj.ProductID = this.ProductID;
             obj.OrderID = entity.OrderID;
 			obj.AcceptChanges();
@@ -714,18 +694,18 @@ namespace BusinessObjects
 		}
 
 		private OrdersCollection _UpToOrdersCollection;
-		private OrderDetailsCollection _OrderDetailsCollection;
+		private OrderDetailsCollection _many_OrderDetailsCollection;
 		#endregion
 
-		#region OrderDetailsCollectionByProductID - Zero To Many
+		#region OrderDetailsCollection - Zero To Many
 		
-		static public esPrefetchMap Prefetch_OrderDetailsCollectionByProductID
+		static public esPrefetchMap Prefetch_OrderDetailsCollection
 		{
 			get
 			{
 				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Products.OrderDetailsCollectionByProductID_Delegate;
-				map.PropertyName = "OrderDetailsCollectionByProductID";
+				map.PrefetchDelegate = BusinessObjects.Products.OrderDetailsCollection_Delegate;
+				map.PropertyName = "OrderDetailsCollection";
 				map.MyColumnName = "ProductID";
 				map.ParentColumnName = "ProductID";
 				map.IsMultiPartKey = false;
@@ -733,7 +713,7 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void OrderDetailsCollectionByProductID_Delegate(esPrefetchParameters data)
+		static private void OrderDetailsCollection_Delegate(esPrefetchParameters data)
 		{
 			ProductsQuery parent = new ProductsQuery(data.NextAlias());
 
@@ -750,9 +730,9 @@ namespace BusinessObjects
 		}	
 		
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeOrderDetailsCollectionByProductID()
+		public bool ShouldSerializeOrderDetailsCollection()
 		{
-		    if(this._OrderDetailsCollectionByProductID != null && this._OrderDetailsCollectionByProductID.Count > 0)
+		    if(this._OrderDetailsCollection != null && this._OrderDetailsCollection.Count > 0)
 				return true;
             else
 				return false;
@@ -764,42 +744,41 @@ namespace BusinessObjects
 		/// </summary>
 		
 
-		[XmlIgnore]
-		[DataMember]
-		public OrderDetailsCollection OrderDetailsCollectionByProductID
+		[DataMember(Name="OrderDetailsCollection", EmitDefaultValue = false)]
+		public OrderDetailsCollection OrderDetailsCollection
 		{
 			get
 			{
-				if(this._OrderDetailsCollectionByProductID == null)
+				if(this._OrderDetailsCollection == null)
 				{
-					this._OrderDetailsCollectionByProductID = new OrderDetailsCollection();
-					this._OrderDetailsCollectionByProductID.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("OrderDetailsCollectionByProductID", this._OrderDetailsCollectionByProductID);
+					this._OrderDetailsCollection = new OrderDetailsCollection();
+					this._OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("OrderDetailsCollection", this._OrderDetailsCollection);
 				
 					if (this.ProductID != null)
 					{
 						if (!this.es.IsLazyLoadDisabled)
 						{
-							this._OrderDetailsCollectionByProductID.Query.Where(this._OrderDetailsCollectionByProductID.Query.ProductID == this.ProductID);
-							this._OrderDetailsCollectionByProductID.Query.Load();
+							this._OrderDetailsCollection.Query.Where(this._OrderDetailsCollection.Query.ProductID == this.ProductID);
+							this._OrderDetailsCollection.Query.Load();
 						}
 
 						// Auto-hookup Foreign Keys
-						this._OrderDetailsCollectionByProductID.fks.Add(OrderDetailsMetadata.ColumnNames.ProductID, this.ProductID);
+						this._OrderDetailsCollection.fks.Add(OrderDetailsMetadata.ColumnNames.ProductID, this.ProductID);
 					}
 				}
 
-				return this._OrderDetailsCollectionByProductID;
+				return this._OrderDetailsCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._OrderDetailsCollectionByProductID != null) 
+				if (this._OrderDetailsCollection != null) 
 				{ 
-					this.RemovePostSave("OrderDetailsCollectionByProductID"); 
-					this._OrderDetailsCollectionByProductID = null;
+					this.RemovePostSave("OrderDetailsCollection"); 
+					this._OrderDetailsCollection = null;
 					
 				} 
 			} 			
@@ -809,51 +788,51 @@ namespace BusinessObjects
 		
 			
 		
-		private OrderDetailsCollection _OrderDetailsCollectionByProductID;
+		private OrderDetailsCollection _OrderDetailsCollection;
 		#endregion
 
 				
 				
-		#region UpToCategoriesByCategoryID - Many To One
+		#region UpToCategories - Many To One
 		/// <summary>
 		/// Many to One
 		/// Foreign Key Name - FK_Products_Categories
 		/// </summary>
 
-		[XmlIgnore]
+		[DataMember(Name="UpToCategories", EmitDefaultValue = false)]
 					
-		public Categories UpToCategoriesByCategoryID
+		public Categories UpToCategories
 		{
 			get
 			{
 				if (this.es.IsLazyLoadDisabled) return null;
 				
-				if(this._UpToCategoriesByCategoryID == null && CategoryID != null)
+				if(this._UpToCategories == null && CategoryID != null)
 				{
-					this._UpToCategoriesByCategoryID = new Categories();
-					this._UpToCategoriesByCategoryID.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToCategoriesByCategoryID", this._UpToCategoriesByCategoryID);
-					this._UpToCategoriesByCategoryID.Query.Where(this._UpToCategoriesByCategoryID.Query.CategoryID == this.CategoryID);
-					this._UpToCategoriesByCategoryID.Query.Load();
+					this._UpToCategories = new Categories();
+					this._UpToCategories.es.Connection.Name = this.es.Connection.Name;
+					this.SetPreSave("UpToCategories", this._UpToCategories);
+					this._UpToCategories.Query.Where(this._UpToCategories.Query.CategoryID == this.CategoryID);
+					this._UpToCategories.Query.Load();
 				}	
-				return this._UpToCategoriesByCategoryID;
+				return this._UpToCategories;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToCategoriesByCategoryID");
+				this.RemovePreSave("UpToCategories");
 				
 
 				if(value == null)
 				{
 					this.CategoryID = null;
-					this._UpToCategoriesByCategoryID = null;
+					this._UpToCategories = null;
 				}
 				else
 				{
 					this.CategoryID = value.CategoryID;
-					this._UpToCategoriesByCategoryID = value;
-					this.SetPreSave("UpToCategoriesByCategoryID", this._UpToCategoriesByCategoryID);
+					this._UpToCategories = value;
+					this.SetPreSave("UpToCategories", this._UpToCategories);
 				}
 				
 			}
@@ -863,46 +842,46 @@ namespace BusinessObjects
 
 				
 				
-		#region UpToSuppliersBySupplierID - Many To One
+		#region UpToSuppliers - Many To One
 		/// <summary>
 		/// Many to One
 		/// Foreign Key Name - FK_Products_Suppliers
 		/// </summary>
 
-		[XmlIgnore]
+		[DataMember(Name="UpToSuppliers", EmitDefaultValue = false)]
 					
-		public Suppliers UpToSuppliersBySupplierID
+		public Suppliers UpToSuppliers
 		{
 			get
 			{
 				if (this.es.IsLazyLoadDisabled) return null;
 				
-				if(this._UpToSuppliersBySupplierID == null && SupplierID != null)
+				if(this._UpToSuppliers == null && SupplierID != null)
 				{
-					this._UpToSuppliersBySupplierID = new Suppliers();
-					this._UpToSuppliersBySupplierID.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToSuppliersBySupplierID", this._UpToSuppliersBySupplierID);
-					this._UpToSuppliersBySupplierID.Query.Where(this._UpToSuppliersBySupplierID.Query.SupplierID == this.SupplierID);
-					this._UpToSuppliersBySupplierID.Query.Load();
+					this._UpToSuppliers = new Suppliers();
+					this._UpToSuppliers.es.Connection.Name = this.es.Connection.Name;
+					this.SetPreSave("UpToSuppliers", this._UpToSuppliers);
+					this._UpToSuppliers.Query.Where(this._UpToSuppliers.Query.SupplierID == this.SupplierID);
+					this._UpToSuppliers.Query.Load();
 				}	
-				return this._UpToSuppliersBySupplierID;
+				return this._UpToSuppliers;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToSuppliersBySupplierID");
+				this.RemovePreSave("UpToSuppliers");
 				
 
 				if(value == null)
 				{
 					this.SupplierID = null;
-					this._UpToSuppliersBySupplierID = null;
+					this._UpToSuppliers = null;
 				}
 				else
 				{
 					this.SupplierID = value.SupplierID;
-					this._UpToSuppliersBySupplierID = value;
-					this.SetPreSave("UpToSuppliersBySupplierID", this._UpToSuppliersBySupplierID);
+					this._UpToSuppliers = value;
+					this.SetPreSave("UpToSuppliers", this._UpToSuppliers);
 				}
 				
 			}
@@ -917,8 +896,8 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "OrderDetailsCollectionByProductID":
-					coll = this.OrderDetailsCollectionByProductID;
+				case "OrderDetailsCollection":
+					coll = this.OrderDetailsCollection;
 					break;	
 			}
 
@@ -931,7 +910,7 @@ namespace BusinessObjects
 		{
 			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
 			
-			props.Add(new esPropertyDescriptor(this, "OrderDetailsCollectionByProductID", typeof(OrderDetailsCollection), new OrderDetails()));
+			props.Add(new esPropertyDescriptor(this, "OrderDetailsCollection", typeof(OrderDetailsCollection), new OrderDetails()));
 		
 			return props;
 		}
@@ -941,13 +920,13 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPreSaveKeys()
 		{
-			if(!this.es.IsDeleted && this._UpToCategoriesByCategoryID != null)
+			if(!this.es.IsDeleted && this._UpToCategories != null)
 			{
-				this.CategoryID = this._UpToCategoriesByCategoryID.CategoryID;
+				this.CategoryID = this._UpToCategories.CategoryID;
 			}
-			if(!this.es.IsDeleted && this._UpToSuppliersBySupplierID != null)
+			if(!this.es.IsDeleted && this._UpToSuppliers != null)
 			{
-				this.SupplierID = this._UpToSuppliersBySupplierID.SupplierID;
+				this.SupplierID = this._UpToSuppliers.SupplierID;
 			}
 		}
 		
@@ -978,9 +957,9 @@ namespace BusinessObjects
 			{
 				Apply(this._OrderDetailsCollection, "ProductID", this.ProductID);
 			}
-			if(this._OrderDetailsCollectionByProductID != null)
+			if(this._OrderDetailsCollection != null)
 			{
-				Apply(this._OrderDetailsCollectionByProductID, "ProductID", this.ProductID);
+				Apply(this._OrderDetailsCollection, "ProductID", this.ProductID);
 			}
 		}
 		

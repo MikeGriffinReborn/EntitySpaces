@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0725.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/25/2019 4:41:35 PM
+Date Generated       : 7/31/2019 10:51:53 AM
 ===============================================================================
 */
 
@@ -94,26 +94,6 @@ namespace BusinessObjects
 			return this.SingleOrDefault(e => e.OrderID == orderID && e.ProductID == productID);
 		}
 
-		
-		
-		#region WCF Service Class
-		
-		[DataContract]
-		[KnownType(typeof(OrderDetails))]
-		public class OrderDetailsCollectionWCFPacket : esCollectionWCFPacket<OrderDetailsCollection>
-		{
-			public static implicit operator OrderDetailsCollection(OrderDetailsCollectionWCFPacket packet)
-			{
-				return packet.Collection;
-			}
-
-			public static implicit operator OrderDetailsCollectionWCFPacket(OrderDetailsCollection collection)
-			{
-				return new OrderDetailsCollectionWCFPacket() { Collection = collection };
-			}
-		}
-		
-		#endregion
 		
 				
 	}
@@ -211,8 +191,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemInt32(OrderDetailsMetadata.ColumnNames.OrderID, value))
 				{
-					this._UpToOrdersByOrderID = null;
-					this.OnPropertyChanged("UpToOrdersByOrderID");
+					this._UpToOrders = null;
+					this.OnPropertyChanged("UpToOrders");
 					OnPropertyChanged(OrderDetailsMetadata.PropertyNames.OrderID);
 				}
 			}
@@ -233,8 +213,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemInt32(OrderDetailsMetadata.ColumnNames.ProductID, value))
 				{
-					this._UpToProductsByProductID = null;
-					this.OnPropertyChanged("UpToProductsByProductID");
+					this._UpToProducts = null;
+					this.OnPropertyChanged("UpToProducts");
 					OnPropertyChanged(OrderDetailsMetadata.PropertyNames.ProductID);
 				}
 			}
@@ -301,9 +281,9 @@ namespace BusinessObjects
 		}		
 		
 		[CLSCompliant(false)]
-		internal protected Orders _UpToOrdersByOrderID;
+		internal protected Orders _UpToOrders;
 		[CLSCompliant(false)]
-		internal protected Products _UpToProductsByProductID;
+		internal protected Products _UpToProducts;
 		#endregion
 		
 		#region Housekeeping methods
@@ -503,46 +483,46 @@ namespace BusinessObjects
 
 				
 				
-		#region UpToOrdersByOrderID - Many To One
+		#region UpToOrders - Many To One
 		/// <summary>
 		/// Many to One
 		/// Foreign Key Name - FK_Order_Details_Orders
 		/// </summary>
 
-		[XmlIgnore]
+		[DataMember(Name="UpToOrders", EmitDefaultValue = false)]
 					
-		public Orders UpToOrdersByOrderID
+		public Orders UpToOrders
 		{
 			get
 			{
 				if (this.es.IsLazyLoadDisabled) return null;
 				
-				if(this._UpToOrdersByOrderID == null && OrderID != null)
+				if(this._UpToOrders == null && OrderID != null)
 				{
-					this._UpToOrdersByOrderID = new Orders();
-					this._UpToOrdersByOrderID.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToOrdersByOrderID", this._UpToOrdersByOrderID);
-					this._UpToOrdersByOrderID.Query.Where(this._UpToOrdersByOrderID.Query.OrderID == this.OrderID);
-					this._UpToOrdersByOrderID.Query.Load();
+					this._UpToOrders = new Orders();
+					this._UpToOrders.es.Connection.Name = this.es.Connection.Name;
+					this.SetPreSave("UpToOrders", this._UpToOrders);
+					this._UpToOrders.Query.Where(this._UpToOrders.Query.OrderID == this.OrderID);
+					this._UpToOrders.Query.Load();
 				}	
-				return this._UpToOrdersByOrderID;
+				return this._UpToOrders;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToOrdersByOrderID");
+				this.RemovePreSave("UpToOrders");
 				
 
 				if(value == null)
 				{
 					this.OrderID = null;
-					this._UpToOrdersByOrderID = null;
+					this._UpToOrders = null;
 				}
 				else
 				{
 					this.OrderID = value.OrderID;
-					this._UpToOrdersByOrderID = value;
-					this.SetPreSave("UpToOrdersByOrderID", this._UpToOrdersByOrderID);
+					this._UpToOrders = value;
+					this.SetPreSave("UpToOrders", this._UpToOrders);
 				}
 				
 			}
@@ -552,46 +532,46 @@ namespace BusinessObjects
 
 				
 				
-		#region UpToProductsByProductID - Many To One
+		#region UpToProducts - Many To One
 		/// <summary>
 		/// Many to One
 		/// Foreign Key Name - FK_Order_Details_Products
 		/// </summary>
 
-		[XmlIgnore]
+		[DataMember(Name="UpToProducts", EmitDefaultValue = false)]
 					
-		public Products UpToProductsByProductID
+		public Products UpToProducts
 		{
 			get
 			{
 				if (this.es.IsLazyLoadDisabled) return null;
 				
-				if(this._UpToProductsByProductID == null && ProductID != null)
+				if(this._UpToProducts == null && ProductID != null)
 				{
-					this._UpToProductsByProductID = new Products();
-					this._UpToProductsByProductID.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToProductsByProductID", this._UpToProductsByProductID);
-					this._UpToProductsByProductID.Query.Where(this._UpToProductsByProductID.Query.ProductID == this.ProductID);
-					this._UpToProductsByProductID.Query.Load();
+					this._UpToProducts = new Products();
+					this._UpToProducts.es.Connection.Name = this.es.Connection.Name;
+					this.SetPreSave("UpToProducts", this._UpToProducts);
+					this._UpToProducts.Query.Where(this._UpToProducts.Query.ProductID == this.ProductID);
+					this._UpToProducts.Query.Load();
 				}	
-				return this._UpToProductsByProductID;
+				return this._UpToProducts;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToProductsByProductID");
+				this.RemovePreSave("UpToProducts");
 				
 
 				if(value == null)
 				{
 					this.ProductID = null;
-					this._UpToProductsByProductID = null;
+					this._UpToProducts = null;
 				}
 				else
 				{
 					this.ProductID = value.ProductID;
-					this._UpToProductsByProductID = value;
-					this.SetPreSave("UpToProductsByProductID", this._UpToProductsByProductID);
+					this._UpToProducts = value;
+					this.SetPreSave("UpToProducts", this._UpToProducts);
 				}
 				
 			}
@@ -606,13 +586,13 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPreSaveKeys()
 		{
-			if(!this.es.IsDeleted && this._UpToOrdersByOrderID != null)
+			if(!this.es.IsDeleted && this._UpToOrders != null)
 			{
-				this.OrderID = this._UpToOrdersByOrderID.OrderID;
+				this.OrderID = this._UpToOrders.OrderID;
 			}
-			if(!this.es.IsDeleted && this._UpToProductsByProductID != null)
+			if(!this.es.IsDeleted && this._UpToProducts != null)
 			{
-				this.ProductID = this._UpToProductsByProductID.ProductID;
+				this.ProductID = this._UpToProducts.ProductID;
 			}
 		}
 		

@@ -25,5 +25,13 @@ namespace BusinessObjects
 		{
 		
 		}
-	}
+
+        public override void SetProperty(string name, object value)
+        {
+            base.SetProperty(name, value);
+            int i = 0;
+        }
+
+
+    }
 }

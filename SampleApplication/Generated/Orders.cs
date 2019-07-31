@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0725.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/25/2019 4:41:35 PM
+Date Generated       : 7/31/2019 10:51:53 AM
 ===============================================================================
 */
 
@@ -92,26 +92,6 @@ namespace BusinessObjects
 			return this.SingleOrDefault(e => e.OrderID == orderID);
 		}
 
-		
-		
-		#region WCF Service Class
-		
-		[DataContract]
-		[KnownType(typeof(Orders))]
-		public class OrdersCollectionWCFPacket : esCollectionWCFPacket<OrdersCollection>
-		{
-			public static implicit operator OrdersCollection(OrdersCollectionWCFPacket packet)
-			{
-				return packet.Collection;
-			}
-
-			public static implicit operator OrdersCollectionWCFPacket(OrdersCollection collection)
-			{
-				return new OrdersCollectionWCFPacket() { Collection = collection };
-			}
-		}
-		
-		#endregion
 		
 				
 	}
@@ -229,8 +209,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemString(OrdersMetadata.ColumnNames.CustomerID, value))
 				{
-					this._UpToCustomersByCustomerID = null;
-					this.OnPropertyChanged("UpToCustomersByCustomerID");
+					this._UpToCustomers = null;
+					this.OnPropertyChanged("UpToCustomers");
 					OnPropertyChanged(OrdersMetadata.PropertyNames.CustomerID);
 				}
 			}
@@ -251,8 +231,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemInt32(OrdersMetadata.ColumnNames.EmployeeID, value))
 				{
-					this._UpToEmployeesByEmployeeID = null;
-					this.OnPropertyChanged("UpToEmployeesByEmployeeID");
+					this._UpToEmployees = null;
+					this.OnPropertyChanged("UpToEmployees");
 					OnPropertyChanged(OrdersMetadata.PropertyNames.EmployeeID);
 				}
 			}
@@ -333,8 +313,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemInt32(OrdersMetadata.ColumnNames.ShipVia, value))
 				{
-					this._UpToShippersByShipVia = null;
-					this.OnPropertyChanged("UpToShippersByShipVia");
+					this._UpToShippers = null;
+					this.OnPropertyChanged("UpToShippers");
 					OnPropertyChanged(OrdersMetadata.PropertyNames.ShipVia);
 				}
 			}
@@ -481,11 +461,11 @@ namespace BusinessObjects
 		}		
 		
 		[CLSCompliant(false)]
-		internal protected Customers _UpToCustomersByCustomerID;
+		internal protected Customers _UpToCustomers;
 		[CLSCompliant(false)]
-		internal protected Employees _UpToEmployeesByEmployeeID;
+		internal protected Employees _UpToEmployees;
 		[CLSCompliant(false)]
-		internal protected Shippers _UpToShippersByShipVia;
+		internal protected Shippers _UpToShippers;
 		#endregion
 		
 		#region Housekeeping methods
@@ -745,7 +725,7 @@ namespace BusinessObjects
 		/// Foreign Key Name - FK_Order_Details_Orders
 		/// </summary>
 
-		[XmlIgnore]
+		[DataMember(Name="UpToProductsCollection", EmitDefaultValue = false)]
 		public ProductsCollection UpToProductsCollection
 		{
 			get
@@ -789,14 +769,14 @@ namespace BusinessObjects
 		/// </summary>
 		public void AssociateProductsCollection(Products entity)
 		{
-			if (this._OrderDetailsCollection == null)
+			if (this._many_OrderDetailsCollection == null)
 			{
-				this._OrderDetailsCollection = new OrderDetailsCollection();
-				this._OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("OrderDetailsCollection", this._OrderDetailsCollection);
+				this._many_OrderDetailsCollection = new OrderDetailsCollection();
+				this._many_OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("ManyOrderDetailsCollection", this._many_OrderDetailsCollection);
 			}
 
-			OrderDetails obj = this._OrderDetailsCollection.AddNew();
+			OrderDetails obj = this._many_OrderDetailsCollection.AddNew();
 			obj.OrderID = this.OrderID;
 			obj.ProductID = entity.ProductID;
 		}
@@ -807,14 +787,14 @@ namespace BusinessObjects
 		/// </summary>
 		public void DissociateProductsCollection(Products entity)
 		{
-			if (this._OrderDetailsCollection == null)
+			if (this._many_OrderDetailsCollection == null)
 			{
-				this._OrderDetailsCollection = new OrderDetailsCollection();
-				this._OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("OrderDetailsCollection", this._OrderDetailsCollection);
+				this._many_OrderDetailsCollection = new OrderDetailsCollection();
+				this._many_OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("ManyOrderDetailsCollection", this._many_OrderDetailsCollection);
 			}
 
-			OrderDetails obj = this._OrderDetailsCollection.AddNew();
+			OrderDetails obj = this._many_OrderDetailsCollection.AddNew();
 			obj.OrderID = this.OrderID;
             obj.ProductID = entity.ProductID;
 			obj.AcceptChanges();
@@ -822,18 +802,18 @@ namespace BusinessObjects
 		}
 
 		private ProductsCollection _UpToProductsCollection;
-		private OrderDetailsCollection _OrderDetailsCollection;
+		private OrderDetailsCollection _many_OrderDetailsCollection;
 		#endregion
 
-		#region OrderDetailsCollectionByOrderID - Zero To Many
+		#region OrderDetailsCollection - Zero To Many
 		
-		static public esPrefetchMap Prefetch_OrderDetailsCollectionByOrderID
+		static public esPrefetchMap Prefetch_OrderDetailsCollection
 		{
 			get
 			{
 				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Orders.OrderDetailsCollectionByOrderID_Delegate;
-				map.PropertyName = "OrderDetailsCollectionByOrderID";
+				map.PrefetchDelegate = BusinessObjects.Orders.OrderDetailsCollection_Delegate;
+				map.PropertyName = "OrderDetailsCollection";
 				map.MyColumnName = "OrderID";
 				map.ParentColumnName = "OrderID";
 				map.IsMultiPartKey = false;
@@ -841,7 +821,7 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void OrderDetailsCollectionByOrderID_Delegate(esPrefetchParameters data)
+		static private void OrderDetailsCollection_Delegate(esPrefetchParameters data)
 		{
 			OrdersQuery parent = new OrdersQuery(data.NextAlias());
 
@@ -858,9 +838,9 @@ namespace BusinessObjects
 		}	
 		
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeOrderDetailsCollectionByOrderID()
+		public bool ShouldSerializeOrderDetailsCollection()
 		{
-		    if(this._OrderDetailsCollectionByOrderID != null && this._OrderDetailsCollectionByOrderID.Count > 0)
+		    if(this._OrderDetailsCollection != null && this._OrderDetailsCollection.Count > 0)
 				return true;
             else
 				return false;
@@ -872,42 +852,41 @@ namespace BusinessObjects
 		/// </summary>
 		
 
-		[XmlIgnore]
-		[DataMember]
-		public OrderDetailsCollection OrderDetailsCollectionByOrderID
+		[DataMember(Name="OrderDetailsCollection", EmitDefaultValue = false)]
+		public OrderDetailsCollection OrderDetailsCollection
 		{
 			get
 			{
-				if(this._OrderDetailsCollectionByOrderID == null)
+				if(this._OrderDetailsCollection == null)
 				{
-					this._OrderDetailsCollectionByOrderID = new OrderDetailsCollection();
-					this._OrderDetailsCollectionByOrderID.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("OrderDetailsCollectionByOrderID", this._OrderDetailsCollectionByOrderID);
+					this._OrderDetailsCollection = new OrderDetailsCollection();
+					this._OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("OrderDetailsCollection", this._OrderDetailsCollection);
 				
 					if (this.OrderID != null)
 					{
 						if (!this.es.IsLazyLoadDisabled)
 						{
-							this._OrderDetailsCollectionByOrderID.Query.Where(this._OrderDetailsCollectionByOrderID.Query.OrderID == this.OrderID);
-							this._OrderDetailsCollectionByOrderID.Query.Load();
+							this._OrderDetailsCollection.Query.Where(this._OrderDetailsCollection.Query.OrderID == this.OrderID);
+							this._OrderDetailsCollection.Query.Load();
 						}
 
 						// Auto-hookup Foreign Keys
-						this._OrderDetailsCollectionByOrderID.fks.Add(OrderDetailsMetadata.ColumnNames.OrderID, this.OrderID);
+						this._OrderDetailsCollection.fks.Add(OrderDetailsMetadata.ColumnNames.OrderID, this.OrderID);
 					}
 				}
 
-				return this._OrderDetailsCollectionByOrderID;
+				return this._OrderDetailsCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._OrderDetailsCollectionByOrderID != null) 
+				if (this._OrderDetailsCollection != null) 
 				{ 
-					this.RemovePostSave("OrderDetailsCollectionByOrderID"); 
-					this._OrderDetailsCollectionByOrderID = null;
+					this.RemovePostSave("OrderDetailsCollection"); 
+					this._OrderDetailsCollection = null;
 					
 				} 
 			} 			
@@ -917,51 +896,51 @@ namespace BusinessObjects
 		
 			
 		
-		private OrderDetailsCollection _OrderDetailsCollectionByOrderID;
+		private OrderDetailsCollection _OrderDetailsCollection;
 		#endregion
 
 				
 				
-		#region UpToCustomersByCustomerID - Many To One
+		#region UpToCustomers - Many To One
 		/// <summary>
 		/// Many to One
 		/// Foreign Key Name - FK_Orders_Customers
 		/// </summary>
 
-		[XmlIgnore]
+		[DataMember(Name="UpToCustomers", EmitDefaultValue = false)]
 					
-		public Customers UpToCustomersByCustomerID
+		public Customers UpToCustomers
 		{
 			get
 			{
 				if (this.es.IsLazyLoadDisabled) return null;
 				
-				if(this._UpToCustomersByCustomerID == null && CustomerID != null)
+				if(this._UpToCustomers == null && CustomerID != null)
 				{
-					this._UpToCustomersByCustomerID = new Customers();
-					this._UpToCustomersByCustomerID.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToCustomersByCustomerID", this._UpToCustomersByCustomerID);
-					this._UpToCustomersByCustomerID.Query.Where(this._UpToCustomersByCustomerID.Query.CustomerID == this.CustomerID);
-					this._UpToCustomersByCustomerID.Query.Load();
+					this._UpToCustomers = new Customers();
+					this._UpToCustomers.es.Connection.Name = this.es.Connection.Name;
+					this.SetPreSave("UpToCustomers", this._UpToCustomers);
+					this._UpToCustomers.Query.Where(this._UpToCustomers.Query.CustomerID == this.CustomerID);
+					this._UpToCustomers.Query.Load();
 				}	
-				return this._UpToCustomersByCustomerID;
+				return this._UpToCustomers;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToCustomersByCustomerID");
+				this.RemovePreSave("UpToCustomers");
 				
 
 				if(value == null)
 				{
 					this.CustomerID = null;
-					this._UpToCustomersByCustomerID = null;
+					this._UpToCustomers = null;
 				}
 				else
 				{
 					this.CustomerID = value.CustomerID;
-					this._UpToCustomersByCustomerID = value;
-					this.SetPreSave("UpToCustomersByCustomerID", this._UpToCustomersByCustomerID);
+					this._UpToCustomers = value;
+					this.SetPreSave("UpToCustomers", this._UpToCustomers);
 				}
 				
 			}
@@ -971,46 +950,46 @@ namespace BusinessObjects
 
 				
 				
-		#region UpToEmployeesByEmployeeID - Many To One
+		#region UpToEmployees - Many To One
 		/// <summary>
 		/// Many to One
 		/// Foreign Key Name - FK_Orders_Employees
 		/// </summary>
 
-		[XmlIgnore]
+		[DataMember(Name="UpToEmployees", EmitDefaultValue = false)]
 					
-		public Employees UpToEmployeesByEmployeeID
+		public Employees UpToEmployees
 		{
 			get
 			{
 				if (this.es.IsLazyLoadDisabled) return null;
 				
-				if(this._UpToEmployeesByEmployeeID == null && EmployeeID != null)
+				if(this._UpToEmployees == null && EmployeeID != null)
 				{
-					this._UpToEmployeesByEmployeeID = new Employees();
-					this._UpToEmployeesByEmployeeID.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToEmployeesByEmployeeID", this._UpToEmployeesByEmployeeID);
-					this._UpToEmployeesByEmployeeID.Query.Where(this._UpToEmployeesByEmployeeID.Query.EmployeeID == this.EmployeeID);
-					this._UpToEmployeesByEmployeeID.Query.Load();
+					this._UpToEmployees = new Employees();
+					this._UpToEmployees.es.Connection.Name = this.es.Connection.Name;
+					this.SetPreSave("UpToEmployees", this._UpToEmployees);
+					this._UpToEmployees.Query.Where(this._UpToEmployees.Query.EmployeeID == this.EmployeeID);
+					this._UpToEmployees.Query.Load();
 				}	
-				return this._UpToEmployeesByEmployeeID;
+				return this._UpToEmployees;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToEmployeesByEmployeeID");
+				this.RemovePreSave("UpToEmployees");
 				
 
 				if(value == null)
 				{
 					this.EmployeeID = null;
-					this._UpToEmployeesByEmployeeID = null;
+					this._UpToEmployees = null;
 				}
 				else
 				{
 					this.EmployeeID = value.EmployeeID;
-					this._UpToEmployeesByEmployeeID = value;
-					this.SetPreSave("UpToEmployeesByEmployeeID", this._UpToEmployeesByEmployeeID);
+					this._UpToEmployees = value;
+					this.SetPreSave("UpToEmployees", this._UpToEmployees);
 				}
 				
 			}
@@ -1020,46 +999,46 @@ namespace BusinessObjects
 
 				
 				
-		#region UpToShippersByShipVia - Many To One
+		#region UpToShippers - Many To One
 		/// <summary>
 		/// Many to One
 		/// Foreign Key Name - FK_Orders_Shippers
 		/// </summary>
 
-		[XmlIgnore]
+		[DataMember(Name="UpToShippers", EmitDefaultValue = false)]
 					
-		public Shippers UpToShippersByShipVia
+		public Shippers UpToShippers
 		{
 			get
 			{
 				if (this.es.IsLazyLoadDisabled) return null;
 				
-				if(this._UpToShippersByShipVia == null && ShipVia != null)
+				if(this._UpToShippers == null && ShipVia != null)
 				{
-					this._UpToShippersByShipVia = new Shippers();
-					this._UpToShippersByShipVia.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToShippersByShipVia", this._UpToShippersByShipVia);
-					this._UpToShippersByShipVia.Query.Where(this._UpToShippersByShipVia.Query.ShipperID == this.ShipVia);
-					this._UpToShippersByShipVia.Query.Load();
+					this._UpToShippers = new Shippers();
+					this._UpToShippers.es.Connection.Name = this.es.Connection.Name;
+					this.SetPreSave("UpToShippers", this._UpToShippers);
+					this._UpToShippers.Query.Where(this._UpToShippers.Query.ShipperID == this.ShipVia);
+					this._UpToShippers.Query.Load();
 				}	
-				return this._UpToShippersByShipVia;
+				return this._UpToShippers;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToShippersByShipVia");
+				this.RemovePreSave("UpToShippers");
 				
 
 				if(value == null)
 				{
 					this.ShipVia = null;
-					this._UpToShippersByShipVia = null;
+					this._UpToShippers = null;
 				}
 				else
 				{
 					this.ShipVia = value.ShipperID;
-					this._UpToShippersByShipVia = value;
-					this.SetPreSave("UpToShippersByShipVia", this._UpToShippersByShipVia);
+					this._UpToShippers = value;
+					this.SetPreSave("UpToShippers", this._UpToShippers);
 				}
 				
 			}
@@ -1074,8 +1053,8 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "OrderDetailsCollectionByOrderID":
-					coll = this.OrderDetailsCollectionByOrderID;
+				case "OrderDetailsCollection":
+					coll = this.OrderDetailsCollection;
 					break;	
 			}
 
@@ -1088,7 +1067,7 @@ namespace BusinessObjects
 		{
 			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
 			
-			props.Add(new esPropertyDescriptor(this, "OrderDetailsCollectionByOrderID", typeof(OrderDetailsCollection), new OrderDetails()));
+			props.Add(new esPropertyDescriptor(this, "OrderDetailsCollection", typeof(OrderDetailsCollection), new OrderDetails()));
 		
 			return props;
 		}
@@ -1098,13 +1077,13 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPreSaveKeys()
 		{
-			if(!this.es.IsDeleted && this._UpToEmployeesByEmployeeID != null)
+			if(!this.es.IsDeleted && this._UpToEmployees != null)
 			{
-				this.EmployeeID = this._UpToEmployeesByEmployeeID.EmployeeID;
+				this.EmployeeID = this._UpToEmployees.EmployeeID;
 			}
-			if(!this.es.IsDeleted && this._UpToShippersByShipVia != null)
+			if(!this.es.IsDeleted && this._UpToShippers != null)
 			{
-				this.ShipVia = this._UpToShippersByShipVia.ShipperID;
+				this.ShipVia = this._UpToShippers.ShipperID;
 			}
 		}
 		
@@ -1135,9 +1114,9 @@ namespace BusinessObjects
 			{
 				Apply(this._OrderDetailsCollection, "OrderID", this.OrderID);
 			}
-			if(this._OrderDetailsCollectionByOrderID != null)
+			if(this._OrderDetailsCollection != null)
 			{
-				Apply(this._OrderDetailsCollectionByOrderID, "OrderID", this.OrderID);
+				Apply(this._OrderDetailsCollection, "OrderID", this.OrderID);
 			}
 		}
 		

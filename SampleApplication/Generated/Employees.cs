@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0725.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/25/2019 4:41:33 PM
+Date Generated       : 7/31/2019 10:51:51 AM
 ===============================================================================
 */
 
@@ -92,26 +92,6 @@ namespace BusinessObjects
 			return this.SingleOrDefault(e => e.EmployeeID == employeeID);
 		}
 
-		
-		
-		#region WCF Service Class
-		
-		[DataContract]
-		[KnownType(typeof(Employees))]
-		public class EmployeesCollectionWCFPacket : esCollectionWCFPacket<EmployeesCollection>
-		{
-			public static implicit operator EmployeesCollection(EmployeesCollectionWCFPacket packet)
-			{
-				return packet.Collection;
-			}
-
-			public static implicit operator EmployeesCollectionWCFPacket(EmployeesCollection collection)
-			{
-				return new EmployeesCollectionWCFPacket() { Collection = collection };
-			}
-		}
-		
-		#endregion
 		
 				
 	}
@@ -529,8 +509,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemInt32(EmployeesMetadata.ColumnNames.ReportsTo, value))
 				{
-					this._UpToEmployeesByReportsTo = null;
-					this.OnPropertyChanged("UpToEmployeesByReportsTo");
+					this._UpToEmployees = null;
+					this.OnPropertyChanged("UpToEmployees");
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.ReportsTo);
 				}
 			}
@@ -557,7 +537,7 @@ namespace BusinessObjects
 		}		
 		
 		[CLSCompliant(false)]
-		internal protected Employees _UpToEmployeesByReportsTo;
+		internal protected Employees _UpToEmployees;
 		#endregion
 		
 		#region Housekeeping methods
@@ -833,15 +813,15 @@ namespace BusinessObjects
 	public partial class Employees : esEmployees
 	{
 
-		#region EmployeesCollectionByReportsTo - Zero To Many
+		#region EmployeesCollection - Zero To Many
 		
-		static public esPrefetchMap Prefetch_EmployeesCollectionByReportsTo
+		static public esPrefetchMap Prefetch_EmployeesCollection
 		{
 			get
 			{
 				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Employees.EmployeesCollectionByReportsTo_Delegate;
-				map.PropertyName = "EmployeesCollectionByReportsTo";
+				map.PrefetchDelegate = BusinessObjects.Employees.EmployeesCollection_Delegate;
+				map.PropertyName = "EmployeesCollection";
 				map.MyColumnName = "EmployeeID";
 				map.ParentColumnName = "ReportsTo";
 				map.IsMultiPartKey = false;
@@ -849,7 +829,7 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void EmployeesCollectionByReportsTo_Delegate(esPrefetchParameters data)
+		static private void EmployeesCollection_Delegate(esPrefetchParameters data)
 		{
 			EmployeesQuery parent = new EmployeesQuery(data.NextAlias());
 
@@ -866,9 +846,9 @@ namespace BusinessObjects
 		}	
 		
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeEmployeesCollectionByReportsTo()
+		public bool ShouldSerializeEmployeesCollection()
 		{
-		    if(this._EmployeesCollectionByReportsTo != null && this._EmployeesCollectionByReportsTo.Count > 0)
+		    if(this._EmployeesCollection != null && this._EmployeesCollection.Count > 0)
 				return true;
             else
 				return false;
@@ -880,42 +860,41 @@ namespace BusinessObjects
 		/// </summary>
 		
 
-		[XmlIgnore]
-		[DataMember]
-		public EmployeesCollection EmployeesCollectionByReportsTo
+		[DataMember(Name="EmployeesCollection", EmitDefaultValue = false)]
+		public EmployeesCollection EmployeesCollection
 		{
 			get
 			{
-				if(this._EmployeesCollectionByReportsTo == null)
+				if(this._EmployeesCollection == null)
 				{
-					this._EmployeesCollectionByReportsTo = new EmployeesCollection();
-					this._EmployeesCollectionByReportsTo.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("EmployeesCollectionByReportsTo", this._EmployeesCollectionByReportsTo);
+					this._EmployeesCollection = new EmployeesCollection();
+					this._EmployeesCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("EmployeesCollection", this._EmployeesCollection);
 				
 					if (this.EmployeeID != null)
 					{
 						if (!this.es.IsLazyLoadDisabled)
 						{
-							this._EmployeesCollectionByReportsTo.Query.Where(this._EmployeesCollectionByReportsTo.Query.ReportsTo == this.EmployeeID);
-							this._EmployeesCollectionByReportsTo.Query.Load();
+							this._EmployeesCollection.Query.Where(this._EmployeesCollection.Query.ReportsTo == this.EmployeeID);
+							this._EmployeesCollection.Query.Load();
 						}
 
 						// Auto-hookup Foreign Keys
-						this._EmployeesCollectionByReportsTo.fks.Add(EmployeesMetadata.ColumnNames.ReportsTo, this.EmployeeID);
+						this._EmployeesCollection.fks.Add(EmployeesMetadata.ColumnNames.ReportsTo, this.EmployeeID);
 					}
 				}
 
-				return this._EmployeesCollectionByReportsTo;
+				return this._EmployeesCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._EmployeesCollectionByReportsTo != null) 
+				if (this._EmployeesCollection != null) 
 				{ 
-					this.RemovePostSave("EmployeesCollectionByReportsTo"); 
-					this._EmployeesCollectionByReportsTo = null;
+					this.RemovePostSave("EmployeesCollection"); 
+					this._EmployeesCollection = null;
 					
 				} 
 			} 			
@@ -925,51 +904,51 @@ namespace BusinessObjects
 		
 			
 		
-		private EmployeesCollection _EmployeesCollectionByReportsTo;
+		private EmployeesCollection _EmployeesCollection;
 		#endregion
 
 				
 				
-		#region UpToEmployeesByReportsTo - Many To One
+		#region UpToEmployees - Many To One
 		/// <summary>
 		/// Many to One
 		/// Foreign Key Name - FK_Employees_Employees
 		/// </summary>
 
-		[XmlIgnore]
+		[DataMember(Name="UpToEmployees", EmitDefaultValue = false)]
 					
-		public Employees UpToEmployeesByReportsTo
+		public Employees UpToEmployees
 		{
 			get
 			{
 				if (this.es.IsLazyLoadDisabled) return null;
 				
-				if(this._UpToEmployeesByReportsTo == null && ReportsTo != null)
+				if(this._UpToEmployees == null && ReportsTo != null)
 				{
-					this._UpToEmployeesByReportsTo = new Employees();
-					this._UpToEmployeesByReportsTo.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToEmployeesByReportsTo", this._UpToEmployeesByReportsTo);
-					this._UpToEmployeesByReportsTo.Query.Where(this._UpToEmployeesByReportsTo.Query.EmployeeID == this.ReportsTo);
-					this._UpToEmployeesByReportsTo.Query.Load();
+					this._UpToEmployees = new Employees();
+					this._UpToEmployees.es.Connection.Name = this.es.Connection.Name;
+					this.SetPreSave("UpToEmployees", this._UpToEmployees);
+					this._UpToEmployees.Query.Where(this._UpToEmployees.Query.EmployeeID == this.ReportsTo);
+					this._UpToEmployees.Query.Load();
 				}	
-				return this._UpToEmployeesByReportsTo;
+				return this._UpToEmployees;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToEmployeesByReportsTo");
+				this.RemovePreSave("UpToEmployees");
 				
 
 				if(value == null)
 				{
 					this.ReportsTo = null;
-					this._UpToEmployeesByReportsTo = null;
+					this._UpToEmployees = null;
 				}
 				else
 				{
 					this.ReportsTo = value.EmployeeID;
-					this._UpToEmployeesByReportsTo = value;
-					this.SetPreSave("UpToEmployeesByReportsTo", this._UpToEmployeesByReportsTo);
+					this._UpToEmployees = value;
+					this.SetPreSave("UpToEmployees", this._UpToEmployees);
 				}
 				
 			}
@@ -985,7 +964,7 @@ namespace BusinessObjects
 		/// Foreign Key Name - FK_EmployeeTerritories_Employees
 		/// </summary>
 
-		[XmlIgnore]
+		[DataMember(Name="UpToTerritoriesCollection", EmitDefaultValue = false)]
 		public TerritoriesCollection UpToTerritoriesCollection
 		{
 			get
@@ -1029,14 +1008,14 @@ namespace BusinessObjects
 		/// </summary>
 		public void AssociateTerritoriesCollection(Territories entity)
 		{
-			if (this._EmployeeTerritoriesCollection == null)
+			if (this._many_EmployeeTerritoriesCollection == null)
 			{
-				this._EmployeeTerritoriesCollection = new EmployeeTerritoriesCollection();
-				this._EmployeeTerritoriesCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("EmployeeTerritoriesCollection", this._EmployeeTerritoriesCollection);
+				this._many_EmployeeTerritoriesCollection = new EmployeeTerritoriesCollection();
+				this._many_EmployeeTerritoriesCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("EmployeeTerritoriesCollection", this._many_EmployeeTerritoriesCollection);
 			}
 
-			EmployeeTerritories obj = this._EmployeeTerritoriesCollection.AddNew();
+			EmployeeTerritories obj = this._many_EmployeeTerritoriesCollection.AddNew();
 			obj.EmployeeID = this.EmployeeID;
 			obj.TerritoryID = entity.TerritoryID;
 		}
@@ -1047,14 +1026,14 @@ namespace BusinessObjects
 		/// </summary>
 		public void DissociateTerritoriesCollection(Territories entity)
 		{
-			if (this._EmployeeTerritoriesCollection == null)
+			if (this._many_EmployeeTerritoriesCollection == null)
 			{
-				this._EmployeeTerritoriesCollection = new EmployeeTerritoriesCollection();
-				this._EmployeeTerritoriesCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("EmployeeTerritoriesCollection", this._EmployeeTerritoriesCollection);
+				this._many_EmployeeTerritoriesCollection = new EmployeeTerritoriesCollection();
+				this._many_EmployeeTerritoriesCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("EmployeeTerritoriesCollection", this._many_EmployeeTerritoriesCollection);
 			}
 
-			EmployeeTerritories obj = this._EmployeeTerritoriesCollection.AddNew();
+			EmployeeTerritories obj = this._many_EmployeeTerritoriesCollection.AddNew();
 			obj.EmployeeID = this.EmployeeID;
             obj.TerritoryID = entity.TerritoryID;
 			obj.AcceptChanges();
@@ -1062,18 +1041,18 @@ namespace BusinessObjects
 		}
 
 		private TerritoriesCollection _UpToTerritoriesCollection;
-		private EmployeeTerritoriesCollection _EmployeeTerritoriesCollection;
+		private EmployeeTerritoriesCollection _many_EmployeeTerritoriesCollection;
 		#endregion
 
-		#region EmployeeTerritoriesCollectionByEmployeeID - Zero To Many
+		#region EmployeeTerritoriesCollection - Zero To Many
 		
-		static public esPrefetchMap Prefetch_EmployeeTerritoriesCollectionByEmployeeID
+		static public esPrefetchMap Prefetch_EmployeeTerritoriesCollection
 		{
 			get
 			{
 				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Employees.EmployeeTerritoriesCollectionByEmployeeID_Delegate;
-				map.PropertyName = "EmployeeTerritoriesCollectionByEmployeeID";
+				map.PrefetchDelegate = BusinessObjects.Employees.EmployeeTerritoriesCollection_Delegate;
+				map.PropertyName = "EmployeeTerritoriesCollection";
 				map.MyColumnName = "EmployeeID";
 				map.ParentColumnName = "EmployeeID";
 				map.IsMultiPartKey = false;
@@ -1081,7 +1060,7 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void EmployeeTerritoriesCollectionByEmployeeID_Delegate(esPrefetchParameters data)
+		static private void EmployeeTerritoriesCollection_Delegate(esPrefetchParameters data)
 		{
 			EmployeesQuery parent = new EmployeesQuery(data.NextAlias());
 
@@ -1098,9 +1077,9 @@ namespace BusinessObjects
 		}	
 		
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeEmployeeTerritoriesCollectionByEmployeeID()
+		public bool ShouldSerializeEmployeeTerritoriesCollection()
 		{
-		    if(this._EmployeeTerritoriesCollectionByEmployeeID != null && this._EmployeeTerritoriesCollectionByEmployeeID.Count > 0)
+		    if(this._EmployeeTerritoriesCollection != null && this._EmployeeTerritoriesCollection.Count > 0)
 				return true;
             else
 				return false;
@@ -1112,42 +1091,41 @@ namespace BusinessObjects
 		/// </summary>
 		
 
-		[XmlIgnore]
-		[DataMember]
-		public EmployeeTerritoriesCollection EmployeeTerritoriesCollectionByEmployeeID
+		[DataMember(Name="EmployeeTerritoriesCollection", EmitDefaultValue = false)]
+		public EmployeeTerritoriesCollection EmployeeTerritoriesCollection
 		{
 			get
 			{
-				if(this._EmployeeTerritoriesCollectionByEmployeeID == null)
+				if(this._EmployeeTerritoriesCollection == null)
 				{
-					this._EmployeeTerritoriesCollectionByEmployeeID = new EmployeeTerritoriesCollection();
-					this._EmployeeTerritoriesCollectionByEmployeeID.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("EmployeeTerritoriesCollectionByEmployeeID", this._EmployeeTerritoriesCollectionByEmployeeID);
+					this._EmployeeTerritoriesCollection = new EmployeeTerritoriesCollection();
+					this._EmployeeTerritoriesCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("EmployeeTerritoriesCollection", this._EmployeeTerritoriesCollection);
 				
 					if (this.EmployeeID != null)
 					{
 						if (!this.es.IsLazyLoadDisabled)
 						{
-							this._EmployeeTerritoriesCollectionByEmployeeID.Query.Where(this._EmployeeTerritoriesCollectionByEmployeeID.Query.EmployeeID == this.EmployeeID);
-							this._EmployeeTerritoriesCollectionByEmployeeID.Query.Load();
+							this._EmployeeTerritoriesCollection.Query.Where(this._EmployeeTerritoriesCollection.Query.EmployeeID == this.EmployeeID);
+							this._EmployeeTerritoriesCollection.Query.Load();
 						}
 
 						// Auto-hookup Foreign Keys
-						this._EmployeeTerritoriesCollectionByEmployeeID.fks.Add(EmployeeTerritoriesMetadata.ColumnNames.EmployeeID, this.EmployeeID);
+						this._EmployeeTerritoriesCollection.fks.Add(EmployeeTerritoriesMetadata.ColumnNames.EmployeeID, this.EmployeeID);
 					}
 				}
 
-				return this._EmployeeTerritoriesCollectionByEmployeeID;
+				return this._EmployeeTerritoriesCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._EmployeeTerritoriesCollectionByEmployeeID != null) 
+				if (this._EmployeeTerritoriesCollection != null) 
 				{ 
-					this.RemovePostSave("EmployeeTerritoriesCollectionByEmployeeID"); 
-					this._EmployeeTerritoriesCollectionByEmployeeID = null;
+					this.RemovePostSave("EmployeeTerritoriesCollection"); 
+					this._EmployeeTerritoriesCollection = null;
 					
 				} 
 			} 			
@@ -1157,18 +1135,18 @@ namespace BusinessObjects
 		
 			
 		
-		private EmployeeTerritoriesCollection _EmployeeTerritoriesCollectionByEmployeeID;
+		private EmployeeTerritoriesCollection _EmployeeTerritoriesCollection;
 		#endregion
 
-		#region OrdersCollectionByEmployeeID - Zero To Many
+		#region OrdersCollection - Zero To Many
 		
-		static public esPrefetchMap Prefetch_OrdersCollectionByEmployeeID
+		static public esPrefetchMap Prefetch_OrdersCollection
 		{
 			get
 			{
 				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Employees.OrdersCollectionByEmployeeID_Delegate;
-				map.PropertyName = "OrdersCollectionByEmployeeID";
+				map.PrefetchDelegate = BusinessObjects.Employees.OrdersCollection_Delegate;
+				map.PropertyName = "OrdersCollection";
 				map.MyColumnName = "EmployeeID";
 				map.ParentColumnName = "EmployeeID";
 				map.IsMultiPartKey = false;
@@ -1176,7 +1154,7 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void OrdersCollectionByEmployeeID_Delegate(esPrefetchParameters data)
+		static private void OrdersCollection_Delegate(esPrefetchParameters data)
 		{
 			EmployeesQuery parent = new EmployeesQuery(data.NextAlias());
 
@@ -1193,9 +1171,9 @@ namespace BusinessObjects
 		}	
 		
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeOrdersCollectionByEmployeeID()
+		public bool ShouldSerializeOrdersCollection()
 		{
-		    if(this._OrdersCollectionByEmployeeID != null && this._OrdersCollectionByEmployeeID.Count > 0)
+		    if(this._OrdersCollection != null && this._OrdersCollection.Count > 0)
 				return true;
             else
 				return false;
@@ -1207,42 +1185,41 @@ namespace BusinessObjects
 		/// </summary>
 		
 
-		[XmlIgnore]
-		[DataMember]
-		public OrdersCollection OrdersCollectionByEmployeeID
+		[DataMember(Name="OrdersCollection", EmitDefaultValue = false)]
+		public OrdersCollection OrdersCollection
 		{
 			get
 			{
-				if(this._OrdersCollectionByEmployeeID == null)
+				if(this._OrdersCollection == null)
 				{
-					this._OrdersCollectionByEmployeeID = new OrdersCollection();
-					this._OrdersCollectionByEmployeeID.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("OrdersCollectionByEmployeeID", this._OrdersCollectionByEmployeeID);
+					this._OrdersCollection = new OrdersCollection();
+					this._OrdersCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("OrdersCollection", this._OrdersCollection);
 				
 					if (this.EmployeeID != null)
 					{
 						if (!this.es.IsLazyLoadDisabled)
 						{
-							this._OrdersCollectionByEmployeeID.Query.Where(this._OrdersCollectionByEmployeeID.Query.EmployeeID == this.EmployeeID);
-							this._OrdersCollectionByEmployeeID.Query.Load();
+							this._OrdersCollection.Query.Where(this._OrdersCollection.Query.EmployeeID == this.EmployeeID);
+							this._OrdersCollection.Query.Load();
 						}
 
 						// Auto-hookup Foreign Keys
-						this._OrdersCollectionByEmployeeID.fks.Add(OrdersMetadata.ColumnNames.EmployeeID, this.EmployeeID);
+						this._OrdersCollection.fks.Add(OrdersMetadata.ColumnNames.EmployeeID, this.EmployeeID);
 					}
 				}
 
-				return this._OrdersCollectionByEmployeeID;
+				return this._OrdersCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._OrdersCollectionByEmployeeID != null) 
+				if (this._OrdersCollection != null) 
 				{ 
-					this.RemovePostSave("OrdersCollectionByEmployeeID"); 
-					this._OrdersCollectionByEmployeeID = null;
+					this.RemovePostSave("OrdersCollection"); 
+					this._OrdersCollection = null;
 					
 				} 
 			} 			
@@ -1252,7 +1229,7 @@ namespace BusinessObjects
 		
 			
 		
-		private OrdersCollection _OrdersCollectionByEmployeeID;
+		private OrdersCollection _OrdersCollection;
 		#endregion
 
 		
@@ -1262,14 +1239,14 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "EmployeesCollectionByReportsTo":
-					coll = this.EmployeesCollectionByReportsTo;
+				case "EmployeesCollection":
+					coll = this.EmployeesCollection;
 					break;
-				case "EmployeeTerritoriesCollectionByEmployeeID":
-					coll = this.EmployeeTerritoriesCollectionByEmployeeID;
+				case "EmployeeTerritoriesCollection":
+					coll = this.EmployeeTerritoriesCollection;
 					break;
-				case "OrdersCollectionByEmployeeID":
-					coll = this.OrdersCollectionByEmployeeID;
+				case "OrdersCollection":
+					coll = this.OrdersCollection;
 					break;	
 			}
 
@@ -1282,9 +1259,9 @@ namespace BusinessObjects
 		{
 			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
 			
-			props.Add(new esPropertyDescriptor(this, "EmployeesCollectionByReportsTo", typeof(EmployeesCollection), new Employees()));
-			props.Add(new esPropertyDescriptor(this, "EmployeeTerritoriesCollectionByEmployeeID", typeof(EmployeeTerritoriesCollection), new EmployeeTerritories()));
-			props.Add(new esPropertyDescriptor(this, "OrdersCollectionByEmployeeID", typeof(OrdersCollection), new Orders()));
+			props.Add(new esPropertyDescriptor(this, "EmployeesCollection", typeof(EmployeesCollection), new Employees()));
+			props.Add(new esPropertyDescriptor(this, "EmployeeTerritoriesCollection", typeof(EmployeeTerritoriesCollection), new EmployeeTerritories()));
+			props.Add(new esPropertyDescriptor(this, "OrdersCollection", typeof(OrdersCollection), new Orders()));
 		
 			return props;
 		}
@@ -1294,9 +1271,9 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPreSaveKeys()
 		{
-			if(!this.es.IsDeleted && this._UpToEmployeesByReportsTo != null)
+			if(!this.es.IsDeleted && this._UpToEmployees != null)
 			{
-				this.ReportsTo = this._UpToEmployeesByReportsTo.EmployeeID;
+				this.ReportsTo = this._UpToEmployees.EmployeeID;
 			}
 		}
 		
@@ -1323,21 +1300,21 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPostSaveKeys()
 		{
-			if(this._EmployeesCollectionByReportsTo != null)
+			if(this._EmployeesCollection != null)
 			{
-				Apply(this._EmployeesCollectionByReportsTo, "ReportsTo", this.EmployeeID);
+				Apply(this._EmployeesCollection, "ReportsTo", this.EmployeeID);
 			}
 			if(this._EmployeeTerritoriesCollection != null)
 			{
 				Apply(this._EmployeeTerritoriesCollection, "EmployeeID", this.EmployeeID);
 			}
-			if(this._EmployeeTerritoriesCollectionByEmployeeID != null)
+			if(this._EmployeeTerritoriesCollection != null)
 			{
-				Apply(this._EmployeeTerritoriesCollectionByEmployeeID, "EmployeeID", this.EmployeeID);
+				Apply(this._EmployeeTerritoriesCollection, "EmployeeID", this.EmployeeID);
 			}
-			if(this._OrdersCollectionByEmployeeID != null)
+			if(this._OrdersCollection != null)
 			{
-				Apply(this._OrdersCollectionByEmployeeID, "EmployeeID", this.EmployeeID);
+				Apply(this._OrdersCollection, "EmployeeID", this.EmployeeID);
 			}
 		}
 		

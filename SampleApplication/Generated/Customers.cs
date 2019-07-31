@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0725.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/25/2019 4:41:33 PM
+Date Generated       : 7/31/2019 10:51:50 AM
 ===============================================================================
 */
 
@@ -92,26 +92,6 @@ namespace BusinessObjects
 			return this.SingleOrDefault(e => e.CustomerID == customerID);
 		}
 
-		
-		
-		#region WCF Service Class
-		
-		[DataContract]
-		[KnownType(typeof(Customers))]
-		public class CustomersCollectionWCFPacket : esCollectionWCFPacket<CustomersCollection>
-		{
-			public static implicit operator CustomersCollection(CustomersCollectionWCFPacket packet)
-			{
-				return packet.Collection;
-			}
-
-			public static implicit operator CustomersCollectionWCFPacket(CustomersCollection collection)
-			{
-				return new CustomersCollectionWCFPacket() { Collection = collection };
-			}
-		}
-		
-		#endregion
 		
 				
 	}
@@ -655,7 +635,7 @@ namespace BusinessObjects
 		/// Foreign Key Name - FK_CustomerCustomerDemo_Customers
 		/// </summary>
 
-		[XmlIgnore]
+		[DataMember(Name="UpToCustomerDemographicsCollection", EmitDefaultValue = false)]
 		public CustomerDemographicsCollection UpToCustomerDemographicsCollection
 		{
 			get
@@ -699,14 +679,14 @@ namespace BusinessObjects
 		/// </summary>
 		public void AssociateCustomerDemographicsCollection(CustomerDemographics entity)
 		{
-			if (this._CustomerCustomerDemoCollection == null)
+			if (this._many_CustomerCustomerDemoCollection == null)
 			{
-				this._CustomerCustomerDemoCollection = new CustomerCustomerDemoCollection();
-				this._CustomerCustomerDemoCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("CustomerCustomerDemoCollection", this._CustomerCustomerDemoCollection);
+				this._many_CustomerCustomerDemoCollection = new CustomerCustomerDemoCollection();
+				this._many_CustomerCustomerDemoCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("CustomerCustomerDemoCollection", this._many_CustomerCustomerDemoCollection);
 			}
 
-			CustomerCustomerDemo obj = this._CustomerCustomerDemoCollection.AddNew();
+			CustomerCustomerDemo obj = this._many_CustomerCustomerDemoCollection.AddNew();
 			obj.CustomerID = this.CustomerID;
 			obj.CustomerTypeID = entity.CustomerTypeID;
 		}
@@ -717,14 +697,14 @@ namespace BusinessObjects
 		/// </summary>
 		public void DissociateCustomerDemographicsCollection(CustomerDemographics entity)
 		{
-			if (this._CustomerCustomerDemoCollection == null)
+			if (this._many_CustomerCustomerDemoCollection == null)
 			{
-				this._CustomerCustomerDemoCollection = new CustomerCustomerDemoCollection();
-				this._CustomerCustomerDemoCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("CustomerCustomerDemoCollection", this._CustomerCustomerDemoCollection);
+				this._many_CustomerCustomerDemoCollection = new CustomerCustomerDemoCollection();
+				this._many_CustomerCustomerDemoCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("CustomerCustomerDemoCollection", this._many_CustomerCustomerDemoCollection);
 			}
 
-			CustomerCustomerDemo obj = this._CustomerCustomerDemoCollection.AddNew();
+			CustomerCustomerDemo obj = this._many_CustomerCustomerDemoCollection.AddNew();
 			obj.CustomerID = this.CustomerID;
             obj.CustomerTypeID = entity.CustomerTypeID;
 			obj.AcceptChanges();
@@ -732,18 +712,18 @@ namespace BusinessObjects
 		}
 
 		private CustomerDemographicsCollection _UpToCustomerDemographicsCollection;
-		private CustomerCustomerDemoCollection _CustomerCustomerDemoCollection;
+		private CustomerCustomerDemoCollection _many_CustomerCustomerDemoCollection;
 		#endregion
 
-		#region CustomerCustomerDemoCollectionByCustomerID - Zero To Many
+		#region CustomerCustomerDemoCollection - Zero To Many
 		
-		static public esPrefetchMap Prefetch_CustomerCustomerDemoCollectionByCustomerID
+		static public esPrefetchMap Prefetch_CustomerCustomerDemoCollection
 		{
 			get
 			{
 				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Customers.CustomerCustomerDemoCollectionByCustomerID_Delegate;
-				map.PropertyName = "CustomerCustomerDemoCollectionByCustomerID";
+				map.PrefetchDelegate = BusinessObjects.Customers.CustomerCustomerDemoCollection_Delegate;
+				map.PropertyName = "CustomerCustomerDemoCollection";
 				map.MyColumnName = "CustomerID";
 				map.ParentColumnName = "CustomerID";
 				map.IsMultiPartKey = false;
@@ -751,7 +731,7 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void CustomerCustomerDemoCollectionByCustomerID_Delegate(esPrefetchParameters data)
+		static private void CustomerCustomerDemoCollection_Delegate(esPrefetchParameters data)
 		{
 			CustomersQuery parent = new CustomersQuery(data.NextAlias());
 
@@ -768,9 +748,9 @@ namespace BusinessObjects
 		}	
 		
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeCustomerCustomerDemoCollectionByCustomerID()
+		public bool ShouldSerializeCustomerCustomerDemoCollection()
 		{
-		    if(this._CustomerCustomerDemoCollectionByCustomerID != null && this._CustomerCustomerDemoCollectionByCustomerID.Count > 0)
+		    if(this._CustomerCustomerDemoCollection != null && this._CustomerCustomerDemoCollection.Count > 0)
 				return true;
             else
 				return false;
@@ -782,42 +762,41 @@ namespace BusinessObjects
 		/// </summary>
 		
 
-		[XmlIgnore]
-		[DataMember]
-		public CustomerCustomerDemoCollection CustomerCustomerDemoCollectionByCustomerID
+		[DataMember(Name="CustomerCustomerDemoCollection", EmitDefaultValue = false)]
+		public CustomerCustomerDemoCollection CustomerCustomerDemoCollection
 		{
 			get
 			{
-				if(this._CustomerCustomerDemoCollectionByCustomerID == null)
+				if(this._CustomerCustomerDemoCollection == null)
 				{
-					this._CustomerCustomerDemoCollectionByCustomerID = new CustomerCustomerDemoCollection();
-					this._CustomerCustomerDemoCollectionByCustomerID.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("CustomerCustomerDemoCollectionByCustomerID", this._CustomerCustomerDemoCollectionByCustomerID);
+					this._CustomerCustomerDemoCollection = new CustomerCustomerDemoCollection();
+					this._CustomerCustomerDemoCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("CustomerCustomerDemoCollection", this._CustomerCustomerDemoCollection);
 				
 					if (this.CustomerID != null)
 					{
 						if (!this.es.IsLazyLoadDisabled)
 						{
-							this._CustomerCustomerDemoCollectionByCustomerID.Query.Where(this._CustomerCustomerDemoCollectionByCustomerID.Query.CustomerID == this.CustomerID);
-							this._CustomerCustomerDemoCollectionByCustomerID.Query.Load();
+							this._CustomerCustomerDemoCollection.Query.Where(this._CustomerCustomerDemoCollection.Query.CustomerID == this.CustomerID);
+							this._CustomerCustomerDemoCollection.Query.Load();
 						}
 
 						// Auto-hookup Foreign Keys
-						this._CustomerCustomerDemoCollectionByCustomerID.fks.Add(CustomerCustomerDemoMetadata.ColumnNames.CustomerID, this.CustomerID);
+						this._CustomerCustomerDemoCollection.fks.Add(CustomerCustomerDemoMetadata.ColumnNames.CustomerID, this.CustomerID);
 					}
 				}
 
-				return this._CustomerCustomerDemoCollectionByCustomerID;
+				return this._CustomerCustomerDemoCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._CustomerCustomerDemoCollectionByCustomerID != null) 
+				if (this._CustomerCustomerDemoCollection != null) 
 				{ 
-					this.RemovePostSave("CustomerCustomerDemoCollectionByCustomerID"); 
-					this._CustomerCustomerDemoCollectionByCustomerID = null;
+					this.RemovePostSave("CustomerCustomerDemoCollection"); 
+					this._CustomerCustomerDemoCollection = null;
 					
 				} 
 			} 			
@@ -827,18 +806,18 @@ namespace BusinessObjects
 		
 			
 		
-		private CustomerCustomerDemoCollection _CustomerCustomerDemoCollectionByCustomerID;
+		private CustomerCustomerDemoCollection _CustomerCustomerDemoCollection;
 		#endregion
 
-		#region OrdersCollectionByCustomerID - Zero To Many
+		#region OrdersCollection - Zero To Many
 		
-		static public esPrefetchMap Prefetch_OrdersCollectionByCustomerID
+		static public esPrefetchMap Prefetch_OrdersCollection
 		{
 			get
 			{
 				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Customers.OrdersCollectionByCustomerID_Delegate;
-				map.PropertyName = "OrdersCollectionByCustomerID";
+				map.PrefetchDelegate = BusinessObjects.Customers.OrdersCollection_Delegate;
+				map.PropertyName = "OrdersCollection";
 				map.MyColumnName = "CustomerID";
 				map.ParentColumnName = "CustomerID";
 				map.IsMultiPartKey = false;
@@ -846,7 +825,7 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void OrdersCollectionByCustomerID_Delegate(esPrefetchParameters data)
+		static private void OrdersCollection_Delegate(esPrefetchParameters data)
 		{
 			CustomersQuery parent = new CustomersQuery(data.NextAlias());
 
@@ -863,9 +842,9 @@ namespace BusinessObjects
 		}	
 		
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeOrdersCollectionByCustomerID()
+		public bool ShouldSerializeOrdersCollection()
 		{
-		    if(this._OrdersCollectionByCustomerID != null && this._OrdersCollectionByCustomerID.Count > 0)
+		    if(this._OrdersCollection != null && this._OrdersCollection.Count > 0)
 				return true;
             else
 				return false;
@@ -877,42 +856,41 @@ namespace BusinessObjects
 		/// </summary>
 		
 
-		[XmlIgnore]
-		[DataMember]
-		public OrdersCollection OrdersCollectionByCustomerID
+		[DataMember(Name="OrdersCollection", EmitDefaultValue = false)]
+		public OrdersCollection OrdersCollection
 		{
 			get
 			{
-				if(this._OrdersCollectionByCustomerID == null)
+				if(this._OrdersCollection == null)
 				{
-					this._OrdersCollectionByCustomerID = new OrdersCollection();
-					this._OrdersCollectionByCustomerID.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("OrdersCollectionByCustomerID", this._OrdersCollectionByCustomerID);
+					this._OrdersCollection = new OrdersCollection();
+					this._OrdersCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("OrdersCollection", this._OrdersCollection);
 				
 					if (this.CustomerID != null)
 					{
 						if (!this.es.IsLazyLoadDisabled)
 						{
-							this._OrdersCollectionByCustomerID.Query.Where(this._OrdersCollectionByCustomerID.Query.CustomerID == this.CustomerID);
-							this._OrdersCollectionByCustomerID.Query.Load();
+							this._OrdersCollection.Query.Where(this._OrdersCollection.Query.CustomerID == this.CustomerID);
+							this._OrdersCollection.Query.Load();
 						}
 
 						// Auto-hookup Foreign Keys
-						this._OrdersCollectionByCustomerID.fks.Add(OrdersMetadata.ColumnNames.CustomerID, this.CustomerID);
+						this._OrdersCollection.fks.Add(OrdersMetadata.ColumnNames.CustomerID, this.CustomerID);
 					}
 				}
 
-				return this._OrdersCollectionByCustomerID;
+				return this._OrdersCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._OrdersCollectionByCustomerID != null) 
+				if (this._OrdersCollection != null) 
 				{ 
-					this.RemovePostSave("OrdersCollectionByCustomerID"); 
-					this._OrdersCollectionByCustomerID = null;
+					this.RemovePostSave("OrdersCollection"); 
+					this._OrdersCollection = null;
 					
 				} 
 			} 			
@@ -922,7 +900,7 @@ namespace BusinessObjects
 		
 			
 		
-		private OrdersCollection _OrdersCollectionByCustomerID;
+		private OrdersCollection _OrdersCollection;
 		#endregion
 
 		
@@ -932,11 +910,11 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "CustomerCustomerDemoCollectionByCustomerID":
-					coll = this.CustomerCustomerDemoCollectionByCustomerID;
+				case "CustomerCustomerDemoCollection":
+					coll = this.CustomerCustomerDemoCollection;
 					break;
-				case "OrdersCollectionByCustomerID":
-					coll = this.OrdersCollectionByCustomerID;
+				case "OrdersCollection":
+					coll = this.OrdersCollection;
 					break;	
 			}
 
@@ -949,8 +927,8 @@ namespace BusinessObjects
 		{
 			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
 			
-			props.Add(new esPropertyDescriptor(this, "CustomerCustomerDemoCollectionByCustomerID", typeof(CustomerCustomerDemoCollection), new CustomerCustomerDemo()));
-			props.Add(new esPropertyDescriptor(this, "OrdersCollectionByCustomerID", typeof(OrdersCollection), new Orders()));
+			props.Add(new esPropertyDescriptor(this, "CustomerCustomerDemoCollection", typeof(CustomerCustomerDemoCollection), new CustomerCustomerDemo()));
+			props.Add(new esPropertyDescriptor(this, "OrdersCollection", typeof(OrdersCollection), new Orders()));
 		
 			return props;
 		}

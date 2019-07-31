@@ -52,6 +52,8 @@ namespace ConsoleApp
             Subquery();
             CaseWhenThenEnd();
             HavingClause();
+
+            int i = 9;
         }
 
         static private void AddLoadSaveDeleteSingleEntity()
@@ -218,12 +220,12 @@ namespace ConsoleApp
             Orders order = coll.AddNew();
             order.OrderDate = DateTime.Now;
 
-            OrderDetails detail1 = order.OrderDetailsCollectionByOrderID.AddNew();
+            OrderDetails detail1 = order.OrderDetailsCollection.AddNew();
             detail1.UnitPrice = 55.00M;
             detail1.Quantity = 4;
             detail1.ProductID = 8;
 
-            OrderDetails detail2 = order.OrderDetailsCollectionByOrderID.AddNew();
+            OrderDetails detail2 = order.OrderDetailsCollection.AddNew();
             detail2.UnitPrice = 25.00M;
             detail2.Quantity = 3;
             detail2.ProductID = 4;

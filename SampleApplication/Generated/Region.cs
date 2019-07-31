@@ -8,7 +8,7 @@
 ===============================================================================
 EntitySpaces Version : 2019.1.0725.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/25/2019 4:41:37 PM
+Date Generated       : 7/31/2019 10:51:55 AM
 ===============================================================================
 */
 
@@ -92,26 +92,6 @@ namespace BusinessObjects
 			return this.SingleOrDefault(e => e.RegionID == regionID);
 		}
 
-		
-		
-		#region WCF Service Class
-		
-		[DataContract]
-		[KnownType(typeof(Region))]
-		public class RegionCollectionWCFPacket : esCollectionWCFPacket<RegionCollection>
-		{
-			public static implicit operator RegionCollection(RegionCollectionWCFPacket packet)
-			{
-				return packet.Collection;
-			}
-
-			public static implicit operator RegionCollectionWCFPacket(RegionCollection collection)
-			{
-				return new RegionCollectionWCFPacket() { Collection = collection };
-			}
-		}
-		
-		#endregion
 		
 				
 	}
@@ -413,15 +393,15 @@ namespace BusinessObjects
 	public partial class Region : esRegion
 	{
 
-		#region TerritoriesCollectionByRegionID - Zero To Many
+		#region TerritoriesCollection - Zero To Many
 		
-		static public esPrefetchMap Prefetch_TerritoriesCollectionByRegionID
+		static public esPrefetchMap Prefetch_TerritoriesCollection
 		{
 			get
 			{
 				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Region.TerritoriesCollectionByRegionID_Delegate;
-				map.PropertyName = "TerritoriesCollectionByRegionID";
+				map.PrefetchDelegate = BusinessObjects.Region.TerritoriesCollection_Delegate;
+				map.PropertyName = "TerritoriesCollection";
 				map.MyColumnName = "RegionID";
 				map.ParentColumnName = "RegionID";
 				map.IsMultiPartKey = false;
@@ -429,7 +409,7 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void TerritoriesCollectionByRegionID_Delegate(esPrefetchParameters data)
+		static private void TerritoriesCollection_Delegate(esPrefetchParameters data)
 		{
 			RegionQuery parent = new RegionQuery(data.NextAlias());
 
@@ -446,9 +426,9 @@ namespace BusinessObjects
 		}	
 		
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeTerritoriesCollectionByRegionID()
+		public bool ShouldSerializeTerritoriesCollection()
 		{
-		    if(this._TerritoriesCollectionByRegionID != null && this._TerritoriesCollectionByRegionID.Count > 0)
+		    if(this._TerritoriesCollection != null && this._TerritoriesCollection.Count > 0)
 				return true;
             else
 				return false;
@@ -460,42 +440,41 @@ namespace BusinessObjects
 		/// </summary>
 		
 
-		[XmlIgnore]
-		[DataMember]
-		public TerritoriesCollection TerritoriesCollectionByRegionID
+		[DataMember(Name="TerritoriesCollection", EmitDefaultValue = false)]
+		public TerritoriesCollection TerritoriesCollection
 		{
 			get
 			{
-				if(this._TerritoriesCollectionByRegionID == null)
+				if(this._TerritoriesCollection == null)
 				{
-					this._TerritoriesCollectionByRegionID = new TerritoriesCollection();
-					this._TerritoriesCollectionByRegionID.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("TerritoriesCollectionByRegionID", this._TerritoriesCollectionByRegionID);
+					this._TerritoriesCollection = new TerritoriesCollection();
+					this._TerritoriesCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("TerritoriesCollection", this._TerritoriesCollection);
 				
 					if (this.RegionID != null)
 					{
 						if (!this.es.IsLazyLoadDisabled)
 						{
-							this._TerritoriesCollectionByRegionID.Query.Where(this._TerritoriesCollectionByRegionID.Query.RegionID == this.RegionID);
-							this._TerritoriesCollectionByRegionID.Query.Load();
+							this._TerritoriesCollection.Query.Where(this._TerritoriesCollection.Query.RegionID == this.RegionID);
+							this._TerritoriesCollection.Query.Load();
 						}
 
 						// Auto-hookup Foreign Keys
-						this._TerritoriesCollectionByRegionID.fks.Add(TerritoriesMetadata.ColumnNames.RegionID, this.RegionID);
+						this._TerritoriesCollection.fks.Add(TerritoriesMetadata.ColumnNames.RegionID, this.RegionID);
 					}
 				}
 
-				return this._TerritoriesCollectionByRegionID;
+				return this._TerritoriesCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._TerritoriesCollectionByRegionID != null) 
+				if (this._TerritoriesCollection != null) 
 				{ 
-					this.RemovePostSave("TerritoriesCollectionByRegionID"); 
-					this._TerritoriesCollectionByRegionID = null;
+					this.RemovePostSave("TerritoriesCollection"); 
+					this._TerritoriesCollection = null;
 					
 				} 
 			} 			
@@ -505,7 +484,7 @@ namespace BusinessObjects
 		
 			
 		
-		private TerritoriesCollection _TerritoriesCollectionByRegionID;
+		private TerritoriesCollection _TerritoriesCollection;
 		#endregion
 
 		
@@ -515,8 +494,8 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "TerritoriesCollectionByRegionID":
-					coll = this.TerritoriesCollectionByRegionID;
+				case "TerritoriesCollection":
+					coll = this.TerritoriesCollection;
 					break;	
 			}
 
@@ -529,7 +508,7 @@ namespace BusinessObjects
 		{
 			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
 			
-			props.Add(new esPropertyDescriptor(this, "TerritoriesCollectionByRegionID", typeof(TerritoriesCollection), new Territories()));
+			props.Add(new esPropertyDescriptor(this, "TerritoriesCollection", typeof(TerritoriesCollection), new Territories()));
 		
 			return props;
 		}
