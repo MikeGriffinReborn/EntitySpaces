@@ -26,8 +26,11 @@ esConfigSettings.ConnectionInfo.Connections.Add(conn);
 // Assign the Default Connection
 esConfigSettings.ConnectionInfo.Default = "RemoteDb";
 ```
+## Generating your Classes
 
 <img src="https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard/blob/master/Studio.PNG" alt="EntitySpaces Studio" width="632" height="406">
+
+It's very simple. You only need to execute two templates. The Custom classes are generated only once, that is where you can added custom code and overide EntitySpaces functionality if need be. The Generated classes are generated any time your database schema changes, you never edit these classes.
 
 ## Add/Load/Save/Delete Single Entity
 ```c#
