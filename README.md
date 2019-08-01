@@ -29,7 +29,7 @@ conn.Provider = "EntitySpaces.SqlClientProvider";
 conn.ProviderClass = "DataProvider";
 conn.SqlAccessType = esSqlAccessType.DynamicSQL;
 conn.ConnectionString = "User ID=mydmin;Password=abc123;Initial Catalog=Northwind;Data Source=localhost";
-conn.DatabaseVersion = "2012";
+conn.DatabaseVersion = "2017";
 esConfigSettings.ConnectionInfo.Connections.Add(conn);
 
 // Assign the Default Connection
