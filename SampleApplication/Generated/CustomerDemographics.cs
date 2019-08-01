@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0725.0
+EntitySpaces Version : 2019.1.0731.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/31/2019 10:51:50 AM
+Date Generated       : 8/1/2019 10:19:38 AM
 ===============================================================================
 */
 
@@ -400,6 +400,15 @@ namespace BusinessObjects
 		/// Many to Many
 		/// Foreign Key Name - FK_CustomerCustomerDemo
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToCustomersCollection()
+		{
+		    if(this._UpToCustomersCollection != null && this._UpToCustomersCollection.Count > 0)
+				return true;
+            else
+				return false;
+		}
+		
 
 		[DataMember(Name="UpToCustomersCollection", EmitDefaultValue = false)]
 		public CustomersCollection UpToCustomersCollection
@@ -456,7 +465,7 @@ namespace BusinessObjects
 			obj.CustomerTypeID = this.CustomerTypeID;
 			obj.CustomerID = entity.CustomerID;
 		}
-
+		
 		/// <summary>
 		/// Many to Many Dissociate
 		/// Foreign Key Name - FK_CustomerCustomerDemo
@@ -512,7 +521,11 @@ namespace BusinessObjects
 
 			data.You = parent;
 		}	
-		
+	
+		/// <summary>
+		/// Zero to Many
+		/// Foreign Key Name - FK_CustomerCustomerDemo
+		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public bool ShouldSerializeCustomerCustomerDemoCollection()
 		{
@@ -521,11 +534,6 @@ namespace BusinessObjects
             else
 				return false;
 		}	
-		
-		/// <summary>
-		/// Zero to Many
-		/// Foreign Key Name - FK_CustomerCustomerDemo
-		/// </summary>
 		
 
 		[DataMember(Name="CustomerCustomerDemoCollection", EmitDefaultValue = false)]

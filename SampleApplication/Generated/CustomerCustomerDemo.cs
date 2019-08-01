@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0725.0
+EntitySpaces Version : 2019.1.0731.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/31/2019 10:51:49 AM
+Date Generated       : 8/1/2019 10:19:37 AM
 ===============================================================================
 */
 
@@ -410,6 +410,15 @@ namespace BusinessObjects
 		/// Many to One
 		/// Foreign Key Name - FK_CustomerCustomerDemo
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToCustomerDemographics()
+		{
+		    if(this._UpToCustomerDemographics != null)
+				return true;
+            else
+				return false;
+		}
+		
 
 		[DataMember(Name="UpToCustomerDemographics", EmitDefaultValue = false)]
 					
@@ -459,6 +468,15 @@ namespace BusinessObjects
 		/// Many to One
 		/// Foreign Key Name - FK_CustomerCustomerDemo_Customers
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToCustomers()
+		{
+		    if(this._UpToCustomers != null)
+				return true;
+            else
+				return false;
+		}
+		
 
 		[DataMember(Name="UpToCustomers", EmitDefaultValue = false)]
 					

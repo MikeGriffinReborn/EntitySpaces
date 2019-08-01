@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0725.0
+EntitySpaces Version : 2019.1.0731.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/31/2019 10:51:55 AM
+Date Generated       : 8/1/2019 10:19:42 AM
 ===============================================================================
 */
 
@@ -450,7 +450,11 @@ namespace BusinessObjects
 
 			data.You = parent;
 		}	
-		
+	
+		/// <summary>
+		/// Zero to Many
+		/// Foreign Key Name - FK_Orders_Shippers
+		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public bool ShouldSerializeOrdersCollection()
 		{
@@ -459,11 +463,6 @@ namespace BusinessObjects
             else
 				return false;
 		}	
-		
-		/// <summary>
-		/// Zero to Many
-		/// Foreign Key Name - FK_Orders_Shippers
-		/// </summary>
 		
 
 		[DataMember(Name="OrdersCollection", EmitDefaultValue = false)]

@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0725.0
+EntitySpaces Version : 2019.1.0731.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/31/2019 10:51:50 AM
+Date Generated       : 8/1/2019 10:19:38 AM
 ===============================================================================
 */
 
@@ -634,6 +634,15 @@ namespace BusinessObjects
 		/// Many to Many
 		/// Foreign Key Name - FK_CustomerCustomerDemo_Customers
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToCustomerDemographicsCollection()
+		{
+		    if(this._UpToCustomerDemographicsCollection != null && this._UpToCustomerDemographicsCollection.Count > 0)
+				return true;
+            else
+				return false;
+		}
+		
 
 		[DataMember(Name="UpToCustomerDemographicsCollection", EmitDefaultValue = false)]
 		public CustomerDemographicsCollection UpToCustomerDemographicsCollection
@@ -690,7 +699,7 @@ namespace BusinessObjects
 			obj.CustomerID = this.CustomerID;
 			obj.CustomerTypeID = entity.CustomerTypeID;
 		}
-
+		
 		/// <summary>
 		/// Many to Many Dissociate
 		/// Foreign Key Name - FK_CustomerCustomerDemo_Customers
@@ -746,7 +755,11 @@ namespace BusinessObjects
 
 			data.You = parent;
 		}	
-		
+	
+		/// <summary>
+		/// Zero to Many
+		/// Foreign Key Name - FK_CustomerCustomerDemo_Customers
+		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public bool ShouldSerializeCustomerCustomerDemoCollection()
 		{
@@ -755,11 +768,6 @@ namespace BusinessObjects
             else
 				return false;
 		}	
-		
-		/// <summary>
-		/// Zero to Many
-		/// Foreign Key Name - FK_CustomerCustomerDemo_Customers
-		/// </summary>
 		
 
 		[DataMember(Name="CustomerCustomerDemoCollection", EmitDefaultValue = false)]
@@ -840,7 +848,11 @@ namespace BusinessObjects
 
 			data.You = parent;
 		}	
-		
+	
+		/// <summary>
+		/// Zero to Many
+		/// Foreign Key Name - FK_Orders_Customers
+		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public bool ShouldSerializeOrdersCollection()
 		{
@@ -849,11 +861,6 @@ namespace BusinessObjects
             else
 				return false;
 		}	
-		
-		/// <summary>
-		/// Zero to Many
-		/// Foreign Key Name - FK_Orders_Customers
-		/// </summary>
 		
 
 		[DataMember(Name="OrdersCollection", EmitDefaultValue = false)]

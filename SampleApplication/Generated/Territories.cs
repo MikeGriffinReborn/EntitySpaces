@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0725.0
+EntitySpaces Version : 2019.1.0731.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/31/2019 10:51:55 AM
+Date Generated       : 8/1/2019 10:19:42 AM
 ===============================================================================
 */
 
@@ -430,6 +430,15 @@ namespace BusinessObjects
 		/// Many to Many
 		/// Foreign Key Name - FK_EmployeeTerritories_Territories
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToEmployeesCollection()
+		{
+		    if(this._UpToEmployeesCollection != null && this._UpToEmployeesCollection.Count > 0)
+				return true;
+            else
+				return false;
+		}
+		
 
 		[DataMember(Name="UpToEmployeesCollection", EmitDefaultValue = false)]
 		public EmployeesCollection UpToEmployeesCollection
@@ -486,7 +495,7 @@ namespace BusinessObjects
 			obj.TerritoryID = this.TerritoryID;
 			obj.EmployeeID = entity.EmployeeID;
 		}
-
+		
 		/// <summary>
 		/// Many to Many Dissociate
 		/// Foreign Key Name - FK_EmployeeTerritories_Territories
@@ -542,7 +551,11 @@ namespace BusinessObjects
 
 			data.You = parent;
 		}	
-		
+	
+		/// <summary>
+		/// Zero to Many
+		/// Foreign Key Name - FK_EmployeeTerritories_Territories
+		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public bool ShouldSerializeEmployeeTerritoriesCollection()
 		{
@@ -551,11 +564,6 @@ namespace BusinessObjects
             else
 				return false;
 		}	
-		
-		/// <summary>
-		/// Zero to Many
-		/// Foreign Key Name - FK_EmployeeTerritories_Territories
-		/// </summary>
 		
 
 		[DataMember(Name="EmployeeTerritoriesCollection", EmitDefaultValue = false)]
@@ -612,6 +620,15 @@ namespace BusinessObjects
 		/// Many to One
 		/// Foreign Key Name - FK_Territories_Region
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToRegion()
+		{
+		    if(this._UpToRegion != null)
+				return true;
+            else
+				return false;
+		}
+		
 
 		[DataMember(Name="UpToRegion", EmitDefaultValue = false)]
 					

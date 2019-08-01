@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0725.0
+EntitySpaces Version : 2019.1.0731.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/31/2019 10:51:53 AM
+Date Generated       : 8/1/2019 10:19:41 AM
 ===============================================================================
 */
 
@@ -616,6 +616,15 @@ namespace BusinessObjects
 		/// Many to Many
 		/// Foreign Key Name - FK_Order_Details_Products
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToOrdersCollection()
+		{
+		    if(this._UpToOrdersCollection != null && this._UpToOrdersCollection.Count > 0)
+				return true;
+            else
+				return false;
+		}
+		
 
 		[DataMember(Name="UpToOrdersCollection", EmitDefaultValue = false)]
 		public OrdersCollection UpToOrdersCollection
@@ -672,7 +681,7 @@ namespace BusinessObjects
 			obj.ProductID = this.ProductID;
 			obj.OrderID = entity.OrderID;
 		}
-
+		
 		/// <summary>
 		/// Many to Many Dissociate
 		/// Foreign Key Name - FK_Order_Details_Products
@@ -728,7 +737,11 @@ namespace BusinessObjects
 
 			data.You = parent;
 		}	
-		
+	
+		/// <summary>
+		/// Zero to Many
+		/// Foreign Key Name - FK_Order_Details_Products
+		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public bool ShouldSerializeOrderDetailsCollection()
 		{
@@ -737,11 +750,6 @@ namespace BusinessObjects
             else
 				return false;
 		}	
-		
-		/// <summary>
-		/// Zero to Many
-		/// Foreign Key Name - FK_Order_Details_Products
-		/// </summary>
 		
 
 		[DataMember(Name="OrderDetailsCollection", EmitDefaultValue = false)]
@@ -798,6 +806,15 @@ namespace BusinessObjects
 		/// Many to One
 		/// Foreign Key Name - FK_Products_Categories
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToCategories()
+		{
+		    if(this._UpToCategories != null)
+				return true;
+            else
+				return false;
+		}
+		
 
 		[DataMember(Name="UpToCategories", EmitDefaultValue = false)]
 					
@@ -847,6 +864,15 @@ namespace BusinessObjects
 		/// Many to One
 		/// Foreign Key Name - FK_Products_Suppliers
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToSuppliers()
+		{
+		    if(this._UpToSuppliers != null)
+				return true;
+            else
+				return false;
+		}
+		
 
 		[DataMember(Name="UpToSuppliers", EmitDefaultValue = false)]
 					

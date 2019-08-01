@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0725.0
+EntitySpaces Version : 2019.1.0731.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/31/2019 10:51:53 AM
+Date Generated       : 8/1/2019 10:19:41 AM
 ===============================================================================
 */
 
@@ -724,6 +724,15 @@ namespace BusinessObjects
 		/// Many to Many
 		/// Foreign Key Name - FK_Order_Details_Orders
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToProductsCollection()
+		{
+		    if(this._UpToProductsCollection != null && this._UpToProductsCollection.Count > 0)
+				return true;
+            else
+				return false;
+		}
+		
 
 		[DataMember(Name="UpToProductsCollection", EmitDefaultValue = false)]
 		public ProductsCollection UpToProductsCollection
@@ -773,14 +782,14 @@ namespace BusinessObjects
 			{
 				this._many_OrderDetailsCollection = new OrderDetailsCollection();
 				this._many_OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("ManyOrderDetailsCollection", this._many_OrderDetailsCollection);
+				this.SetPostSave("OrderDetailsCollection", this._many_OrderDetailsCollection);
 			}
 
 			OrderDetails obj = this._many_OrderDetailsCollection.AddNew();
 			obj.OrderID = this.OrderID;
 			obj.ProductID = entity.ProductID;
 		}
-
+		
 		/// <summary>
 		/// Many to Many Dissociate
 		/// Foreign Key Name - FK_Order_Details_Orders
@@ -791,7 +800,7 @@ namespace BusinessObjects
 			{
 				this._many_OrderDetailsCollection = new OrderDetailsCollection();
 				this._many_OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("ManyOrderDetailsCollection", this._many_OrderDetailsCollection);
+				this.SetPostSave("OrderDetailsCollection", this._many_OrderDetailsCollection);
 			}
 
 			OrderDetails obj = this._many_OrderDetailsCollection.AddNew();
@@ -836,7 +845,11 @@ namespace BusinessObjects
 
 			data.You = parent;
 		}	
-		
+	
+		/// <summary>
+		/// Zero to Many
+		/// Foreign Key Name - FK_Order_Details_Orders
+		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public bool ShouldSerializeOrderDetailsCollection()
 		{
@@ -845,11 +858,6 @@ namespace BusinessObjects
             else
 				return false;
 		}	
-		
-		/// <summary>
-		/// Zero to Many
-		/// Foreign Key Name - FK_Order_Details_Orders
-		/// </summary>
 		
 
 		[DataMember(Name="OrderDetailsCollection", EmitDefaultValue = false)]
@@ -906,6 +914,15 @@ namespace BusinessObjects
 		/// Many to One
 		/// Foreign Key Name - FK_Orders_Customers
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToCustomers()
+		{
+		    if(this._UpToCustomers != null)
+				return true;
+            else
+				return false;
+		}
+		
 
 		[DataMember(Name="UpToCustomers", EmitDefaultValue = false)]
 					
@@ -955,6 +972,15 @@ namespace BusinessObjects
 		/// Many to One
 		/// Foreign Key Name - FK_Orders_Employees
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToEmployees()
+		{
+		    if(this._UpToEmployees != null)
+				return true;
+            else
+				return false;
+		}
+		
 
 		[DataMember(Name="UpToEmployees", EmitDefaultValue = false)]
 					
@@ -1004,6 +1030,15 @@ namespace BusinessObjects
 		/// Many to One
 		/// Foreign Key Name - FK_Orders_Shippers
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToShippers()
+		{
+		    if(this._UpToShippers != null)
+				return true;
+            else
+				return false;
+		}
+		
 
 		[DataMember(Name="UpToShippers", EmitDefaultValue = false)]
 					

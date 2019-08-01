@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0725.0
+EntitySpaces Version : 2019.1.0731.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/31/2019 10:51:51 AM
+Date Generated       : 8/1/2019 10:19:39 AM
 ===============================================================================
 */
 
@@ -844,7 +844,11 @@ namespace BusinessObjects
 
 			data.You = parent;
 		}	
-		
+	
+		/// <summary>
+		/// Zero to Many
+		/// Foreign Key Name - FK_Employees_Employees
+		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public bool ShouldSerializeEmployeesCollection()
 		{
@@ -853,11 +857,6 @@ namespace BusinessObjects
             else
 				return false;
 		}	
-		
-		/// <summary>
-		/// Zero to Many
-		/// Foreign Key Name - FK_Employees_Employees
-		/// </summary>
 		
 
 		[DataMember(Name="EmployeesCollection", EmitDefaultValue = false)]
@@ -914,6 +913,15 @@ namespace BusinessObjects
 		/// Many to One
 		/// Foreign Key Name - FK_Employees_Employees
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToEmployees()
+		{
+		    if(this._UpToEmployees != null)
+				return true;
+            else
+				return false;
+		}
+		
 
 		[DataMember(Name="UpToEmployees", EmitDefaultValue = false)]
 					
@@ -963,6 +971,15 @@ namespace BusinessObjects
 		/// Many to Many
 		/// Foreign Key Name - FK_EmployeeTerritories_Employees
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerializeUpToTerritoriesCollection()
+		{
+		    if(this._UpToTerritoriesCollection != null && this._UpToTerritoriesCollection.Count > 0)
+				return true;
+            else
+				return false;
+		}
+		
 
 		[DataMember(Name="UpToTerritoriesCollection", EmitDefaultValue = false)]
 		public TerritoriesCollection UpToTerritoriesCollection
@@ -1019,7 +1036,7 @@ namespace BusinessObjects
 			obj.EmployeeID = this.EmployeeID;
 			obj.TerritoryID = entity.TerritoryID;
 		}
-
+		
 		/// <summary>
 		/// Many to Many Dissociate
 		/// Foreign Key Name - FK_EmployeeTerritories_Employees
@@ -1075,7 +1092,11 @@ namespace BusinessObjects
 
 			data.You = parent;
 		}	
-		
+	
+		/// <summary>
+		/// Zero to Many
+		/// Foreign Key Name - FK_EmployeeTerritories_Employees
+		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public bool ShouldSerializeEmployeeTerritoriesCollection()
 		{
@@ -1084,11 +1105,6 @@ namespace BusinessObjects
             else
 				return false;
 		}	
-		
-		/// <summary>
-		/// Zero to Many
-		/// Foreign Key Name - FK_EmployeeTerritories_Employees
-		/// </summary>
 		
 
 		[DataMember(Name="EmployeeTerritoriesCollection", EmitDefaultValue = false)]
@@ -1169,7 +1185,11 @@ namespace BusinessObjects
 
 			data.You = parent;
 		}	
-		
+	
+		/// <summary>
+		/// Zero to Many
+		/// Foreign Key Name - FK_Orders_Employees
+		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public bool ShouldSerializeOrdersCollection()
 		{
@@ -1178,11 +1198,6 @@ namespace BusinessObjects
             else
 				return false;
 		}	
-		
-		/// <summary>
-		/// Zero to Many
-		/// Foreign Key Name - FK_Orders_Employees
-		/// </summary>
 		
 
 		[DataMember(Name="OrdersCollection", EmitDefaultValue = false)]

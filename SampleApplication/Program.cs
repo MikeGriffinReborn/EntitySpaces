@@ -52,8 +52,6 @@ namespace ConsoleApp
             Subquery();
             CaseWhenThenEnd();
             HavingClause();
-
-            int i = 9;
         }
 
         static private void AddLoadSaveDeleteSingleEntity()
