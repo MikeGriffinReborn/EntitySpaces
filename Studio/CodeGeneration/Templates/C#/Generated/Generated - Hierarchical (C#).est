@@ -134,6 +134,15 @@ namespace <%=Namespace%>
 		/// One to One
 		/// Foreign Key Name - <%=tr.Name%>
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerialize<%=objName%>()
+		{
+		    if(this._<%=objName%> != null && this._<%=objName%>.Count > 0)
+				return true;
+            else
+				return false;
+		}
+		
 <%if(!TargetTheCompactFramework){%>
 	    [DataMember(Name="<%=objName%>", EmitDefaultValue = false)]<%}%>
 		public <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> <%=objName%>
@@ -218,6 +227,15 @@ namespace <%=Namespace%>
 		/// One to One
 		/// Foreign Key Name - <%=tr.Name%>
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerialize<%=objName%>()
+		{
+		    if(this._<%=objName%> != null && this._<%=objName%>.Count > 0)
+				return true;
+            else
+				return false;
+		}
+		
 <%if(!TargetTheCompactFramework){%>
 		[DataMember(Name="<%=objName%>", EmitDefaultValue = false)]<%}%>
 		public <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%> <%=objName%>
@@ -301,6 +319,15 @@ namespace <%=Namespace%>
 		/// Many to Many
 		/// Foreign Key Name - <%=tr.Name%>
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerialize<%=objName%>()
+		{
+		    if(this._<%=objName%> != null && this._<%=objName%>.Count > 0)
+				return true;
+            else
+				return false;
+		}
+		
 <%if(!TargetTheCompactFramework){%>
 		[DataMember(Name="<%=objName%>", EmitDefaultValue = false)]<%}%>
 		public <%=esMeta.esPlugIn.Collection(tr.CrossReferenceTable)%> <%=objName%>
@@ -368,7 +395,7 @@ namespace <%=Namespace%>
 			obj.<%=esMeta.esPlugIn.PropertyName(tr.LinkingColumns[i])%> = entity.<%=esMeta.esPlugIn.PropertyName(tr.CrossReferenceTable.PrimaryKeys[i])%>;<%
             }%>
 		}
-
+		
 		/// <summary>
 		/// Many to Many Dissociate
 		/// Foreign Key Name - <%=tr.Name%>
@@ -489,7 +516,11 @@ namespace <%=Namespace%>
 
 			data.You = parent;
 		}	
-		
+	
+		/// <summary>
+		/// Zero to Many
+		/// Foreign Key Name - <%=tr.Name%>
+		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public bool ShouldSerialize<%=objName%>()
 		{
@@ -498,11 +529,6 @@ namespace <%=Namespace%>
             else
 				return false;
 		}	
-		
-		/// <summary>
-		/// Zero to Many
-		/// Foreign Key Name - <%=tr.Name%>
-		/// </summary>
 		
 <%if(!TargetTheCompactFramework){%>
 		[DataMember(Name="<%=objName%>", EmitDefaultValue = false)]<%}
@@ -643,6 +669,15 @@ if(RiaServicesSupport) {%>
 		/// Many to One
 		/// Foreign Key Name - <%=tr.Name%>
 		/// </summary>
+	    [EditorBrowsable(EditorBrowsableState.Never)]
+		public bool ShouldSerialize<%=objName%>()
+		{
+		    if(this._<%=objName%> != null)
+				return true;
+            else
+				return false;
+		}
+		
 <%if(!TargetTheCompactFramework){%>
 		[DataMember(Name="<%=objName%>", EmitDefaultValue = false)]<%}%>
 		<%if(DataContractSupport){ knownTypes[esMeta.esPlugIn.Entity(tr.ForeignTable)] = 1; }%>			
