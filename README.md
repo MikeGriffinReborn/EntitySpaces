@@ -13,7 +13,7 @@ However, first you will need to go to the "Settings" tab and then the "Connectio
 
 <img src="https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard/blob/master/Studio.PNG" alt="EntitySpaces Studio" width="632" height="406">
 
-## Setup SQL Connection
+## Setup SQL Connection in your C# .NET Project
 
 ```c#
 // esDataProviderFactory is a one time setup 
