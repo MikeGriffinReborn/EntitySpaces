@@ -33,6 +33,7 @@ esConfigSettings.ConnectionInfo.Connections.Add(conn);
 // Assign the Default Connection
 esConfigSettings.ConnectionInfo.Default = "RemoteDb";
 ```
+# EntitySpaces Coding Examples
 
 ## Add/Load/Save/Delete Single Entity
 ```c#
