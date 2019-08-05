@@ -1458,6 +1458,8 @@ namespace EntitySpaces.SqlClientProvider
         {
             SqlCommand cmd = null;
 
+            if (request.EntitySavePacket.CurrentValues == null || request.EntitySavePacket.CurrentValues.Count == 0) return null;
+
             switch (request.EntitySavePacket.RowState)
             {
                 case esDataRowState.Added:
