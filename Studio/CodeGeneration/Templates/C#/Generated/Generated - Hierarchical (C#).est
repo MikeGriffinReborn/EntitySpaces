@@ -111,8 +111,6 @@ namespace <%=Namespace%>
 					continue;
 				}
 			}
-			
-
 
 			// One to One with primary table
 			if(tr.IsOneToOne && !tr.IsDirect)
@@ -131,16 +129,13 @@ namespace <%=Namespace%>
 				
 		#region <%=objName%> - One To One
 		/// <summary>
-		/// One to One
+		/// One to One (fixed)
 		/// Foreign Key Name - <%=tr.Name%>
 		/// </summary>
 	    [EditorBrowsable(EditorBrowsableState.Never)]
 		public bool ShouldSerialize<%=objName%>()
 		{
-		    if(this._<%=objName%> != null && this._<%=objName%>.Count > 0)
-				return true;
-            else
-				return false;
+		    return (this._<%=objName%> != null) ? true : false;
 		}
 		
 <%if(!TargetTheCompactFramework){%>
@@ -149,13 +144,11 @@ namespace <%=Namespace%>
 		{
 			get
 			{
-				if (this.es.IsLazyLoadDisabled) return null;
-				
-				if(this._<%=objName%> == null)
-				{
-					this._<%=objName%> = new <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%>();
-					this._<%=objName%>.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostOneSave("<%=objName%>", this._<%=objName%>);<%
+                if (this._<%=objName%> == null)
+                {
+                    this._<%=objName%> = new <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%>();
+                    this._<%=objName%>.es.Connection.Name = this.es.Connection.Name;
+                    this.SetPostOneSave("<%=objName%>", this._<%=objName%>);<%
 				string concat = "";
 				for(int i = 0; i < tr.ColumnCount; i++)
 				{
@@ -164,18 +157,21 @@ namespace <%=Namespace%>
 				}%>
 				
 					if(<%=nullTest%>)
-					{<%
-				for(int i = 0; i < tr.ColumnCount; i++)
-				{%>
-						this._<%=objName%>.Query.Where(this._<%=objName%>.Query.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%> == this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>);<%
-				}%>
-						this._<%=objName%>.Query.Load();
+					{
+						if (this.es.IsLazyLoadDisabled)
+						{<%
+							for(int i = 0; i < tr.ColumnCount; i++)
+							{%>
+							this._<%=objName%>.Query.Where(this._<%=objName%>.Query.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%> == this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>);<%
+							}%>
+							this._<%=objName%>.Query.Load();
+						}
 					}
-				}
+                }
 
 				return this._<%=objName%>;
 			}
-			
+		
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
@@ -224,16 +220,13 @@ namespace <%=Namespace%>
 			
 		#region <%=objName%> - One To One
 		/// <summary>
-		/// One to One
+		/// One to One (fixed2)
 		/// Foreign Key Name - <%=tr.Name%>
 		/// </summary>
 	    [EditorBrowsable(EditorBrowsableState.Never)]
 		public bool ShouldSerialize<%=objName%>()
 		{
-		    if(this._<%=objName%> != null && this._<%=objName%>.Count > 0)
-				return true;
-            else
-				return false;
+		    return (this._<%=objName%> != null) ? true : false;
 		}
 		
 <%if(!TargetTheCompactFramework){%>
@@ -242,20 +235,24 @@ namespace <%=Namespace%>
 		{
 			get
 			{
-				if (this.es.IsLazyLoadDisabled) return null;
-			
-				if(this._<%=objName%> == null<%	for(int i = 0; i < tr.ColumnCount; i++)
-				{%><%=" && " + esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i]) + " != null"%><%}%>)
-				{
-					this._<%=objName%> = new <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%>();
-					this._<%=objName%>.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("<%=objName%>", this._<%=objName%>);<%
-				for(int i = 0; i < tr.ColumnCount; i++)
-				{%>
-					this._<%=objName%>.Query.Where(this._<%=objName%>.Query.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%> == this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>);<%
-				}%>
-					this._<%=objName%>.Query.Load();
-				}
+                if (this._<%=objName%> == null)
+                {
+                    this._<%=objName%> = new <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%>();
+                    this._<%=objName%>.es.Connection.Name = this.es.Connection.Name;
+                    this.SetPreSave("<%=objName%>", this._<%=objName%>);
+				
+					if(<%string concat = ""; for(int i = 0; i < tr.ColumnCount; i++){%><%=concat + esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i]) + " != null"%><%concat=" && ";}%>)
+					{
+						if (this.es.IsLazyLoadDisabled)
+						{<%
+						for(int i = 0; i < tr.ColumnCount; i++)
+						{%>
+							this._<%=objName%>.Query.Where(this._<%=objName%>.Query.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%> == this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>);<%
+						}%>
+							this._<%=objName%>.Query.Load();
+						}
+					}
+                }
 
 				return this._<%=objName%>;
 			}
@@ -672,10 +669,7 @@ if(RiaServicesSupport) {%>
 	    [EditorBrowsable(EditorBrowsableState.Never)]
 		public bool ShouldSerialize<%=objName%>()
 		{
-		    if(this._<%=objName%> != null)
-				return true;
-            else
-				return false;
+		    return this._<%=objName%> != null ? true : false;
 		}
 		
 <%if(!TargetTheCompactFramework){%>
@@ -685,22 +679,28 @@ if(RiaServicesSupport) {%>
 		{
 			get
 			{
-				if (this.es.IsLazyLoadDisabled) return null;
-				
-				if(this._<%=objName%> == null<% 
-				for(int i = 0; i < tr.ColumnCount; i++)
-				{%><%=" && " + esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i]) + " != null"%><%
-				}%>)
-				{
-					this._<%=objName%> = new <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%>();
-					this._<%=objName%>.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("<%=objName%>", this._<%=objName%>);<% 
-				for(int i = 0; i < tr.ColumnCount; i++)
-				{%>
-					this._<%=objName%>.Query.Where(this._<%=objName%>.Query.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%> == this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>);<%
-				}%>
-					this._<%=objName%>.Query.Load();
-				}	
+                if (this._<%=objName%> == null)
+                {
+                    this._<%=objName%> = new <%=esMeta.esPlugIn.Entity(tr.ForeignTable)%>();
+                    this._<%=objName%>.es.Connection.Name = this.es.Connection.Name;
+                    this.SetPreSave("<%=objName%>", this._<%=objName%>);
+
+					if(this._<%=objName%> == null<% 
+					for(int i = 0; i < tr.ColumnCount; i++)
+					{%><%=" && " + esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i]) + " != null"%><%
+					}%>)
+                    {
+                        if (!this.es.IsLazyLoadDisabled)
+                        {<%
+						for(int i = 0; i < tr.ColumnCount; i++)
+						{%>
+							this._<%=objName%>.Query.Where(this._<%=objName%>.Query.<%=esMeta.esPlugIn.PropertyName(tr.ForeignColumns[i])%> == this.<%=esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i])%>);<%
+						}%>
+							this._<%=objName%>.Query.Load();
+                        }
+                    }
+                }
+
 				return this._<%=objName%>;
 			}
 			
