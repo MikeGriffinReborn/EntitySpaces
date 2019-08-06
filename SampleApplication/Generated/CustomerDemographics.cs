@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0731.0
+EntitySpaces Version : 2019.1.0805.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/1/2019 10:19:38 AM
+Date Generated       : 8/6/2019 9:55:47 AM
 ===============================================================================
 */
 
@@ -393,33 +393,29 @@ namespace BusinessObjects
 	public partial class CustomerDemographics : esCustomerDemographics
 	{
 
-					
 			
-		#region UpToCustomersCollection - Many To Many
-		/// <summary>
-		/// Many to Many
-		/// Foreign Key Name - FK_CustomerCustomerDemo
-		/// </summary>
+		#region CustomersCollection - Many To Many (FK_CustomerCustomerDemo)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToCustomersCollection()
+		public bool ShouldSerializeCustomersCollection()
 		{
-		    if(this._UpToCustomersCollection != null && this._UpToCustomersCollection.Count > 0)
+		    if(this._CustomersCollection != null && this._CustomersCollection.Count > 0)
 				return true;
             else
 				return false;
 		}
 		
 
-		[DataMember(Name="UpToCustomersCollection", EmitDefaultValue = false)]
-		public CustomersCollection UpToCustomersCollection
+		[DataMember(Name="CustomersCollection", EmitDefaultValue = false)]
+		public CustomersCollection CustomersCollection
 		{
 			get
 			{
-				if(this._UpToCustomersCollection == null)
+				if(this._CustomersCollection == null)
 				{
-					this._UpToCustomersCollection = new CustomersCollection();
-					this._UpToCustomersCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("UpToCustomersCollection", this._UpToCustomersCollection);
+					this._CustomersCollection = new CustomersCollection();
+					this._CustomersCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("CustomersCollection", this._CustomersCollection);
 					if (!this.es.IsLazyLoadDisabled && this.CustomerTypeID != null)
 					{
 						CustomersQuery m = new CustomersQuery("m");
@@ -428,21 +424,21 @@ namespace BusinessObjects
 						m.InnerJoin(j).On(m.CustomerID == j.CustomerID);
                         m.Where(j.CustomerTypeID == this.CustomerTypeID);
 
-						this._UpToCustomersCollection.Load(m);
+						this._CustomersCollection.Load(m);
 					}
 				}
 
-				return this._UpToCustomersCollection;
+				return this._CustomersCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._UpToCustomersCollection != null) 
+				if (this._CustomersCollection != null) 
 				{ 
-					this.RemovePostSave("UpToCustomersCollection"); 
-					this._UpToCustomersCollection = null;
+					this.RemovePostSave("CustomersCollection"); 
+					this._CustomersCollection = null;
 					
 				} 
 			}  			
@@ -486,11 +482,11 @@ namespace BusinessObjects
 			obj.MarkAsDeleted();
 		}
 
-		private CustomersCollection _UpToCustomersCollection;
+		private CustomersCollection _CustomersCollection;
 		private CustomerCustomerDemoCollection _many_CustomerCustomerDemoCollection;
 		#endregion
 
-		#region CustomerCustomerDemoCollection - Zero To Many
+		#region CustomerCustomerDemoCollection - Zero To Many (FK_CustomerCustomerDemo)
 		
 		static public esPrefetchMap Prefetch_CustomerCustomerDemoCollection
 		{

@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0731.0
+EntitySpaces Version : 2019.1.0805.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/1/2019 10:19:38 AM
+Date Generated       : 8/6/2019 9:55:47 AM
 ===============================================================================
 */
 
@@ -627,33 +627,29 @@ namespace BusinessObjects
 	public partial class Customers : esCustomers
 	{
 
-					
 			
-		#region UpToCustomerDemographicsCollection - Many To Many
-		/// <summary>
-		/// Many to Many
-		/// Foreign Key Name - FK_CustomerCustomerDemo_Customers
-		/// </summary>
+		#region CustomerDemographicsCollection - Many To Many (FK_CustomerCustomerDemo_Customers)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToCustomerDemographicsCollection()
+		public bool ShouldSerializeCustomerDemographicsCollection()
 		{
-		    if(this._UpToCustomerDemographicsCollection != null && this._UpToCustomerDemographicsCollection.Count > 0)
+		    if(this._CustomerDemographicsCollection != null && this._CustomerDemographicsCollection.Count > 0)
 				return true;
             else
 				return false;
 		}
 		
 
-		[DataMember(Name="UpToCustomerDemographicsCollection", EmitDefaultValue = false)]
-		public CustomerDemographicsCollection UpToCustomerDemographicsCollection
+		[DataMember(Name="CustomerDemographicsCollection", EmitDefaultValue = false)]
+		public CustomerDemographicsCollection CustomerDemographicsCollection
 		{
 			get
 			{
-				if(this._UpToCustomerDemographicsCollection == null)
+				if(this._CustomerDemographicsCollection == null)
 				{
-					this._UpToCustomerDemographicsCollection = new CustomerDemographicsCollection();
-					this._UpToCustomerDemographicsCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("UpToCustomerDemographicsCollection", this._UpToCustomerDemographicsCollection);
+					this._CustomerDemographicsCollection = new CustomerDemographicsCollection();
+					this._CustomerDemographicsCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("CustomerDemographicsCollection", this._CustomerDemographicsCollection);
 					if (!this.es.IsLazyLoadDisabled && this.CustomerID != null)
 					{
 						CustomerDemographicsQuery m = new CustomerDemographicsQuery("m");
@@ -662,21 +658,21 @@ namespace BusinessObjects
 						m.InnerJoin(j).On(m.CustomerTypeID == j.CustomerTypeID);
                         m.Where(j.CustomerID == this.CustomerID);
 
-						this._UpToCustomerDemographicsCollection.Load(m);
+						this._CustomerDemographicsCollection.Load(m);
 					}
 				}
 
-				return this._UpToCustomerDemographicsCollection;
+				return this._CustomerDemographicsCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._UpToCustomerDemographicsCollection != null) 
+				if (this._CustomerDemographicsCollection != null) 
 				{ 
-					this.RemovePostSave("UpToCustomerDemographicsCollection"); 
-					this._UpToCustomerDemographicsCollection = null;
+					this.RemovePostSave("CustomerDemographicsCollection"); 
+					this._CustomerDemographicsCollection = null;
 					
 				} 
 			}  			
@@ -720,11 +716,11 @@ namespace BusinessObjects
 			obj.MarkAsDeleted();
 		}
 
-		private CustomerDemographicsCollection _UpToCustomerDemographicsCollection;
+		private CustomerDemographicsCollection _CustomerDemographicsCollection;
 		private CustomerCustomerDemoCollection _many_CustomerCustomerDemoCollection;
 		#endregion
 
-		#region CustomerCustomerDemoCollection - Zero To Many
+		#region CustomerCustomerDemoCollection - Zero To Many (FK_CustomerCustomerDemo_Customers)
 		
 		static public esPrefetchMap Prefetch_CustomerCustomerDemoCollection
 		{
@@ -817,7 +813,7 @@ namespace BusinessObjects
 		private CustomerCustomerDemoCollection _CustomerCustomerDemoCollection;
 		#endregion
 
-		#region OrdersCollection - Zero To Many
+		#region OrdersCollection - Zero To Many (FK_Orders_Customers)
 		
 		static public esPrefetchMap Prefetch_OrdersCollection
 		{

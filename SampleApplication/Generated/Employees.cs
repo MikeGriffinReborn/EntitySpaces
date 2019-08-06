@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0731.0
+EntitySpaces Version : 2019.1.0805.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/1/2019 10:19:39 AM
+Date Generated       : 8/6/2019 9:55:48 AM
 ===============================================================================
 */
 
@@ -509,8 +509,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemInt32(EmployeesMetadata.ColumnNames.ReportsTo, value))
 				{
-					this._UpToEmployees = null;
-					this.OnPropertyChanged("UpToEmployees");
+					this._Supervisor = null;
+					this.OnPropertyChanged("Supervisor");
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.ReportsTo);
 				}
 			}
@@ -537,7 +537,7 @@ namespace BusinessObjects
 		}		
 		
 		[CLSCompliant(false)]
-		internal protected Employees _UpToEmployees;
+		internal protected Employees _Supervisor;
 		#endregion
 		
 		#region Housekeeping methods
@@ -813,15 +813,15 @@ namespace BusinessObjects
 	public partial class Employees : esEmployees
 	{
 
-		#region EmployeesCollection - Zero To Many
+		#region SupervisorCollection - Zero To Many (FK_Employees_Employees)
 		
-		static public esPrefetchMap Prefetch_EmployeesCollection
+		static public esPrefetchMap Prefetch_SupervisorCollection
 		{
 			get
 			{
 				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Employees.EmployeesCollection_Delegate;
-				map.PropertyName = "EmployeesCollection";
+				map.PrefetchDelegate = BusinessObjects.Employees.SupervisorCollection_Delegate;
+				map.PropertyName = "SupervisorCollection";
 				map.MyColumnName = "EmployeeID";
 				map.ParentColumnName = "ReportsTo";
 				map.IsMultiPartKey = false;
@@ -829,7 +829,7 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void EmployeesCollection_Delegate(esPrefetchParameters data)
+		static private void SupervisorCollection_Delegate(esPrefetchParameters data)
 		{
 			EmployeesQuery parent = new EmployeesQuery(data.NextAlias());
 
@@ -850,50 +850,50 @@ namespace BusinessObjects
 		/// Foreign Key Name - FK_Employees_Employees
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeEmployeesCollection()
+		public bool ShouldSerializeSupervisorCollection()
 		{
-		    if(this._EmployeesCollection != null && this._EmployeesCollection.Count > 0)
+		    if(this._SupervisorCollection != null && this._SupervisorCollection.Count > 0)
 				return true;
             else
 				return false;
 		}	
 		
 
-		[DataMember(Name="EmployeesCollection", EmitDefaultValue = false)]
-		public EmployeesCollection EmployeesCollection
+		[DataMember(Name="SupervisorCollection", EmitDefaultValue = false)]
+		public EmployeesCollection SupervisorCollection
 		{
 			get
 			{
-				if(this._EmployeesCollection == null)
+				if(this._SupervisorCollection == null)
 				{
-					this._EmployeesCollection = new EmployeesCollection();
-					this._EmployeesCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("EmployeesCollection", this._EmployeesCollection);
+					this._SupervisorCollection = new EmployeesCollection();
+					this._SupervisorCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("SupervisorCollection", this._SupervisorCollection);
 				
 					if (this.EmployeeID != null)
 					{
 						if (!this.es.IsLazyLoadDisabled)
 						{
-							this._EmployeesCollection.Query.Where(this._EmployeesCollection.Query.ReportsTo == this.EmployeeID);
-							this._EmployeesCollection.Query.Load();
+							this._SupervisorCollection.Query.Where(this._SupervisorCollection.Query.ReportsTo == this.EmployeeID);
+							this._SupervisorCollection.Query.Load();
 						}
 
 						// Auto-hookup Foreign Keys
-						this._EmployeesCollection.fks.Add(EmployeesMetadata.ColumnNames.ReportsTo, this.EmployeeID);
+						this._SupervisorCollection.fks.Add(EmployeesMetadata.ColumnNames.ReportsTo, this.EmployeeID);
 					}
 				}
 
-				return this._EmployeesCollection;
+				return this._SupervisorCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._EmployeesCollection != null) 
+				if (this._SupervisorCollection != null) 
 				{ 
-					this.RemovePostSave("EmployeesCollection"); 
-					this._EmployeesCollection = null;
+					this.RemovePostSave("SupervisorCollection"); 
+					this._SupervisorCollection = null;
 					
 				} 
 			} 			
@@ -903,60 +903,59 @@ namespace BusinessObjects
 		
 			
 		
-		private EmployeesCollection _EmployeesCollection;
+		private EmployeesCollection _SupervisorCollection;
 		#endregion
 
-				
-				
-		#region UpToEmployees - Many To One
-		/// <summary>
-		/// Many to One
-		/// Foreign Key Name - FK_Employees_Employees
-		/// </summary>
+		
+		#region Supervisor - Many To One (FK_Employees_Employees)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToEmployees()
+		public bool ShouldSerializeSupervisor()
 		{
-		    if(this._UpToEmployees != null)
-				return true;
-            else
-				return false;
+		    return this._Supervisor != null ? true : false;
 		}
 		
 
-		[DataMember(Name="UpToEmployees", EmitDefaultValue = false)]
+		[DataMember(Name="Supervisor", EmitDefaultValue = false)]
 					
-		public Employees UpToEmployees
+		public Employees Supervisor
 		{
 			get
 			{
-				if (this.es.IsLazyLoadDisabled) return null;
-				
-				if(this._UpToEmployees == null && ReportsTo != null)
-				{
-					this._UpToEmployees = new Employees();
-					this._UpToEmployees.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToEmployees", this._UpToEmployees);
-					this._UpToEmployees.Query.Where(this._UpToEmployees.Query.EmployeeID == this.ReportsTo);
-					this._UpToEmployees.Query.Load();
-				}	
-				return this._UpToEmployees;
+                if (this._Supervisor == null)
+                {
+                    this._Supervisor = new Employees();
+                    this._Supervisor.es.Connection.Name = this.es.Connection.Name;
+                    this.SetPreSave("Supervisor", this._Supervisor);
+
+					if(this._Supervisor == null && ReportsTo != null)
+                    {
+                        if (!this.es.IsLazyLoadDisabled)
+                        {
+							this._Supervisor.Query.Where(this._Supervisor.Query.EmployeeID == this.ReportsTo);
+							this._Supervisor.Query.Load();
+                        }
+                    }
+                }
+
+				return this._Supervisor;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToEmployees");
+				this.RemovePreSave("Supervisor");
 				
 
 				if(value == null)
 				{
 					this.ReportsTo = null;
-					this._UpToEmployees = null;
+					this._Supervisor = null;
 				}
 				else
 				{
 					this.ReportsTo = value.EmployeeID;
-					this._UpToEmployees = value;
-					this.SetPreSave("UpToEmployees", this._UpToEmployees);
+					this._Supervisor = value;
+					this.SetPreSave("Supervisor", this._Supervisor);
 				}
 				
 			}
@@ -964,33 +963,29 @@ namespace BusinessObjects
 		#endregion
 		
 
-					
 			
-		#region UpToTerritoriesCollection - Many To Many
-		/// <summary>
-		/// Many to Many
-		/// Foreign Key Name - FK_EmployeeTerritories_Employees
-		/// </summary>
+		#region TerritoriesCollection - Many To Many (FK_EmployeeTerritories_Employees)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToTerritoriesCollection()
+		public bool ShouldSerializeTerritoriesCollection()
 		{
-		    if(this._UpToTerritoriesCollection != null && this._UpToTerritoriesCollection.Count > 0)
+		    if(this._TerritoriesCollection != null && this._TerritoriesCollection.Count > 0)
 				return true;
             else
 				return false;
 		}
 		
 
-		[DataMember(Name="UpToTerritoriesCollection", EmitDefaultValue = false)]
-		public TerritoriesCollection UpToTerritoriesCollection
+		[DataMember(Name="TerritoriesCollection", EmitDefaultValue = false)]
+		public TerritoriesCollection TerritoriesCollection
 		{
 			get
 			{
-				if(this._UpToTerritoriesCollection == null)
+				if(this._TerritoriesCollection == null)
 				{
-					this._UpToTerritoriesCollection = new TerritoriesCollection();
-					this._UpToTerritoriesCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("UpToTerritoriesCollection", this._UpToTerritoriesCollection);
+					this._TerritoriesCollection = new TerritoriesCollection();
+					this._TerritoriesCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("TerritoriesCollection", this._TerritoriesCollection);
 					if (!this.es.IsLazyLoadDisabled && this.EmployeeID != null)
 					{
 						TerritoriesQuery m = new TerritoriesQuery("m");
@@ -999,21 +994,21 @@ namespace BusinessObjects
 						m.InnerJoin(j).On(m.TerritoryID == j.TerritoryID);
                         m.Where(j.EmployeeID == this.EmployeeID);
 
-						this._UpToTerritoriesCollection.Load(m);
+						this._TerritoriesCollection.Load(m);
 					}
 				}
 
-				return this._UpToTerritoriesCollection;
+				return this._TerritoriesCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._UpToTerritoriesCollection != null) 
+				if (this._TerritoriesCollection != null) 
 				{ 
-					this.RemovePostSave("UpToTerritoriesCollection"); 
-					this._UpToTerritoriesCollection = null;
+					this.RemovePostSave("TerritoriesCollection"); 
+					this._TerritoriesCollection = null;
 					
 				} 
 			}  			
@@ -1057,11 +1052,11 @@ namespace BusinessObjects
 			obj.MarkAsDeleted();
 		}
 
-		private TerritoriesCollection _UpToTerritoriesCollection;
+		private TerritoriesCollection _TerritoriesCollection;
 		private EmployeeTerritoriesCollection _many_EmployeeTerritoriesCollection;
 		#endregion
 
-		#region EmployeeTerritoriesCollection - Zero To Many
+		#region EmployeeTerritoriesCollection - Zero To Many (FK_EmployeeTerritories_Employees)
 		
 		static public esPrefetchMap Prefetch_EmployeeTerritoriesCollection
 		{
@@ -1154,7 +1149,7 @@ namespace BusinessObjects
 		private EmployeeTerritoriesCollection _EmployeeTerritoriesCollection;
 		#endregion
 
-		#region OrdersCollection - Zero To Many
+		#region OrdersCollection - Zero To Many (FK_Orders_Employees)
 		
 		static public esPrefetchMap Prefetch_OrdersCollection
 		{
@@ -1254,8 +1249,8 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "EmployeesCollection":
-					coll = this.EmployeesCollection;
+				case "SupervisorCollection":
+					coll = this.SupervisorCollection;
 					break;
 				case "EmployeeTerritoriesCollection":
 					coll = this.EmployeeTerritoriesCollection;
@@ -1274,7 +1269,7 @@ namespace BusinessObjects
 		{
 			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
 			
-			props.Add(new esPropertyDescriptor(this, "EmployeesCollection", typeof(EmployeesCollection), new Employees()));
+			props.Add(new esPropertyDescriptor(this, "SupervisorCollection", typeof(EmployeesCollection), new Employees()));
 			props.Add(new esPropertyDescriptor(this, "EmployeeTerritoriesCollection", typeof(EmployeeTerritoriesCollection), new EmployeeTerritories()));
 			props.Add(new esPropertyDescriptor(this, "OrdersCollection", typeof(OrdersCollection), new Orders()));
 		
@@ -1286,9 +1281,9 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPreSaveKeys()
 		{
-			if(!this.es.IsDeleted && this._UpToEmployees != null)
+			if(!this.es.IsDeleted && this._Supervisor != null)
 			{
-				this.ReportsTo = this._UpToEmployees.EmployeeID;
+				this.ReportsTo = this._Supervisor.EmployeeID;
 			}
 		}
 		
@@ -1315,9 +1310,9 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPostSaveKeys()
 		{
-			if(this._EmployeesCollection != null)
+			if(this._SupervisorCollection != null)
 			{
-				Apply(this._EmployeesCollection, "ReportsTo", this.EmployeeID);
+				Apply(this._SupervisorCollection, "ReportsTo", this.EmployeeID);
 			}
 			if(this._EmployeeTerritoriesCollection != null)
 			{

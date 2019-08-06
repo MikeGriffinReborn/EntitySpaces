@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0731.0
+EntitySpaces Version : 2019.1.0805.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/1/2019 10:19:42 AM
+Date Generated       : 8/6/2019 9:55:51 AM
 ===============================================================================
 */
 
@@ -229,15 +229,15 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemInt32(TerritoriesMetadata.ColumnNames.RegionID, value))
 				{
-					this._UpToRegion = null;
-					this.OnPropertyChanged("UpToRegion");
+					this._Region = null;
+					this.OnPropertyChanged("Region");
 					OnPropertyChanged(TerritoriesMetadata.PropertyNames.RegionID);
 				}
 			}
 		}		
 		
 		[CLSCompliant(false)]
-		internal protected Region _UpToRegion;
+		internal protected Region _Region;
 		#endregion
 		
 		#region Housekeeping methods
@@ -423,33 +423,29 @@ namespace BusinessObjects
 	public partial class Territories : esTerritories
 	{
 
-					
 			
-		#region UpToEmployeesCollection - Many To Many
-		/// <summary>
-		/// Many to Many
-		/// Foreign Key Name - FK_EmployeeTerritories_Territories
-		/// </summary>
+		#region EmployeesCollection - Many To Many (FK_EmployeeTerritories_Territories)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToEmployeesCollection()
+		public bool ShouldSerializeEmployeesCollection()
 		{
-		    if(this._UpToEmployeesCollection != null && this._UpToEmployeesCollection.Count > 0)
+		    if(this._EmployeesCollection != null && this._EmployeesCollection.Count > 0)
 				return true;
             else
 				return false;
 		}
 		
 
-		[DataMember(Name="UpToEmployeesCollection", EmitDefaultValue = false)]
-		public EmployeesCollection UpToEmployeesCollection
+		[DataMember(Name="EmployeesCollection", EmitDefaultValue = false)]
+		public EmployeesCollection EmployeesCollection
 		{
 			get
 			{
-				if(this._UpToEmployeesCollection == null)
+				if(this._EmployeesCollection == null)
 				{
-					this._UpToEmployeesCollection = new EmployeesCollection();
-					this._UpToEmployeesCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("UpToEmployeesCollection", this._UpToEmployeesCollection);
+					this._EmployeesCollection = new EmployeesCollection();
+					this._EmployeesCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("EmployeesCollection", this._EmployeesCollection);
 					if (!this.es.IsLazyLoadDisabled && this.TerritoryID != null)
 					{
 						EmployeesQuery m = new EmployeesQuery("m");
@@ -458,21 +454,21 @@ namespace BusinessObjects
 						m.InnerJoin(j).On(m.EmployeeID == j.EmployeeID);
                         m.Where(j.TerritoryID == this.TerritoryID);
 
-						this._UpToEmployeesCollection.Load(m);
+						this._EmployeesCollection.Load(m);
 					}
 				}
 
-				return this._UpToEmployeesCollection;
+				return this._EmployeesCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._UpToEmployeesCollection != null) 
+				if (this._EmployeesCollection != null) 
 				{ 
-					this.RemovePostSave("UpToEmployeesCollection"); 
-					this._UpToEmployeesCollection = null;
+					this.RemovePostSave("EmployeesCollection"); 
+					this._EmployeesCollection = null;
 					
 				} 
 			}  			
@@ -516,11 +512,11 @@ namespace BusinessObjects
 			obj.MarkAsDeleted();
 		}
 
-		private EmployeesCollection _UpToEmployeesCollection;
+		private EmployeesCollection _EmployeesCollection;
 		private EmployeeTerritoriesCollection _many_EmployeeTerritoriesCollection;
 		#endregion
 
-		#region EmployeeTerritoriesCollection - Zero To Many
+		#region EmployeeTerritoriesCollection - Zero To Many (FK_EmployeeTerritories_Territories)
 		
 		static public esPrefetchMap Prefetch_EmployeeTerritoriesCollection
 		{
@@ -613,57 +609,56 @@ namespace BusinessObjects
 		private EmployeeTerritoriesCollection _EmployeeTerritoriesCollection;
 		#endregion
 
-				
-				
-		#region UpToRegion - Many To One
-		/// <summary>
-		/// Many to One
-		/// Foreign Key Name - FK_Territories_Region
-		/// </summary>
+		
+		#region Region - Many To One (FK_Territories_Region)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToRegion()
+		public bool ShouldSerializeRegion()
 		{
-		    if(this._UpToRegion != null)
-				return true;
-            else
-				return false;
+		    return this._Region != null ? true : false;
 		}
 		
 
-		[DataMember(Name="UpToRegion", EmitDefaultValue = false)]
+		[DataMember(Name="Region", EmitDefaultValue = false)]
 					
-		public Region UpToRegion
+		public Region Region
 		{
 			get
 			{
-				if (this.es.IsLazyLoadDisabled) return null;
-				
-				if(this._UpToRegion == null && RegionID != null)
-				{
-					this._UpToRegion = new Region();
-					this._UpToRegion.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToRegion", this._UpToRegion);
-					this._UpToRegion.Query.Where(this._UpToRegion.Query.RegionID == this.RegionID);
-					this._UpToRegion.Query.Load();
-				}	
-				return this._UpToRegion;
+                if (this._Region == null)
+                {
+                    this._Region = new Region();
+                    this._Region.es.Connection.Name = this.es.Connection.Name;
+                    this.SetPreSave("Region", this._Region);
+
+					if(this._Region == null && RegionID != null)
+                    {
+                        if (!this.es.IsLazyLoadDisabled)
+                        {
+							this._Region.Query.Where(this._Region.Query.RegionID == this.RegionID);
+							this._Region.Query.Load();
+                        }
+                    }
+                }
+
+				return this._Region;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToRegion");
+				this.RemovePreSave("Region");
 				
 
 				if(value == null)
 				{
 					this.RegionID = null;
-					this._UpToRegion = null;
+					this._Region = null;
 				}
 				else
 				{
 					this.RegionID = value.RegionID;
-					this._UpToRegion = value;
-					this.SetPreSave("UpToRegion", this._UpToRegion);
+					this._Region = value;
+					this.SetPreSave("Region", this._Region);
 				}
 				
 			}

@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0731.0
+EntitySpaces Version : 2019.1.0805.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/1/2019 10:19:41 AM
+Date Generated       : 8/6/2019 9:55:50 AM
 ===============================================================================
 */
 
@@ -229,8 +229,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemInt32(ProductsMetadata.ColumnNames.SupplierID, value))
 				{
-					this._UpToSuppliers = null;
-					this.OnPropertyChanged("UpToSuppliers");
+					this._Suppliers = null;
+					this.OnPropertyChanged("Suppliers");
 					OnPropertyChanged(ProductsMetadata.PropertyNames.SupplierID);
 				}
 			}
@@ -251,8 +251,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemInt32(ProductsMetadata.ColumnNames.CategoryID, value))
 				{
-					this._UpToCategories = null;
-					this.OnPropertyChanged("UpToCategories");
+					this._Categories = null;
+					this.OnPropertyChanged("Categories");
 					OnPropertyChanged(ProductsMetadata.PropertyNames.CategoryID);
 				}
 			}
@@ -379,9 +379,9 @@ namespace BusinessObjects
 		}		
 		
 		[CLSCompliant(false)]
-		internal protected Categories _UpToCategories;
+		internal protected Categories _Categories;
 		[CLSCompliant(false)]
-		internal protected Suppliers _UpToSuppliers;
+		internal protected Suppliers _Suppliers;
 		#endregion
 		
 		#region Housekeeping methods
@@ -609,33 +609,29 @@ namespace BusinessObjects
 	public partial class Products : esProducts
 	{
 
-					
 			
-		#region UpToOrdersCollection - Many To Many
-		/// <summary>
-		/// Many to Many
-		/// Foreign Key Name - FK_Order_Details_Products
-		/// </summary>
+		#region OrdersCollection - Many To Many (FK_Order_Details_Products)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToOrdersCollection()
+		public bool ShouldSerializeOrdersCollection()
 		{
-		    if(this._UpToOrdersCollection != null && this._UpToOrdersCollection.Count > 0)
+		    if(this._OrdersCollection != null && this._OrdersCollection.Count > 0)
 				return true;
             else
 				return false;
 		}
 		
 
-		[DataMember(Name="UpToOrdersCollection", EmitDefaultValue = false)]
-		public OrdersCollection UpToOrdersCollection
+		[DataMember(Name="OrdersCollection", EmitDefaultValue = false)]
+		public OrdersCollection OrdersCollection
 		{
 			get
 			{
-				if(this._UpToOrdersCollection == null)
+				if(this._OrdersCollection == null)
 				{
-					this._UpToOrdersCollection = new OrdersCollection();
-					this._UpToOrdersCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("UpToOrdersCollection", this._UpToOrdersCollection);
+					this._OrdersCollection = new OrdersCollection();
+					this._OrdersCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("OrdersCollection", this._OrdersCollection);
 					if (!this.es.IsLazyLoadDisabled && this.ProductID != null)
 					{
 						OrdersQuery m = new OrdersQuery("m");
@@ -644,21 +640,21 @@ namespace BusinessObjects
 						m.InnerJoin(j).On(m.OrderID == j.OrderID);
                         m.Where(j.ProductID == this.ProductID);
 
-						this._UpToOrdersCollection.Load(m);
+						this._OrdersCollection.Load(m);
 					}
 				}
 
-				return this._UpToOrdersCollection;
+				return this._OrdersCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._UpToOrdersCollection != null) 
+				if (this._OrdersCollection != null) 
 				{ 
-					this.RemovePostSave("UpToOrdersCollection"); 
-					this._UpToOrdersCollection = null;
+					this.RemovePostSave("OrdersCollection"); 
+					this._OrdersCollection = null;
 					
 				} 
 			}  			
@@ -702,11 +698,11 @@ namespace BusinessObjects
 			obj.MarkAsDeleted();
 		}
 
-		private OrdersCollection _UpToOrdersCollection;
+		private OrdersCollection _OrdersCollection;
 		private OrderDetailsCollection _many_OrderDetailsCollection;
 		#endregion
 
-		#region OrderDetailsCollection - Zero To Many
+		#region OrderDetailsCollection - Zero To Many (FK_Order_Details_Products)
 		
 		static public esPrefetchMap Prefetch_OrderDetailsCollection
 		{
@@ -799,57 +795,56 @@ namespace BusinessObjects
 		private OrderDetailsCollection _OrderDetailsCollection;
 		#endregion
 
-				
-				
-		#region UpToCategories - Many To One
-		/// <summary>
-		/// Many to One
-		/// Foreign Key Name - FK_Products_Categories
-		/// </summary>
+		
+		#region Categories - Many To One (FK_Products_Categories)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToCategories()
+		public bool ShouldSerializeCategories()
 		{
-		    if(this._UpToCategories != null)
-				return true;
-            else
-				return false;
+		    return this._Categories != null ? true : false;
 		}
 		
 
-		[DataMember(Name="UpToCategories", EmitDefaultValue = false)]
+		[DataMember(Name="Categories", EmitDefaultValue = false)]
 					
-		public Categories UpToCategories
+		public Categories Categories
 		{
 			get
 			{
-				if (this.es.IsLazyLoadDisabled) return null;
-				
-				if(this._UpToCategories == null && CategoryID != null)
-				{
-					this._UpToCategories = new Categories();
-					this._UpToCategories.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToCategories", this._UpToCategories);
-					this._UpToCategories.Query.Where(this._UpToCategories.Query.CategoryID == this.CategoryID);
-					this._UpToCategories.Query.Load();
-				}	
-				return this._UpToCategories;
+                if (this._Categories == null)
+                {
+                    this._Categories = new Categories();
+                    this._Categories.es.Connection.Name = this.es.Connection.Name;
+                    this.SetPreSave("Categories", this._Categories);
+
+					if(this._Categories == null && CategoryID != null)
+                    {
+                        if (!this.es.IsLazyLoadDisabled)
+                        {
+							this._Categories.Query.Where(this._Categories.Query.CategoryID == this.CategoryID);
+							this._Categories.Query.Load();
+                        }
+                    }
+                }
+
+				return this._Categories;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToCategories");
+				this.RemovePreSave("Categories");
 				
 
 				if(value == null)
 				{
 					this.CategoryID = null;
-					this._UpToCategories = null;
+					this._Categories = null;
 				}
 				else
 				{
 					this.CategoryID = value.CategoryID;
-					this._UpToCategories = value;
-					this.SetPreSave("UpToCategories", this._UpToCategories);
+					this._Categories = value;
+					this.SetPreSave("Categories", this._Categories);
 				}
 				
 			}
@@ -857,57 +852,56 @@ namespace BusinessObjects
 		#endregion
 		
 
-				
-				
-		#region UpToSuppliers - Many To One
-		/// <summary>
-		/// Many to One
-		/// Foreign Key Name - FK_Products_Suppliers
-		/// </summary>
+		
+		#region Suppliers - Many To One (FK_Products_Suppliers)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToSuppliers()
+		public bool ShouldSerializeSuppliers()
 		{
-		    if(this._UpToSuppliers != null)
-				return true;
-            else
-				return false;
+		    return this._Suppliers != null ? true : false;
 		}
 		
 
-		[DataMember(Name="UpToSuppliers", EmitDefaultValue = false)]
+		[DataMember(Name="Suppliers", EmitDefaultValue = false)]
 					
-		public Suppliers UpToSuppliers
+		public Suppliers Suppliers
 		{
 			get
 			{
-				if (this.es.IsLazyLoadDisabled) return null;
-				
-				if(this._UpToSuppliers == null && SupplierID != null)
-				{
-					this._UpToSuppliers = new Suppliers();
-					this._UpToSuppliers.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToSuppliers", this._UpToSuppliers);
-					this._UpToSuppliers.Query.Where(this._UpToSuppliers.Query.SupplierID == this.SupplierID);
-					this._UpToSuppliers.Query.Load();
-				}	
-				return this._UpToSuppliers;
+                if (this._Suppliers == null)
+                {
+                    this._Suppliers = new Suppliers();
+                    this._Suppliers.es.Connection.Name = this.es.Connection.Name;
+                    this.SetPreSave("Suppliers", this._Suppliers);
+
+					if(this._Suppliers == null && SupplierID != null)
+                    {
+                        if (!this.es.IsLazyLoadDisabled)
+                        {
+							this._Suppliers.Query.Where(this._Suppliers.Query.SupplierID == this.SupplierID);
+							this._Suppliers.Query.Load();
+                        }
+                    }
+                }
+
+				return this._Suppliers;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToSuppliers");
+				this.RemovePreSave("Suppliers");
 				
 
 				if(value == null)
 				{
 					this.SupplierID = null;
-					this._UpToSuppliers = null;
+					this._Suppliers = null;
 				}
 				else
 				{
 					this.SupplierID = value.SupplierID;
-					this._UpToSuppliers = value;
-					this.SetPreSave("UpToSuppliers", this._UpToSuppliers);
+					this._Suppliers = value;
+					this.SetPreSave("Suppliers", this._Suppliers);
 				}
 				
 			}
@@ -946,13 +940,13 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPreSaveKeys()
 		{
-			if(!this.es.IsDeleted && this._UpToCategories != null)
+			if(!this.es.IsDeleted && this._Categories != null)
 			{
-				this.CategoryID = this._UpToCategories.CategoryID;
+				this.CategoryID = this._Categories.CategoryID;
 			}
-			if(!this.es.IsDeleted && this._UpToSuppliers != null)
+			if(!this.es.IsDeleted && this._Suppliers != null)
 			{
-				this.SupplierID = this._UpToSuppliers.SupplierID;
+				this.SupplierID = this._Suppliers.SupplierID;
 			}
 		}
 		

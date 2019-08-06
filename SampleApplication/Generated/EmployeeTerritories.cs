@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0731.0
+EntitySpaces Version : 2019.1.0805.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/1/2019 10:19:40 AM
+Date Generated       : 8/6/2019 9:55:49 AM
 ===============================================================================
 */
 
@@ -191,8 +191,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemInt32(EmployeeTerritoriesMetadata.ColumnNames.EmployeeID, value))
 				{
-					this._UpToEmployees = null;
-					this.OnPropertyChanged("UpToEmployees");
+					this._Employees = null;
+					this.OnPropertyChanged("Employees");
 					OnPropertyChanged(EmployeeTerritoriesMetadata.PropertyNames.EmployeeID);
 				}
 			}
@@ -213,17 +213,17 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemString(EmployeeTerritoriesMetadata.ColumnNames.TerritoryID, value))
 				{
-					this._UpToTerritories = null;
-					this.OnPropertyChanged("UpToTerritories");
+					this._Territories = null;
+					this.OnPropertyChanged("Territories");
 					OnPropertyChanged(EmployeeTerritoriesMetadata.PropertyNames.TerritoryID);
 				}
 			}
 		}		
 		
 		[CLSCompliant(false)]
-		internal protected Employees _UpToEmployees;
+		internal protected Employees _Employees;
 		[CLSCompliant(false)]
-		internal protected Territories _UpToTerritories;
+		internal protected Territories _Territories;
 		#endregion
 		
 		#region Housekeeping methods
@@ -403,57 +403,56 @@ namespace BusinessObjects
 	public partial class EmployeeTerritories : esEmployeeTerritories
 	{
 
-				
-				
-		#region UpToEmployees - Many To One
-		/// <summary>
-		/// Many to One
-		/// Foreign Key Name - FK_EmployeeTerritories_Employees
-		/// </summary>
+		
+		#region Employees - Many To One (FK_EmployeeTerritories_Employees)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToEmployees()
+		public bool ShouldSerializeEmployees()
 		{
-		    if(this._UpToEmployees != null)
-				return true;
-            else
-				return false;
+		    return this._Employees != null ? true : false;
 		}
 		
 
-		[DataMember(Name="UpToEmployees", EmitDefaultValue = false)]
+		[DataMember(Name="Employees", EmitDefaultValue = false)]
 					
-		public Employees UpToEmployees
+		public Employees Employees
 		{
 			get
 			{
-				if (this.es.IsLazyLoadDisabled) return null;
-				
-				if(this._UpToEmployees == null && EmployeeID != null)
-				{
-					this._UpToEmployees = new Employees();
-					this._UpToEmployees.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToEmployees", this._UpToEmployees);
-					this._UpToEmployees.Query.Where(this._UpToEmployees.Query.EmployeeID == this.EmployeeID);
-					this._UpToEmployees.Query.Load();
-				}	
-				return this._UpToEmployees;
+                if (this._Employees == null)
+                {
+                    this._Employees = new Employees();
+                    this._Employees.es.Connection.Name = this.es.Connection.Name;
+                    this.SetPreSave("Employees", this._Employees);
+
+					if(this._Employees == null && EmployeeID != null)
+                    {
+                        if (!this.es.IsLazyLoadDisabled)
+                        {
+							this._Employees.Query.Where(this._Employees.Query.EmployeeID == this.EmployeeID);
+							this._Employees.Query.Load();
+                        }
+                    }
+                }
+
+				return this._Employees;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToEmployees");
+				this.RemovePreSave("Employees");
 				
 
 				if(value == null)
 				{
 					this.EmployeeID = null;
-					this._UpToEmployees = null;
+					this._Employees = null;
 				}
 				else
 				{
 					this.EmployeeID = value.EmployeeID;
-					this._UpToEmployees = value;
-					this.SetPreSave("UpToEmployees", this._UpToEmployees);
+					this._Employees = value;
+					this.SetPreSave("Employees", this._Employees);
 				}
 				
 			}
@@ -461,57 +460,56 @@ namespace BusinessObjects
 		#endregion
 		
 
-				
-				
-		#region UpToTerritories - Many To One
-		/// <summary>
-		/// Many to One
-		/// Foreign Key Name - FK_EmployeeTerritories_Territories
-		/// </summary>
+		
+		#region Territories - Many To One (FK_EmployeeTerritories_Territories)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToTerritories()
+		public bool ShouldSerializeTerritories()
 		{
-		    if(this._UpToTerritories != null)
-				return true;
-            else
-				return false;
+		    return this._Territories != null ? true : false;
 		}
 		
 
-		[DataMember(Name="UpToTerritories", EmitDefaultValue = false)]
+		[DataMember(Name="Territories", EmitDefaultValue = false)]
 					
-		public Territories UpToTerritories
+		public Territories Territories
 		{
 			get
 			{
-				if (this.es.IsLazyLoadDisabled) return null;
-				
-				if(this._UpToTerritories == null && TerritoryID != null)
-				{
-					this._UpToTerritories = new Territories();
-					this._UpToTerritories.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToTerritories", this._UpToTerritories);
-					this._UpToTerritories.Query.Where(this._UpToTerritories.Query.TerritoryID == this.TerritoryID);
-					this._UpToTerritories.Query.Load();
-				}	
-				return this._UpToTerritories;
+                if (this._Territories == null)
+                {
+                    this._Territories = new Territories();
+                    this._Territories.es.Connection.Name = this.es.Connection.Name;
+                    this.SetPreSave("Territories", this._Territories);
+
+					if(this._Territories == null && TerritoryID != null)
+                    {
+                        if (!this.es.IsLazyLoadDisabled)
+                        {
+							this._Territories.Query.Where(this._Territories.Query.TerritoryID == this.TerritoryID);
+							this._Territories.Query.Load();
+                        }
+                    }
+                }
+
+				return this._Territories;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToTerritories");
+				this.RemovePreSave("Territories");
 				
 
 				if(value == null)
 				{
 					this.TerritoryID = null;
-					this._UpToTerritories = null;
+					this._Territories = null;
 				}
 				else
 				{
 					this.TerritoryID = value.TerritoryID;
-					this._UpToTerritories = value;
-					this.SetPreSave("UpToTerritories", this._UpToTerritories);
+					this._Territories = value;
+					this.SetPreSave("Territories", this._Territories);
 				}
 				
 			}
@@ -526,9 +524,9 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPreSaveKeys()
 		{
-			if(!this.es.IsDeleted && this._UpToEmployees != null)
+			if(!this.es.IsDeleted && this._Employees != null)
 			{
-				this.EmployeeID = this._UpToEmployees.EmployeeID;
+				this.EmployeeID = this._Employees.EmployeeID;
 			}
 		}
 		

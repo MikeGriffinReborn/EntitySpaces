@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0731.0
+EntitySpaces Version : 2019.1.0805.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/1/2019 10:19:41 AM
+Date Generated       : 8/6/2019 9:55:49 AM
 ===============================================================================
 */
 
@@ -209,8 +209,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemString(OrdersMetadata.ColumnNames.CustomerID, value))
 				{
-					this._UpToCustomers = null;
-					this.OnPropertyChanged("UpToCustomers");
+					this._Customers = null;
+					this.OnPropertyChanged("Customers");
 					OnPropertyChanged(OrdersMetadata.PropertyNames.CustomerID);
 				}
 			}
@@ -231,8 +231,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemInt32(OrdersMetadata.ColumnNames.EmployeeID, value))
 				{
-					this._UpToEmployees = null;
-					this.OnPropertyChanged("UpToEmployees");
+					this._Employees = null;
+					this.OnPropertyChanged("Employees");
 					OnPropertyChanged(OrdersMetadata.PropertyNames.EmployeeID);
 				}
 			}
@@ -313,8 +313,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemInt32(OrdersMetadata.ColumnNames.ShipVia, value))
 				{
-					this._UpToShippers = null;
-					this.OnPropertyChanged("UpToShippers");
+					this._Shippers = null;
+					this.OnPropertyChanged("Shippers");
 					OnPropertyChanged(OrdersMetadata.PropertyNames.ShipVia);
 				}
 			}
@@ -461,11 +461,11 @@ namespace BusinessObjects
 		}		
 		
 		[CLSCompliant(false)]
-		internal protected Customers _UpToCustomers;
+		internal protected Customers _Customers;
 		[CLSCompliant(false)]
-		internal protected Employees _UpToEmployees;
+		internal protected Employees _Employees;
 		[CLSCompliant(false)]
-		internal protected Shippers _UpToShippers;
+		internal protected Shippers _Shippers;
 		#endregion
 		
 		#region Housekeeping methods
@@ -717,33 +717,29 @@ namespace BusinessObjects
 	public partial class Orders : esOrders
 	{
 
-					
 			
-		#region UpToProductsCollection - Many To Many
-		/// <summary>
-		/// Many to Many
-		/// Foreign Key Name - FK_Order_Details_Orders
-		/// </summary>
+		#region ProductsCollection - Many To Many (FK_Order_Details_Orders)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToProductsCollection()
+		public bool ShouldSerializeProductsCollection()
 		{
-		    if(this._UpToProductsCollection != null && this._UpToProductsCollection.Count > 0)
+		    if(this._ProductsCollection != null && this._ProductsCollection.Count > 0)
 				return true;
             else
 				return false;
 		}
 		
 
-		[DataMember(Name="UpToProductsCollection", EmitDefaultValue = false)]
-		public ProductsCollection UpToProductsCollection
+		[DataMember(Name="ProductsCollection", EmitDefaultValue = false)]
+		public ProductsCollection ProductsCollection
 		{
 			get
 			{
-				if(this._UpToProductsCollection == null)
+				if(this._ProductsCollection == null)
 				{
-					this._UpToProductsCollection = new ProductsCollection();
-					this._UpToProductsCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("UpToProductsCollection", this._UpToProductsCollection);
+					this._ProductsCollection = new ProductsCollection();
+					this._ProductsCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("ProductsCollection", this._ProductsCollection);
 					if (!this.es.IsLazyLoadDisabled && this.OrderID != null)
 					{
 						ProductsQuery m = new ProductsQuery("m");
@@ -752,21 +748,21 @@ namespace BusinessObjects
 						m.InnerJoin(j).On(m.ProductID == j.ProductID);
                         m.Where(j.OrderID == this.OrderID);
 
-						this._UpToProductsCollection.Load(m);
+						this._ProductsCollection.Load(m);
 					}
 				}
 
-				return this._UpToProductsCollection;
+				return this._ProductsCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._UpToProductsCollection != null) 
+				if (this._ProductsCollection != null) 
 				{ 
-					this.RemovePostSave("UpToProductsCollection"); 
-					this._UpToProductsCollection = null;
+					this.RemovePostSave("ProductsCollection"); 
+					this._ProductsCollection = null;
 					
 				} 
 			}  			
@@ -810,11 +806,11 @@ namespace BusinessObjects
 			obj.MarkAsDeleted();
 		}
 
-		private ProductsCollection _UpToProductsCollection;
+		private ProductsCollection _ProductsCollection;
 		private OrderDetailsCollection _many_OrderDetailsCollection;
 		#endregion
 
-		#region OrderDetailsCollection - Zero To Many
+		#region OrderDetailsCollection - Zero To Many (FK_Order_Details_Orders)
 		
 		static public esPrefetchMap Prefetch_OrderDetailsCollection
 		{
@@ -907,57 +903,56 @@ namespace BusinessObjects
 		private OrderDetailsCollection _OrderDetailsCollection;
 		#endregion
 
-				
-				
-		#region UpToCustomers - Many To One
-		/// <summary>
-		/// Many to One
-		/// Foreign Key Name - FK_Orders_Customers
-		/// </summary>
+		
+		#region Customers - Many To One (FK_Orders_Customers)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToCustomers()
+		public bool ShouldSerializeCustomers()
 		{
-		    if(this._UpToCustomers != null)
-				return true;
-            else
-				return false;
+		    return this._Customers != null ? true : false;
 		}
 		
 
-		[DataMember(Name="UpToCustomers", EmitDefaultValue = false)]
+		[DataMember(Name="Customers", EmitDefaultValue = false)]
 					
-		public Customers UpToCustomers
+		public Customers Customers
 		{
 			get
 			{
-				if (this.es.IsLazyLoadDisabled) return null;
-				
-				if(this._UpToCustomers == null && CustomerID != null)
-				{
-					this._UpToCustomers = new Customers();
-					this._UpToCustomers.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToCustomers", this._UpToCustomers);
-					this._UpToCustomers.Query.Where(this._UpToCustomers.Query.CustomerID == this.CustomerID);
-					this._UpToCustomers.Query.Load();
-				}	
-				return this._UpToCustomers;
+                if (this._Customers == null)
+                {
+                    this._Customers = new Customers();
+                    this._Customers.es.Connection.Name = this.es.Connection.Name;
+                    this.SetPreSave("Customers", this._Customers);
+
+					if(this._Customers == null && CustomerID != null)
+                    {
+                        if (!this.es.IsLazyLoadDisabled)
+                        {
+							this._Customers.Query.Where(this._Customers.Query.CustomerID == this.CustomerID);
+							this._Customers.Query.Load();
+                        }
+                    }
+                }
+
+				return this._Customers;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToCustomers");
+				this.RemovePreSave("Customers");
 				
 
 				if(value == null)
 				{
 					this.CustomerID = null;
-					this._UpToCustomers = null;
+					this._Customers = null;
 				}
 				else
 				{
 					this.CustomerID = value.CustomerID;
-					this._UpToCustomers = value;
-					this.SetPreSave("UpToCustomers", this._UpToCustomers);
+					this._Customers = value;
+					this.SetPreSave("Customers", this._Customers);
 				}
 				
 			}
@@ -965,57 +960,56 @@ namespace BusinessObjects
 		#endregion
 		
 
-				
-				
-		#region UpToEmployees - Many To One
-		/// <summary>
-		/// Many to One
-		/// Foreign Key Name - FK_Orders_Employees
-		/// </summary>
+		
+		#region Employees - Many To One (FK_Orders_Employees)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToEmployees()
+		public bool ShouldSerializeEmployees()
 		{
-		    if(this._UpToEmployees != null)
-				return true;
-            else
-				return false;
+		    return this._Employees != null ? true : false;
 		}
 		
 
-		[DataMember(Name="UpToEmployees", EmitDefaultValue = false)]
+		[DataMember(Name="Employees", EmitDefaultValue = false)]
 					
-		public Employees UpToEmployees
+		public Employees Employees
 		{
 			get
 			{
-				if (this.es.IsLazyLoadDisabled) return null;
-				
-				if(this._UpToEmployees == null && EmployeeID != null)
-				{
-					this._UpToEmployees = new Employees();
-					this._UpToEmployees.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToEmployees", this._UpToEmployees);
-					this._UpToEmployees.Query.Where(this._UpToEmployees.Query.EmployeeID == this.EmployeeID);
-					this._UpToEmployees.Query.Load();
-				}	
-				return this._UpToEmployees;
+                if (this._Employees == null)
+                {
+                    this._Employees = new Employees();
+                    this._Employees.es.Connection.Name = this.es.Connection.Name;
+                    this.SetPreSave("Employees", this._Employees);
+
+					if(this._Employees == null && EmployeeID != null)
+                    {
+                        if (!this.es.IsLazyLoadDisabled)
+                        {
+							this._Employees.Query.Where(this._Employees.Query.EmployeeID == this.EmployeeID);
+							this._Employees.Query.Load();
+                        }
+                    }
+                }
+
+				return this._Employees;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToEmployees");
+				this.RemovePreSave("Employees");
 				
 
 				if(value == null)
 				{
 					this.EmployeeID = null;
-					this._UpToEmployees = null;
+					this._Employees = null;
 				}
 				else
 				{
 					this.EmployeeID = value.EmployeeID;
-					this._UpToEmployees = value;
-					this.SetPreSave("UpToEmployees", this._UpToEmployees);
+					this._Employees = value;
+					this.SetPreSave("Employees", this._Employees);
 				}
 				
 			}
@@ -1023,57 +1017,56 @@ namespace BusinessObjects
 		#endregion
 		
 
-				
-				
-		#region UpToShippers - Many To One
-		/// <summary>
-		/// Many to One
-		/// Foreign Key Name - FK_Orders_Shippers
-		/// </summary>
+		
+		#region Shippers - Many To One (FK_Orders_Shippers)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToShippers()
+		public bool ShouldSerializeShippers()
 		{
-		    if(this._UpToShippers != null)
-				return true;
-            else
-				return false;
+		    return this._Shippers != null ? true : false;
 		}
 		
 
-		[DataMember(Name="UpToShippers", EmitDefaultValue = false)]
+		[DataMember(Name="Shippers", EmitDefaultValue = false)]
 					
-		public Shippers UpToShippers
+		public Shippers Shippers
 		{
 			get
 			{
-				if (this.es.IsLazyLoadDisabled) return null;
-				
-				if(this._UpToShippers == null && ShipVia != null)
-				{
-					this._UpToShippers = new Shippers();
-					this._UpToShippers.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToShippers", this._UpToShippers);
-					this._UpToShippers.Query.Where(this._UpToShippers.Query.ShipperID == this.ShipVia);
-					this._UpToShippers.Query.Load();
-				}	
-				return this._UpToShippers;
+                if (this._Shippers == null)
+                {
+                    this._Shippers = new Shippers();
+                    this._Shippers.es.Connection.Name = this.es.Connection.Name;
+                    this.SetPreSave("Shippers", this._Shippers);
+
+					if(this._Shippers == null && ShipVia != null)
+                    {
+                        if (!this.es.IsLazyLoadDisabled)
+                        {
+							this._Shippers.Query.Where(this._Shippers.Query.ShipperID == this.ShipVia);
+							this._Shippers.Query.Load();
+                        }
+                    }
+                }
+
+				return this._Shippers;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToShippers");
+				this.RemovePreSave("Shippers");
 				
 
 				if(value == null)
 				{
 					this.ShipVia = null;
-					this._UpToShippers = null;
+					this._Shippers = null;
 				}
 				else
 				{
 					this.ShipVia = value.ShipperID;
-					this._UpToShippers = value;
-					this.SetPreSave("UpToShippers", this._UpToShippers);
+					this._Shippers = value;
+					this.SetPreSave("Shippers", this._Shippers);
 				}
 				
 			}
@@ -1112,13 +1105,13 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPreSaveKeys()
 		{
-			if(!this.es.IsDeleted && this._UpToEmployees != null)
+			if(!this.es.IsDeleted && this._Employees != null)
 			{
-				this.EmployeeID = this._UpToEmployees.EmployeeID;
+				this.EmployeeID = this._Employees.EmployeeID;
 			}
-			if(!this.es.IsDeleted && this._UpToShippers != null)
+			if(!this.es.IsDeleted && this._Shippers != null)
 			{
-				this.ShipVia = this._UpToShippers.ShipperID;
+				this.ShipVia = this._Shippers.ShipperID;
 			}
 		}
 		

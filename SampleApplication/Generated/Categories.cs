@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0731.0
+EntitySpaces Version : 2019.1.0805.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/1/2019 10:19:34 AM
+Date Generated       : 8/6/2019 9:55:45 AM
 ===============================================================================
 */
 
@@ -445,7 +445,7 @@ namespace BusinessObjects
 	public partial class Categories : esCategories
 	{
 
-		#region ProductsCollection - Zero To Many
+		#region ProductsCollection - Zero To Many (FK_Products_Categories)
 		
 		static public esPrefetchMap Prefetch_ProductsCollection
 		{

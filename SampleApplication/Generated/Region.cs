@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0731.0
+EntitySpaces Version : 2019.1.0805.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/1/2019 10:19:42 AM
+Date Generated       : 8/6/2019 9:55:51 AM
 ===============================================================================
 */
 
@@ -393,7 +393,7 @@ namespace BusinessObjects
 	public partial class Region : esRegion
 	{
 
-		#region TerritoriesCollection - Zero To Many
+		#region TerritoriesCollection - Zero To Many (FK_Territories_Region)
 		
 		static public esPrefetchMap Prefetch_TerritoriesCollection
 		{

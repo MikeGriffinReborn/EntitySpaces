@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0731.0
+EntitySpaces Version : 2019.1.0805.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/1/2019 10:19:37 AM
+Date Generated       : 8/6/2019 9:55:46 AM
 ===============================================================================
 */
 
@@ -191,8 +191,8 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemString(CustomerCustomerDemoMetadata.ColumnNames.CustomerID, value))
 				{
-					this._UpToCustomers = null;
-					this.OnPropertyChanged("UpToCustomers");
+					this._Customers = null;
+					this.OnPropertyChanged("Customers");
 					OnPropertyChanged(CustomerCustomerDemoMetadata.PropertyNames.CustomerID);
 				}
 			}
@@ -213,17 +213,17 @@ namespace BusinessObjects
 			{
 				if(base.SetSystemString(CustomerCustomerDemoMetadata.ColumnNames.CustomerTypeID, value))
 				{
-					this._UpToCustomerDemographics = null;
-					this.OnPropertyChanged("UpToCustomerDemographics");
+					this._CustomerDemographics = null;
+					this.OnPropertyChanged("CustomerDemographics");
 					OnPropertyChanged(CustomerCustomerDemoMetadata.PropertyNames.CustomerTypeID);
 				}
 			}
 		}		
 		
 		[CLSCompliant(false)]
-		internal protected CustomerDemographics _UpToCustomerDemographics;
+		internal protected CustomerDemographics _CustomerDemographics;
 		[CLSCompliant(false)]
-		internal protected Customers _UpToCustomers;
+		internal protected Customers _Customers;
 		#endregion
 		
 		#region Housekeeping methods
@@ -403,57 +403,56 @@ namespace BusinessObjects
 	public partial class CustomerCustomerDemo : esCustomerCustomerDemo
 	{
 
-				
-				
-		#region UpToCustomerDemographics - Many To One
-		/// <summary>
-		/// Many to One
-		/// Foreign Key Name - FK_CustomerCustomerDemo
-		/// </summary>
+		
+		#region CustomerDemographics - Many To One (FK_CustomerCustomerDemo)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToCustomerDemographics()
+		public bool ShouldSerializeCustomerDemographics()
 		{
-		    if(this._UpToCustomerDemographics != null)
-				return true;
-            else
-				return false;
+		    return this._CustomerDemographics != null ? true : false;
 		}
 		
 
-		[DataMember(Name="UpToCustomerDemographics", EmitDefaultValue = false)]
+		[DataMember(Name="CustomerDemographics", EmitDefaultValue = false)]
 					
-		public CustomerDemographics UpToCustomerDemographics
+		public CustomerDemographics CustomerDemographics
 		{
 			get
 			{
-				if (this.es.IsLazyLoadDisabled) return null;
-				
-				if(this._UpToCustomerDemographics == null && CustomerTypeID != null)
-				{
-					this._UpToCustomerDemographics = new CustomerDemographics();
-					this._UpToCustomerDemographics.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToCustomerDemographics", this._UpToCustomerDemographics);
-					this._UpToCustomerDemographics.Query.Where(this._UpToCustomerDemographics.Query.CustomerTypeID == this.CustomerTypeID);
-					this._UpToCustomerDemographics.Query.Load();
-				}	
-				return this._UpToCustomerDemographics;
+                if (this._CustomerDemographics == null)
+                {
+                    this._CustomerDemographics = new CustomerDemographics();
+                    this._CustomerDemographics.es.Connection.Name = this.es.Connection.Name;
+                    this.SetPreSave("CustomerDemographics", this._CustomerDemographics);
+
+					if(this._CustomerDemographics == null && CustomerTypeID != null)
+                    {
+                        if (!this.es.IsLazyLoadDisabled)
+                        {
+							this._CustomerDemographics.Query.Where(this._CustomerDemographics.Query.CustomerTypeID == this.CustomerTypeID);
+							this._CustomerDemographics.Query.Load();
+                        }
+                    }
+                }
+
+				return this._CustomerDemographics;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToCustomerDemographics");
+				this.RemovePreSave("CustomerDemographics");
 				
 
 				if(value == null)
 				{
 					this.CustomerTypeID = null;
-					this._UpToCustomerDemographics = null;
+					this._CustomerDemographics = null;
 				}
 				else
 				{
 					this.CustomerTypeID = value.CustomerTypeID;
-					this._UpToCustomerDemographics = value;
-					this.SetPreSave("UpToCustomerDemographics", this._UpToCustomerDemographics);
+					this._CustomerDemographics = value;
+					this.SetPreSave("CustomerDemographics", this._CustomerDemographics);
 				}
 				
 			}
@@ -461,57 +460,56 @@ namespace BusinessObjects
 		#endregion
 		
 
-				
-				
-		#region UpToCustomers - Many To One
-		/// <summary>
-		/// Many to One
-		/// Foreign Key Name - FK_CustomerCustomerDemo_Customers
-		/// </summary>
+		
+		#region Customers - Many To One (FK_CustomerCustomerDemo_Customers)
+		
 	    [EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeUpToCustomers()
+		public bool ShouldSerializeCustomers()
 		{
-		    if(this._UpToCustomers != null)
-				return true;
-            else
-				return false;
+		    return this._Customers != null ? true : false;
 		}
 		
 
-		[DataMember(Name="UpToCustomers", EmitDefaultValue = false)]
+		[DataMember(Name="Customers", EmitDefaultValue = false)]
 					
-		public Customers UpToCustomers
+		public Customers Customers
 		{
 			get
 			{
-				if (this.es.IsLazyLoadDisabled) return null;
-				
-				if(this._UpToCustomers == null && CustomerID != null)
-				{
-					this._UpToCustomers = new Customers();
-					this._UpToCustomers.es.Connection.Name = this.es.Connection.Name;
-					this.SetPreSave("UpToCustomers", this._UpToCustomers);
-					this._UpToCustomers.Query.Where(this._UpToCustomers.Query.CustomerID == this.CustomerID);
-					this._UpToCustomers.Query.Load();
-				}	
-				return this._UpToCustomers;
+                if (this._Customers == null)
+                {
+                    this._Customers = new Customers();
+                    this._Customers.es.Connection.Name = this.es.Connection.Name;
+                    this.SetPreSave("Customers", this._Customers);
+
+					if(this._Customers == null && CustomerID != null)
+                    {
+                        if (!this.es.IsLazyLoadDisabled)
+                        {
+							this._Customers.Query.Where(this._Customers.Query.CustomerID == this.CustomerID);
+							this._Customers.Query.Load();
+                        }
+                    }
+                }
+
+				return this._Customers;
 			}
 			
 			set
 			{
-				this.RemovePreSave("UpToCustomers");
+				this.RemovePreSave("Customers");
 				
 
 				if(value == null)
 				{
 					this.CustomerID = null;
-					this._UpToCustomers = null;
+					this._Customers = null;
 				}
 				else
 				{
 					this.CustomerID = value.CustomerID;
-					this._UpToCustomers = value;
-					this.SetPreSave("UpToCustomers", this._UpToCustomers);
+					this._Customers = value;
+					this.SetPreSave("Customers", this._Customers);
 				}
 				
 			}
