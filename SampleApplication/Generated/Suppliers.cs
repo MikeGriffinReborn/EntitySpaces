@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0805.0
+EntitySpaces Version : 2019.1.0807.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/6/2019 9:55:51 AM
+Date Generated       : 8/8/2019 8:05:39 AM
 ===============================================================================
 */
 
@@ -192,7 +192,7 @@ namespace BusinessObjects
 					OnPropertyChanged(SuppliersMetadata.PropertyNames.SupplierID);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Suppliers.CompanyName
@@ -212,7 +212,7 @@ namespace BusinessObjects
 					OnPropertyChanged(SuppliersMetadata.PropertyNames.CompanyName);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Suppliers.ContactName
@@ -232,7 +232,7 @@ namespace BusinessObjects
 					OnPropertyChanged(SuppliersMetadata.PropertyNames.ContactName);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Suppliers.ContactTitle
@@ -252,7 +252,7 @@ namespace BusinessObjects
 					OnPropertyChanged(SuppliersMetadata.PropertyNames.ContactTitle);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Suppliers.Address
@@ -272,7 +272,7 @@ namespace BusinessObjects
 					OnPropertyChanged(SuppliersMetadata.PropertyNames.Address);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Suppliers.City
@@ -292,7 +292,7 @@ namespace BusinessObjects
 					OnPropertyChanged(SuppliersMetadata.PropertyNames.City);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Suppliers.Region
@@ -312,7 +312,7 @@ namespace BusinessObjects
 					OnPropertyChanged(SuppliersMetadata.PropertyNames.Region);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Suppliers.PostalCode
@@ -332,7 +332,7 @@ namespace BusinessObjects
 					OnPropertyChanged(SuppliersMetadata.PropertyNames.PostalCode);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Suppliers.Country
@@ -352,7 +352,7 @@ namespace BusinessObjects
 					OnPropertyChanged(SuppliersMetadata.PropertyNames.Country);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Suppliers.Phone
@@ -372,7 +372,7 @@ namespace BusinessObjects
 					OnPropertyChanged(SuppliersMetadata.PropertyNames.Phone);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Suppliers.Fax
@@ -392,7 +392,7 @@ namespace BusinessObjects
 					OnPropertyChanged(SuppliersMetadata.PropertyNames.Fax);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Suppliers.HomePage
@@ -412,7 +412,7 @@ namespace BusinessObjects
 					OnPropertyChanged(SuppliersMetadata.PropertyNames.HomePage);
 				}
 			}
-		}		
+		}
 		
 		#endregion
 		
@@ -659,12 +659,14 @@ namespace BusinessObjects
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Suppliers.ProductsCollection_Delegate;
-				map.PropertyName = "ProductsCollection";
-				map.MyColumnName = "SupplierID";
-				map.ParentColumnName = "SupplierID";
-				map.IsMultiPartKey = false;
+				esPrefetchMap map = new esPrefetchMap
+				{
+					PrefetchDelegate = BusinessObjects.Suppliers.ProductsCollection_Delegate,
+					PropertyName = "ProductsCollection",
+					MyColumnName = "SupplierID",
+					ParentColumnName = "SupplierID",
+					IsMultiPartKey = false
+				};
 				return map;
 			}
 		}		

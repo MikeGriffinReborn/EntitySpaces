@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0805.0
+EntitySpaces Version : 2019.1.0807.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/6/2019 9:55:49 AM
+Date Generated       : 8/8/2019 8:05:38 AM
 ===============================================================================
 */
 
@@ -196,7 +196,7 @@ namespace BusinessObjects
 					OnPropertyChanged(OrderDetailsMetadata.PropertyNames.OrderID);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Order Details.ProductID
@@ -218,7 +218,7 @@ namespace BusinessObjects
 					OnPropertyChanged(OrderDetailsMetadata.PropertyNames.ProductID);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Order Details.UnitPrice
@@ -238,7 +238,7 @@ namespace BusinessObjects
 					OnPropertyChanged(OrderDetailsMetadata.PropertyNames.UnitPrice);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Order Details.Quantity
@@ -258,7 +258,7 @@ namespace BusinessObjects
 					OnPropertyChanged(OrderDetailsMetadata.PropertyNames.Quantity);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Order Details.Discount
@@ -278,11 +278,9 @@ namespace BusinessObjects
 					OnPropertyChanged(OrderDetailsMetadata.PropertyNames.Discount);
 				}
 			}
-		}		
+		}
 		
-		[CLSCompliant(false)]
 		internal protected Orders _Orders;
-		[CLSCompliant(false)]
 		internal protected Products _Products;
 		#endregion
 		
@@ -642,21 +640,21 @@ namespace BusinessObjects
 			c.PropertyName = OrderDetailsMetadata.PropertyNames.UnitPrice;
 			c.NumericPrecision = 19;
 			c.HasDefault = true;
-			c.Default = @"((0))";
+			c.Default = @"(0)";
 			m_columns.Add(c);
 				
 			c = new esColumnMetadata(OrderDetailsMetadata.ColumnNames.Quantity, 3, typeof(System.Int16), esSystemType.Int16);
 			c.PropertyName = OrderDetailsMetadata.PropertyNames.Quantity;
 			c.NumericPrecision = 5;
 			c.HasDefault = true;
-			c.Default = @"((1))";
+			c.Default = @"(1)";
 			m_columns.Add(c);
 				
 			c = new esColumnMetadata(OrderDetailsMetadata.ColumnNames.Discount, 4, typeof(System.Single), esSystemType.Single);
 			c.PropertyName = OrderDetailsMetadata.PropertyNames.Discount;
 			c.NumericPrecision = 7;
 			c.HasDefault = true;
-			c.Default = @"((0))";
+			c.Default = @"(0)";
 			m_columns.Add(c);
 				
 		}

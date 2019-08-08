@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0805.0
+EntitySpaces Version : 2019.1.0807.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/6/2019 9:55:45 AM
+Date Generated       : 8/8/2019 8:05:38 AM
 ===============================================================================
 */
 
@@ -192,7 +192,7 @@ namespace BusinessObjects
 					OnPropertyChanged(CategoriesMetadata.PropertyNames.CategoryID);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Categories.CategoryName
@@ -212,7 +212,7 @@ namespace BusinessObjects
 					OnPropertyChanged(CategoriesMetadata.PropertyNames.CategoryName);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Categories.Description
@@ -232,7 +232,7 @@ namespace BusinessObjects
 					OnPropertyChanged(CategoriesMetadata.PropertyNames.Description);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Categories.Picture
@@ -252,7 +252,7 @@ namespace BusinessObjects
 					OnPropertyChanged(CategoriesMetadata.PropertyNames.Picture);
 				}
 			}
-		}		
+		}
 		
 		#endregion
 		
@@ -451,12 +451,14 @@ namespace BusinessObjects
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Categories.ProductsCollection_Delegate;
-				map.PropertyName = "ProductsCollection";
-				map.MyColumnName = "CategoryID";
-				map.ParentColumnName = "CategoryID";
-				map.IsMultiPartKey = false;
+				esPrefetchMap map = new esPrefetchMap
+				{
+					PrefetchDelegate = BusinessObjects.Categories.ProductsCollection_Delegate,
+					PropertyName = "ProductsCollection",
+					MyColumnName = "CategoryID",
+					ParentColumnName = "CategoryID",
+					IsMultiPartKey = false
+				};
 				return map;
 			}
 		}		

@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0805.0
+EntitySpaces Version : 2019.1.0807.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/6/2019 9:55:51 AM
+Date Generated       : 8/8/2019 8:05:39 AM
 ===============================================================================
 */
 
@@ -192,7 +192,7 @@ namespace BusinessObjects
 					OnPropertyChanged(TerritoriesMetadata.PropertyNames.TerritoryID);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Territories.TerritoryDescription
@@ -212,7 +212,7 @@ namespace BusinessObjects
 					OnPropertyChanged(TerritoriesMetadata.PropertyNames.TerritoryDescription);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Territories.RegionID
@@ -234,9 +234,8 @@ namespace BusinessObjects
 					OnPropertyChanged(TerritoriesMetadata.PropertyNames.RegionID);
 				}
 			}
-		}		
+		}
 		
-		[CLSCompliant(false)]
 		internal protected Region _Region;
 		#endregion
 		
@@ -478,34 +477,34 @@ namespace BusinessObjects
 		/// Many to Many Associate
 		/// Foreign Key Name - FK_EmployeeTerritories_Territories
 		/// </summary>
-		public void AssociateEmployeesCollection(Employees entity)
+		public void ASsociateEmployeeTerritoriesCollection(Employees entity)
 		{
-			if (this._many_EmployeeTerritoriesCollection == null)
+			if (this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection == null)
 			{
-				this._many_EmployeeTerritoriesCollection = new EmployeeTerritoriesCollection();
-				this._many_EmployeeTerritoriesCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("EmployeeTerritoriesCollection", this._many_EmployeeTerritoriesCollection);
+				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection = new EmployeeTerritoriesCollection();
+				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("ManyEntitySpacesMetadataEngineSqlSqlTableCollection", this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection);
 			}
 
-			EmployeeTerritories obj = this._many_EmployeeTerritoriesCollection.AddNew();
+			EmployeeTerritories obj = this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.AddNew();
 			obj.TerritoryID = this.TerritoryID;
 			obj.EmployeeID = entity.EmployeeID;
 		}
-		
+
 		/// <summary>
 		/// Many to Many Dissociate
 		/// Foreign Key Name - FK_EmployeeTerritories_Territories
 		/// </summary>
-		public void DissociateEmployeesCollection(Employees entity)
+		public void DiSsociateEmployeeTerritoriesCollection(Employees entity)
 		{
-			if (this._many_EmployeeTerritoriesCollection == null)
+			if (this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection == null)
 			{
-				this._many_EmployeeTerritoriesCollection = new EmployeeTerritoriesCollection();
-				this._many_EmployeeTerritoriesCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("EmployeeTerritoriesCollection", this._many_EmployeeTerritoriesCollection);
+				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection = new EmployeeTerritoriesCollection();
+				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("ManyEntitySpacesMetadataEngineSqlSqlTableCollection", this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection);
 			}
 
-			EmployeeTerritories obj = this._many_EmployeeTerritoriesCollection.AddNew();
+			EmployeeTerritories obj = this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.AddNew();
 			obj.TerritoryID = this.TerritoryID;
             obj.EmployeeID = entity.EmployeeID;
 			obj.AcceptChanges();
@@ -513,7 +512,7 @@ namespace BusinessObjects
 		}
 
 		private EmployeesCollection _EmployeesCollection;
-		private EmployeeTerritoriesCollection _many_EmployeeTerritoriesCollection;
+		private EmployeeTerritoriesCollection _ManyEntitySpacesMetadataEngineSqlSqlTableCollection;
 		#endregion
 
 		#region EmployeeTerritoriesCollection - Zero To Many (FK_EmployeeTerritories_Territories)
@@ -522,12 +521,14 @@ namespace BusinessObjects
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Territories.EmployeeTerritoriesCollection_Delegate;
-				map.PropertyName = "EmployeeTerritoriesCollection";
-				map.MyColumnName = "TerritoryID";
-				map.ParentColumnName = "TerritoryID";
-				map.IsMultiPartKey = false;
+				esPrefetchMap map = new esPrefetchMap
+				{
+					PrefetchDelegate = BusinessObjects.Territories.EmployeeTerritoriesCollection_Delegate,
+					PropertyName = "EmployeeTerritoriesCollection",
+					MyColumnName = "TerritoryID",
+					ParentColumnName = "TerritoryID",
+					IsMultiPartKey = false
+				};
 				return map;
 			}
 		}		

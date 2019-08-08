@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0805.0
+EntitySpaces Version : 2019.1.0807.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/6/2019 9:55:51 AM
+Date Generated       : 8/8/2019 8:05:39 AM
 ===============================================================================
 */
 
@@ -192,7 +192,7 @@ namespace BusinessObjects
 					OnPropertyChanged(ShippersMetadata.PropertyNames.ShipperID);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Shippers.CompanyName
@@ -212,7 +212,7 @@ namespace BusinessObjects
 					OnPropertyChanged(ShippersMetadata.PropertyNames.CompanyName);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Shippers.Phone
@@ -232,7 +232,7 @@ namespace BusinessObjects
 					OnPropertyChanged(ShippersMetadata.PropertyNames.Phone);
 				}
 			}
-		}		
+		}
 		
 		#endregion
 		
@@ -425,12 +425,14 @@ namespace BusinessObjects
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Shippers.OrdersCollection_Delegate;
-				map.PropertyName = "OrdersCollection";
-				map.MyColumnName = "ShipVia";
-				map.ParentColumnName = "ShipperID";
-				map.IsMultiPartKey = false;
+				esPrefetchMap map = new esPrefetchMap
+				{
+					PrefetchDelegate = BusinessObjects.Shippers.OrdersCollection_Delegate,
+					PropertyName = "OrdersCollection",
+					MyColumnName = "ShipVia",
+					ParentColumnName = "ShipperID",
+					IsMultiPartKey = false
+				};
 				return map;
 			}
 		}		

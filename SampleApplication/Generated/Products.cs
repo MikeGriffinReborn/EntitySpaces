@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0805.0
+EntitySpaces Version : 2019.1.0807.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/6/2019 9:55:50 AM
+Date Generated       : 8/8/2019 8:05:39 AM
 ===============================================================================
 */
 
@@ -192,7 +192,7 @@ namespace BusinessObjects
 					OnPropertyChanged(ProductsMetadata.PropertyNames.ProductID);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Products.ProductName
@@ -212,7 +212,7 @@ namespace BusinessObjects
 					OnPropertyChanged(ProductsMetadata.PropertyNames.ProductName);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Products.SupplierID
@@ -234,7 +234,7 @@ namespace BusinessObjects
 					OnPropertyChanged(ProductsMetadata.PropertyNames.SupplierID);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Products.CategoryID
@@ -256,7 +256,7 @@ namespace BusinessObjects
 					OnPropertyChanged(ProductsMetadata.PropertyNames.CategoryID);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Products.QuantityPerUnit
@@ -276,7 +276,7 @@ namespace BusinessObjects
 					OnPropertyChanged(ProductsMetadata.PropertyNames.QuantityPerUnit);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Products.UnitPrice
@@ -296,7 +296,7 @@ namespace BusinessObjects
 					OnPropertyChanged(ProductsMetadata.PropertyNames.UnitPrice);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Products.UnitsInStock
@@ -316,7 +316,7 @@ namespace BusinessObjects
 					OnPropertyChanged(ProductsMetadata.PropertyNames.UnitsInStock);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Products.UnitsOnOrder
@@ -336,7 +336,7 @@ namespace BusinessObjects
 					OnPropertyChanged(ProductsMetadata.PropertyNames.UnitsOnOrder);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Products.ReorderLevel
@@ -356,7 +356,7 @@ namespace BusinessObjects
 					OnPropertyChanged(ProductsMetadata.PropertyNames.ReorderLevel);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Products.Discontinued
@@ -376,11 +376,9 @@ namespace BusinessObjects
 					OnPropertyChanged(ProductsMetadata.PropertyNames.Discontinued);
 				}
 			}
-		}		
+		}
 		
-		[CLSCompliant(false)]
 		internal protected Categories _Categories;
-		[CLSCompliant(false)]
 		internal protected Suppliers _Suppliers;
 		#endregion
 		
@@ -664,34 +662,34 @@ namespace BusinessObjects
 		/// Many to Many Associate
 		/// Foreign Key Name - FK_Order_Details_Products
 		/// </summary>
-		public void AssociateOrdersCollection(Orders entity)
+		public void ASsociateOrderDetailsCollection(Orders entity)
 		{
-			if (this._many_OrderDetailsCollection == null)
+			if (this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection == null)
 			{
-				this._many_OrderDetailsCollection = new OrderDetailsCollection();
-				this._many_OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("OrderDetailsCollection", this._many_OrderDetailsCollection);
+				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection = new OrderDetailsCollection();
+				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("ManyEntitySpacesMetadataEngineSqlSqlTableCollection", this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection);
 			}
 
-			OrderDetails obj = this._many_OrderDetailsCollection.AddNew();
+			OrderDetails obj = this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.AddNew();
 			obj.ProductID = this.ProductID;
 			obj.OrderID = entity.OrderID;
 		}
-		
+
 		/// <summary>
 		/// Many to Many Dissociate
 		/// Foreign Key Name - FK_Order_Details_Products
 		/// </summary>
-		public void DissociateOrdersCollection(Orders entity)
+		public void DiSsociateOrderDetailsCollection(Orders entity)
 		{
-			if (this._many_OrderDetailsCollection == null)
+			if (this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection == null)
 			{
-				this._many_OrderDetailsCollection = new OrderDetailsCollection();
-				this._many_OrderDetailsCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("OrderDetailsCollection", this._many_OrderDetailsCollection);
+				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection = new OrderDetailsCollection();
+				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("ManyEntitySpacesMetadataEngineSqlSqlTableCollection", this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection);
 			}
 
-			OrderDetails obj = this._many_OrderDetailsCollection.AddNew();
+			OrderDetails obj = this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.AddNew();
 			obj.ProductID = this.ProductID;
             obj.OrderID = entity.OrderID;
 			obj.AcceptChanges();
@@ -699,7 +697,7 @@ namespace BusinessObjects
 		}
 
 		private OrdersCollection _OrdersCollection;
-		private OrderDetailsCollection _many_OrderDetailsCollection;
+		private OrderDetailsCollection _ManyEntitySpacesMetadataEngineSqlSqlTableCollection;
 		#endregion
 
 		#region OrderDetailsCollection - Zero To Many (FK_Order_Details_Products)
@@ -708,12 +706,14 @@ namespace BusinessObjects
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Products.OrderDetailsCollection_Delegate;
-				map.PropertyName = "OrderDetailsCollection";
-				map.MyColumnName = "ProductID";
-				map.ParentColumnName = "ProductID";
-				map.IsMultiPartKey = false;
+				esPrefetchMap map = new esPrefetchMap
+				{
+					PrefetchDelegate = BusinessObjects.Products.OrderDetailsCollection_Delegate,
+					PropertyName = "OrderDetailsCollection",
+					MyColumnName = "ProductID",
+					ParentColumnName = "ProductID",
+					IsMultiPartKey = false
+				};
 				return map;
 			}
 		}		
@@ -1031,7 +1031,7 @@ namespace BusinessObjects
 			c.PropertyName = ProductsMetadata.PropertyNames.UnitPrice;
 			c.NumericPrecision = 19;
 			c.HasDefault = true;
-			c.Default = @"((0))";
+			c.Default = @"(0)";
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
@@ -1039,7 +1039,7 @@ namespace BusinessObjects
 			c.PropertyName = ProductsMetadata.PropertyNames.UnitsInStock;
 			c.NumericPrecision = 5;
 			c.HasDefault = true;
-			c.Default = @"((0))";
+			c.Default = @"(0)";
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
@@ -1047,7 +1047,7 @@ namespace BusinessObjects
 			c.PropertyName = ProductsMetadata.PropertyNames.UnitsOnOrder;
 			c.NumericPrecision = 5;
 			c.HasDefault = true;
-			c.Default = @"((0))";
+			c.Default = @"(0)";
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
@@ -1055,14 +1055,14 @@ namespace BusinessObjects
 			c.PropertyName = ProductsMetadata.PropertyNames.ReorderLevel;
 			c.NumericPrecision = 5;
 			c.HasDefault = true;
-			c.Default = @"((0))";
+			c.Default = @"(0)";
 			c.IsNullable = true;
 			m_columns.Add(c);
 				
 			c = new esColumnMetadata(ProductsMetadata.ColumnNames.Discontinued, 9, typeof(System.Boolean), esSystemType.Boolean);
 			c.PropertyName = ProductsMetadata.PropertyNames.Discontinued;
 			c.HasDefault = true;
-			c.Default = @"((0))";
+			c.Default = @"(0)";
 			m_columns.Add(c);
 				
 		}

@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0805.0
+EntitySpaces Version : 2019.1.0807.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/6/2019 9:55:47 AM
+Date Generated       : 8/8/2019 8:05:38 AM
 ===============================================================================
 */
 
@@ -192,7 +192,7 @@ namespace BusinessObjects
 					OnPropertyChanged(CustomersMetadata.PropertyNames.CustomerID);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Customers.CompanyName
@@ -212,7 +212,7 @@ namespace BusinessObjects
 					OnPropertyChanged(CustomersMetadata.PropertyNames.CompanyName);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Customers.ContactName
@@ -232,7 +232,7 @@ namespace BusinessObjects
 					OnPropertyChanged(CustomersMetadata.PropertyNames.ContactName);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Customers.ContactTitle
@@ -252,7 +252,7 @@ namespace BusinessObjects
 					OnPropertyChanged(CustomersMetadata.PropertyNames.ContactTitle);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Customers.Address
@@ -272,7 +272,7 @@ namespace BusinessObjects
 					OnPropertyChanged(CustomersMetadata.PropertyNames.Address);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Customers.City
@@ -292,7 +292,7 @@ namespace BusinessObjects
 					OnPropertyChanged(CustomersMetadata.PropertyNames.City);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Customers.Region
@@ -312,7 +312,7 @@ namespace BusinessObjects
 					OnPropertyChanged(CustomersMetadata.PropertyNames.Region);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Customers.PostalCode
@@ -332,7 +332,7 @@ namespace BusinessObjects
 					OnPropertyChanged(CustomersMetadata.PropertyNames.PostalCode);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Customers.Country
@@ -352,7 +352,7 @@ namespace BusinessObjects
 					OnPropertyChanged(CustomersMetadata.PropertyNames.Country);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Customers.Phone
@@ -372,7 +372,7 @@ namespace BusinessObjects
 					OnPropertyChanged(CustomersMetadata.PropertyNames.Phone);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Customers.Fax
@@ -392,7 +392,7 @@ namespace BusinessObjects
 					OnPropertyChanged(CustomersMetadata.PropertyNames.Fax);
 				}
 			}
-		}		
+		}
 		
 		#endregion
 		
@@ -682,34 +682,34 @@ namespace BusinessObjects
 		/// Many to Many Associate
 		/// Foreign Key Name - FK_CustomerCustomerDemo_Customers
 		/// </summary>
-		public void AssociateCustomerDemographicsCollection(CustomerDemographics entity)
+		public void ASsociateCustomerCustomerDemoCollection(CustomerDemographics entity)
 		{
-			if (this._many_CustomerCustomerDemoCollection == null)
+			if (this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection == null)
 			{
-				this._many_CustomerCustomerDemoCollection = new CustomerCustomerDemoCollection();
-				this._many_CustomerCustomerDemoCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("CustomerCustomerDemoCollection", this._many_CustomerCustomerDemoCollection);
+				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection = new CustomerCustomerDemoCollection();
+				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("ManyEntitySpacesMetadataEngineSqlSqlTableCollection", this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection);
 			}
 
-			CustomerCustomerDemo obj = this._many_CustomerCustomerDemoCollection.AddNew();
+			CustomerCustomerDemo obj = this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.AddNew();
 			obj.CustomerID = this.CustomerID;
 			obj.CustomerTypeID = entity.CustomerTypeID;
 		}
-		
+
 		/// <summary>
 		/// Many to Many Dissociate
 		/// Foreign Key Name - FK_CustomerCustomerDemo_Customers
 		/// </summary>
-		public void DissociateCustomerDemographicsCollection(CustomerDemographics entity)
+		public void DiSsociateCustomerCustomerDemoCollection(CustomerDemographics entity)
 		{
-			if (this._many_CustomerCustomerDemoCollection == null)
+			if (this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection == null)
 			{
-				this._many_CustomerCustomerDemoCollection = new CustomerCustomerDemoCollection();
-				this._many_CustomerCustomerDemoCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("CustomerCustomerDemoCollection", this._many_CustomerCustomerDemoCollection);
+				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection = new CustomerCustomerDemoCollection();
+				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("ManyEntitySpacesMetadataEngineSqlSqlTableCollection", this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection);
 			}
 
-			CustomerCustomerDemo obj = this._many_CustomerCustomerDemoCollection.AddNew();
+			CustomerCustomerDemo obj = this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.AddNew();
 			obj.CustomerID = this.CustomerID;
             obj.CustomerTypeID = entity.CustomerTypeID;
 			obj.AcceptChanges();
@@ -717,7 +717,7 @@ namespace BusinessObjects
 		}
 
 		private CustomerDemographicsCollection _CustomerDemographicsCollection;
-		private CustomerCustomerDemoCollection _many_CustomerCustomerDemoCollection;
+		private CustomerCustomerDemoCollection _ManyEntitySpacesMetadataEngineSqlSqlTableCollection;
 		#endregion
 
 		#region CustomerCustomerDemoCollection - Zero To Many (FK_CustomerCustomerDemo_Customers)
@@ -726,12 +726,14 @@ namespace BusinessObjects
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Customers.CustomerCustomerDemoCollection_Delegate;
-				map.PropertyName = "CustomerCustomerDemoCollection";
-				map.MyColumnName = "CustomerID";
-				map.ParentColumnName = "CustomerID";
-				map.IsMultiPartKey = false;
+				esPrefetchMap map = new esPrefetchMap
+				{
+					PrefetchDelegate = BusinessObjects.Customers.CustomerCustomerDemoCollection_Delegate,
+					PropertyName = "CustomerCustomerDemoCollection",
+					MyColumnName = "CustomerID",
+					ParentColumnName = "CustomerID",
+					IsMultiPartKey = false
+				};
 				return map;
 			}
 		}		
@@ -819,12 +821,14 @@ namespace BusinessObjects
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Customers.OrdersCollection_Delegate;
-				map.PropertyName = "OrdersCollection";
-				map.MyColumnName = "CustomerID";
-				map.ParentColumnName = "CustomerID";
-				map.IsMultiPartKey = false;
+				esPrefetchMap map = new esPrefetchMap
+				{
+					PrefetchDelegate = BusinessObjects.Customers.OrdersCollection_Delegate,
+					PropertyName = "OrdersCollection",
+					MyColumnName = "CustomerID",
+					ParentColumnName = "CustomerID",
+					IsMultiPartKey = false
+				};
 				return map;
 			}
 		}		

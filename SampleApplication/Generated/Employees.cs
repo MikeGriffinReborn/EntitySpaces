@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0805.0
+EntitySpaces Version : 2019.1.0807.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/6/2019 9:55:48 AM
+Date Generated       : 8/8/2019 8:05:38 AM
 ===============================================================================
 */
 
@@ -192,7 +192,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.EmployeeID);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.LastName
@@ -212,7 +212,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.LastName);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.FirstName
@@ -232,7 +232,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.FirstName);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.Title
@@ -252,7 +252,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.Title);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.TitleOfCourtesy
@@ -272,7 +272,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.TitleOfCourtesy);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.BirthDate
@@ -292,7 +292,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.BirthDate);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.HireDate
@@ -312,7 +312,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.HireDate);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.Address
@@ -332,7 +332,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.Address);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.City
@@ -352,7 +352,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.City);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.Region
@@ -372,7 +372,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.Region);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.PostalCode
@@ -392,7 +392,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.PostalCode);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.Country
@@ -412,7 +412,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.Country);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.HomePhone
@@ -432,7 +432,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.HomePhone);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.Extension
@@ -452,7 +452,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.Extension);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.Photo
@@ -472,7 +472,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.Photo);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.Notes
@@ -492,7 +492,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.Notes);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.ReportsTo
@@ -514,7 +514,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.ReportsTo);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Employees.PhotoPath
@@ -534,9 +534,8 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeesMetadata.PropertyNames.PhotoPath);
 				}
 			}
-		}		
+		}
 		
-		[CLSCompliant(false)]
 		internal protected Employees _Supervisor;
 		#endregion
 		
@@ -813,23 +812,25 @@ namespace BusinessObjects
 	public partial class Employees : esEmployees
 	{
 
-		#region SupervisorCollection - Zero To Many (FK_Employees_Employees)
+		#region SubordinatesCollection - Zero To Many (FK_Employees_Employees)
 		
-		static public esPrefetchMap Prefetch_SupervisorCollection
+		static public esPrefetchMap Prefetch_SubordinatesCollection
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Employees.SupervisorCollection_Delegate;
-				map.PropertyName = "SupervisorCollection";
-				map.MyColumnName = "EmployeeID";
-				map.ParentColumnName = "ReportsTo";
-				map.IsMultiPartKey = false;
+				esPrefetchMap map = new esPrefetchMap
+				{
+					PrefetchDelegate = BusinessObjects.Employees.SubordinatesCollection_Delegate,
+					PropertyName = "SubordinatesCollection",
+					MyColumnName = "EmployeeID",
+					ParentColumnName = "ReportsTo",
+					IsMultiPartKey = false
+				};
 				return map;
 			}
 		}		
 		
-		static private void SupervisorCollection_Delegate(esPrefetchParameters data)
+		static private void SubordinatesCollection_Delegate(esPrefetchParameters data)
 		{
 			EmployeesQuery parent = new EmployeesQuery(data.NextAlias());
 
@@ -850,50 +851,50 @@ namespace BusinessObjects
 		/// Foreign Key Name - FK_Employees_Employees
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeSupervisorCollection()
+		public bool ShouldSerializeSubordinatesCollection()
 		{
-		    if(this._SupervisorCollection != null && this._SupervisorCollection.Count > 0)
+		    if(this._SubordinatesCollection != null && this._SubordinatesCollection.Count > 0)
 				return true;
             else
 				return false;
 		}	
 		
 
-		[DataMember(Name="SupervisorCollection", EmitDefaultValue = false)]
-		public EmployeesCollection SupervisorCollection
+		[DataMember(Name="SubordinatesCollection", EmitDefaultValue = false)]
+		public EmployeesCollection SubordinatesCollection
 		{
 			get
 			{
-				if(this._SupervisorCollection == null)
+				if(this._SubordinatesCollection == null)
 				{
-					this._SupervisorCollection = new EmployeesCollection();
-					this._SupervisorCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("SupervisorCollection", this._SupervisorCollection);
+					this._SubordinatesCollection = new EmployeesCollection();
+					this._SubordinatesCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("SubordinatesCollection", this._SubordinatesCollection);
 				
 					if (this.EmployeeID != null)
 					{
 						if (!this.es.IsLazyLoadDisabled)
 						{
-							this._SupervisorCollection.Query.Where(this._SupervisorCollection.Query.ReportsTo == this.EmployeeID);
-							this._SupervisorCollection.Query.Load();
+							this._SubordinatesCollection.Query.Where(this._SubordinatesCollection.Query.ReportsTo == this.EmployeeID);
+							this._SubordinatesCollection.Query.Load();
 						}
 
 						// Auto-hookup Foreign Keys
-						this._SupervisorCollection.fks.Add(EmployeesMetadata.ColumnNames.ReportsTo, this.EmployeeID);
+						this._SubordinatesCollection.fks.Add(EmployeesMetadata.ColumnNames.ReportsTo, this.EmployeeID);
 					}
 				}
 
-				return this._SupervisorCollection;
+				return this._SubordinatesCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._SupervisorCollection != null) 
+				if (this._SubordinatesCollection != null) 
 				{ 
-					this.RemovePostSave("SupervisorCollection"); 
-					this._SupervisorCollection = null;
+					this.RemovePostSave("SubordinatesCollection"); 
+					this._SubordinatesCollection = null;
 					
 				} 
 			} 			
@@ -903,7 +904,7 @@ namespace BusinessObjects
 		
 			
 		
-		private EmployeesCollection _SupervisorCollection;
+		private EmployeesCollection _SubordinatesCollection;
 		#endregion
 
 		
@@ -1018,34 +1019,34 @@ namespace BusinessObjects
 		/// Many to Many Associate
 		/// Foreign Key Name - FK_EmployeeTerritories_Employees
 		/// </summary>
-		public void AssociateTerritoriesCollection(Territories entity)
+		public void ASsociateEmployeeTerritoriesCollection(Territories entity)
 		{
-			if (this._many_EmployeeTerritoriesCollection == null)
+			if (this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection == null)
 			{
-				this._many_EmployeeTerritoriesCollection = new EmployeeTerritoriesCollection();
-				this._many_EmployeeTerritoriesCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("EmployeeTerritoriesCollection", this._many_EmployeeTerritoriesCollection);
+				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection = new EmployeeTerritoriesCollection();
+				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("ManyEntitySpacesMetadataEngineSqlSqlTableCollection", this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection);
 			}
 
-			EmployeeTerritories obj = this._many_EmployeeTerritoriesCollection.AddNew();
+			EmployeeTerritories obj = this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.AddNew();
 			obj.EmployeeID = this.EmployeeID;
 			obj.TerritoryID = entity.TerritoryID;
 		}
-		
+
 		/// <summary>
 		/// Many to Many Dissociate
 		/// Foreign Key Name - FK_EmployeeTerritories_Employees
 		/// </summary>
-		public void DissociateTerritoriesCollection(Territories entity)
+		public void DiSsociateEmployeeTerritoriesCollection(Territories entity)
 		{
-			if (this._many_EmployeeTerritoriesCollection == null)
+			if (this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection == null)
 			{
-				this._many_EmployeeTerritoriesCollection = new EmployeeTerritoriesCollection();
-				this._many_EmployeeTerritoriesCollection.es.Connection.Name = this.es.Connection.Name;
-				this.SetPostSave("EmployeeTerritoriesCollection", this._many_EmployeeTerritoriesCollection);
+				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection = new EmployeeTerritoriesCollection();
+				this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.es.Connection.Name = this.es.Connection.Name;
+				this.SetPostSave("ManyEntitySpacesMetadataEngineSqlSqlTableCollection", this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection);
 			}
 
-			EmployeeTerritories obj = this._many_EmployeeTerritoriesCollection.AddNew();
+			EmployeeTerritories obj = this._ManyEntitySpacesMetadataEngineSqlSqlTableCollection.AddNew();
 			obj.EmployeeID = this.EmployeeID;
             obj.TerritoryID = entity.TerritoryID;
 			obj.AcceptChanges();
@@ -1053,7 +1054,7 @@ namespace BusinessObjects
 		}
 
 		private TerritoriesCollection _TerritoriesCollection;
-		private EmployeeTerritoriesCollection _many_EmployeeTerritoriesCollection;
+		private EmployeeTerritoriesCollection _ManyEntitySpacesMetadataEngineSqlSqlTableCollection;
 		#endregion
 
 		#region EmployeeTerritoriesCollection - Zero To Many (FK_EmployeeTerritories_Employees)
@@ -1062,12 +1063,14 @@ namespace BusinessObjects
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Employees.EmployeeTerritoriesCollection_Delegate;
-				map.PropertyName = "EmployeeTerritoriesCollection";
-				map.MyColumnName = "EmployeeID";
-				map.ParentColumnName = "EmployeeID";
-				map.IsMultiPartKey = false;
+				esPrefetchMap map = new esPrefetchMap
+				{
+					PrefetchDelegate = BusinessObjects.Employees.EmployeeTerritoriesCollection_Delegate,
+					PropertyName = "EmployeeTerritoriesCollection",
+					MyColumnName = "EmployeeID",
+					ParentColumnName = "EmployeeID",
+					IsMultiPartKey = false
+				};
 				return map;
 			}
 		}		
@@ -1155,12 +1158,14 @@ namespace BusinessObjects
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Employees.OrdersCollection_Delegate;
-				map.PropertyName = "OrdersCollection";
-				map.MyColumnName = "EmployeeID";
-				map.ParentColumnName = "EmployeeID";
-				map.IsMultiPartKey = false;
+				esPrefetchMap map = new esPrefetchMap
+				{
+					PrefetchDelegate = BusinessObjects.Employees.OrdersCollection_Delegate,
+					PropertyName = "OrdersCollection",
+					MyColumnName = "EmployeeID",
+					ParentColumnName = "EmployeeID",
+					IsMultiPartKey = false
+				};
 				return map;
 			}
 		}		
@@ -1249,8 +1254,8 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "SupervisorCollection":
-					coll = this.SupervisorCollection;
+				case "SubordinatesCollection":
+					coll = this.SubordinatesCollection;
 					break;
 				case "EmployeeTerritoriesCollection":
 					coll = this.EmployeeTerritoriesCollection;
@@ -1269,7 +1274,7 @@ namespace BusinessObjects
 		{
 			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
 			
-			props.Add(new esPropertyDescriptor(this, "SupervisorCollection", typeof(EmployeesCollection), new Employees()));
+			props.Add(new esPropertyDescriptor(this, "SubordinatesCollection", typeof(EmployeesCollection), new Employees()));
 			props.Add(new esPropertyDescriptor(this, "EmployeeTerritoriesCollection", typeof(EmployeeTerritoriesCollection), new EmployeeTerritories()));
 			props.Add(new esPropertyDescriptor(this, "OrdersCollection", typeof(OrdersCollection), new Orders()));
 		
@@ -1310,9 +1315,9 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPostSaveKeys()
 		{
-			if(this._SupervisorCollection != null)
+			if(this._SubordinatesCollection != null)
 			{
-				Apply(this._SupervisorCollection, "ReportsTo", this.EmployeeID);
+				Apply(this._SubordinatesCollection, "ReportsTo", this.EmployeeID);
 			}
 			if(this._EmployeeTerritoriesCollection != null)
 			{

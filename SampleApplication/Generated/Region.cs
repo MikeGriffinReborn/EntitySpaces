@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0805.0
+EntitySpaces Version : 2019.1.0807.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/6/2019 9:55:51 AM
+Date Generated       : 8/8/2019 8:05:39 AM
 ===============================================================================
 */
 
@@ -192,7 +192,7 @@ namespace BusinessObjects
 					OnPropertyChanged(RegionMetadata.PropertyNames.RegionID);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to Region.RegionDescription
@@ -212,7 +212,7 @@ namespace BusinessObjects
 					OnPropertyChanged(RegionMetadata.PropertyNames.RegionDescription);
 				}
 			}
-		}		
+		}
 		
 		#endregion
 		
@@ -399,12 +399,14 @@ namespace BusinessObjects
 		{
 			get
 			{
-				esPrefetchMap map = new esPrefetchMap();
-				map.PrefetchDelegate = BusinessObjects.Region.TerritoriesCollection_Delegate;
-				map.PropertyName = "TerritoriesCollection";
-				map.MyColumnName = "RegionID";
-				map.ParentColumnName = "RegionID";
-				map.IsMultiPartKey = false;
+				esPrefetchMap map = new esPrefetchMap
+				{
+					PrefetchDelegate = BusinessObjects.Region.TerritoriesCollection_Delegate,
+					PropertyName = "TerritoriesCollection",
+					MyColumnName = "RegionID",
+					ParentColumnName = "RegionID",
+					IsMultiPartKey = false
+				};
 				return map;
 			}
 		}		

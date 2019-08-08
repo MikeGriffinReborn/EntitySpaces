@@ -5,9 +5,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0702.0
+EntitySpaces Version : 2019.1.0807.0
 EntitySpaces Driver  : SQL
-Date Generated       : 7/3/2019 1:59:27 PM
+Date Generated       : 8/8/2019 8:04:57 AM
 ===============================================================================
 */
 
@@ -25,13 +25,5 @@ namespace BusinessObjects
 		{
 		
 		}
-
-        public override void SetProperty(string name, object value)
-        {
-            base.SetProperty(name, value);
-            int i = 0;
-        }
-
-
-    }
+	}
 }

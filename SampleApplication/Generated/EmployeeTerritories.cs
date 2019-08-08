@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0805.0
+EntitySpaces Version : 2019.1.0807.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/6/2019 9:55:49 AM
+Date Generated       : 8/8/2019 8:05:38 AM
 ===============================================================================
 */
 
@@ -196,7 +196,7 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeeTerritoriesMetadata.PropertyNames.EmployeeID);
 				}
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Maps to EmployeeTerritories.TerritoryID
@@ -218,11 +218,9 @@ namespace BusinessObjects
 					OnPropertyChanged(EmployeeTerritoriesMetadata.PropertyNames.TerritoryID);
 				}
 			}
-		}		
+		}
 		
-		[CLSCompliant(false)]
 		internal protected Employees _Employees;
-		[CLSCompliant(false)]
 		internal protected Territories _Territories;
 		#endregion
 		
