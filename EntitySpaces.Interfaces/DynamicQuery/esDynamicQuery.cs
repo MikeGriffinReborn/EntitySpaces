@@ -171,6 +171,19 @@ namespace EntitySpaces.Interfaces
             iData.JoinAlias = joinAlias;
         }
 
+        [IgnoreDataMember]
+        public esQueryItem this[string propertyName]
+        {
+            get
+            {
+                if (this.Meta.Columns.FindByPropertyName(propertyName) != null)
+                {
+                    return (esQueryItem)(this.GetType().GetProperty(propertyName).GetValue(this, null));
+                }
+                return null;
+            }
+        }
+
         /// <summary>
         /// Read-only metadata for the entity.
         /// </summary>
