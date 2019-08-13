@@ -16,8 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Mesh.Arch.Ref\FilterExpression.SqlTranslator\SqlTranslator\SqlTranslator.csproj" />
-    <ProjectReference Include="..\..\Mesh.Arch.Ref\FilterExpressionLibrary\FilterParser\FilterParser.csproj" />
     <ProjectReference Include="..\EntitySpaces.ORM.SqlServer\EntitySpaces.ORM.SqlServer.csproj" />
   </ItemGroup>
 

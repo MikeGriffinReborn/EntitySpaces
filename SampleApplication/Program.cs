@@ -1,13 +1,7 @@
 ﻿using BusinessObjects;
-using EntitySpaces.DynamicQuery;
 using EntitySpaces.Interfaces;
-using FilterParser;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using SqlTranslator;
-using SqlTranslator.Models;
 
 namespace ConsoleApp
 {
@@ -32,77 +26,31 @@ namespace ConsoleApp
             // Assign the Default Connection
             esConfigSettings.ConnectionInfo.Default = "RemoteDb";
 
-            TestTranslator();
+            AddLoadSaveDeleteSingleEntity();
+            CollectionLoadAll();
 
-            //AddLoadSaveDeleteSingleEntity();
-            //CollectionLoadAll();
+            SaveEntity();
+            UpdateEntity();
+            DeleteEntity();
 
-            //SaveEntity();
-            //UpdateEntity();
-            //DeleteEntity();
+            CollectionSave();
+            CollectionSave_BulkInsert();
+            CollectionSaveHierarchical();
 
-            //CollectionSave();
-            //CollectionSave_BulkInsert();
-            //CollectionSaveHierarchical();
+            GetTheCount();
+            GroupBy();
+            Concatenation();
+            Paging();
+            SelectAllExcept();
+            SelectDistinctTop();
+            AliasColumn();
+            AndOr();
+            Filter();
 
-            //GetTheCount();
-            //GroupBy();
-            //Concatenation();
-            //Paging();
-            //SelectAllExcept();
-            //SelectDistinctTop();
-            //AliasColumn();
-            //AndOr();
-            //Filter();
-
-            //Query_Join();
-            //Subquery();
-            //CaseWhenThenEnd();
-            //HavingClause();
-        }
-
-        static public void TestTranslator()
-        {
-            EmployeesQuery q = new EmployeesQuery("e");
-
-            CategoriesQuery c = new CategoriesQuery("c");
-            ProductsQuery p = new ProductsQuery("p");
-
-            c.InnerJoin(p).On(p.CategoryID == c.CategoryID);
-
-            string[] split = "ProductName".Split('.');
-
-            //var predicate = "LastName = 'Davolio' or ('Mike' = LastName and ReportsTo > 4) and LastName starts_with 'a' and EmployeeID in [2,3,4]";
-            //var predicate = "LastName = 'Davolio' and LastName starts_with 'a'";
-            //var predicate = "EmployeeID in [2,3,4] or LastName = 'Davolio' or LastName = 'Davolio' or LastName starts_with 'a' or EmployeeID in [2,3,4]";
-
-            var predicate = "CategoryName = 'cat' and ProductsCollection.ProductName = 'pro'";
-
-
-            PropertyMap pm = new PropertyMap(c);
-            pm.AddEntry("CategoryID", c);
-            pm.AddEntry("CategoryName", c);
-            pm.AddEntry("ProductsCollection.ProductID", p);
-            pm.AddEntry("ProductsCollection.ProductName", p);
-
-            var grammar = new FilterExpressionGrammar((string name) =>
-            {
-                return pm.GetPropertyType(name);
-            });
-
-            try
-            {
-                var expression = grammar.ParseExpression(predicate);
-                var result = expression.ToSql(pm).Expression.ToString().Replace("\"", "");
-
-                string s = c.Parse();
-
-                int x = 0;
-            }
-            catch (Exception ex)
-            {
-                int i = 9;
-            }
+            Query_Join();
+            Subquery();
+            CaseWhenThenEnd();
+            HavingClause();
         }
 
         static private void AddLoadSaveDeleteSingleEntity()
@@ -156,18 +104,7 @@ namespace ConsoleApp
         static private void Concatenation()
         {
             EmployeesQuery q = new EmployeesQuery("e");
-            //q.Select(q.EmployeeID, (q.LastName + ", " + q.FirstName).As("FullName"));
-            //q.Where(q.EmployeeID.IsNotNull());
-            //q.Where("< e.FirstName = 'Wow'");
-
-
-            esDynamicQuery esq = q as esDynamicQuery;
-            // esQueryItem qi = new esQueryItem(esq, "FirstName", esSystemType.String);
-
-        //    esQueryItem qi = esq["FirstName"];
-
-         //   esq.Where(qi.IsNotNull());
-
+            q.Select(q.EmployeeID, (q.LastName + ", " + q.FirstName).As("FullName"));
 
             EmployeesCollection coll = new EmployeesCollection();
             if (coll.Load(q))
