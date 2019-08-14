@@ -176,11 +176,7 @@ namespace EntitySpaces.Interfaces
         {
             get
             {
-                if (this.Meta.Columns.FindByPropertyName(propertyName) != null)
-                {
-                    return (esQueryItem)(this.GetType().GetProperty(propertyName).GetValue(this, null));
-                }
-                return null;
+                return this.QueryItemFromName(propertyName);
             }
         }
 

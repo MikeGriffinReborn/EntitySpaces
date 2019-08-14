@@ -1339,7 +1339,6 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        [CLSCompliant(false)]
         protected System.UInt16? GetSystemUInt16(string columnName)
         {
             if (!FieldsExists(this)) return null;
@@ -1358,7 +1357,6 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        [CLSCompliant(false)]
         protected System.UInt16 GetSystemUInt16Required(string columnName)
         {
             object o = null;
@@ -1374,7 +1372,6 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        [CLSCompliant(false)]
         protected bool SetSystemUInt16(string columnName, System.UInt16? data)
         {
             return SetValue(columnName, data);
@@ -1403,7 +1400,6 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        [CLSCompliant(false)]
         protected System.UInt32 GetSystemUInt32Required(string columnName)
         {
             object o = null;
@@ -1419,7 +1415,6 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        [CLSCompliant(false)]
         protected bool SetSystemUInt32(string columnName, System.UInt32? data)
         {
             return SetValue(columnName, data);
@@ -1429,7 +1424,6 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        [CLSCompliant(false)]
         protected System.UInt64? GetSystemUInt64(string columnName)
         {
             if (!FieldsExists(this)) return null;
@@ -1448,7 +1442,6 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        [CLSCompliant(false)]
         protected System.UInt64 GetSystemUInt64Required(string columnName)
         {
             object o = null;
@@ -1464,7 +1457,6 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        [CLSCompliant(false)]
         protected bool SetSystemUInt64(string columnName, System.UInt64? data)
         {
             return SetValue(columnName, data);
