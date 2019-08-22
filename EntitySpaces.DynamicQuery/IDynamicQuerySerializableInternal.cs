@@ -178,5 +178,13 @@ namespace EntitySpaces.DynamicQuery
         /// The number of rows to take from the result set (starting from the Skip)
         /// </summary>
         int? Take { get; }
+
+        int? PartitionByTop { get; }
+
+        List<esQueryItem> PartitionByColumns { get; }
+
+        List<esQueryItem> PartitionByDistinctColumns { get; }
+
+        List<esOrderByItem> PartitionByOrderByItems { get; }
     }
 }

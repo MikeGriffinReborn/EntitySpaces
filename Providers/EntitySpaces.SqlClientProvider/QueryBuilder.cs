@@ -86,6 +86,60 @@ namespace EntitySpaces.SqlClientProvider
                 sql += "WHERE ESRN BETWEEN " + begRow + " AND " + endRow;
                 sql += " ORDER BY ESRN ASC";
             }
+            else if (iQuery.PartitionByTop != null && iQuery.PartitionByTop.Value > 0)
+            {
+                //------------------------------------------------
+                // Partition
+                //------------------------------------------------
+
+                /*
+                    SELECT * FROM ORDERS o INNER JOIN  
+                    (
+	                    select DISTINCT OrderID from 
+	                    (
+		                    SELECT DISTINCT
+			                    oq.OrderID,
+			                    ROW_NUMBER() OVER(Partition BY e.EmployeeID ORDER BY oq.EmployeeID, oq.Freight, odq.Quantity DESC) AS ERSN 
+		                    FROM [Orders] oq 
+		                    inner JOIN [Order Details] odq ON oq.[OrderID] = odq.[OrderID] 
+		                    inner JOIN 
+		                    ( 
+			                    SELECT DISTINCT e.EmployeeID FROM Employees e
+			                    INNER JOIN [Orders] oq on oq.EmployeeID = e.EmployeeID
+			                    INNER JOIN [Order Details] odq ON oq.[OrderID] = odq.[OrderID] 
+   			                    WHERE oq.EmployeeID < 6 and oq.ShipVia = 2
+		                    ) e ON e.[EmployeeID] = oq.[EmployeeID]
+		                    WHERE oq.EmployeeID < 6 and oq.ShipVia = 2
+	                    ) as r
+	                    where ERSN <= 4
+                    ) ij on o.OrderID = ij.OrderID
+                    order by o.OrderID
+                 */
+
+                sql = "SELECT " + select + " FROM " + Shared.CreateFullName(std.request, query) + " " +
+                     iQuery.JoinAlias + " INNER JOIN ( SELECT DISTINCT " + GetPartitionColumnNames(iQuery.PartitionByDistinctColumns, "r") + " FROM ( ";
+                sql += "SELECT DISTINCT " + GetPartitionColumnNames(iQuery.PartitionByDistinctColumns) + ", ROW_NUMBER() OVER(PARTITION BY " +
+                    GetPartitionColumnNames(iQuery.PartitionByColumns);
+
+                if (orderBy != null && orderBy.Length > 0)
+                {
+                    sql += orderBy + " ) AS ESRN FROM ";
+                }
+                else
+                {
+                    sql += " ORDER BY " + GetPartitionOderByColumnNames(iQuery.PartitionByOrderByItems) + " ) AS ESRN FROM ";
+                }
+
+                // Normal query embedded here
+                sql += from + join + where + ") r WHERE ESRN <=" + iQuery.PartitionByTop + ") ij on ";
+
+                string and = " ";
+                foreach (esQueryItem item in iQuery.PartitionByDistinctColumns)
+                {
+                    sql += and + GetPartitionColumnName(item, "ij") + " = " + GetPartitionColumnName(item, iQuery.JoinAlias);
+                    and = " and ";
+                }
+            }
             else
             {
                 sql += "SELECT " + select + " FROM " + from + join + where + setOperation + groupBy + having + orderBy;
@@ -1157,6 +1211,60 @@ namespace EntitySpaces.SqlClientProvider
             }
 
             return searchCondition;
+        }
+
+        private static string GetPartitionColumnNames(List<esQueryItem> items, string alias = "")
+        {
+            if (items == null) return "";
+
+            string result = "";
+            string comma = "";
+
+            if (alias != null)
+            {
+                alias = alias.Length > 0 ? (alias + ".") : "";
+            }
+
+            foreach (esQueryItem item in items)
+            {
+                if (alias.Length == 0)
+                    result += comma + item.Column.Query.joinAlias + ".[" + item.Column.Name + "]";
+                else
+                    result += comma + "[" + item.Column.Name + "]";
+
+                comma = ", ";
+            }
+
+            return result;
+        }
+
+        private static string GetPartitionColumnName(esQueryItem item, string alias = "")
+        {
+            if (alias.Length == 0)
+                return item.Column.Query.joinAlias + ".[" + item.Column.Name + "]";
+            else
+                return alias + ".[" + item.Column.Name + "]";
+        }
+
+        private static string GetPartitionOderByColumnNames(List<esOrderByItem> items)
+        {
+            if (items == null) return "";
+
+            string comma = " ";
+            string result = "";
+
+            foreach (esOrderByItem item in items)
+            {
+                result += comma + item.Expression.Query.joinAlias + ".[" + item.Expression.Column.Name + "]";
+                comma = ", ";
+            }
+
+            return result;
+        }
+
+        private static string GetPartitionOderByColumnName(esOrderByItem item)
+        {
+            return item.Expression.Query.joinAlias + ".[" + item.Expression.Column.Name + "]";
         }
     }
 }

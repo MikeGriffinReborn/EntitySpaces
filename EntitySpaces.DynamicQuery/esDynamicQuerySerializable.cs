@@ -101,7 +101,8 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// The Constructor used when using this query in a "Join"
         /// </summary>
-        /// <param name="joinAlias">The alias of the associated Table to be used in the "Join"</param>
+        /// <param name="joinAlias">The alias of the associated Table to be u
+        /// sed in the "Join"</param>
         public esDynamicQuerySerializable(string joinAlias)
         {
             this.joinAlias = joinAlias;
@@ -195,7 +196,7 @@ namespace EntitySpaces.DynamicQuery
                 }
 
                 // This if conditional is this way intentionally
-                if(queryItem is object)
+                if (queryItem is object)
                 {
                     sItem = queryItem;
                 }
@@ -258,7 +259,7 @@ namespace EntitySpaces.DynamicQuery
                 }
 
                 // This if conditional is this way intentionally
-                if(queryItem is object)
+                if (queryItem is object)
                 {
                     sItem = queryItem;
                 }
@@ -437,7 +438,7 @@ namespace EntitySpaces.DynamicQuery
             esSetOperation setOperation = new esSetOperation(query);
             setOperation.SetOperationType = esSetOperationType.Union;
 
-            if(setOperations == null)
+            if (setOperations == null)
             {
                 setOperations = new List<esSetOperation>();
             }
@@ -1244,6 +1245,68 @@ namespace EntitySpaces.DynamicQuery
                 set { this.dynamicQuery.top = value; }
             }
 
+
+            /// <summary>
+            ///  Allows you use Top within a Group without using GroupBy
+            /// </summary>
+            /// <param name="partitionByTop"></param>
+            public int? PartitionByTop
+            {
+                get { return this.dynamicQuery.partitionByTop; }
+                set { this.dynamicQuery.partitionByTop = value; }
+            }
+
+            /// <summary>
+            ///  Allows you use Top within a Group without using GroupBy
+            /// </summary>
+            /// <param name="partitionByColumns"></param>
+            public void PartitionByColumns(params esQueryItem[] partitionByColumns)
+            {
+                if(this.dynamicQuery.partitionByColumns == null)
+                {
+                    this.dynamicQuery.partitionByColumns = new List<esQueryItem>();
+                }
+
+                foreach(esQueryItem item in partitionByColumns) 
+                {
+                    this.dynamicQuery.partitionByColumns.Add(item);
+                }
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="partitionDistinctColumns"></param>
+            public void PartitionDistinctColumns(params esQueryItem[] partitionDistinctColumns)
+            {
+                if (this.dynamicQuery.partitionByDistinctColumns == null)
+                {
+                    this.dynamicQuery.partitionByDistinctColumns = new List<esQueryItem>();
+                }
+
+                foreach (esQueryItem item in partitionDistinctColumns)
+                {
+                    this.dynamicQuery.partitionByDistinctColumns.Add(item);
+                }
+            }
+
+            /// <summary>
+            ///  Allows you use Top within a Group without using GroupBy
+            /// </summary>
+            /// <param name="partitionByorderByItems"></param>
+            public void PartitionByOrderBy(params esOrderByItem[] partitionByorderByItems)
+            {
+                if (this.dynamicQuery.partitionByOrderByItems == null)
+                {
+                    this.dynamicQuery.partitionByOrderByItems = new List<esOrderByItem>();
+                }
+
+                foreach (esOrderByItem item in partitionByorderByItems)
+                {
+                    this.dynamicQuery.partitionByOrderByItems.Add(item);
+                }
+            }
+
             /// <summary>
             /// This will use the WITH (NOLOCK) syntax on all tables joined in the query. Currently
             /// only implemented for Microsoft SQL Server.
@@ -1320,8 +1383,8 @@ namespace EntitySpaces.DynamicQuery
             public bool CountAll
             {
                 get { return this.dynamicQuery.countAll; }
-                set 
-                { 
+                set
+                {
                     this.dynamicQuery.countAll = value;
                     if (String.IsNullOrEmpty(this.dynamicQuery.countAllAlias))
                     {
@@ -1393,7 +1456,7 @@ namespace EntitySpaces.DynamicQuery
             //    set { this.dynamicQuery.connection = value; }
             //}
 
-            private esDynamicQuerySerializable dynamicQuery;
+            internal esDynamicQuerySerializable dynamicQuery;
         }
         #endregion
 
@@ -1491,7 +1554,7 @@ namespace EntitySpaces.DynamicQuery
                     using (var reader = System.Xml.XmlDictionaryReader.Create(memoryStream, settings))
                     {
                         // Deserialize
-                        DataContractSerializer serializer = new DataContractSerializer(type, type.Name, "http://www.entityspaces.net", 
+                        DataContractSerializer serializer = new DataContractSerializer(type, type.Name, "http://www.entityspaces.net",
                             knownTypes);
                         query = serializer.ReadObject(reader) as esDynamicQuerySerializable;
                     }
@@ -1625,18 +1688,31 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// Used by derived classes
         /// </summary>
-        [DataMember(Name = "Distinct", EmitDefaultValue = false)] 
+        [DataMember(Name = "Distinct", EmitDefaultValue = false)]
         internal bool distinct;
         /// <summary>
         /// Used by derived classes
         /// </summary>
         [DataMember(Name = "SubquerySearchCondition", EmitDefaultValue = false)]
-        internal esSubquerySearchCondition subquerySearchCondition; 
+        internal esSubquerySearchCondition subquerySearchCondition;
         /// <summary>
         /// Used by derived classes
         /// </summary>
         [DataMember(Name = "Top", EmitDefaultValue = false)]
         internal int? top;
+
+        [DataMember(Name = "PartitionByTop", EmitDefaultValue = false)]
+        internal int? partitionByTop;
+
+        [DataMember(Name = "PartitionByColumns", EmitDefaultValue = false)]
+        internal List<esQueryItem> partitionByColumns;
+
+        [DataMember(Name = "PartitionDistinctColumns", EmitDefaultValue = false)]
+        internal List<esQueryItem> partitionByDistinctColumns;
+
+        [DataMember(Name = "PartitionByColumns", EmitDefaultValue = false)]
+        internal List<esOrderByItem> partitionByOrderByItems;
+
         /// <summary>
         /// Used by derived classes
         /// </summary>
@@ -1671,7 +1747,7 @@ namespace EntitySpaces.DynamicQuery
         /// Must be supplied when using JOIN's
         /// </summary>
         [DataMember(Name = "JoinAlias", EmitDefaultValue = false)]
-       internal string joinAlias = " ";
+        internal string joinAlias = " ";
 
         [DataMember(Name = "SubQueryNames", EmitDefaultValue = false)]
         internal string subQueryNames;
@@ -1714,9 +1790,9 @@ namespace EntitySpaces.DynamicQuery
 
         bool IDynamicQuerySerializableInternal.HasSetOperation
         {
-            get 
-            { 
-                return setOperations != null && setOperations.Count > 0; 
+            get
+            {
+                return setOperations != null && setOperations.Count > 0;
             }
         }
 
@@ -1737,20 +1813,20 @@ namespace EntitySpaces.DynamicQuery
             set { this.lastQuery = value; }
         }
 
-        string IDynamicQuerySerializableInternal.QuerySource 
+        string IDynamicQuerySerializableInternal.QuerySource
         {
             get { return this.querySource; }
             set { this.querySource = value; }
         }
 
-        bool IDynamicQuerySerializableInternal.SelectAll 
+        bool IDynamicQuerySerializableInternal.SelectAll
         {
-            get { return this.m_selectAll; } 
+            get { return this.m_selectAll; }
         }
 
-        List<esQueryItem> IDynamicQuerySerializableInternal.SelectAllExcept 
+        List<esQueryItem> IDynamicQuerySerializableInternal.SelectAllExcept
         {
-            get { return this.m_selectAllExcept; } 
+            get { return this.m_selectAllExcept; }
         }
 
         esSubquerySearchCondition IDynamicQuerySerializableInternal.SubquerySearchCondition
@@ -1805,7 +1881,7 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// 
         /// </summary>
-        object IDynamicQuerySerializableInternal.ProviderMetadata 
+        object IDynamicQuerySerializableInternal.ProviderMetadata
         {
             get { return this.providerMetadata; }
             set { this.providerMetadata = value; }
@@ -1814,9 +1890,9 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// 
         /// </summary>
-        object IDynamicQuerySerializableInternal.Columns 
+        object IDynamicQuerySerializableInternal.Columns
         {
-            get { return this.columns; } 
+            get { return this.columns; }
             set { this.columns = value; }
         }
 
@@ -1831,27 +1907,25 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// 
         /// </summary>
-        Dictionary<string, esDynamicQuerySerializable> IDynamicQuerySerializableInternal.queries 
-        {
-            get { return this.queries; }
-        }
+        Dictionary<string, esDynamicQuerySerializable> IDynamicQuerySerializableInternal.queries => this.queries;
 
         /// <summary>
         /// The number of rows to skip in the result set (starting from the beginning)
         /// </summary>
-        int? IDynamicQuerySerializableInternal.Skip
-        {
-            get { return this.skip; }
-        }
+        int? IDynamicQuerySerializableInternal.Skip => this.skip;
 
         /// <summary>
         /// The number of rows to take from the result set (starting from the Skip)
         /// </summary>
-        int? IDynamicQuerySerializableInternal.Take
-        {
-            get { return this.take; }
-        }
+        int? IDynamicQuerySerializableInternal.Take => this.take;
 
+        int? IDynamicQuerySerializableInternal.PartitionByTop => this.es.dynamicQuery.partitionByTop;
+
+        List<esQueryItem> IDynamicQuerySerializableInternal.PartitionByColumns => this.es.dynamicQuery.partitionByColumns;
+
+        List<esQueryItem> IDynamicQuerySerializableInternal.PartitionByDistinctColumns => this.es.dynamicQuery.partitionByDistinctColumns;
+
+        List<esOrderByItem> IDynamicQuerySerializableInternal.PartitionByOrderByItems => this.es.dynamicQuery.partitionByOrderByItems;
         #endregion
     }
 }
