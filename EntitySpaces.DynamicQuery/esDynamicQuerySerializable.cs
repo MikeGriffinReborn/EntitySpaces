@@ -37,7 +37,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
-
+using EntitySpaces.Interfaces;
 
 namespace EntitySpaces.DynamicQuery
 {
@@ -1097,6 +1097,35 @@ namespace EntitySpaces.DynamicQuery
             return null;
         }
 
+        /// <summary>
+        /// Read-only metadata for the entity.
+        /// </summary>
+        /// <remarks>
+        /// The sample below loops through the <see cref="esColumnMetadataCollection"/> in provided
+        /// by the <see cref="IMetadata"/> interface. There is a lot of useful information here, in fact,
+        /// there is enough information for EntitySpaces to build all of the dynamic sql required during
+        /// operations that use dynamic sql.
+        /// <code>
+        /// public partial class Employees : esEmployees
+        /// {
+        /// 	public void CustomMethod()
+        /// 	{
+        /// 		foreach(esColumnMetadata col in this.Meta.Columns)
+        /// 		{
+        /// 			if(col.IsInPrimaryKey)
+        /// 			{
+        /// 				// do something ...
+        /// 			}
+        /// 		}
+        /// 	}
+        /// }
+        /// </code>
+        /// </remarks>
+        /// <seealso cref="esColumnMetadata"/>
+        /// <seealso cref="esColumnMetadataCollection"/>
+        /// <seealso cref="esProviderSpecificMetadata"/>
+        virtual protected IMetadata Meta { get { return null; } }
+
         #region Helper Routine
         private List<esComparison> ProcessWhereItems(esConjunction conj, params object[] theItems)
         {
@@ -1245,12 +1274,19 @@ namespace EntitySpaces.DynamicQuery
                 set { this.dynamicQuery.top = value; }
             }
 
+            public esPartionOrderBy PartitionBy(params esQueryItem[] partitionByColumns)
+            {
+                this.dynamicQuery.es.PartitionByColumns(partitionByColumns);
+
+                return new esPartionOrderBy(this.dynamicQuery);
+            }
+
 
             /// <summary>
             ///  Allows you use Top within a Group without using GroupBy
             /// </summary>
             /// <param name="partitionByTop"></param>
-            public int? PartitionByTop
+            internal int? PartitionByTop
             {
                 get { return this.dynamicQuery.partitionByTop; }
                 set { this.dynamicQuery.partitionByTop = value; }
@@ -1260,7 +1296,7 @@ namespace EntitySpaces.DynamicQuery
             ///  Allows you use Top within a Group without using GroupBy
             /// </summary>
             /// <param name="partitionByColumns"></param>
-            public void PartitionByColumns(params esQueryItem[] partitionByColumns)
+            internal void PartitionByColumns(params esQueryItem[] partitionByColumns)
             {
                 if(this.dynamicQuery.partitionByColumns == null)
                 {
@@ -1277,7 +1313,7 @@ namespace EntitySpaces.DynamicQuery
             /// 
             /// </summary>
             /// <param name="partitionDistinctColumns"></param>
-            public void PartitionDistinctColumns(params esQueryItem[] partitionDistinctColumns)
+            internal void PartitionDistinctColumns(params esQueryItem[] partitionDistinctColumns)
             {
                 if (this.dynamicQuery.partitionByDistinctColumns == null)
                 {
@@ -1294,7 +1330,7 @@ namespace EntitySpaces.DynamicQuery
             ///  Allows you use Top within a Group without using GroupBy
             /// </summary>
             /// <param name="partitionByorderByItems"></param>
-            public void PartitionByOrderBy(params esOrderByItem[] partitionByorderByItems)
+            internal void PartitionByOrderBy(params esOrderByItem[] partitionByorderByItems)
             {
                 if (this.dynamicQuery.partitionByOrderByItems == null)
                 {
@@ -1926,6 +1962,14 @@ namespace EntitySpaces.DynamicQuery
         List<esQueryItem> IDynamicQuerySerializableInternal.PartitionByDistinctColumns => this.es.dynamicQuery.partitionByDistinctColumns;
 
         List<esOrderByItem> IDynamicQuerySerializableInternal.PartitionByOrderByItems => this.es.dynamicQuery.partitionByOrderByItems;
+
+        /// <summary>
+        /// Allow you to gain access to the on-board metadata
+        /// </summary>
+        IMetadata IDynamicQuerySerializableInternal.Meta
+        {
+            get { return this.Meta; }
+        }
         #endregion
     }
 }

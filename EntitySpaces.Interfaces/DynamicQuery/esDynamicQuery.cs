@@ -181,35 +181,6 @@ namespace EntitySpaces.Interfaces
         }
 
         /// <summary>
-        /// Read-only metadata for the entity.
-        /// </summary>
-        /// <remarks>
-        /// The sample below loops through the <see cref="esColumnMetadataCollection"/> in provided
-        /// by the <see cref="IMetadata"/> interface. There is a lot of useful information here, in fact,
-        /// there is enough information for EntitySpaces to build all of the dynamic sql required during
-        /// operations that use dynamic sql.
-        /// <code>
-        /// public partial class Employees : esEmployees
-        /// {
-        /// 	public void CustomMethod()
-        /// 	{
-        /// 		foreach(esColumnMetadata col in this.Meta.Columns)
-        /// 		{
-        /// 			if(col.IsInPrimaryKey)
-        /// 			{
-        /// 				// do something ...
-        /// 			}
-        /// 		}
-        /// 	}
-        /// }
-        /// </code>
-        /// </remarks>
-        /// <seealso cref="esColumnMetadata"/>
-        /// <seealso cref="esColumnMetadataCollection"/>
-        /// <seealso cref="esProviderSpecificMetadata"/>
-        virtual protected IMetadata Meta { get { return null; } }
-
-        /// <summary>
         /// Called whenever the Entity needs a connection. This can be used to override the default connection 
         /// per object manually, or automatically by filling in the "Connection Name" on the "Generated Master"
         /// template. 

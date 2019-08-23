@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
+using EntitySpaces.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -186,5 +187,7 @@ namespace EntitySpaces.DynamicQuery
         List<esQueryItem> PartitionByDistinctColumns { get; }
 
         List<esOrderByItem> PartitionByOrderByItems { get; }
+
+        IMetadata Meta { get; }
     }
 }
