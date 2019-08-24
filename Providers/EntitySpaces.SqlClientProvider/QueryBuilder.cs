@@ -93,42 +93,49 @@ namespace EntitySpaces.SqlClientProvider
                 //------------------------------------------------
 
                 /*
-                    SELECT * FROM ORDERS o INNER JOIN  
+                    //---------------------------------------------------------
+                    // C#
+                    //---------------------------------------------------------
+                    eQuery = new EmployeesQuery("e");
+                    OrdersQuery o = new OrdersQuery("o");
+                    OrderDetailsQuery od = new OrderDetailsQuery("od");
+
+                    eQuery.Select(eQuery.EmployeeID)
+                    .InnerJoin(o).On(eQuery.EmployeeID == o.EmployeeID)
+                    .InnerJoin(od).On(o.OrderID == od.OrderID)
+                    .Where(eQuery.EmployeeID < 6);
+               
+                    eQuery.es.PartitionBy(eQuery.EmployeeID).OrderBy().DistinctBy(eQuery.EmployeeID).Top = 1;                  
+                  
+                    //---------------------------------------------------------
+                    // SQL
+                    //---------------------------------------------------------
+                    SELECT e.[EmployeeID], e.LastName, e.FirstName, e.ReportsTo 
+                    FROM [Employees] e 
+                    INNER JOIN
                     (
-	                    select DISTINCT OrderID from 
-	                    (
-		                    SELECT DISTINCT
-			                    oq.OrderID,
-			                    ROW_NUMBER() OVER(Partition BY e.EmployeeID ORDER BY oq.EmployeeID, oq.Freight, odq.Quantity DESC) AS ERSN 
-		                    FROM [Orders] oq 
-		                    inner JOIN [Order Details] odq ON oq.[OrderID] = odq.[OrderID] 
-		                    inner JOIN 
-		                    ( 
-			                    SELECT DISTINCT e.EmployeeID FROM Employees e
-			                    INNER JOIN [Orders] oq on oq.EmployeeID = e.EmployeeID
-			                    INNER JOIN [Order Details] odq ON oq.[OrderID] = odq.[OrderID] 
-   			                    WHERE oq.EmployeeID < 6 and oq.ShipVia = 2
-		                    ) e ON e.[EmployeeID] = oq.[EmployeeID]
-		                    WHERE oq.EmployeeID < 6 and oq.ShipVia = 2
-	                    ) as r
-	                    where ERSN <= 4
-                    ) ij on o.OrderID = ij.OrderID
-                    order by o.OrderID
+                        SELECT DISTINCT   [EmployeeID] 
+                        FROM
+                        (
+                            SELECT DISTINCT
+                                e.[EmployeeID],
+                                ROW_NUMBER() OVER(PARTITION BY e.[EmployeeID] 
+                            ORDER BY e.[LastName], o.[Freight], od.[Quantity] ) AS ESRN 
+                            FROM [Employees] e  
+		                    INNER JOIN [Orders] o ON e.[EmployeeID] = o.[EmployeeID] 
+                            INNER JOIN [Order Details] od  ON o.[OrderID] = od.[OrderID] 
+                            WHERE e.[EmployeeID] < @EmployeeID1
+                        )  r 
+                        WHERE ESRN <= 1
+                    ) ij on ij.[EmployeeID] = e.[EmployeeID] 
+                    ORDER BY e.LastName ASC
                  */
 
                 sql = "SELECT " + select + " FROM " + Shared.CreateFullName(std.request, query) + " " +
                      iQuery.JoinAlias + " INNER JOIN ( SELECT DISTINCT " + GetPartitionColumnNames(iQuery.PartitionByDistinctColumns, "r") + " FROM ( ";
                 sql += "SELECT DISTINCT " + GetPartitionColumnNames(iQuery.PartitionByDistinctColumns) + ", ROW_NUMBER() OVER(PARTITION BY " +
                     GetPartitionColumnNames(iQuery.PartitionByColumns);
-
-                if (orderBy != null && orderBy.Length > 0)
-                {
-                    sql += orderBy + " ) AS ESRN FROM ";
-                }
-                else
-                {
-                    sql += " ORDER BY " + GetPartitionOderByColumnNames(iQuery.PartitionByOrderByItems) + " ) AS ESRN FROM ";
-                }
+                sql += " ORDER BY " + GetPartitionOderByColumnNames(iQuery.PartitionByOrderByItems) + " ) AS ESRN FROM ";
 
                 // Normal query embedded here
                 sql += from + join + where + ") r WHERE ESRN <=" + iQuery.PartitionByTop + ") ij on ";
@@ -138,6 +145,11 @@ namespace EntitySpaces.SqlClientProvider
                 {
                     sql += and + GetPartitionColumnName(item, "ij") + " = " + GetPartitionColumnName(item, iQuery.JoinAlias);
                     and = " and ";
+                }
+
+                if (orderBy != null && orderBy.Length > 0)
+                {
+                    sql += " " + orderBy;
                 }
             }
             else
