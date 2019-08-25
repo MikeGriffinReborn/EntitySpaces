@@ -27,17 +27,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
-using System.IO;
-using System.Xml;
-using System.Xml.Serialization;
-using System.Runtime.Serialization;
 using EntitySpaces.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Dynamic;
+using System.IO;
+using System.Linq.Expressions;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Xml;
+
+#if (LINQ)
+using System.Data.Linq;
+using System.Linq;
+#endif
+
+
+
+//SharpArgumentInfo.Create'	EntitySpaces.ORM.SqlServer C:\Users\MikeGriffin\source\repos\EntitySpaces_DotNetStandard\EntitySpaces.DynamicQuery\esDynamicQuerySerializable.cs	349	N/A
+
 
 namespace EntitySpaces.DynamicQuery
 {
@@ -88,7 +97,7 @@ namespace EntitySpaces.DynamicQuery
     /// </example>
     [Serializable]
     [DataContract(Namespace = "es", IsReference = true)]
-    public class esDynamicQuerySerializable : IDynamicQuerySerializableInternal
+    public class esDynamicQuerySerializable : DynamicObject, IDynamicQuerySerializableInternal
     {
         /// <summary>
         /// The Constructor
@@ -107,6 +116,125 @@ namespace EntitySpaces.DynamicQuery
         {
             this.joinAlias = joinAlias;
         }
+
+        #region DynamicObject Stuff
+
+        private Dictionary<string, object> dyno = new Dictionary<string, object>();
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override IEnumerable<string> GetDynamicMemberNames()
+        {
+            return dyno.Keys;
+        }
+
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override DynamicMetaObject GetMetaObject(Expression parameter)
+        {
+            return base.GetMetaObject(parameter);
+        }
+
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool TryBinaryOperation(BinaryOperationBinder binder, object arg, out object result)
+        {
+            return base.TryBinaryOperation(binder, arg, out result);
+        }
+
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool TryConvert(ConvertBinder binder, out object result)
+        {
+            return base.TryConvert(binder, out result);
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool TryCreateInstance(CreateInstanceBinder binder, object[] args, out object result)
+        {
+            return base.TryCreateInstance(binder, args, out result);
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool TryDeleteIndex(DeleteIndexBinder binder, object[] indexes)
+        {
+            return base.TryDeleteIndex(binder, indexes);
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool TryDeleteMember(DeleteMemberBinder binder)
+        {
+            return base.TryDeleteMember(binder);
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
+        {
+            string property = (string)indexes[0];
+
+            if(!dyno.ContainsKey(property))
+            {
+                throw new Exception("Property '" + property + "' not found or not yet declared on '" + this.joinAlias + "'");
+            }
+
+            result = dyno[property];
+            return true;
+         // return base.TryGetIndex(binder, indexes, out result);
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool TryGetMember(GetMemberBinder binder, out object result)
+        {
+            if (!dyno.ContainsKey(binder.Name))
+            {
+                throw new Exception("Property '" + binder.Name + "' not found or not yet declared on '" + this.joinAlias + "'");
+            }
+
+            result = dyno[binder.Name];
+            return true;
+         // return dyno.TryGetValue(binder.Name, out result);
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool TryInvoke(InvokeBinder binder, object[] args, out object result)
+        {
+            return base.TryInvoke(binder, args, out result);
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
+        {
+            return base.TryInvokeMember(binder, args, out result);
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
+        {
+            string property = (string)indexes[0];
+
+            if (!dyno.ContainsKey(property))
+            {
+                throw new Exception("Property '" + property + "' not found or not yet declared on '" + this.joinAlias + "'");
+            }
+
+            dyno[property] = value;
+            return true;
+        //  return base.TrySetIndex(binder, indexes, value);
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool TrySetMember(SetMemberBinder binder, object value)
+        {
+            dyno[binder.Name] = value;
+            return true;
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool TryUnaryOperation(UnaryOperationBinder binder, out object result)
+        {
+            return base.TryUnaryOperation(binder, out result);
+        }
+
+        #endregion
 
         /// <summary>
         /// Called whenever the Entity needs a connection. This can be used to override the default connection 
@@ -344,6 +472,9 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
         public esJoinItem InnerJoin(esDynamicQuerySerializable joinQuery)
         {
+
+            dynamic thisAsDynamic = (dynamic)this;
+            thisAsDynamic[joinQuery.joinAlias] = joinQuery;
             return JoinCommon(joinQuery, esJoinType.InnerJoin);
         }
 
