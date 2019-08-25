@@ -211,9 +211,9 @@ namespace EntitySpaces.DynamicQuery
         {
             string property = (string)indexes[0];
 
-            if (!dyno.ContainsKey(property))
+            if (dyno.ContainsKey(property))
             {
-                throw new Exception("Property '" + property + "' not found or not yet declared on '" + this.joinAlias + "'");
+                throw new Exception("Property '" + property + "' is already declared on '" + this.joinAlias + "'");
             }
 
             dyno[property] = value;
