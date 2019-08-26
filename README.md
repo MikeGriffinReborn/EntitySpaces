@@ -167,7 +167,41 @@ Notice the "fullName" column is present in the JSON, no need for intermediate cl
 ]
 ``` 
 
-### 
+### Streamlined Join Syntax
+It's important to note that both syntaxes shown below are valid. Use whichever one you are comfortable with.
+
+Traditional syntax
+```c#
+EmployeesQuery eQuery = new EmployeesQuery("e");
+OrdersQuery o = new OrdersQuery("o");
+OrderDetailsQuery od = new OrderDetailsQuery("od");
+
+ eQuery.Select(eQuery.EmployeeID)
+.InnerJoin(o).On(eQuery.EmployeeID == o.EmployeeID)
+.InnerJoin(od).On(o.OrderID == od.OrderID)
+.Where(o.Freight > 20);
+
+EmployeesCollection coll = new EmployeesCollection();
+if(coll.Load(eQuery))
+{
+
+}
+```
+
+The newer streamlined syntax synthesizes the subqueries join alias as property on the parent. You can new the subquery inline and access it via the synthesized property.
+```c#
+dynamic eQuery = new EmployeesQuery("e");
+eQuery.Select(eQuery.EmployeeID)
+.InnerJoin(new OrdersQuery("o")).On(eQuery.EmployeeID == eQuery.o.EmployeeID)
+.InnerJoin(new OrderDetailsQuery("od")).On(eQuery.o.OrderID == eQuery.od.OrderID)
+.Where(eQuery.o.Freight > 20);
+
+EmployeesCollection coll = new EmployeesCollection();
+if(coll.Load(eQuery))
+{
+
+}
+```
 
 ### Supported Operators
 
