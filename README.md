@@ -250,7 +250,7 @@ Use the native language syntax, it works as you expect it would.
 
 ```C#
 EmployeesQuery q = new EmployeesQuery();
-q.tg.Top = 1; // TOP
+q.es.Top = 1; // TOP
 q.Where(q.EmployeeID == 1 && (q.LastName != "googy"));
 
 // Use the single entity since we expect only 1 record
@@ -297,7 +297,7 @@ FROM [dbo].[Employee]
 ```c#
 ErrorLogQuery q = new ErrorLogQuery();
 q.Where(q.Message.Like("%a"));
-q.tg.CountAll = true;
+q.es.CountAll = true;
 
 long count = q.ExecuteScalar<long>();
 ```
@@ -319,8 +319,8 @@ This is the traditional way of paging and works on all versions of SQL Server. Y
 ErrorLogQuery q = new ErrorLogQuery();
 q.Select(q.ErrorLogId, q.Method, q.Message);
 q.OrderBy(q.DateOccurred.Descending);
-q.tg.PageNumber = 2;
-q.tg.PageSize = 20;
+q.es.PageNumber = 2;
+q.es.PageSize = 20;
 
 ErrorLogCollection coll = new ErrorLogCollection();
 if(coll.Load(q))
@@ -388,7 +388,7 @@ oq.From
             .GroupBy(oiq.OrderID)
     ).As("sub");
 oq.InnerJoin(oq).On(oq.OrderID == oiq.OrderID);
-oq.tg.WithNoLock = true;
+oq.es.WithNoLock = true;
 
 OrderCollection coll = new OrderCollection();
 if(coll.Load(oq))
@@ -592,7 +592,7 @@ Exists evaluates to true, if the SubQuery returns a result set.
 ```c#
 // SubQuery of Employees with a null Supervisor column.
 EmployeeQuery sq = new EmployeeQuery("s");
-sq.tg.Distinct = true;
+sq.es.Distinct = true;
 sq.Select(sq.EmployeeID);
 sq.Where(sq.Supervisor.IsNull());
 
@@ -632,7 +632,7 @@ OrderItemQuery oiq = new OrderItemQuery("oi");
 
 // SubQuery of OrderItems with a discount
 OrderItemQuery oisq = new OrderItemQuery("ois");
-oisq.tg.Distinct = true;
+oisq.es.Distinct = true;
 oisq.Select(oisq.Discount);
 oisq.Where(oisq.Discount > 0);
 
@@ -803,12 +803,12 @@ WHERE o.[OrderDate] IN
 #### Any, All, and Some
 ANY, ALL, and SOME are SubQuery qualifiers. They precede the SubQuery they apply to. For most databases, ANY and SOME are synonymous. Usually, if you use an operator (>, >=, =, <, <=) in a Where clause against a SubQuery, then the SubQuery must return a single value. By applying a qualifier to the SubQuery, you can use operators against SubQueries that return multiple results.
 
-Notice, below, that the ALL qualifier is set to true for the SubQuery with "cq.tg.All = true;".
+Notice, below, that the ALL qualifier is set to true for the SubQuery with "cq.es.All = true;".
 
 ```c#
 // DateAdded for Customers whose Manager  = 3
 CustomerQuery cq = new CustomerQuery("c");
-cq.tg.All = true;
+cq.es.All = true;
 cq.Select(cq.DateAdded);
 cq.Where(cq.Manager == 3);
 
@@ -837,7 +837,7 @@ WHERE o.[OrderDate] < ALL
     WHERE c.[Manager] = @Manager1
 )
 ```
-Below, is a nested SubQuery. The ANY qualifier is set to true for the middle SubQuery with "cq.tg.Any = true;".
+Below, is a nested SubQuery. The ANY qualifier is set to true for the middle SubQuery with "cq.es.Any = true;".
 
 ```c#
 // Employees whose LastName begins with 'S'.
@@ -848,7 +848,7 @@ eq.Where(eq.LastName.Like("S%"));
 // DateAdded for Customers whose Managers are in the
 // EmployeeQuery above.
 CustomerQuery cq = new CustomerQuery("c");
-cq.tg.Any = true;
+cq.es.Any = true;
 cq.Select(cq.DateAdded);
 cq.Where(cq.Manager.In(eq));
 
