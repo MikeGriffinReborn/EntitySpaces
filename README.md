@@ -194,7 +194,7 @@ EmployeesQuery eQuery = new EmployeesQuery("e");
 
 eQuery.Select(eQuery.EmployeeID)
 .InnerJoin<OrdersQuery>("o", out OrdersQuery o).On(eQuery.EmployeeID == o.EmployeeID)
-.InnerJoin<OrderDetailsQuery>("od", out OrderDetailsQuery od).On(o.OrderID == od.OrderID);
+.InnerJoin<OrderDetailsQuery>("od", out OrderDetailsQuery od).On(o.OrderID == od.OrderID)
 .Where(o.Freight > 20);
 
 EmployeesCollection coll = new EmployeesCollection();
