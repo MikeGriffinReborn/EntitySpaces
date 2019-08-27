@@ -172,9 +172,9 @@ It's important to note that both syntaxes shown below are valid. Use whichever o
 
 #### Traditional syntax
 ```c#
-EmployeesQuery eQuery = new EmployeesQuery("e");
 OrdersQuery o = new OrdersQuery("o");
 OrderDetailsQuery od = new OrderDetailsQuery("od");
+EmployeesQuery eQuery = new EmployeesQuery("e");
 
  eQuery.Select(eQuery.EmployeeID)
 .InnerJoin(o).On(eQuery.EmployeeID == o.EmployeeID)
@@ -191,6 +191,7 @@ if(coll.Load(eQuery))
 The newer streamlined syntax uses the C# "dynamic" support to synthesize the subqueries "join alias" passed in on the constructor as a  property on the parent. You can "new" the subquery inline in the .On() method and access it via the synthesized property. 
 ```c#
 EmployeesQuery eQuery = new EmployeesQuery("e");
+
 eQuery.Select(eQuery.EmployeeID)
 .InnerJoin<OrdersQuery>("o", out OrdersQuery o).On(eQuery.EmployeeID == o.EmployeeID)
 .InnerJoin<OrderDetailsQuery>("od", out OrderDetailsQuery od).On(o.OrderID == od.OrderID);
