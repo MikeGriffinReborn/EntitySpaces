@@ -188,13 +188,13 @@ if(coll.Load(eQuery))
 }
 ```
 #### Streamlined Access
-The newer streamlined syntax uses the C# "dynamic" support to synthesize the subqueries "join alias" passed in on the constructor as a  property on the parent. You can "new" the subquery inline in the .On() method and access it via the synthesized property.
+The newer streamlined syntax uses the C# "dynamic" support to synthesize the subqueries "join alias" passed in on the constructor as a  property on the parent. You can "new" the subquery inline in the .On() method and access it via the synthesized property. 
 ```c#
-dynamic eQuery = new EmployeesQuery("e");
-eQuery.Select(eQuery.EmployeeID)
-.InnerJoin(new OrdersQuery("o")).On(eQuery.EmployeeID == eQuery.o.EmployeeID)
-.InnerJoin(new OrderDetailsQuery("od")).On(eQuery.o.OrderID == eQuery.od.OrderID)
-.Where(eQuery.o.Freight > 20);
+EmployeesQuery eQuery = new EmployeesQuery("e");
+eQuery.Select(eQuery.EmployeeID);
+eQuery.InnerJoin(new OrdersQuery("o")).On(eQuery.EmployeeID == eQuery.o.EmployeeID);
+eQuery.InnerJoin(new OrderDetailsQuery("od")).On(eQuery.o.OrderID == eQuery.od.OrderID);
+eQuery.Where(eQuery.o.Freight > 20);
 
 EmployeesCollection coll = new EmployeesCollection();
 if(coll.Load(eQuery))
