@@ -119,6 +119,14 @@ namespace EntitySpaces.DynamicQuery
 
         #region DynamicObject Stuff
 
+        public dynamic Subquery
+        {
+            get
+            {
+                return this as dynamic;
+            }
+        }
+
         private Dictionary<string, object> dyno = new Dictionary<string, object>();
 
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -131,7 +139,8 @@ namespace EntitySpaces.DynamicQuery
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override DynamicMetaObject GetMetaObject(Expression parameter)
         {
-            return base.GetMetaObject(parameter);
+            DynamicMetaObject meta =  base.GetMetaObject(parameter);
+            return meta;
         }
 
 
@@ -472,10 +481,25 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
         public esJoinItem InnerJoin(esDynamicQuerySerializable joinQuery)
         {
-
             dynamic thisAsDynamic = (dynamic)this;
             thisAsDynamic[joinQuery.joinAlias] = joinQuery;
             return JoinCommon(joinQuery, esJoinType.InnerJoin);
+        }
+
+        /// <summary>
+        /// This method allows you to streamline join syntax
+        /// </summary>
+        /// <typeparam name="T">The DynamicQuery Class</typeparam>
+        /// <param name="alias">The desired alias</param>
+        /// <param name="query">The name of your output parameter</param>
+        /// <returns></returns>
+        public esJoinItem InnerJoin<T>(string alias, out T query) where T : esDynamicQuerySerializable, new()
+        {
+            query = new T();
+            query.joinAlias = alias;
+            dynamic thisAsDynamic = (dynamic)this;
+            thisAsDynamic[alias] = query;
+            return JoinCommon(query, esJoinType.InnerJoin);
         }
 
         /// <summary>
@@ -485,8 +509,27 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
         public esJoinItem LeftJoin(esDynamicQuerySerializable joinQuery)
         {
+            dynamic thisAsDynamic = (dynamic)this;
+            thisAsDynamic[joinQuery.joinAlias] = joinQuery;
             return JoinCommon(joinQuery, esJoinType.LeftJoin);
         }
+
+        /// <summary>
+        /// This method allows you to streamline join syntax
+        /// </summary>
+        /// <typeparam name="T">The DynamicQuery Class</typeparam>
+        /// <param name="alias">The desired alias</param>
+        /// <param name="query">The name of your output parameter</param>
+        /// <returns></returns>
+        public esJoinItem LeftJoin<T>(string alias, out T query) where T : esDynamicQuerySerializable, new()
+        {
+            query = new T();
+            query.joinAlias = alias;
+            dynamic thisAsDynamic = (dynamic)this;
+            thisAsDynamic[alias] = query;
+            return JoinCommon(query, esJoinType.LeftJoin);
+        }
+
 
         /// <summary>
         /// Creates a RIGHT JOIN 
@@ -495,7 +538,25 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
         public esJoinItem RightJoin(esDynamicQuerySerializable joinQuery)
         {
+            dynamic thisAsDynamic = (dynamic)this;
+            thisAsDynamic[joinQuery.joinAlias] = joinQuery;
             return JoinCommon(joinQuery, esJoinType.RightJoin);
+        }
+
+        /// <summary>
+        /// This method allows you to streamline join syntax
+        /// </summary>
+        /// <typeparam name="T">The DynamicQuery Class</typeparam>
+        /// <param name="alias">The desired alias</param>
+        /// <param name="query">The name of your output parameter</param>
+        /// <returns></returns>
+        public esJoinItem RightJoin<T>(string alias, out T query) where T : esDynamicQuerySerializable, new()
+        {
+            query = new T();
+            query.joinAlias = alias;
+            dynamic thisAsDynamic = (dynamic)this;
+            thisAsDynamic[alias] = query;
+            return JoinCommon(query, esJoinType.RightJoin);
         }
 
         /// <summary>
@@ -505,7 +566,25 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
         public esJoinItem FullJoin(esDynamicQuerySerializable joinQuery)
         {
+            dynamic thisAsDynamic = (dynamic)this;
+            thisAsDynamic[joinQuery.joinAlias] = joinQuery;
             return JoinCommon(joinQuery, esJoinType.FullJoin);
+        }
+
+        /// <summary>
+        /// This method allows you to streamline join syntax
+        /// </summary>
+        /// <typeparam name="T">The DynamicQuery Class</typeparam>
+        /// <param name="alias">The desired alias</param>
+        /// <param name="query">The name of your output parameter</param>
+        /// <returns></returns>
+        public esJoinItem FullJoin<T>(string alias, out T query) where T : esDynamicQuerySerializable, new()
+        {
+            query = new T();
+            query.joinAlias = alias;
+            dynamic thisAsDynamic = (dynamic)this;
+            thisAsDynamic[alias] = query;
+            return JoinCommon(query, esJoinType.FullJoin);
         }
 
         /// <summary>
@@ -515,7 +594,25 @@ namespace EntitySpaces.DynamicQuery
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
         public esJoinItem CrossJoin(esDynamicQuerySerializable joinQuery)
         {
+            dynamic thisAsDynamic = (dynamic)this;
+            thisAsDynamic[joinQuery.joinAlias] = joinQuery;
             return JoinCommon(joinQuery, esJoinType.CrossJoin);
+        }
+
+        /// <summary>
+        /// This method allows you to streamline join syntax
+        /// </summary>
+        /// <typeparam name="T">The DynamicQuery Class</typeparam>
+        /// <param name="alias">The desired alias</param>
+        /// <param name="query">The name of your output parameter</param>
+        /// <returns></returns>
+        public esJoinItem CrossJoin<T>(string alias, out T query) where T : esDynamicQuerySerializable, new()
+        {
+            query = new T();
+            query.joinAlias = alias;
+            dynamic thisAsDynamic = (dynamic)this;
+            thisAsDynamic[alias] = query;
+            return JoinCommon(query, esJoinType.CrossJoin);
         }
 
         /// <summary>
