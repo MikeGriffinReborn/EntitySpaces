@@ -439,6 +439,46 @@ WHERE c1.[PostalCode] > ALL
 )
 ```
 
+### Nested SubQueries (literally) ...
+
+The In() clause ....
+
+```c#
+OrdersQuery oQuery = new OrdersQuery("o");
+oQuery.Select(oQuery.OrderID, oQuery.EmployeeID)
+.InnerJoin<OrderDetailsQuery>("od", out var od).On(oQuery.OrderID == od.OrderID)
+.InnerJoin<EmployeesQuery>("e", out var e).On(e.EmployeeID == oQuery.EmployeeID && oQuery.EmployeeID.In(() =>
+{
+    EmployeesQuery ee = new EmployeesQuery("ee");
+    ee.InnerJoin<OrdersQuery>("eo", out var eo).On(ee.EmployeeID == eo.EmployeeID)
+        .InnerJoin<OrderDetailsQuery>("eod", out var eod).On(eo.OrderID == eod.OrderID)
+        .Select(eo.EmployeeID)
+        .es.Distinct();
+    return ee;
+}));
+
+OrdersCollection coll = new OrdersCollection();
+if (coll.Load(oQuery))
+{
+
+}
+```
+
+Results:
+
+```sql
+SELECT o.[OrderID],  o.[EmployeeID]
+FROM [Orders] o
+INNER JOIN [Order Details] od ON o.[OrderID] = od.[OrderID]
+INNER JOIN [Employees] e ON (e.[EmployeeID] = o.[EmployeeID] AND o.[EmployeeID] IN (
+	SELECT DISTINCT eo.[EmployeeID]
+	FROM [Employees] ee
+	INNER JOIN [Orders] eo ON ee.[EmployeeID] = eo.[EmployeeID]
+	INNER JOIN [Order Details] eod ON eo.[OrderID] = eod.[OrderID])
+)
+```
+
+
 #### Full Expressions in OrderBy and GroupBy
 This query doesn’t really make sense, but we wanted to show you what will is possible.
 
