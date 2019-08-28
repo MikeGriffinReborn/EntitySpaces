@@ -409,6 +409,36 @@ FROM [Employees] e
 INNER JOIN [Orders] o ON e.[EmployeeID] = o.[EmployeeID]
 ```
 
+### Any, All, and Some
+
+```c#
+CustomersQuery c2 = new CustomersQuery("c2");
+c2.Select(c2.PostalCode).Where(c2.Region == "OR").es.All();
+
+CustomersQuery c1 = new CustomersQuery("c1");
+c1.Select(c1.CustomerID, c1.CompanyName, c1.PostalCode);
+c1.Where(c1.PostalCode > c2); // NOTICE > 
+
+CustomersCollection coll = new CustomersCollection();
+if(coll.Load(c1))
+{
+
+}
+```
+
+Results:
+
+```sql
+SELECT c1.[CustomerID], c1.[CompanyName], c1.[PostalCode]
+FROM [Customers] c1
+WHERE c1.[PostalCode] > ALL
+(
+    SELECT c2.[PostalCode]
+     FROM [Customers] c2
+     WHERE c2.[Region] = @Region1
+)
+```
+
 #### Full Expressions in OrderBy and GroupBy
 This query doesn’t really make sense, but we wanted to show you what will is possible.
 
