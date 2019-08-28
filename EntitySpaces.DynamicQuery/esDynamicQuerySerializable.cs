@@ -658,11 +658,45 @@ namespace EntitySpaces.DynamicQuery
         }
 
         /// <summary>
+        /// Allows you to pass in a nested SubQuery for your FROM statement
+        /// </summary>
+        /// <param name="fromQuery">The subquery to use as your FROM statement</param>
+        /// <returns></returns>
+        public esDynamicQuerySerializable From(Func<esDynamicQuery> func)
+        {
+            esDynamicQuerySerializable query = func();
+            this.fromQuery = query;
+            AddQueryToList(query);
+            return this;
+        }
+
+        /// <summary>
         /// Performs a UNION between two statements
         /// </summary>
         /// <returns></returns>
         public esDynamicQuerySerializable Union(esDynamicQuerySerializable query)
         {
+            esSetOperation setOperation = new esSetOperation(query);
+            setOperation.SetOperationType = esSetOperationType.Union;
+
+            if (setOperations == null)
+            {
+                setOperations = new List<esSetOperation>();
+            }
+
+            setOperations.Add(setOperation);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Performs a UNION between two statements
+        /// </summary>
+        /// <returns></returns>
+        public esDynamicQuerySerializable Union(Func<esDynamicQuery> func)
+        {
+            esDynamicQuerySerializable query = func();
+
             esSetOperation setOperation = new esSetOperation(query);
             setOperation.SetOperationType = esSetOperationType.Union;
 
@@ -696,6 +730,27 @@ namespace EntitySpaces.DynamicQuery
         }
 
         /// <summary>
+        /// Performs a UNION ALL between two statements
+        /// </summary>
+        /// <returns></returns>
+        public esDynamicQuerySerializable UnionAll(Func<esDynamicQuery> func)
+        {
+            esDynamicQuerySerializable query = func();
+
+            esSetOperation setOperation = new esSetOperation(query);
+            setOperation.SetOperationType = esSetOperationType.UnionAll;
+
+            if (setOperations == null)
+            {
+                setOperations = new List<esSetOperation>();
+            }
+
+            setOperations.Add(setOperation);
+
+            return this;
+        }
+
+        /// <summary>
         /// Peforms an INTERSECT between two statements
         /// </summary>
         /// <returns></returns>
@@ -715,11 +770,49 @@ namespace EntitySpaces.DynamicQuery
         }
 
         /// <summary>
+        /// Peforms an INTERSECT between two statements
+        /// </summary>
+        /// <returns></returns>
+        public esDynamicQuerySerializable Intersect(Func<esDynamicQuery> func)
+        {
+            esDynamicQuerySerializable query = func();
+
+            esSetOperation setOperation = new esSetOperation(query);
+            setOperation.SetOperationType = esSetOperationType.Intersect;
+
+            if (setOperations == null)
+            {
+                setOperations = new List<esSetOperation>();
+            }
+
+            setOperations.Add(setOperation);
+
+            return this;
+        }
+
+        /// <summary>
         /// Performs an EXCEPT between two statements
         /// </summary>
         /// <returns></returns>
         public esDynamicQuerySerializable Except(esDynamicQuerySerializable query)
         {
+            esSetOperation setOperation = new esSetOperation(query);
+            setOperation.SetOperationType = esSetOperationType.Except;
+
+            if (setOperations == null)
+            {
+                setOperations = new List<esSetOperation>();
+            }
+
+            setOperations.Add(setOperation);
+
+            return this;
+        }
+
+        public esDynamicQuerySerializable Except(Func<esDynamicQuery> func)
+        {
+            esDynamicQuerySerializable query = func();
+
             esSetOperation setOperation = new esSetOperation(query);
             setOperation.SetOperationType = esSetOperationType.Except;
 
