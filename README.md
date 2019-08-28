@@ -552,18 +552,19 @@ INNER JOIN [dbo].[Order] o ON o.[OrderID] = sub.[OrderID]
 In and NotIn are two of the most common operators used in a Where SubQuery. The following produces a result set containing Territories that an Employee is not associated with.
 
 ```c#
-// SubQuery of Territories that Employee 1 is assigned to.
-EmployeeTerritoryQuery etq = new EmployeeTerritoryQuery("et");
-etq.Select(etq.TerrID);
-etq.Where(etq.EmpID == 1);
-
 // Territories that Employee 1 is not assigned to.
-TerritoryQuery tq = new TerritoryQuery("t");
-tq.Select(tq.Description);
-tq.Where(tq.TerritoryID.NotIn(etq));
+TerritoriesQuery tq = new TerritoriesQuery("t");
+tq.Select(tq.TerritoryID, tq.TerritoryDescription);
+tq.Where(tq.TerritoryID.NotIn(() =>
+{
+    EmployeeTerritoriesQuery etq = new EmployeeTerritoriesQuery("et");
+    etq.Select(etq.TerritoryID);
+    etq.Where(etq.EmployeeID == 1);
+    return etq;
+}));
 
-TerritoryCollection coll = new TerritoryCollection();
-if(coll.Load(tq))
+TerritoriesCollection coll = new TerritoriesCollection();
+if (coll.Load(tq))
 {
     // Then we loaded at least one record
 }
