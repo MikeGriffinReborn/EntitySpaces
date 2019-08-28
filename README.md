@@ -186,7 +186,8 @@ if(coll.Load(eQuery))
 }
 ```
 #### Streamlined Syntax
-The newer streamlined syntax uses the C# "dynamic" support to synthesize the subqueries "join alias" passed in on the constructor as a  property on the parent. You can "new" the subquery inline in the .On() method and access it via the synthesized property. 
+The newer streamlined creates the sub-queries for you and provides the local variable as an "out" parameter. You no longer have to predeclare "out" parameters which makes this syntax very clean.
+
 ```c#
 EmployeesQuery eQuery = new EmployeesQuery("e");
 
