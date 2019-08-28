@@ -291,19 +291,21 @@ FROM [dbo].[Employee]
 #### Getting the Count
 
 ```c#
-ErrorLogQuery q = new ErrorLogQuery();
-q.Where(q.Message.Like("%a")).es.CountAll();
+EmployeesQuery q = new EmployeesQuery();
+q.Where(q.ReportsTo.IsNull()).es.CountAll();
 
-long count = q.ExecuteScalar<long>();
+int count = q.ExecuteScalar<int>();
 ```
 
 Results:
 
 ```sql
 SELECT COUNT(*) AS 'Count' 
-FROM [dbo].[ErrorLog] 
-WHERE [Message] LIKE @Message1
+FROM [Employees] 
+WHERE [ReportsTo] IS NULL
 ```
+
+Let's get the count 
 
 #### Paging
 Using PageSize and PageNumber.
