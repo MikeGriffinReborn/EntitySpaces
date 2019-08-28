@@ -364,20 +364,14 @@ FETCH NEXT 20 ROWS ONLY
 
 #### With NoLock
 ```c#
-OrderQuery oq = new OrderQuery("o");
-OrderItemQuery oiq = new OrderItemQuery("oi");
+EmployeesQuery e = new EmployeesQuery("e");
 
-oq.Select(oq.CustID, oq.OrderDate, "<sub.OrderTotal>");
-oq.From
-    (
-        oiq.Select(oiq.OrderID,
-            (oiq.UnitPrice * oiq.Quantity).Sum().As("OrderTotal"))
-            .GroupBy(oiq.OrderID)
-    ).As("sub");
-oq.InnerJoin(oq).On(oq.OrderID == oiq.OrderID);
-oq.es.WithNoLock();
+e.Select(e.EmployeeID)
+.InnerJoin<OrdersQuery>("o", out var o).On(e.EmployeeID == o.EmployeeID)
+.Where(o.Freight > 20)
+.es.WithNoLock();
 
-OrderCollection coll = new OrderCollection();
+EmployeesCollection coll = new EmployeesCollection();
 if(coll.Load(oq))
 {
     // Then we loaded at least one record
@@ -386,19 +380,13 @@ if(coll.Load(oq))
 
 Notice that even though many query objects are being used you only need to set WithNoLock to true for the parent or main query object. The SQL generated is as follows:
 
-Results:
+Results: (Notice that "WITH (NOLOCK)" was applied on both tables involved in the query)
 
 ```sql
-SELECT o.[CustID],o.[OrderDate],sub.OrderTotal  
-FROM 
-(
-   SELECT oi.[OrderID],
-    SUM((oi.[UnitPrice]*oi.[Quantity])) AS 'OrderTotal'  
-   FROM [OrderItem] oi WITH (NOLOCK) 
-   GROUP BY oi.[OrderID]
-) AS sub 
-INNER JOIN [Order] o WITH (NOLOCK) 
-ON o.[OrderID] = sub.[OrderID] 
+SELECT e.[EmployeeID]  
+FROM [Employees] e WITH (NOLOCK) 
+INNER JOIN [Orders] o WITH (NOLOCK) ON e.[EmployeeID] = o.[EmployeeID] 
+WHERE o.[Freight] > @Freight1
 ```
 
 #### Full Expressions in OrderBy and GroupBy
