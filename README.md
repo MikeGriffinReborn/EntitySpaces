@@ -313,14 +313,13 @@ Using PageSize and PageNumber.
 This is the traditional way of paging and works on all versions of SQL Server. You always need an OrderBy when sorting.
 
 ```c#
-ErrorLogQuery q = new ErrorLogQuery();
-q.Select(q.ErrorLogId, q.Method, q.Message)
-.OrderBy(q.DateOccurred.Descending).es.PageNumber(2).es.PageSize(20);
+EmployeesQuery q = new EmployeesQuery();
+q.Select(q.EmployeeID, q.LastName).OrderBy(q.LastName.Ascending).es.PageNumber(2).es.PageSize(20);
 
-ErrorLogCollection coll = new ErrorLogCollection();
-if(coll.Load(q))
+EmployeesCollection coll = new EmployeesCollection();
+if (coll.Load(q))
 {
-    // Then we loaded at least one record
+
 }
 ```
 
