@@ -250,8 +250,7 @@ Use the native language syntax, it works as you expect it would.
 
 ```C#
 EmployeesQuery q = new EmployeesQuery();
-q.es.Top = 1; // TOP
-q.Where(q.EmployeeID == 1 && (q.LastName != "googy"));
+q.Where(q.EmployeeID == 1 && (q.LastName != "Smith")).es.Top(1);
 
 // Use the single entity since we expect only 1 record
 Employees emp = new Employees();
@@ -296,8 +295,7 @@ FROM [dbo].[Employee]
 
 ```c#
 ErrorLogQuery q = new ErrorLogQuery();
-q.Where(q.Message.Like("%a"));
-q.es.CountAll = true;
+q.Where(q.Message.Like("%a")).es.CountAll();
 
 long count = q.ExecuteScalar<long>();
 ```
@@ -317,10 +315,10 @@ This is the traditional way of paging and works on all versions of SQL Server. Y
 
 ```c#
 ErrorLogQuery q = new ErrorLogQuery();
-q.Select(q.ErrorLogId, q.Method, q.Message);
-q.OrderBy(q.DateOccurred.Descending);
-q.es.PageNumber = 2;
-q.es.PageSize = 20;
+q.Select(q.ErrorLogId, q.Method, q.Message)
+.OrderBy(q.DateOccurred.Descending)
+.es.PageNumber(2)
+.es.PageSize(20);
 
 ErrorLogCollection coll = new ErrorLogCollection();
 if(coll.Load(q))
@@ -354,9 +352,9 @@ Skip and Take Require Microsoft SQL 2012 at a minimum and is a much nicer syntax
 
 ```c#
 ErrorLogQuery q = new ErrorLogQuery();
-q.Select(q.ErrorLogId, q.Method, q.Message);
-q.OrderBy(q.DateOccurred.Descending);
-q.Skip(40).Take(20);
+q.Select(q.ErrorLogId, q.Method, q.Message)
+.OrderBy(q.DateOccurred.Descending)
+.Skip(40).Take(20);
 
 ErrorLogCollection coll = new ErrorLogCollection();
 if(coll.Load(q))
@@ -388,7 +386,7 @@ oq.From
             .GroupBy(oiq.OrderID)
     ).As("sub");
 oq.InnerJoin(oq).On(oq.OrderID == oiq.OrderID);
-oq.es.WithNoLock = true;
+oq.es.WithNoLock();
 
 OrderCollection coll = new OrderCollection();
 if(coll.Load(oq))
@@ -632,15 +630,12 @@ OrderItemQuery oiq = new OrderItemQuery("oi");
 
 // SubQuery of OrderItems with a discount
 OrderItemQuery oisq = new OrderItemQuery("ois");
-oisq.es.Distinct = true;
-oisq.Select(oisq.Discount);
-oisq.Where(oisq.Discount > 0);
+oisq.Select(oisq.Discount).Where(oisq.Discount > 0).es.Distinct();
 
 // Orders with discounted items
 OrderQuery oq = new OrderQuery("o");
 oq.Select(oq.OrderID, oiq.Discount);
-oq.InnerJoin(oiq).
-    On(oq.OrderID == oiq.OrderID && oiq.Discount.In(oisq));
+oq.InnerJoin(oiq). On(oq.OrderID == oiq.OrderID && oiq.Discount.In(oisq));
 
 OrderCollection coll = new OrderCollection();
 if(coll.Load(oq))
@@ -808,9 +803,7 @@ Notice, below, that the ALL qualifier is set to true for the SubQuery with "cq.e
 ```c#
 // DateAdded for Customers whose Manager  = 3
 CustomerQuery cq = new CustomerQuery("c");
-cq.es.All = true;
-cq.Select(cq.DateAdded);
-cq.Where(cq.Manager == 3);
+cq.Select(cq.DateAdded).Where(cq.Manager == 3).es.All();
 
 // OrderID and CustID where the OrderDate is 
 // less than all of the dates in the CustomerQuery above.
@@ -842,21 +835,17 @@ Below, is a nested SubQuery. The ANY qualifier is set to true for the middle Sub
 ```c#
 // Employees whose LastName begins with 'S'.
 EmployeeQuery eq = new EmployeeQuery("e");
-eq.Select(eq.EmployeeID);
-eq.Where(eq.LastName.Like("S%"));
+eq.Select(eq.EmployeeID).Where(eq.LastName.Like("S%"));
 
 // DateAdded for Customers whose Managers are in the
 // EmployeeQuery above.
 CustomerQuery cq = new CustomerQuery("c");
-cq.es.Any = true;
-cq.Select(cq.DateAdded);
-cq.Where(cq.Manager.In(eq));
+cq.Select(cq.DateAdded).Where(cq.Manager.In(eq)).es.Any();
 
 // OrderID and CustID where the OrderDate is 
 // less than any one of the dates in the CustomerQuery above.
 OrderQuery oq = new OrderQuery("o");
-oq.Select(oq.OrderID, oq.CustID);
-oq.Where(oq.OrderDate < cq);
+oq.Select(oq.OrderID, oq.CustID).Where(oq.OrderDate < cq);
 
 OrderCollection coll = new OrderCollection();
 if(coll.Load(oq))
@@ -963,11 +952,11 @@ if(coll.Load(q))
 
 ```c#
 EmployeeQuery q = new EmployeeQuery();
-q.Select(q.EmployeeID, q.Age.Sum().As("TotalAge"));
-q.Where(q.EmployeeID.IsNotNull());
-q.GroupBy(q.EmployeeID);
-q.Having(q.Age.Sum() > 5);
-q.OrderBy(q.EmployeeID.Descending);
+q.Select(q.EmployeeID, q.Age.Sum().As("TotalAge"))
+.Where(q.EmployeeID.IsNotNull())
+.GroupBy(q.EmployeeID)
+.Having(q.Age.Sum() > 5)
+.OrderBy(q.EmployeeID.Descending);
 
 EmployeeCollection coll = new EmployeeCollection();
 if(coll.Load(q))
@@ -1033,10 +1022,10 @@ Here is an example query. You would never write a query like this in reality. Ti
 
 ```c#
 EmployeesQuery q = new EmployeesQuery();
-q.Select("<FirstName>", q.HireDate);
-q.Where("<EmployeeID = 1>");
-q.GroupBy("<FirstName>", q.HireDate);
-q.OrderBy("<FirstName ASC>"); 
+q.Select("<FirstName>", q.HireDate)
+.Where("<EmployeeID = 1>")
+.GroupBy("<FirstName>", q.HireDate)
+.OrderBy("<FirstName ASC>"); 
 
 EmployeeCollection coll = new EmployeeCollection();
 if(coll.Load(q))
@@ -1061,9 +1050,9 @@ Of course, you could easily write the above query without injection, but you get
 ```c#
 EmployeesQuery q = new EmployeesQuery();
 q.Select(q.FirstName);
-q.Where(q.EmployeeID == 1);
-q.OrderBy(q.FirstName.Ascending);
-q.GroupBy(q.FirstName, q.HireDate);
+.Where(q.EmployeeID == 1)
+.OrderBy(q.FirstName.Ascending)
+.GroupBy(q.FirstName, q.HireDate)
 ```
 
 Using the raw SQL injection techniques above will allow you to invoke SQL functions that we don’t support, including database vender specific SQL, and so on. Hopefully, you will almost never have to resort to writing a custom load method to invoke a stored procedure or an entirely hand written SQL statement. Of course, you can use our native API everywhere and just inject the raw SQL on the GroupBy for instance. You can mix and match to get the desired SQL.
