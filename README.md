@@ -586,21 +586,21 @@ WHERE t.[TerritoryID] NOT IN
 Exists evaluates to true, if the SubQuery returns a result set.
 
 ```c#
-// SubQuery of Employees with a null Supervisor column.
-EmployeeQuery sq = new EmployeeQuery("s");
-sq.es.Distinct = true;
-sq.Select(sq.EmployeeID);
-sq.Where(sq.Supervisor.IsNull());
-
 // If even one employee has a null supervisor,
 // i.e., the above query has a result set,
 // then run a list of all employees.
-EmployeeQuery eq = new EmployeeQuery("e");
-eq.Select(eq.EmployeeID, eq.Supervisor);
-eq.Where(eq.Exists(sq));
+EmployeesQuery eq = new EmployeesQuery("e");
+eq.Select(eq.EmployeeID, eq.ReportsTo)
+.Where(eq.Exists(() =>
+{
+    // SubQuery of Employees with a null Supervisor column.
+    EmployeesQuery sq = new EmployeesQuery("s");
+    sq.Select(sq.EmployeeID).Where(sq.ReportsTo.IsNull()).es.Distinct();
+    return sq;
+}));
 
-EmployeeCollection coll = new EmployeeCollection();
-if(coll.Load(eq))
+EmployeesCollection coll = new EmployeesCollection();
+if (coll.Load(eq))
 {
     // Then we loaded at least one record
 }
