@@ -120,7 +120,6 @@ namespace ConsoleApp
         {
             OrdersQuery oq = new OrdersQuery("oq");
             oq.InnerJoin<OrderDetailsQuery>("odq", out var odq).On(oq.OrderID == odq.OrderID)
-            .InnerJoin(odq).On(oq.OrderID == odq.OrderID)
             .Where(odq.Discount > 0)
             .Select(oq.OrderID, odq.Discount);
 
@@ -239,7 +238,7 @@ namespace ConsoleApp
         {
             EmployeesQuery q = new EmployeesQuery();
             q.Where(q.LastName.Like("%a"));
-            q.es.CountAll = true;
+            q.es.CountAll();
 
             int count = q.ExecuteScalar<int>();
         }
@@ -259,20 +258,18 @@ namespace ConsoleApp
 
         static private void Paging()
         {
+            // PageSize and PageNumber
             EmployeesQuery q = new EmployeesQuery("e");
-            q.es.PageSize = 5;
-            q.es.PageNumber = 2;
-            q.OrderBy(q.HireDate.Descending);
+            q.OrderBy(q.HireDate.Descending).es.PageSize(5).es.PageNumber(2);
 
             EmployeesCollection coll1 = new EmployeesCollection();
             if (coll1.Load(q))
             {
             }
 
+            // Skip and Take
             EmployeesQuery q1 = new EmployeesQuery("e");
-            q1.Take(20);
-            q1.Skip(5);
-            q1.OrderBy(q.HireDate.Descending);
+            q1.OrderBy(q.HireDate.Descending).Skip(5).Take(20);
 
             EmployeesCollection coll2 = new EmployeesCollection();
             if (coll2.Load(q1))
@@ -295,9 +292,7 @@ namespace ConsoleApp
         static private void SelectDistinctTop()
         {
             EmployeesQuery q = new EmployeesQuery("e");
-            q.es.Top = 5;
-            q.es.Distinct = true;
-            q.Select(q.EmployeeID);
+            q.Select(q.EmployeeID).es.Top(5).es.Distinct();
 
             EmployeesCollection coll = new EmployeesCollection();
             if (coll.Load(q))
@@ -317,10 +312,10 @@ namespace ConsoleApp
                     EmployeesQuery subquery = new EmployeesQuery("s");
                     subquery.Select(subquery.EmployeeID)
                     .Where(subquery.ReportsTo.IsNotNull() && subquery.EmployeeID == eq.EmployeeID)
-                    .es.Distinct = true;
+                    .es.Distinct();
                     return subquery;
                 })
-            ).es.Distinct = true;
+            );
 
             EmployeesCollection coll = new EmployeesCollection();
             if (coll.Load(eq))
@@ -398,7 +393,7 @@ namespace ConsoleApp
             oiq.Select(oiq.OrderID, (oiq.Quantity * oiq.UnitPrice).Sum().As("Total"))
             .Where(oiq.ProductID
                 .In(
-                    pq.Select(pq.ProductID).Where(oiq.ProductID == pq.ProductID).es.Distinct = true
+                    pq.Select(pq.ProductID).Where(oiq.ProductID == pq.ProductID).es.Distinct()
                 )
             )
             .GroupBy(oiq.OrderID);
@@ -418,7 +413,7 @@ namespace ConsoleApp
                 {
                     ProductsQuery pq = new ProductsQuery("p");
                     pq.Select(pq.ProductID).Where(oiq.ProductID == pq.ProductID)
-                    .es.Distinct = true;
+                    .es.Distinct();
                     return pq;
                 })
             )
@@ -459,13 +454,12 @@ namespace ConsoleApp
         static private void HavingClause()
         {
             OrderDetailsQuery q = new OrderDetailsQuery();
-            q.Select(q.OrderID, q.UnitPrice.Sum().As("TotalUnitPrice"));
-            q.Where(q.Discount.IsNotNull());
-            q.GroupBy(q.OrderID);
-            q.Having(q.UnitPrice.Sum() > 100);
-            q.OrderBy(q.OrderID.Descending);
-
-            q.es.WithNoLock = true;
+            q.Select(q.OrderID, q.UnitPrice.Sum().As("TotalUnitPrice"))
+            .Where(q.Discount.IsNotNull())
+            .GroupBy(q.OrderID)
+            .Having(q.UnitPrice.Sum() > 100)
+            .OrderBy(q.OrderID.Descending)
+            .es.WithNoLock();
 
             OrderDetailsCollection coll = new OrderDetailsCollection();
             if (coll.Load(q))

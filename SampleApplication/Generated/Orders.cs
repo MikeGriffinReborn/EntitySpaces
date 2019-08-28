@@ -104,7 +104,7 @@ namespace BusinessObjects
 	{
 		public OrdersQuery(string joinAlias)
 		{
-			this.es.JoinAlias = joinAlias;
+			this.es.JoinAlias(joinAlias);
 		}	
 
 		override protected string GetQueryName()

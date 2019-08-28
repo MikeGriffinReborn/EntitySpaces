@@ -710,8 +710,8 @@ namespace EntitySpaces.SqlClientProvider
 
             name += Delimiters.TableOpen;
 
-            if (query.es.QuerySource != null)
-                name += query.es.QuerySource;
+            if (query.querySource != null)
+                name += query.querySource;
             else
                 name += providerMetadata.Destination;
             name += Delimiters.TableClose;
@@ -738,8 +738,8 @@ namespace EntitySpaces.SqlClientProvider
 
             name += Delimiters.TableOpen;
 
-            if (request.DynamicQuery != null && request.DynamicQuery.es.QuerySource != null)
-                name += request.DynamicQuery.es.QuerySource;
+            if (request.DynamicQuery != null && request.DynamicQuery.querySource != null)
+                name += request.DynamicQuery.querySource;
             else
                 name += request.QueryText != null ? request.QueryText : request.ProviderMetadata.Destination;
             name += Delimiters.TableClose;

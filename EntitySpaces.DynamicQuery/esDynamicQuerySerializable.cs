@@ -1444,13 +1444,13 @@ namespace EntitySpaces.DynamicQuery
 
         protected void HookupWithNoLock(esDynamicQuerySerializable query)
         {
-            if (query.es.WithNoLock.HasValue && query.es.WithNoLock == true)
+            if (query.withNoLock.HasValue && query.withNoLock == true)
             {
                 if (query.queries != null)
                 {
                     foreach (esDynamicQuerySerializable nestedQuery in query.queries.Values)
                     {
-                        nestedQuery.es.WithNoLock = true;
+                        nestedQuery.withNoLock = true;
 
                         HookupWithNoLock(nestedQuery);
                     }
@@ -1498,41 +1498,43 @@ namespace EntitySpaces.DynamicQuery
             /// string QuerySource.
             /// </summary>
             /// <returns>string QuerySource.</returns>
-            public string QuerySource
+            public esDynamicQuerySerializable QuerySource(string querySource)
             {
-                get { return this.dynamicQuery.querySource; }
-                set { this.dynamicQuery.querySource = value; }
+                this.dynamicQuery.querySource = querySource;
+                return this.dynamicQuery;
             }
 
             /// <summary>
             /// string JoinAlias.
             /// </summary>
             /// <returns>string JoinAlias.</returns>
-            public string JoinAlias
+            public esDynamicQuerySerializable JoinAlias(string alias)
             {
-                get { return this.dynamicQuery.joinAlias; }
-                set { this.dynamicQuery.joinAlias = value; }
+                this.dynamicQuery.joinAlias = alias;
+                return this.dynamicQuery;
             }
 
             /// <summary>
             /// esConjunction DefaultConjunction.
             /// </summary>
             /// <returns>esConjunction DefaultConjunction.</returns>
-            public esConjunction DefaultConjunction
+            public esDynamicQuerySerializable DefaultConjunction(esConjunction conj)
             {
-                get { return this.dynamicQuery.defaultConjunction; }
-                set { this.dynamicQuery.defaultConjunction = value; }
+                this.dynamicQuery.defaultConjunction = conj;
+                return this.dynamicQuery;
             }
 
             /// <summary>
             /// This will limit the number of rows returned, after sorting.
             /// Setting Top to 10 will return the top ten rows after sorting.
             /// </summary>
-            public int? Top
+            public esDynamicQuerySerializable Top(int top)
             {
-                get { return this.dynamicQuery.top; }
-                set { this.dynamicQuery.top = value; }
+                this.dynamicQuery.top = top;
+                return this.dynamicQuery;
             }
+
+            #region Partion Code
 
             public esPartionOrderBy PartitionBy(params esQueryItem[] partitionByColumns)
             {
@@ -1603,34 +1605,36 @@ namespace EntitySpaces.DynamicQuery
                 }
             }
 
+            #endregion
+
             /// <summary>
             /// This will use the WITH (NOLOCK) syntax on all tables joined in the query. Currently
             /// only implemented for Microsoft SQL Server.
             /// </summary>
-            public bool? WithNoLock
+            public esDynamicQuerySerializable WithNoLock()
             {
-                get { return this.dynamicQuery.withNoLock; }
-                set { this.dynamicQuery.withNoLock = value; }
+                this.dynamicQuery.withNoLock = true;
+                return this.dynamicQuery;
             }
 
             /// <summary>
             /// Used in SubQueries. The Any qualifier works just like the In except it allows for >, >=, 
             /// <, <= as well as the = (In) and != (Not In) operators
             /// </summary>
-            public bool Any
+            public esDynamicQuerySerializable Any()
             {
-                get { return this.dynamicQuery.subquerySearchCondition == esSubquerySearchCondition.Any; }
-                set { this.dynamicQuery.subquerySearchCondition = esSubquerySearchCondition.Any; }
+                this.dynamicQuery.subquerySearchCondition = esSubquerySearchCondition.Any;
+                return this.dynamicQuery;
             }
 
             /// <summary>
             /// Used in SubQueries. Used like 'Any' except for one key exception - any operator applied must be true for
             /// ALL the values returned in our subquery.
             /// </summary>
-            public bool All
+            public esDynamicQuerySerializable All()
             {
-                get { return this.dynamicQuery.subquerySearchCondition == esSubquerySearchCondition.All; }
-                set { this.dynamicQuery.subquerySearchCondition = esSubquerySearchCondition.All; }
+                this.dynamicQuery.subquerySearchCondition = esSubquerySearchCondition.All;
+                return this.dynamicQuery;
             }
 
             /// <summary>
@@ -1638,64 +1642,62 @@ namespace EntitySpaces.DynamicQuery
             /// The SQL standard defines these two words with the same meaning to overcome a limitation in the English language, 
             /// particularly for inequality comparisons.
             /// </summary>
-            public bool Some
+            public esDynamicQuerySerializable Some()
             {
-                get { return this.dynamicQuery.subquerySearchCondition == esSubquerySearchCondition.Some; }
-                set { this.dynamicQuery.subquerySearchCondition = esSubquerySearchCondition.Some; }
+                this.dynamicQuery.subquerySearchCondition = esSubquerySearchCondition.Some;
+                return this.dynamicQuery;
             }
 
             /// <summary>
             /// This will retrieve a specific row number from a select.
             /// This is useful when paging large sets of data
             /// </summary>
-            public int? PageNumber
+            public esDynamicQuerySerializable PageNumber(int pageNumber)
             {
-                get { return this.dynamicQuery.pageNumber; }
-                set { this.dynamicQuery.pageNumber = value; }
+                this.dynamicQuery.pageNumber = pageNumber;
+                return this.dynamicQuery;
             }
 
             /// <summary>
             /// This will retrieve a specific row number from a select.
             /// This is useful when paging large sets of data
             /// </summary>
-            public int? PageSize
+            public esDynamicQuerySerializable PageSize(int pageSize)
             {
-                get { return this.dynamicQuery.pageSize; }
-                set { this.dynamicQuery.pageSize = value; }
+                this.dynamicQuery.pageSize = pageSize;
+                return this.dynamicQuery;
             }
 
             /// <summary>
             /// Setting Distinct = True will elimate duplicate rows from the data.
             /// </summary>
-            public bool Distinct
+            public esDynamicQuerySerializable Distinct()
             {
-                get { return this.dynamicQuery.distinct; }
-                set { this.dynamicQuery.distinct = value; }
+                this.dynamicQuery.distinct = true;
+                return this.dynamicQuery;
             }
 
             /// <summary>
-            /// If true, add a COUNT(*) Aggregate to the selected columns list.
+            /// Add a COUNT(*) Aggregate to the selected columns list.
             /// </summary>
-            public bool CountAll
+            public esDynamicQuerySerializable CountAll()
             {
-                get { return this.dynamicQuery.countAll; }
-                set
+                this.dynamicQuery.countAll = true;
+                if (String.IsNullOrEmpty(this.dynamicQuery.countAllAlias))
                 {
-                    this.dynamicQuery.countAll = value;
-                    if (String.IsNullOrEmpty(this.dynamicQuery.countAllAlias))
-                    {
-                        this.dynamicQuery.countAllAlias = "Count";
-                    }
+                    this.dynamicQuery.countAllAlias = "Count";
                 }
+
+                return this.dynamicQuery;
             }
 
             /// <summary>
             /// If CountAll is set to true, use this to add a user-friendly column name.
             /// </summary>
-            public string CountAllAlias
+            public esDynamicQuerySerializable CountAllAlias(string alias)
             {
-                get { return this.dynamicQuery.countAllAlias; }
-                set { this.dynamicQuery.countAllAlias = value; }
+                this.dynamicQuery.countAllAlias = alias;
+                return this.dynamicQuery;
             }
 
             /// <summary>
@@ -1706,10 +1708,10 @@ namespace EntitySpaces.DynamicQuery
             /// emps.Query.es.WithRollup = true;
             /// </code>
             /// </example>
-            public bool WithRollup
+            public esDynamicQuerySerializable WithRollup()
             {
-                get { return this.dynamicQuery.withRollup; }
-                set { this.dynamicQuery.withRollup = value; }
+                this.dynamicQuery.withRollup = true;
+                return this.dynamicQuery;
             }
 
             /// <summary>

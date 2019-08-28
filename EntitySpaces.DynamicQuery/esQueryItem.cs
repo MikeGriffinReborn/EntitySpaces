@@ -90,7 +90,7 @@ namespace EntitySpaces.DynamicQuery
             this.query = query;
             this.Column.Query = query;
             this.Column.Name = columnName;
-            this.Column.Query.es.JoinAlias = query.es.JoinAlias;
+            this.Column.Query.es.JoinAlias(query.joinAlias);
             this.Column.Datatype = datatype;
         }
 

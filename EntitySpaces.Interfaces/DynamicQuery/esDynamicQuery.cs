@@ -333,9 +333,9 @@ namespace EntitySpaces.Interfaces
                 _selectAll();
             }
 
-            if (es.QuerySource == null || es.QuerySource.Length == 0)
+            if (this.querySource == null || this.querySource.Length == 0)
             {
-                es.QuerySource = providerMetadata.Source;
+                this.es.QuerySource(providerMetadata.Source);
             }
         }
 

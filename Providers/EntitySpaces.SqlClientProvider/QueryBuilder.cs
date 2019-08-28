@@ -55,7 +55,7 @@ namespace EntitySpaces.SqlClientProvider
         {
             bool paging = false;
 
-            if (query.es.PageNumber.HasValue && query.es.PageSize.HasValue)
+            if (query.pageNumber.HasValue && query.pageSize.HasValue)
                 paging = true;
 
             IDynamicQuerySerializableInternal iQuery = query as IDynamicQuerySerializableInternal;
@@ -73,8 +73,8 @@ namespace EntitySpaces.SqlClientProvider
 
             if (paging)
             {
-                int begRow = ((query.es.PageNumber.Value - 1) * query.es.PageSize.Value) + 1;
-                int endRow = begRow + (query.es.PageSize.Value - 1);
+                int begRow = ((query.pageNumber.Value - 1) * query.pageSize.Value) + 1;
+                int endRow = begRow + (query.pageSize.Value - 1);
 
                 // The WITH statement
                 sql += "WITH [withStatement] AS (";
@@ -188,7 +188,7 @@ namespace EntitySpaces.SqlClientProvider
                     sql += " " + iQuery.JoinAlias;
                 }
 
-                if (query.es.WithNoLock == true)
+                if (query.withNoLock == true)
                 {
                     sql += " WITH (NOLOCK)";
                 }
@@ -222,8 +222,8 @@ namespace EntitySpaces.SqlClientProvider
 
             IDynamicQuerySerializableInternal iQuery = query as IDynamicQuerySerializableInternal;
 
-            if (query.es.Distinct) sql += " DISTINCT ";
-            if (query.es.Top >= 0) sql += " TOP " + query.es.Top.ToString() + " ";
+            if (query.distinct) sql += " DISTINCT ";
+            if (query.top >= 0) sql += " TOP " + query.top.ToString() + " ";
 
             if (iQuery.InternalSelectColumns != null)
             {
@@ -267,17 +267,17 @@ namespace EntitySpaces.SqlClientProvider
                 sql += " ";
             }
 
-            if (query.es.CountAll)
+            if (query.countAll)
             {
                 selectAll = false;
 
                 sql += comma;
                 sql += "COUNT(*)";
 
-                if (query.es.CountAllAlias != null)
+                if (query.countAllAlias != null)
                 {
                     // Need DBMS string delimiter here
-                    sql += " AS " + Delimiters.StringOpen + query.es.CountAllAlias + Delimiters.StringClose;
+                    sql += " AS " + Delimiters.StringOpen + query.countAllAlias + Delimiters.StringClose;
                 }
             }
 
@@ -323,7 +323,7 @@ namespace EntitySpaces.SqlClientProvider
 
                     sql += " " + iSubQuery.JoinAlias;
 
-                    if (query.es.WithNoLock == true)
+                    if (query.withNoLock == true)
                     {
                         sql += " WITH (NOLOCK)";
                     }
@@ -729,7 +729,7 @@ namespace EntitySpaces.SqlClientProvider
                     comma = ",";
                 }
 
-                if (query.es.WithRollup)
+                if (query.withRollup)
                 {
                     sql += " WITH ROLLUP";
                 }
@@ -1184,7 +1184,7 @@ namespace EntitySpaces.SqlClientProvider
 
         protected static string GetColumnName(esColumnItem column)
         {
-            if (column.Query == null || column.Query.es.JoinAlias == " ")
+            if (column.Query == null || column.Query.joinAlias == " ")
             {
                 return Delimiters.ColumnOpen + column.Name + Delimiters.ColumnClose;
             }
@@ -1194,7 +1194,7 @@ namespace EntitySpaces.SqlClientProvider
 
                 if (iQuery.IsInSubQuery)
                 {
-                    return column.Query.es.JoinAlias + "." + Delimiters.ColumnOpen + column.Name + Delimiters.ColumnClose;
+                    return column.Query.joinAlias + "." + Delimiters.ColumnOpen + column.Name + Delimiters.ColumnClose;
                 }
                 else
                 {
