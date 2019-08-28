@@ -6,7 +6,7 @@ EntitySpaces Studio has been updated to .NET 4.5 and is now available ...
 
 1. Install [EntitySpaces Studio](https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard/raw/master/EntitySpaces.Studio/EntitySpacesStudio_2019.0.0828.0.zip/ "Zip File")
 
-2. Install the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") for the SQL Server NuGet package into your Visual Studio project.\
+2. Install the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") for the SQL Server NuGet package into your Visual Studio project.
 
 ## Generating your Classes via EntitySpaces Studio
 It's very simple. You only need to execute two templates. The Custom classes are generated only once, that is where you can added custom code and overide EntitySpaces functionality if need be. The Generated classes are generated any time your database schema changes, you never edit these classes.
