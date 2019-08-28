@@ -328,44 +328,38 @@ Results:
 ```sql
 WITH [withStatement] AS 
 (
-    SELECT [errorlogid], 
-        [method], 
-        [message], 
-        Row_number() OVER
-        ( 
-            ORDER BY [dateoccurred] DESC
-        ) AS ESRN 
-    FROM [dbo].[errorlog]
-) 
+   SELECT [EmployeeID],[LastName],
+      ROW_NUMBER() OVER( ORDER BY [LastName] ASC) AS ESRN 
+	  FROM [Employees]
+)
 SELECT * 
 FROM [withStatement] 
-WHERE esrn BETWEEN 21 AND 40 
-ORDER BY esrn ASC 
+WHERE ESRN BETWEEN 21 AND 40 
+ORDER BY ESRN ASC
 ```
 
-#### Using Skip and Take for paging.
+Using Skip and Take for paging.
 Skip and Take Require Microsoft SQL 2012 at a minimum and is a much nicer syntax.
 
 ```c#
-ErrorLogQuery q = new ErrorLogQuery();
-q.Select(q.ErrorLogId, q.Method, q.Message)
-.OrderBy(q.DateOccurred.Descending).Skip(40).Take(20);
+EmployeesQuery q = new EmployeesQuery();
+q.Select(q.EmployeeID, q.LastName).OrderBy(q.LastName.Ascending).Skip(40).Take(20);
 
-ErrorLogCollection coll = new ErrorLogCollection();
-if(coll.Load(q))
+EmployeesCollection coll = new EmployeesCollection();
+if (coll.Load(q))
 {
-    // Then we loaded at least one record
+
 }
 ```
 
 Results:
 
 ```sql
-SELECT [ErrorLogId],[Method],[Message]  
-FROM [dbo].[ErrorLog] 
-ORDER BY [DateOccurred] DESC 
-OFFSET 40 ROWS 
-FETCH NEXT 20 ROWS ONLY
+SELECT [EmployeeID],[LastName]
+FROM [Employees] 
+ORDER BY [LastName] ASC 
+OFFSET 40 ROWS  
+FETCH NEXT 20 ROWS ONLY 
 ```
 
 #### With NoLock
