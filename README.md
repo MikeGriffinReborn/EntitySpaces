@@ -270,12 +270,12 @@ ORDER BY [LastName] DESC
 SelectAllExcept() is not really a SubQuery, just a convenient enhancement that allows you to select all except one or more listed columns.
 
 ```c#
-EmployeeQuery q = new EmployeeQuery();
 // We don't want to bring back the huge photo
+EmployeesQuery q = new EmployeesQuery();
 q.SelectAllExcept(q.Photo);
 
-EmployeeCollection coll = new EmployeeCollection();
-if(coll.Load(q))
+EmployeesCollection coll = new EmployeesCollection();
+if (coll.Load(q))
 {
     // Then we loaded at least one record
 }
@@ -284,8 +284,7 @@ if(coll.Load(q))
 Results:
 
 ```sql
-SELECT [EmployeeID],[LastName],[FirstName],[Supervisor],[Age]
-  -- not [Photo]
+SELECT [EmployeeID],[LastName],[FirstName],[Supervisor],[Age], -- ... not [Photo]
 FROM [dbo].[Employee]
 ```
 
