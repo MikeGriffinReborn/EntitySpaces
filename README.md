@@ -248,11 +248,10 @@ Use the native language syntax, it works as you expect it would.
 
 ```C#
 EmployeesQuery q = new EmployeesQuery();
-q.Where(q.EmployeeID == 1 && (q.LastName != "Smith")).es.Top(1);
+q.Where(q.ReportsTo.IsNotNull()).OrderBy(q.LastName.Descending).es.Top(1);
 
-// Use the single entity since we expect only 1 record
-Employees emp = new Employees();
-if(emp.Load(q))
+EmployeesCollection emp = new EmployeesCollection();
+if (emp.Load(q))
 {
     // Then we loaded at least one record
 }
@@ -263,7 +262,8 @@ Result:
 ```sql
 SELECT  TOP 1 * 
 FROM [Employees] 
-WHERE ([EmployeeID] = @EmployeeID1 AND [LastName] <> @LastName2)
+WHERE [ReportsTo] IS NOT NULL 
+ORDER BY [LastName] DESC
 ```
 
 #### SelectAllExcept
