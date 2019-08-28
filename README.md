@@ -389,6 +389,26 @@ INNER JOIN [Orders] o WITH (NOLOCK) ON e.[EmployeeID] = o.[EmployeeID]
 WHERE o.[Freight] > @Freight1
 ```
 
+### Distinct
+SelectT DISTINCT clause to retrieve the only distinct values in a specified list of columns.
+
+```c#
+EmployeesQuery e = new EmployeesQuery("e");
+
+// Employee's who have orders ...
+e.Select(e.EmployeeID)
+.InnerJoin<OrdersQuery>("o", out var o).On(e.EmployeeID == o.EmployeeID)
+.es.Distinct();
+```
+
+Results:
+
+```sql
+SELECT DISTINCT e.[EmployeeID]
+FROM [Employees] e 
+INNER JOIN [Orders] o ON e.[EmployeeID] = o.[EmployeeID]
+```
+
 #### Full Expressions in OrderBy and GroupBy
 This query doesn’t really make sense, but we wanted to show you what will is possible.
 
