@@ -512,6 +512,40 @@ WHERE EXISTS (
 )
 ```
 
+### The From() clause
+
+```c#
+OrderDetailsQuery od = null;
+
+OrdersQuery o = new OrdersQuery("o");
+o.Select(o.CustomerID, o.OrderDate, "<sub.OrderTotal>");
+o.From(() =>
+{
+    od = new OrderDetailsQuery("od");
+    od.Select(od.OrderID, (od.UnitPrice * od.Quantity).Sum().As("OrderTotal"))
+    .GroupBy(od.OrderID);
+    return od;
+}).As("sub");
+o.InnerJoin(o).On(o.OrderID == od.OrderID);
+
+OrdersCollection collection = new OrdersCollection();
+if(collection.Load(o))
+{
+    // Then we loaded at least one record
+}
+```
+
+```sql
+SELECT o.[CustomerID], o.[OrderDate], sub.OrderTotal
+FROM  
+(
+    SELECT od.[OrderID], SUM((od.[UnitPrice] * od.[Quantity])) AS 'OrderTotal'
+   FROM [Order Details] od
+   GROUP BY od.[OrderID]
+) AS sub
+INNER JOIN [Orders] o ON o.[OrderID] = sub.[OrderID]
+```
+
 #### Full Expressions in OrderBy and GroupBy
 This query doesn’t really make sense, but we wanted to show you what will is possible.
 
