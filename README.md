@@ -417,7 +417,7 @@ c2.Select(c2.PostalCode).Where(c2.Region == "OR").es.All();
 
 CustomersQuery c1 = new CustomersQuery("c1");
 c1.Select(c1.CustomerID, c1.CompanyName, c1.PostalCode);
-c1.Where(c1.PostalCode > c2); // NOTICE > 
+c1.Where(c1.PostalCode > c2); // NOTICE the > on the query C2
 
 CustomersCollection coll = new CustomersCollection();
 if(coll.Load(c1))
