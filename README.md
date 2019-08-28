@@ -316,9 +316,7 @@ This is the traditional way of paging and works on all versions of SQL Server. Y
 ```c#
 ErrorLogQuery q = new ErrorLogQuery();
 q.Select(q.ErrorLogId, q.Method, q.Message)
-.OrderBy(q.DateOccurred.Descending)
-.es.PageNumber(2)
-.es.PageSize(20);
+.OrderBy(q.DateOccurred.Descending).es.PageNumber(2).es.PageSize(20);
 
 ErrorLogCollection coll = new ErrorLogCollection();
 if(coll.Load(q))
@@ -353,8 +351,7 @@ Skip and Take Require Microsoft SQL 2012 at a minimum and is a much nicer syntax
 ```c#
 ErrorLogQuery q = new ErrorLogQuery();
 q.Select(q.ErrorLogId, q.Method, q.Message)
-.OrderBy(q.DateOccurred.Descending)
-.Skip(40).Take(20);
+.OrderBy(q.DateOccurred.Descending).Skip(40).Take(20);
 
 ErrorLogCollection coll = new ErrorLogCollection();
 if(coll.Load(q))
