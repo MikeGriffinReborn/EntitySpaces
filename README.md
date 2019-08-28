@@ -441,7 +441,7 @@ WHERE c1.[PostalCode] > ALL
 
 ### Nested SubQueries (literally) ...
 
-The In() clause ....
+#### The In() and NotIn() clauses ....
 
 ```c#
 OrdersQuery oQuery = new OrdersQuery("o");
@@ -478,6 +478,40 @@ INNER JOIN [Employees] e ON (e.[EmployeeID] = o.[EmployeeID] AND o.[EmployeeID] 
 )
 ```
 
+### The Exists() clause
+
+Exists evaluates to true, if the SubQuery returns a result set.
+
+```c#
+EmployeesQuery eq = new EmployeesQuery("e");
+eq.Select(eq.EmployeeID, eq.ReportsTo)
+.Where(eq.Exists(() =>
+{
+    // SubQuery of Employees with a null Supervisor column.
+    EmployeesQuery sq = new EmployeesQuery("s");
+    sq.Select(sq.EmployeeID).Where(sq.ReportsTo.IsNull()).es.Distinct();
+    return sq;
+}));
+
+EmployeesCollection coll = new EmployeesCollection();
+if (coll.Load(eq))
+{
+    // Then we loaded at least one record
+}
+```
+
+Results:
+
+```sql
+SELECT e.[EmployeeID],e.[Supervisor]  
+FROM [dbo].[Employee] e 
+WHERE EXISTS 
+(
+    SELECT DISTINCT s.[EmployeeID]  
+    FROM [dbo].[Employee] s 
+    WHERE s.[Supervisor] IS NULL
+)
+```
 
 #### Full Expressions in OrderBy and GroupBy
 This query doesn’t really make sense, but we wanted to show you what will is possible.
@@ -687,7 +721,6 @@ WHERE EXISTS
     FROM [dbo].[Employee] s 
     WHERE s.[Supervisor] IS NULL
 )
-Join(query).On(SubQuery)
 ```
 
 SubQueries cannot be used directly within a Join(SubQuery) clause, but they can be used within a Join(query).On(SubQuery) clause.
