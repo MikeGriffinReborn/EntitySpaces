@@ -503,13 +503,12 @@ if (coll.Load(eq))
 Results:
 
 ```sql
-SELECT e.[EmployeeID],e.[Supervisor]  
-FROM [dbo].[Employee] e 
-WHERE EXISTS 
-(
-    SELECT DISTINCT s.[EmployeeID]  
-    FROM [dbo].[Employee] s 
-    WHERE s.[Supervisor] IS NULL
+SELECT e.[EmployeeID], e.[ReportsTo]
+FROM [Employees] e
+WHERE EXISTS (
+    SELECT DISTINCT s.[EmployeeID]
+    FROM [Employees] s
+    WHERE s.[ReportsTo] IS NULL
 )
 ```
 
