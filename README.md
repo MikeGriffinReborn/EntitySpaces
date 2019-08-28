@@ -128,9 +128,7 @@ EntitySpaces will serialize any extra columns which are brought back by a query 
 EmployeesQuery e = new EmployeesQuery("e");
 e.Select
 (
-    e.EmployeeID, 
-    e.LastName, 
-    e.FirstName, 
+    e.EmployeeID, e.LastName, e.FirstName, 
     (e.LastName + ", " + e.FirstName).As("fullName") // extra column 
 )
 .OrderBy(e.LastName.Descending);
