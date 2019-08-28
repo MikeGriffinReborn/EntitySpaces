@@ -1047,12 +1047,44 @@ namespace EntitySpaces.DynamicQuery
         }
 
         /// <summary>
+        /// Embed a subquery to use in an EXISTS statement
+        /// </summary>
+        /// <param name="func">And embedded query</param>
+        /// <returns></returns>
+        public esComparison Exists(Func<esDynamicQuery> func)
+        {
+            esDynamicQuerySerializable query = func();
+            AddQueryToList(query);
+
+            esComparison where = new esComparison(query);
+            where.Operand = esComparisonOperand.Exists;
+            where.Value = query;
+            return where;
+        }
+
+        /// <summary>
         /// Pass in a subquery to use in an NOT EXISTS statement
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
         public esComparison NotExists(esDynamicQuerySerializable query)
         {
+            AddQueryToList(query);
+
+            esComparison where = new esComparison(query);
+            where.Operand = esComparisonOperand.NotExists;
+            where.Value = query;
+            return where;
+        }
+
+        /// <summary>
+        /// Embed a subquery to use in an EXISTS statement
+        /// </summary>
+        /// <param name="func">And embedded query</param>
+        /// <returns></returns>
+        public esComparison NotExists(Func<esDynamicQuery> func)
+        {
+            esDynamicQuerySerializable query = func();
             AddQueryToList(query);
 
             esComparison where = new esComparison(query);

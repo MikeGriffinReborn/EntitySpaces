@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
+using EntitySpaces.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5094,6 +5095,24 @@ namespace EntitySpaces.DynamicQuery
         }
 
         /// <summary>
+        /// Allows you to pass in anonymous code containing the nested query via () =>
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public esComparison In(Func<esDynamicQuery> func)
+        {
+            esComparison comparison = new esComparison(this.query);
+            comparison.Operand = esComparisonOperand.In;
+            comparison.data.Column = this.Column;
+            comparison.SubOperators = this.SubOperators;
+            comparison.Value = func();
+
+            this.query.AddQueryToList((esDynamicQuery)comparison.Value);
+
+            return comparison;
+        }
+
+        /// <summary>
         /// Comparison ensuring that this column is NOT IN a list of values.
         /// See <see cref="esComparisonOperand"/> Enumeration.
         /// </summary>
@@ -5161,6 +5180,24 @@ namespace EntitySpaces.DynamicQuery
             comparison.Value = subQuery;
 
             this.query.AddQueryToList(subQuery);
+
+            return comparison;
+        }
+
+        /// <summary>
+        /// Allows you to pass in anonymous code containing the nested query via () =>
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public esComparison NotIn(Func<esDynamicQuery> func)
+        {
+            esComparison comparison = new esComparison(this.query);
+            comparison.Operand = esComparisonOperand.NotIn;
+            comparison.data.Column = this.Column;
+            comparison.SubOperators = this.SubOperators;
+            comparison.Value = func();
+
+            this.query.AddQueryToList((esDynamicQuery)comparison.Value);
 
             return comparison;
         }

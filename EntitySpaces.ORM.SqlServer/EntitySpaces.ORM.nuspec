@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>EntitySpaces.ORM.SqlServer</id>
-    <version>2019.8.26.0</version>
+    <version>2019.8.27.1</version>
     <authors>EntitySpaces.ORM.SqlServer</authors>
     <owners>EntitySpaces.ORM.SqlServer</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

@@ -41,6 +41,9 @@ namespace ConsoleApp
             GroupBy();
             Concatenation();
             Paging();
+            WhereExists();
+            CorrelatedSubQuery();
+            CorrelatedSubQueryEmbeddedSubQuery();
             SelectAllExcept();
             SelectDistinctTop();
             AliasColumn();
@@ -116,22 +119,20 @@ namespace ConsoleApp
         static private void Query_Join()
         {
             OrdersQuery oq = new OrdersQuery("oq");
-            OrderDetailsQuery odq = new OrderDetailsQuery("odq");
-            oq.Select(oq.OrderID, odq.Discount);
-            oq.InnerJoin(odq).On(oq.OrderID == odq.OrderID);
-            oq.Where(odq.Discount > 0);
+            oq.InnerJoin<OrderDetailsQuery>("odq", out var odq).On(oq.OrderID == odq.OrderID)
+            .InnerJoin(odq).On(oq.OrderID == odq.OrderID)
+            .Where(odq.Discount > 0)
+            .Select(oq.OrderID, odq.Discount);
 
             OrdersCollection coll = new OrdersCollection();
             if (coll.Load(oq))
             {
+                // Lazy loads ...
                 foreach (Orders order in coll)
                 {
-                    int? id = order.OrderID;
-                    var discount = order.GetColumn("Discount");
-                    
-                    // Lazy loads ...
                     /*
-                    foreach (OrderDetails orderItem in order.OrderDetailsCollectionByOrderID)
+                    // LAZY LOADS
+                    foreach (OrderDetails orderItem in order.OrderDetailsCollection)
                     {
 
                     }
@@ -305,6 +306,29 @@ namespace ConsoleApp
             }
         }
 
+        static private void WhereExists()
+        {
+            // Find all Employees who have no ReportsTo. We could do this via a simple
+            // join as well but are demonstrating the Exists() functionality
+            EmployeesQuery eq = new EmployeesQuery("e");
+            eq.Select(eq.EmployeeID, eq.ReportsTo)
+            .Where(eq.Exists(() =>
+                {
+                    EmployeesQuery subquery = new EmployeesQuery("s");
+                    subquery.Select(subquery.EmployeeID)
+                    .Where(subquery.ReportsTo.IsNotNull() && subquery.EmployeeID == eq.EmployeeID)
+                    .es.Distinct = true;
+                    return subquery;
+                })
+            ).es.Distinct = true;
+
+            EmployeesCollection coll = new EmployeesCollection();
+            if (coll.Load(eq))
+            {
+                // Then we loaded at least one record
+            }
+        }
+
         static private void AliasColumn()
         {
             EmployeesQuery q = new EmployeesQuery("e");
@@ -371,17 +395,34 @@ namespace ConsoleApp
             OrderDetailsQuery oiq = new OrderDetailsQuery("oi");
             ProductsQuery pq = new ProductsQuery("p");
 
-            oiq.Select(
-                oiq.OrderID,
-                (oiq.Quantity * oiq.UnitPrice).Sum().As("Total")
-            );
-            oiq.Where(oiq.ProductID
+            oiq.Select(oiq.OrderID, (oiq.Quantity * oiq.UnitPrice).Sum().As("Total"))
+            .Where(oiq.ProductID
                 .In(
-                    pq.Select(pq.ProductID)
-                    .Where(oiq.ProductID == pq.ProductID)
+                    pq.Select(pq.ProductID).Where(oiq.ProductID == pq.ProductID).es.Distinct = true
                 )
-            );
-            oiq.GroupBy(oiq.OrderID);
+            )
+            .GroupBy(oiq.OrderID);
+
+            OrderDetailsCollection coll = new OrderDetailsCollection();
+            if (coll.Load(oiq))
+            {
+
+            }
+        }
+
+        static private void CorrelatedSubQueryEmbeddedSubQuery()
+        {
+            OrderDetailsQuery oiq = new OrderDetailsQuery("oi");
+            oiq.Select(oiq.OrderID, (oiq.Quantity * oiq.UnitPrice).Sum().As("Total"))
+            .Where(oiq.ProductID.In(() =>
+                {
+                    ProductsQuery pq = new ProductsQuery("p");
+                    pq.Select(pq.ProductID).Where(oiq.ProductID == pq.ProductID)
+                    .es.Distinct = true;
+                    return pq;
+                })
+            )
+            .GroupBy(oiq.OrderID);
 
             OrderDetailsCollection coll = new OrderDetailsCollection();
             if (coll.Load(oiq))
