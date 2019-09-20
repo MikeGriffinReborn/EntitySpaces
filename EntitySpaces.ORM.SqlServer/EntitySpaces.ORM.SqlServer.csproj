@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyVersion>2019.08.28.0</AssemblyVersion>
-    <FileVersion>2019.08.28.0</FileVersion>
-    <Version>2019.08.28.0</Version>
+    <AssemblyVersion>2019.09.20.0</AssemblyVersion>
+    <FileVersion>2019.09.20.0</FileVersion>
+    <Version>2019.09.20.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>EntitySpaces in .NET Standard Mode for SQL Server (single assembly install)</Description>
     <PackageProjectUrl>https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard</PackageProjectUrl>
