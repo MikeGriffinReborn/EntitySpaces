@@ -653,7 +653,7 @@ namespace EntitySpaces.Core
         {
             Dictionary<string, object> extraColumns = new Dictionary<string, object>();
 
-            if (this.currentValues != null)
+            if (this.currentValues != null && this.currentValues.Count > 0)
             {
                 esColumnMetadataCollection cols = this.es.Meta.Columns;
 
@@ -4590,19 +4590,10 @@ namespace EntitySpaces.Core
         [OnDeserialized]
         internal void OnDeserialized(StreamingContext context)
         {
-            this.m_modifiedColumns = tempModifiedColumns;
-            tempModifiedColumns = null;
-
-            this.rowState = tempRowState;
-
-            if (originalValues == null)
-            {
-                originalValues = new esSmartDictionary(currentValues);
-            }
+            // We no longer do anything here
         }
 
         [XmlIgnore]
-     // [DataMember(Name = "RowState", EmitDefaultValue = false)]
         private esDataRowState TempRowState
         {
             get { return es.RowState; }
