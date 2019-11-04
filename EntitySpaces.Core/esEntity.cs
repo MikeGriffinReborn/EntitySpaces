@@ -98,7 +98,7 @@ namespace EntitySpaces.Core
     [Serializable]
     [XmlType(IncludeInSchema = false)]
     [DataContract]
-    public abstract class esEntity : DynamicObject, IVisitable, IEditableObject, IEntity, ICommittable, INotifyPropertyChanged, IDataErrorInfo
+    public abstract class esEntity : /*DynamicObject,*/ IVisitable, IEditableObject, IEntity, ICommittable, INotifyPropertyChanged, IDataErrorInfo
 #if (WebBinding)
        , ICustomTypeDescriptor
 #endif
@@ -109,8 +109,19 @@ namespace EntitySpaces.Core
             currentValues.FirstAccess += new esSmartDictionary.esSmartDictionaryFirstAccessEventHandler(CurrentValues_OnFirstAccess);
         }
 
-        #region DynamicObject Stuff
+        public void HrydateFromDto(esSmartDto dto)
+        {
+            if (dto != null)
+            {
+                this.currentValues = dto.currentValues;
+                this.originalValues = dto.originalValues;
+                this.rowState = dto.rowState;
+                this.m_modifiedColumns = dto.m_modifiedColumns;
+            }
+        }
 
+        #region DynamicObject Stuff
+        /*
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override IEnumerable<string> GetDynamicMemberNames()
         {
@@ -199,7 +210,7 @@ namespace EntitySpaces.Core
         {
             return base.TryUnaryOperation(binder, out result);
         }
-
+        */
         #endregion
 
         /// <summary>

@@ -89,6 +89,8 @@ namespace EntitySpaces.Core
             this.entities.ListChanged += new ListChangedEventHandler(this.OnListChanged);
         }
 
+
+
         /// <summary>
         /// Called internally when debugging, allows you to easily view the collection while debugging
         /// </summary>

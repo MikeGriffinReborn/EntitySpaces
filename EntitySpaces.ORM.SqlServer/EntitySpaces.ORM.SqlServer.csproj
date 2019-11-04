@@ -86,7 +86,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="EntitySpaces.Core\" />
     <Folder Include="EntitySpaces.Interfaces\DynamicQuery\" />
     <Folder Include="EntitySpaces.Interfaces\Exceptions\" />
     <Folder Include="EntitySpaces.SqlClientProvider\" />
