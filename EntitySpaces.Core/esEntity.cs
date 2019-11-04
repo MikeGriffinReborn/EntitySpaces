@@ -98,7 +98,7 @@ namespace EntitySpaces.Core
     [Serializable]
     [XmlType(IncludeInSchema = false)]
     [DataContract]
-    public abstract class esEntity : /*DynamicObject,*/ IVisitable, IEditableObject, IEntity, ICommittable, INotifyPropertyChanged, IDataErrorInfo
+    public abstract class esEntity : DynamicObject, IVisitable, IEditableObject, IEntity, ICommittable, INotifyPropertyChanged, IDataErrorInfo
 #if (WebBinding)
        , ICustomTypeDescriptor
 #endif
@@ -121,7 +121,7 @@ namespace EntitySpaces.Core
         }
 
         #region DynamicObject Stuff
-        /*
+     
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override IEnumerable<string> GetDynamicMemberNames()
         {
@@ -210,7 +210,7 @@ namespace EntitySpaces.Core
         {
             return base.TryUnaryOperation(binder, out result);
         }
-        */
+   
         #endregion
 
         /// <summary>
