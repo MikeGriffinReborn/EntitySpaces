@@ -63,6 +63,7 @@ namespace EntitySpaces.SqlClientProvider
             string select = GetSelectStatement(std, query);
             string from = GetFromStatement(std, query);
             string join = GetJoinStatement(std, query);
+            string apply = GetApplyStatement(std, query);
             string where = GetComparisonStatement(std, query, iQuery.InternalWhereItems, " WHERE ");
             string groupBy = GetGroupByStatement(std, query);
             string having = GetComparisonStatement(std, query, iQuery.InternalHavingItems, " HAVING ");
@@ -79,7 +80,7 @@ namespace EntitySpaces.SqlClientProvider
                 // The WITH statement
                 sql += "WITH [withStatement] AS (";
                 sql += "SELECT " + select + ", ROW_NUMBER() OVER(" + orderBy + ") AS ESRN ";
-                sql += "FROM " + from + join + where + groupBy + ") ";
+                sql += "FROM " + from + join + apply + where + groupBy + ") ";
 
                 sql += "SELECT * FROM [withStatement] ";
 
@@ -138,7 +139,7 @@ namespace EntitySpaces.SqlClientProvider
                 sql += " ORDER BY " + GetPartitionOderByColumnNames(iQuery.PartitionByOrderByItems) + " ) AS ESRN FROM ";
 
                 // Normal query embedded here
-                sql += from + join + where + ") r WHERE ESRN <=" + iQuery.PartitionByTop + ") ij on ";
+                sql += from + join + apply + where + ") r WHERE ESRN <=" + iQuery.PartitionByTop + ") ij on ";
 
                 string and = " ";
                 foreach (esQueryItem item in iQuery.PartitionByDistinctColumns)
@@ -154,7 +155,7 @@ namespace EntitySpaces.SqlClientProvider
             }
             else
             {
-                sql += "SELECT " + select + " FROM " + from + join + where + setOperation + groupBy + having + orderBy;
+                sql += "SELECT " + select + " FROM " + from + join +  apply + where + setOperation + groupBy + having + orderBy;
             }
 
             if (iQuery.Skip.HasValue || iQuery.Take.HasValue)
@@ -333,6 +334,49 @@ namespace EntitySpaces.SqlClientProvider
                     sql += GetComparisonStatement(std, query, joinData.WhereItems, String.Empty);
                 }
             }
+            return sql;
+        }
+
+        protected static string GetApplyStatement(StandardProviderParameters std, esDynamicQuerySerializable query)
+        {
+            string sql = String.Empty;
+
+            IDynamicQuerySerializableInternal iQuery = query as IDynamicQuerySerializableInternal;
+
+            if (iQuery.InternalApplyItems != null)
+            {
+                foreach (esApplyItem applyItem in iQuery.InternalApplyItems)
+                {
+                    esApplyItem.esApplyItemData applyData = (esApplyItem.esApplyItemData)applyItem;
+
+                    switch (applyData.ApplyType)
+                    {
+                        case esApplyType.CrossApply:
+                            sql += " CROSS APPLY ";
+                            break;
+
+                        case esApplyType.OuterApply:
+                            sql += " OUTER APPLY ";
+                            break;
+                    }
+
+                    IDynamicQuerySerializableInternal iSubQuery = applyData.Query as IDynamicQuerySerializableInternal;
+
+                    iSubQuery.IsInSubQuery = true;
+
+                    sql += "(";
+                    sql += BuildQuery(std, applyData.Query);
+                    sql += ")";
+
+                    if (iSubQuery.SubQueryAlias != " ")
+                    {
+                        sql += " AS " + applyData.Query.joinAlias;
+                    }
+
+                    iSubQuery.IsInSubQuery = false;
+                }
+            }
+
             return sql;
         }
 

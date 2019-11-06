@@ -422,6 +422,25 @@ namespace EntitySpaces.DynamicQuery
     };
 
     /// <summary>
+    /// The Type of Apply (Cross or Outer)
+    /// </summary>
+    public enum esApplyType
+    {
+        /// <summary>
+        /// Unassigned.
+        /// </summary>
+        Unassigned = 0,
+        /// <summary>
+        /// CROSS APPLY
+        /// </summary>
+        CrossApply,
+        /// <summary>
+        /// OUTER APPLY
+        /// </summary>
+        OuterApply
+    }
+
+    /// <summary>
     /// The type of Combination
     /// </summary>
     public enum esSetOperationType

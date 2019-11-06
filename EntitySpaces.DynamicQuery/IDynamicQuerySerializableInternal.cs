@@ -114,6 +114,12 @@ namespace EntitySpaces.DynamicQuery
         List<esJoinItem> InternalJoinItems { get; }
 
         /// <summary>
+        /// List&lt;esApplyItem&gt; InternalApplyItems.
+        /// </summary>
+        /// <returns>List&lt;esApplyItem&gt; InternalApplyItems.</returns>
+        List<esApplyItem> InternalApplyItems { get; }
+
+        /// <summary>
         /// List&lt;esComparison&gt; InternalWhereItems.
         /// </summary>
         /// <returns>List&lt;esComparison&gt; InternalWhereItems.</returns>

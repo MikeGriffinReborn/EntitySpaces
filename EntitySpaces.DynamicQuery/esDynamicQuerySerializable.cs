@@ -646,6 +646,126 @@ namespace EntitySpaces.DynamicQuery
         }
 
         /// <summary>
+        /// Creates a CROSS APPLY 
+        /// </summary>
+        /// <param name="applyQuery">This query represents the query you want to CROSS APPLY</param>
+        /// <returns>An esJoinItem, which you then call the On() method.</returns>
+        public esDynamicQuerySerializable CrossApply(esDynamicQuerySerializable applyQuery)
+        {
+            if (applyQuery.joinAlias == " ")
+            {
+                throw new Exception("Your DynamicQuery must have an Alias, use the alternate constructor");
+            }
+
+            if (this.applyItems == null)
+            {
+                this.applyItems = new List<esApplyItem>();
+            }
+
+            dynamic thisAsDynamic = (dynamic)this;
+            thisAsDynamic[applyQuery.joinAlias] = applyQuery;
+
+            esApplyItem applyItem = new esApplyItem(this);
+            applyItem.data.Query = applyQuery;
+            applyItem.data.ApplyType = esApplyType.CrossApply;
+
+            this.applyItems.Add(applyItem);
+
+            AddQueryToList(applyQuery);
+
+            return this;
+        }
+
+        public esDynamicQuerySerializable CrossApply(Func<esDynamicQuery> func)
+        {
+            esDynamicQuerySerializable query = func();
+            return CrossApply(query);
+        }
+
+        public esDynamicQuerySerializable CrossApply<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuerySerializable, new()
+        {
+            esDynamicQuerySerializable theQuery = func();
+            query = (T)theQuery;
+            return CrossApply(theQuery);
+        }
+
+        /// <summary>
+        /// This method allows you to streamline the cross apply syntax
+        /// </summary>
+        /// <typeparam name="T">The DynamicQuery Class</typeparam>
+        /// <param name="alias">The desired alias</param>
+        /// <param name="query">The name of your output parameter</param>
+        /// <returns></returns>
+        public esDynamicQuerySerializable CrossApply<T>(string alias, out T query) where T : esDynamicQuerySerializable, new()
+        {
+            query = new T();
+            query.joinAlias = alias;
+            dynamic thisAsDynamic = (dynamic)this;
+            thisAsDynamic[alias] = query;
+            return CrossApply(query);
+        }
+
+        /// <summary>
+        /// Creates a OUTER APPLY 
+        /// </summary>
+        /// <param name="applyQuery">This query represents the query you want to OUTER APPLY</param>
+        /// <returns>An esJoinItem, which you then call the On() method.</returns>
+        public esDynamicQuerySerializable OuterApply(esDynamicQuerySerializable applyQuery)
+        {
+            if (applyQuery.joinAlias == " ")
+            {
+                throw new Exception("Your DynamicQuery must have an Alias, use the alternate constructor");
+            }
+
+            if (this.applyItems == null)
+            {
+                this.applyItems = new List<esApplyItem>();
+            }
+
+            dynamic thisAsDynamic = (dynamic)this;
+            thisAsDynamic[applyQuery.joinAlias] = applyQuery;
+
+            esApplyItem applyItem = new esApplyItem(this);
+            applyItem.data.Query = applyQuery;
+            applyItem.data.ApplyType = esApplyType.OuterApply;
+
+            this.applyItems.Add(applyItem);
+
+            AddQueryToList(applyQuery);
+
+            return this;
+        }
+
+        public esDynamicQuerySerializable OuterApply(Func<esDynamicQuery> func)
+        {
+            esDynamicQuerySerializable query = func();
+            return OuterApply(query);
+        }
+
+        public esDynamicQuerySerializable OuterApply<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuerySerializable, new()
+        {
+            esDynamicQuerySerializable theQuery = func();
+            query = (T)theQuery;
+            return OuterApply(theQuery);
+        }
+
+        /// <summary>
+        /// This method allows you to streamline the cross apply syntax
+        /// </summary>
+        /// <typeparam name="T">The DynamicQuery Class</typeparam>
+        /// <param name="alias">The desired alias</param>
+        /// <param name="query">The name of your output parameter</param>
+        /// <returns></returns>
+        public esDynamicQuerySerializable OuterApply<T>(string alias, out T query) where T : esDynamicQuerySerializable, new()
+        {
+            query = new T();
+            query.joinAlias = alias;
+            dynamic thisAsDynamic = (dynamic)this;
+            thisAsDynamic[alias] = query;
+            return OuterApply(query);
+        }
+
+        /// <summary>
         /// Allows you to pass in a SubQuery for your FROM statement
         /// </summary>
         /// <param name="fromQuery">The subquery to use as your FROM statement</param>
@@ -665,9 +785,14 @@ namespace EntitySpaces.DynamicQuery
         public esDynamicQuerySerializable From(Func<esDynamicQuery> func)
         {
             esDynamicQuerySerializable query = func();
-            this.fromQuery = query;
-            AddQueryToList(query);
-            return this;
+            return From(query);
+        }
+
+        public esDynamicQuerySerializable From<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuerySerializable, new()
+        {
+            esDynamicQuerySerializable theQuery = func();
+            query = (T)theQuery;
+            return From(theQuery);
         }
 
         /// <summary>
@@ -696,18 +821,14 @@ namespace EntitySpaces.DynamicQuery
         public esDynamicQuerySerializable Union(Func<esDynamicQuery> func)
         {
             esDynamicQuerySerializable query = func();
+            return Union(query);
+        }
 
-            esSetOperation setOperation = new esSetOperation(query);
-            setOperation.SetOperationType = esSetOperationType.Union;
-
-            if (setOperations == null)
-            {
-                setOperations = new List<esSetOperation>();
-            }
-
-            setOperations.Add(setOperation);
-
-            return this;
+        public esDynamicQuerySerializable Union<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuerySerializable, new()
+        {
+            esDynamicQuerySerializable theQuery = func();
+            query = (T)theQuery;
+            return Union(theQuery);
         }
 
         /// <summary>
@@ -736,18 +857,14 @@ namespace EntitySpaces.DynamicQuery
         public esDynamicQuerySerializable UnionAll(Func<esDynamicQuery> func)
         {
             esDynamicQuerySerializable query = func();
+            return UnionAll(query);
+        }
 
-            esSetOperation setOperation = new esSetOperation(query);
-            setOperation.SetOperationType = esSetOperationType.UnionAll;
-
-            if (setOperations == null)
-            {
-                setOperations = new List<esSetOperation>();
-            }
-
-            setOperations.Add(setOperation);
-
-            return this;
+        public esDynamicQuerySerializable UnionAll<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuerySerializable, new()
+        {
+            esDynamicQuerySerializable theQuery = func();
+            query = (T)theQuery;
+            return UnionAll(theQuery);
         }
 
         /// <summary>
@@ -776,18 +893,14 @@ namespace EntitySpaces.DynamicQuery
         public esDynamicQuerySerializable Intersect(Func<esDynamicQuery> func)
         {
             esDynamicQuerySerializable query = func();
+            return Intersect(query);
+        }
 
-            esSetOperation setOperation = new esSetOperation(query);
-            setOperation.SetOperationType = esSetOperationType.Intersect;
-
-            if (setOperations == null)
-            {
-                setOperations = new List<esSetOperation>();
-            }
-
-            setOperations.Add(setOperation);
-
-            return this;
+        public esDynamicQuerySerializable Intersect<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuerySerializable, new()
+        {
+            esDynamicQuerySerializable theQuery = func();
+            query = (T)theQuery;
+            return Intersect(theQuery);
         }
 
         /// <summary>
@@ -812,18 +925,14 @@ namespace EntitySpaces.DynamicQuery
         public esDynamicQuerySerializable Except(Func<esDynamicQuery> func)
         {
             esDynamicQuerySerializable query = func();
+            return Except(query);
+        }
 
-            esSetOperation setOperation = new esSetOperation(query);
-            setOperation.SetOperationType = esSetOperationType.Except;
-
-            if (setOperations == null)
-            {
-                setOperations = new List<esSetOperation>();
-            }
-
-            setOperations.Add(setOperation);
-
-            return this;
+        public esDynamicQuerySerializable Except<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuerySerializable, new()
+        {
+            esDynamicQuerySerializable theQuery = func();
+            query = (T)theQuery;
+            return Except(theQuery);
         }
 
         /// <summary>
@@ -1147,12 +1256,14 @@ namespace EntitySpaces.DynamicQuery
         public esComparison Exists(Func<esDynamicQuery> func)
         {
             esDynamicQuerySerializable query = func();
-            AddQueryToList(query);
+            return Exists(query);
+        }
 
-            esComparison where = new esComparison(query);
-            where.Operand = esComparisonOperand.Exists;
-            where.Value = query;
-            return where;
+        public esComparison Exists<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuerySerializable, new()
+        {
+            esDynamicQuerySerializable theQuery = func();
+            query = (T)theQuery;
+            return Exists(theQuery);
         }
 
         /// <summary>
@@ -2076,6 +2187,9 @@ namespace EntitySpaces.DynamicQuery
         [DataMember(Name = "SetOperations", Order = 106, EmitDefaultValue = false)]
         internal List<esSetOperation> setOperations;
 
+        [DataMember(Name = "ApplyItems", Order = 101, EmitDefaultValue = false)]
+        internal List<esApplyItem> applyItems;
+
         /// <summary>
         /// Used by derived classes
         /// </summary>
@@ -2239,6 +2353,11 @@ namespace EntitySpaces.DynamicQuery
         List<esJoinItem> IDynamicQuerySerializableInternal.InternalJoinItems
         {
             get { return this.joinItems; }
+        }
+
+        List<esApplyItem> IDynamicQuerySerializableInternal.InternalApplyItems
+        {
+            get { return this.applyItems; }
         }
 
         List<esComparison> IDynamicQuerySerializableInternal.InternalWhereItems

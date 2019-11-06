@@ -33,6 +33,7 @@
     <Compile Include="..\EntitySpaces.Core\IEntity.cs" Link="EntitySpaces.Core\IEntity.cs" />
     <Compile Include="..\EntitySpaces.Core\IEntityCollection.cs" Link="EntitySpaces.Core\IEntityCollection.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\enums.cs" Link="EntitySpaces.DynamicQuery\enums.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esApplyItem.cs" Link="EntitySpaces.DynamicQuery\esApplyItem.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esCase.cs" Link="EntitySpaces.DynamicQuery\esCase.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esCasts.cs" Link="EntitySpaces.DynamicQuery\esCasts.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esColumnItem.cs" Link="EntitySpaces.DynamicQuery\esColumnItem.cs" />
