@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
+using static EntitySpaces.Core.esSmartDtoMap;
 
 namespace EntitySpaces.Core
 {
@@ -23,6 +24,7 @@ namespace EntitySpaces.Core
                 this.rowState = entity.rowState;
                 this.m_modifiedColumns = entity.m_modifiedColumns;
             }
+                
         }
 
         public List<string> GetModifiedColumns()
@@ -50,13 +52,41 @@ namespace EntitySpaces.Core
             }
         }
 
+        private Dictionary<string, string> Getters
+        {
+            get
+            {
+                if (getters == null)
+                {
+                    getters = GetMap().getters;
+                }
+
+                return getters;
+            }
+        }
+
+        protected T GetValue<T>([CallerMemberName] string propertyName = null)
+        {
+            if (!FieldsExists(this)) return default(T);
+
+            currentValues.TryGetValue(Getters[propertyName], out var o);
+
+            if (o == null || o == DBNull.Value)
+                return default(T);
+            else
+            {
+                Type tType = typeof(T);
+                return (o is T) ? (T)o : (T)Convert.ChangeType(o, typeof(T));
+            }
+        }
+
         /// <summary>
         /// Called by all of the property setters
         /// </summary>
         /// <param name="columnName">The name of the column to set</param>
         /// <param name="data">the value to set it to</param>
         /// <returns>True if the value has truly changed</returns>
-        protected bool SetValue(object data, [CallerMemberName] string columnName = null)
+        protected bool SetValue(object data, [CallerMemberName] string propertyName = null)
         {
             bool changed = true;
 
@@ -79,6 +109,7 @@ namespace EntitySpaces.Core
                     }
                 }
 
+                string columnName = Getters[propertyName];
                 if (!currentValues.ContainsKey(columnName))
                 {
                     currentValues[columnName] = data;
@@ -234,24 +265,6 @@ namespace EntitySpaces.Core
             }
         }
 
-
-        protected T GetValue<T>([CallerMemberName] string columnName = null)
-        {
-            if (!FieldsExists(this)) return default(T);
-
-            currentValues.TryGetValue(columnName, out var o);
-
-            if (o == null || o == DBNull.Value)
-                return default(T);
-            else
-            {
-                Type tType = typeof(T);
-                return (o is T) ? (T)o : (T)Convert.ChangeType(o, typeof(T));
-            }
-
-        }
-
-
         static private bool FieldsExists(esSmartDto entity)
         {
             if (entity.currentValues == null || entity.currentValues.Count == 0)
@@ -271,6 +284,7 @@ namespace EntitySpaces.Core
             return true;
         }
 
+        internal abstract protected esSmartDtoMap GetMap();
 
         /// <summary>
         /// A list of column names that have been modified (or that are dirty) since this entity was
@@ -283,6 +297,8 @@ namespace EntitySpaces.Core
         internal esSmartDictionary currentValues = new esSmartDictionary();
 
         internal esDataRowState rowState = esDataRowState.Unchanged;
+
+        internal Dictionary<string, string> getters;
 
         private bool applyDefaultsCalled;
     }

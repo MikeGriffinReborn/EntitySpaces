@@ -49,6 +49,7 @@ using EntitySpaces.DynamicQuery;
 using System.Reflection;
 using System.Dynamic;
 using System.Linq.Expressions;
+using static EntitySpaces.Core.esSmartDtoMap;
 
 namespace EntitySpaces.Core
 {
@@ -111,13 +112,35 @@ namespace EntitySpaces.Core
 
         public void HrydateFromDto(esSmartDto dto)
         {
-            if (dto != null)
+            if (dto == null) return;
+
+            if (dto.m_modifiedColumns != null && dto.m_modifiedColumns.Count > 0)
             {
-                this.currentValues = dto.currentValues;
-                this.originalValues = dto.originalValues;
                 this.rowState = dto.rowState;
-                this.m_modifiedColumns = dto.m_modifiedColumns;
+
+                esSmartDtoMap smartMap = dto.GetMap();
+                IReadOnlyDictionary<string, string> map = smartMap.GetMap(this.GetType());
+                if (map != null)
+                {
+                    if (m_modifiedColumns == null)
+                        m_modifiedColumns = new List<string>();
+
+                    foreach (string column in dto.m_modifiedColumns)
+                    {
+                        if(map.ContainsKey(column))
+                        {
+                            this.currentValues[column] = dto.currentValues[column];
+                            if (dto.originalValues != null && this.originalValues != null)
+                            {
+                                this.originalValues[column] = dto.originalValues[column];
+                            }
+                            this.m_modifiedColumns.Add(column);
+                        }
+                    }
+                }
             }
+
+            int i = 9;
         }
 
         #region DynamicObject Stuff
