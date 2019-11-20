@@ -15,7 +15,7 @@ namespace EntitySpaces.Core
             currentValues.FirstAccess += new esSmartDictionary.esSmartDictionaryFirstAccessEventHandler(CurrentValues_OnFirstAccess);
         }
 
-        protected void HrydateFromEntity(esEntity entity)
+        internal void HrydateFromEntity(esEntity entity)
         {
             if (entity != null)
             {

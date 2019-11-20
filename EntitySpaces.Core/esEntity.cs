@@ -110,37 +110,27 @@ namespace EntitySpaces.Core
             currentValues.FirstAccess += new esSmartDictionary.esSmartDictionaryFirstAccessEventHandler(CurrentValues_OnFirstAccess);
         }
 
-        public void HrydateFromDto(esSmartDto dto)
+        internal void HrydateFromDto(esSmartDto dto)
         {
             if (dto == null) return;
 
             if (dto.m_modifiedColumns != null && dto.m_modifiedColumns.Count > 0)
             {
-                this.rowState = dto.rowState;
+                //this.rowState = dto.rowState;
 
                 esSmartDtoMap smartMap = dto.GetMap();
                 IReadOnlyDictionary<string, string> map = smartMap.GetMap(this.GetType());
                 if (map != null)
                 {
-                    if (m_modifiedColumns == null)
-                        m_modifiedColumns = new List<string>();
-
                     foreach (string column in dto.m_modifiedColumns)
                     {
                         if(map.ContainsKey(column))
                         {
-                            this.currentValues[column] = dto.currentValues[column];
-                            if (dto.originalValues != null && this.originalValues != null)
-                            {
-                                this.originalValues[column] = dto.originalValues[column];
-                            }
-                            this.m_modifiedColumns.Add(column);
+                            this.SetColumn(column, dto.currentValues[column]);
                         }
                     }
                 }
             }
-
-            int i = 9;
         }
 
         #region DynamicObject Stuff
