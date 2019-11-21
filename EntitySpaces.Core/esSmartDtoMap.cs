@@ -11,12 +11,12 @@ namespace EntitySpaces.Core
        
         }
 
-        static public void CopyEntityToDto<S, D>(S src, D dst) where S : esEntity where D : esSmartDto
+        static public void Map(esEntity src, esSmartDto dst)// where S : esEntity where D : esSmartDto
         {
             dst.HrydateFromEntity(src);
         }
 
-        static public void CopyEntityToDtoCollection<S, D>(S src, D dst) where S : esEntityCollectionBase where D : List<esSmartDto> 
+        static public void Map(esEntityCollectionBase src, List<esSmartDto> dst) //where S : esEntityCollectionBase where D : List<esSmartDto> 
         {
             if (src != null && src.Count > 0 && dst != null && dst.Count > 0)
             {
@@ -35,29 +35,29 @@ namespace EntitySpaces.Core
             }
         }
 
-        static public void CopyDtoToEntity<S, D>(S src, D dst) where S : esSmartDto where D : esEntity
+        static public void Map(esSmartDto src, esEntity dst) //where S : esSmartDto where D : esEntity
         {
             dst.HrydateFromDto(src);
         }
 
-        static public void CopyDtoToEntityCollection<S, D>(S src, List<D> dst) where S : esEntityCollectionBase where D : esSmartDto
-        {
-            if (src != null && src.Count > 0 && dst != null && dst.Count > 0)
-            {
-                if (src.Count == dst.Count)
-                {
-                    IEnumerable iEnum = src as IEnumerable;
-                    var x = iEnum.GetEnumerator();
+        //static public void Map(esEntityCollectionBase src, List<esSmartDto> dst) //where S : esEntityCollectionBase where D : esSmartDto
+        //{
+        //    if (src != null && src.Count > 0 && dst != null && dst.Count > 0)
+        //    {
+        //        if (src.Count == dst.Count)
+        //        {
+        //            IEnumerable iEnum = src as IEnumerable;
+        //            var x = iEnum.GetEnumerator();
 
-                    int i = 0;
-                    foreach(esEntity entity in iEnum)
-                    {
-                        esSmartDto dto = dst[i++];
-                        entity.HrydateFromDto(dto);
-                    }
-                }
-            }
-        }
+        //            int i = 0;
+        //            foreach(esEntity entity in iEnum)
+        //            {
+        //                esSmartDto dto = dst[i++];
+        //                entity.HrydateFromDto(dto);
+        //            }
+        //        }
+        //    }
+        //}
 
         public void Create(Type entityType,
             params (string dtoPropertyName, string dtoColumnName, (Type entWriteType, string entWriteColumn)[] writes)[] entries)
