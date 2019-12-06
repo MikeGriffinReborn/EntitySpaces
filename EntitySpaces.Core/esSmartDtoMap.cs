@@ -40,24 +40,17 @@ namespace EntitySpaces.Core
             dst.HrydateFromDto(src);
         }
 
-        //static public void Map(esEntityCollectionBase src, List<esSmartDto> dst) //where S : esEntityCollectionBase where D : esSmartDto
-        //{
-        //    if (src != null && src.Count > 0 && dst != null && dst.Count > 0)
-        //    {
-        //        if (src.Count == dst.Count)
-        //        {
-        //            IEnumerable iEnum = src as IEnumerable;
-        //            var x = iEnum.GetEnumerator();
+        public string PropertyToSqlColumn(string propertyName)
+        {
+            string sqlColumn = null;
 
-        //            int i = 0;
-        //            foreach(esEntity entity in iEnum)
-        //            {
-        //                esSmartDto dto = dst[i++];
-        //                entity.HrydateFromDto(dto);
-        //            }
-        //        }
-        //    }
-        //}
+            if(getters.ContainsKey(propertyName))
+            {
+                sqlColumn = getters[propertyName];
+            }
+
+            return sqlColumn;
+        }
 
         public void Create(Type entityType,
             params (string dtoPropertyName, string dtoColumnName, (Type entWriteType, string entWriteColumn)[] writes)[] entries)
@@ -104,7 +97,7 @@ namespace EntitySpaces.Core
         private Dictionary<string, Dictionary<string, string>> writeMap = new Dictionary<string, Dictionary<string, string>>();
 
         // Used during GetValue()/SetValue() only
-        internal Dictionary<string, string> getters = new Dictionary<string, string>();
+        internal Dictionary<string, string> getters = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
         internal IReadOnlyDictionary<string, string> GetMap(Type type)
         {
