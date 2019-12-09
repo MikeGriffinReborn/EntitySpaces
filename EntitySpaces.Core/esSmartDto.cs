@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Text;
 using static EntitySpaces.Core.esSmartDtoMap;
 
@@ -347,26 +348,37 @@ namespace EntitySpaces.Core
 
         private dynamic _isDirty;
 
+        [IgnoreDataMember]
         public dynamic IsDirty
         {
             get
             {
-                if (_isDirty == null)
+                try
                 {
-                    var dict = new Dictionary<string, Func<bool>>();
-
-                    foreach (PropertyInfo prop in GetClassType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+                    if (_isDirty == null)
                     {
-                        dict[prop.Name] = () =>
+                        var dict = new Dictionary<string, Func<bool>>();
+
+                        foreach (PropertyInfo prop in GetClassType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
                         {
-                            return _isDirtyFunc(prop.Name);
-                        };
+                            dict[prop.Name] = () =>
+                            {
+                                return _isDirtyFunc(prop.Name);
+                            };
+                        }
+
+                        this._isDirty = (dynamic)new esIsDirty(dict);
                     }
 
-                    this._isDirty = (dynamic)new esIsDirty(dict);
+                    return _isDirty;
                 }
-
-                return _isDirty;
+                catch 
+                {
+                    // Fix swagger startup error
+                    var dict = new Dictionary<string, Func<bool>>();
+                    this._isDirty = (dynamic)new esIsDirty(dict);
+                    return _isDirty;
+                }
             }
         }
 
