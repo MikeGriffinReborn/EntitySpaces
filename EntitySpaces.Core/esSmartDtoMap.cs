@@ -11,12 +11,12 @@ namespace EntitySpaces.Core
        
         }
 
-        static public void Map(esEntity src, esSmartDto dst)// where S : esEntity where D : esSmartDto
+        static public void Map(esEntity src, esSmartDto dst)
         {
             dst.HrydateFromEntity(src);
         }
 
-        static public void Map(esEntityCollectionBase src, List<esSmartDto> dst) //where S : esEntityCollectionBase where D : List<esSmartDto> 
+        static public void Map<T>(esEntityCollectionBase src, List<T> dst) 
         {
             if (src != null && src.Count > 0 && dst != null && dst.Count > 0)
             {
@@ -28,14 +28,13 @@ namespace EntitySpaces.Core
                     int i = 0;
                     foreach (esEntity entity in iEnum)
                     {
-                        esSmartDto dto = dst[i++];
+                        esSmartDto dto = dst[i++] as esSmartDto;
                         dto.HrydateFromEntity(entity);
                     }
                 }
             }
         }
-
-        static public void Map(esSmartDto src, esEntity dst) //where S : esSmartDto where D : esEntity
+        static public void Map(esSmartDto src, esEntity dst) 
         {
             dst.HrydateFromDto(src);
         }
