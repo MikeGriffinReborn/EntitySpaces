@@ -1,6 +1,8 @@
 ﻿using EntitySpaces.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using static EntitySpaces.Core.esSmartDtoMap;
@@ -286,6 +288,8 @@ namespace EntitySpaces.Core
 
         internal abstract protected esSmartDtoMap GetMap();
 
+        internal abstract protected Type GetClassType();
+
         /// <summary>
         /// A list of column names that have been modified (or that are dirty) since this entity was
         /// retrieved from the database or since it was instantied if created new.
@@ -301,5 +305,71 @@ namespace EntitySpaces.Core
         internal Dictionary<string, string> getters;
 
         private bool applyDefaultsCalled;
+
+        #region IsDirty
+
+        private sealed class esIsDirty : DynamicObject
+        {
+            private readonly Dictionary<string, Func<bool>> _properties;
+
+            public esIsDirty(Dictionary<string, Func<bool>> properties)
+            {
+                _properties = properties;
+            }
+
+            public override bool TryGetMember(GetMemberBinder binder, out object result)
+            {
+                if (_properties.ContainsKey(binder.Name))
+                {
+                    result = _properties[binder.Name];
+                    return true;
+                }
+                else
+                {
+                    result = null;
+                    return false;
+                }
+            }
+
+            public override bool TrySetMember(SetMemberBinder binder, object value)
+            {
+                throw new Exception("You cannot 'set' the " + binder.Name + " property");
+            }
+        }
+
+        protected bool _isDirtyFunc(string property)
+        {
+            if (m_modifiedColumns == null || m_modifiedColumns.Count == 0) return false;
+
+            string sqlColumn = this.GetMap().PropertyToSqlColumn(property);
+            return m_modifiedColumns.Contains(sqlColumn);
+        }
+
+        private dynamic _isDirty;
+
+        public dynamic IsDirty
+        {
+            get
+            {
+                if (_isDirty == null)
+                {
+                    var dict = new Dictionary<string, Func<bool>>();
+
+                    foreach (PropertyInfo prop in GetClassType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+                    {
+                        dict[prop.Name] = () =>
+                        {
+                            return _isDirtyFunc(prop.Name);
+                        };
+                    }
+
+                    this._isDirty = (dynamic)new esIsDirty(dict);
+                }
+
+                return _isDirty;
+            }
+        }
+
+        #endregion
     }
 }
