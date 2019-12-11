@@ -1405,7 +1405,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        [CLSCompliant(false)]
+       
         protected System.UInt32? GetSystemUInt32(string columnName)
         {
             if (!FieldsExists(this)) return null; ;
@@ -1883,7 +1883,7 @@ namespace EntitySpaces.Core
         /// This is used internally to get type specific column values for a row.
         /// </summary>
         /// <param name="columnName">The name of the column in the row</param>
-        [CLSCompliant(false)]
+       
         protected System.SByte? GetSystemSByte(string columnName)
         {
             if (!FieldsExists(this)) return null;
@@ -1902,7 +1902,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        [CLSCompliant(false)]
+       
         protected System.SByte GetSystemSByteRequired(string columnName)
         {
             object o = null;
@@ -1918,7 +1918,7 @@ namespace EntitySpaces.Core
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <param name="data">The value to set the column in the row</param>
-        [CLSCompliant(false)]
+       
         protected bool SetSystemSByte(string columnName, System.SByte? data)
         {
             return SetValue(columnName, data);

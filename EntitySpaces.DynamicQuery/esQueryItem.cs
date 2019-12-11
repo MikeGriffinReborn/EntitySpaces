@@ -258,13 +258,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esComparison operator >(esQueryItem item1, sbyte literal)
         {
             return GreaterThan(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator >(sbyte literal, esQueryItem item1)
         {
             return GreaterThan(item1, literal, esSystemType.SByte, false);
@@ -293,39 +293,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esComparison operator >(esQueryItem item1, ushort literal)
         {
             return GreaterThan(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator >(ushort literal, esQueryItem item1)
         {
             return GreaterThan(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esComparison operator >(esQueryItem item1, uint literal)
         {
             return GreaterThan(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator >(uint literal, esQueryItem item1)
         {
             return GreaterThan(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esComparison operator >(esQueryItem item1, ulong literal)
         {
             return GreaterThan(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator >(ulong literal, esQueryItem item1)
         {
             return GreaterThan(item1, literal, esSystemType.UInt64, false);
@@ -494,13 +494,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esComparison operator <(esQueryItem item1, sbyte literal)
         {
             return LessThan(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator <(sbyte literal, esQueryItem item1)
         {
             return LessThan(item1, literal, esSystemType.SByte, false);
@@ -529,39 +529,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esComparison operator <(esQueryItem item1, ushort literal)
         {
             return LessThan(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator <(ushort literal, esQueryItem item1)
         {
             return LessThan(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esComparison operator <(esQueryItem item1, uint literal)
         {
             return LessThan(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator <(uint literal, esQueryItem item1)
         {
             return LessThan(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esComparison operator <(esQueryItem item1, ulong literal)
         {
             return LessThan(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator <(ulong literal, esQueryItem item1)
         {
             return LessThan(item1, literal, esSystemType.UInt64, false);
@@ -730,13 +730,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esComparison operator <=(esQueryItem item1, sbyte literal)
         {
             return LessThanOrEqual(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator <=(sbyte literal, esQueryItem item1)
         {
             return LessThanOrEqual(item1, literal, esSystemType.SByte, false);
@@ -765,39 +765,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esComparison operator <=(esQueryItem item1, ushort literal)
         {
             return LessThanOrEqual(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator <=(ushort literal, esQueryItem item1)
         {
             return LessThanOrEqual(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esComparison operator <=(esQueryItem item1, uint literal)
         {
             return LessThanOrEqual(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator <=(uint literal, esQueryItem item1)
         {
             return LessThanOrEqual(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esComparison operator <=(esQueryItem item1, ulong literal)
         {
             return LessThanOrEqual(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator <=(ulong literal, esQueryItem item1)
         {
             return LessThanOrEqual(item1, literal, esSystemType.UInt64, false);
@@ -966,13 +966,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esComparison operator >=(esQueryItem item1, sbyte literal)
         {
             return GreaterThanOrEqual(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator >=(sbyte literal, esQueryItem item1)
         {
             return GreaterThanOrEqual(item1, literal, esSystemType.SByte, false);
@@ -1001,39 +1001,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esComparison operator >=(esQueryItem item1, ushort literal)
         {
             return GreaterThanOrEqual(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator >=(ushort literal, esQueryItem item1)
         {
             return GreaterThanOrEqual(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esComparison operator >=(esQueryItem item1, uint literal)
         {
             return GreaterThanOrEqual(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator >=(uint literal, esQueryItem item1)
         {
             return GreaterThanOrEqual(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esComparison operator >=(esQueryItem item1, ulong literal)
         {
             return GreaterThanOrEqual(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator >=(ulong literal, esQueryItem item1)
         {
             return GreaterThanOrEqual(item1, literal, esSystemType.UInt64, false);
@@ -1190,13 +1190,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esComparison operator ==(esQueryItem item1, sbyte literal)
         {
             return EqualOperator(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator ==(sbyte literal, esQueryItem item1)
         {
             return EqualOperator(item1, literal, esSystemType.SByte, false);
@@ -1225,39 +1225,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esComparison operator ==(esQueryItem item1, ushort literal)
         {
             return EqualOperator(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator ==(ushort literal, esQueryItem item1)
         {
             return EqualOperator(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esComparison operator ==(esQueryItem item1, uint literal)
         {
             return EqualOperator(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator ==(uint literal, esQueryItem item1)
         {
             return EqualOperator(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esComparison operator ==(esQueryItem item1, ulong literal)
         {
             return EqualOperator(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator ==(ulong literal, esQueryItem item1)
         {
             return EqualOperator(item1, literal, esSystemType.UInt64, false);
@@ -1415,13 +1415,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esComparison operator !=(esQueryItem item1, sbyte literal)
         {
             return NotEqualOperator(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator !=(sbyte literal, esQueryItem item1)
         {
             return NotEqualOperator(item1, literal, esSystemType.SByte, false);
@@ -1450,39 +1450,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esComparison operator !=(esQueryItem item1, ushort literal)
         {
             return NotEqualOperator(item1, literal, esSystemType.UInt16, true);
         }
         
-        [CLSCompliant(false)]
+       
         public static esComparison operator !=(ushort literal, esQueryItem item1)
         {
             return NotEqualOperator(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esComparison operator !=(esQueryItem item1, uint literal)
         {
             return NotEqualOperator(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator !=(uint literal, esQueryItem item1)
         {
             return NotEqualOperator(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esComparison operator !=(esQueryItem item1, ulong literal)
         {
             return NotEqualOperator(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator !=(ulong literal, esQueryItem item1)
         {
             return NotEqualOperator(item1, literal, esSystemType.UInt64, false);
@@ -1635,13 +1635,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator +(esQueryItem item1, sbyte literal)
         {
             return AddOperator(item1, literal, esSystemType.SByte, true);
         }
         
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator +(sbyte literal, esQueryItem item1)
         {
             return AddOperator(item1, literal, esSystemType.SByte, false);
@@ -1670,39 +1670,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator +(esQueryItem item1, ushort literal)
         {
             return AddOperator(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator +(ushort literal, esQueryItem item1)
         {
             return AddOperator(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator +(esQueryItem item1, uint literal)
         {
             return AddOperator(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator +(uint literal, esQueryItem item1)
         {
             return AddOperator(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator +(esQueryItem item1, ulong literal)
         {
             return AddOperator(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator +(ulong literal, esQueryItem item1)
         {
             return AddOperator(item1, literal, esSystemType.UInt64, false);
@@ -1853,13 +1853,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator -(esQueryItem item1, sbyte literal)
         {
             return SubtractOperator(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator -(sbyte literal, esQueryItem item1)
         {
             return SubtractOperator(item1, literal, esSystemType.SByte, false);
@@ -1888,39 +1888,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator -(esQueryItem item1, ushort literal)
         {
             return SubtractOperator(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator -(ushort literal, esQueryItem item1)
         {
             return SubtractOperator(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator -(esQueryItem item1, uint literal)
         {
             return SubtractOperator(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator -(uint literal, esQueryItem item1)
         {
             return SubtractOperator(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator -(esQueryItem item1, ulong literal)
         {
             return SubtractOperator(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator -(ulong literal, esQueryItem item1)
         {
             return SubtractOperator(item1, literal, esSystemType.UInt64, false);
@@ -2071,13 +2071,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator *(esQueryItem item1, sbyte literal)
         {
             return MultiplyOperator(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator *(sbyte literal, esQueryItem item1)
         {
             return MultiplyOperator(item1, literal, esSystemType.SByte, false);
@@ -2106,39 +2106,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator *(esQueryItem item1, ushort literal)
         {
             return MultiplyOperator(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator *(ushort literal, esQueryItem item1)
         {
             return MultiplyOperator(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator *(esQueryItem item1, uint literal)
         {
             return MultiplyOperator(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator *(uint literal, esQueryItem item1)
         {
             return MultiplyOperator(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator *(esQueryItem item1, ulong literal)
         {
             return MultiplyOperator(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator *(ulong literal, esQueryItem item1)
         {
             return MultiplyOperator(item1, literal, esSystemType.UInt64, false);
@@ -2289,13 +2289,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator /(esQueryItem item1, sbyte literal)
         {
             return DivideOperator(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator /(sbyte literal, esQueryItem item1)
         {
             return DivideOperator(item1, literal, esSystemType.SByte, false);
@@ -2324,39 +2324,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator /(esQueryItem item1, ushort literal)
         {
             return DivideOperator(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator /(ushort literal, esQueryItem item1)
         {
             return DivideOperator(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator /(esQueryItem item1, uint literal)
         {
             return DivideOperator(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator /(uint literal, esQueryItem item1)
         {
             return DivideOperator(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator /(esQueryItem item1, ulong literal)
         {
             return DivideOperator(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator /(ulong literal, esQueryItem item1)
         {
             return DivideOperator(item1, literal, esSystemType.UInt64, false);
@@ -2507,13 +2507,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator %(esQueryItem item1, sbyte literal)
         {
             return ModuloOperator(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator %(sbyte literal, esQueryItem item1)
         {
             return ModuloOperator(item1, literal, esSystemType.SByte, false);
@@ -2542,39 +2542,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator %(esQueryItem item1, ushort literal)
         {
             return ModuloOperator(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator %(ushort literal, esQueryItem item1)
         {
             return ModuloOperator(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator %(esQueryItem item1, uint literal)
         {
             return ModuloOperator(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator %(uint literal, esQueryItem item1)
         {
             return ModuloOperator(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator %(esQueryItem item1, ulong literal)
         {
             return ModuloOperator(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator %(ulong literal, esQueryItem item1)
         {
             return ModuloOperator(item1, literal, esSystemType.UInt64, false);
@@ -2700,13 +2700,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esComparison operator >(esQueryItem item1, sbyte? literal)
         {
             return GreaterThan(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator >(sbyte? literal, esQueryItem item1)
         {
             return GreaterThan(item1, literal, esSystemType.SByte, false);
@@ -2724,39 +2724,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esComparison operator >(esQueryItem item1, ushort? literal)
         {
             return GreaterThan(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator >(ushort? literal, esQueryItem item1)
         {
             return GreaterThan(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esComparison operator >(esQueryItem item1, uint? literal)
         {
             return GreaterThan(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator >(uint? literal, esQueryItem item1)
         {
             return GreaterThan(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esComparison operator >(esQueryItem item1, ulong? literal)
         {
             return GreaterThan(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator >(ulong? literal, esQueryItem item1)
         {
             return GreaterThan(item1, literal, esSystemType.UInt64, false);
@@ -2876,13 +2876,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esComparison operator <(esQueryItem item1, sbyte? literal)
         {
             return LessThan(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator <(sbyte? literal, esQueryItem item1)
         {
             return LessThan(item1, literal, esSystemType.SByte, false);
@@ -2900,39 +2900,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esComparison operator <(esQueryItem item1, ushort? literal)
         {
             return LessThan(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator <(ushort? literal, esQueryItem item1)
         {
             return LessThan(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esComparison operator <(esQueryItem item1, uint? literal)
         {
             return LessThan(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator <(uint? literal, esQueryItem item1)
         {
             return LessThan(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esComparison operator <(esQueryItem item1, ulong? literal)
         {
             return LessThan(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator <(ulong? literal, esQueryItem item1)
         {
             return LessThan(item1, literal, esSystemType.UInt64, false);
@@ -3052,13 +3052,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esComparison operator <=(esQueryItem item1, sbyte? literal)
         {
             return LessThanOrEqual(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator <=(sbyte? literal, esQueryItem item1)
         {
             return LessThanOrEqual(item1, literal, esSystemType.SByte, false);
@@ -3076,39 +3076,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esComparison operator <=(esQueryItem item1, ushort? literal)
         {
             return LessThanOrEqual(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator <=(ushort? literal, esQueryItem item1)
         {
             return LessThanOrEqual(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esComparison operator <=(esQueryItem item1, uint? literal)
         {
             return LessThanOrEqual(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator <=(uint? literal, esQueryItem item1)
         {
             return LessThanOrEqual(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esComparison operator <=(esQueryItem item1, ulong? literal)
         {
             return LessThanOrEqual(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator <=(ulong? literal, esQueryItem item1)
         {
             return LessThanOrEqual(item1, literal, esSystemType.UInt64, false);
@@ -3228,13 +3228,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esComparison operator >=(esQueryItem item1, sbyte? literal)
         {
             return GreaterThanOrEqual(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator >=(sbyte? literal, esQueryItem item1)
         {
             return GreaterThanOrEqual(item1, literal, esSystemType.SByte, false);
@@ -3252,39 +3252,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esComparison operator >=(esQueryItem item1, ushort? literal)
         {
             return GreaterThanOrEqual(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator >=(ushort? literal, esQueryItem item1)
         {
             return GreaterThanOrEqual(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esComparison operator >=(esQueryItem item1, uint? literal)
         {
             return GreaterThanOrEqual(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator >=(uint? literal, esQueryItem item1)
         {
             return GreaterThanOrEqual(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esComparison operator >=(esQueryItem item1, ulong? literal)
         {
             return GreaterThanOrEqual(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator >=(ulong? literal, esQueryItem item1)
         {
             return GreaterThanOrEqual(item1, literal, esSystemType.UInt64, false);
@@ -3404,13 +3404,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esComparison operator ==(esQueryItem item1, sbyte? literal)
         {
             return EqualOperator(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator ==(sbyte? literal, esQueryItem item1)
         {
             return EqualOperator(item1, literal, esSystemType.SByte, false);
@@ -3428,39 +3428,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esComparison operator ==(esQueryItem item1, ushort? literal)
         {
             return EqualOperator(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator ==(ushort? literal, esQueryItem item1)
         {
             return EqualOperator(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esComparison operator ==(esQueryItem item1, uint? literal)
         {
             return EqualOperator(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator ==(uint? literal, esQueryItem item1)
         {
             return EqualOperator(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esComparison operator ==(esQueryItem item1, ulong? literal)
         {
             return EqualOperator(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator ==(ulong? literal, esQueryItem item1)
         {
             return EqualOperator(item1, literal, esSystemType.UInt64, false);
@@ -3580,13 +3580,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esComparison operator !=(esQueryItem item1, sbyte? literal)
         {
             return NotEqualOperator(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator !=(sbyte? literal, esQueryItem item1)
         {
             return NotEqualOperator(item1, literal, esSystemType.SByte, false);
@@ -3604,39 +3604,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esComparison operator !=(esQueryItem item1, ushort? literal)
         {
             return NotEqualOperator(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator !=(ushort? literal, esQueryItem item1)
         {
             return NotEqualOperator(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esComparison operator !=(esQueryItem item1, uint? literal)
         {
             return NotEqualOperator(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator !=(uint? literal, esQueryItem item1)
         {
             return NotEqualOperator(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esComparison operator !=(esQueryItem item1, ulong? literal)
         {
             return NotEqualOperator(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esComparison operator !=(ulong? literal, esQueryItem item1)
         {
             return NotEqualOperator(item1, literal, esSystemType.UInt64, false);
@@ -3758,13 +3758,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator +(esQueryItem item1, sbyte? literal)
         {
             return AddOperator(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator +(sbyte? literal, esQueryItem item1)
         {
             return AddOperator(item1, literal, esSystemType.SByte, false);
@@ -3782,39 +3782,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator +(esQueryItem item1, ushort? literal)
         {
             return AddOperator(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator +(ushort? literal, esQueryItem item1)
         {
             return AddOperator(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator +(esQueryItem item1, uint? literal)
         {
             return AddOperator(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator +(uint? literal, esQueryItem item1)
         {
             return AddOperator(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator +(esQueryItem item1, ulong? literal)
         {
             return AddOperator(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator +(ulong? literal, esQueryItem item1)
         {
             return AddOperator(item1, literal, esSystemType.UInt64, false);
@@ -3934,13 +3934,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator -(esQueryItem item1, sbyte? literal)
         {
             return SubtractOperator(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator -(sbyte? literal, esQueryItem item1)
         {
             return SubtractOperator(item1, literal, esSystemType.SByte, false);
@@ -3958,39 +3958,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator -(esQueryItem item1, ushort? literal)
         {
             return SubtractOperator(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator -(ushort? literal, esQueryItem item1)
         {
             return SubtractOperator(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator -(esQueryItem item1, uint? literal)
         {
             return SubtractOperator(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator -(uint? literal, esQueryItem item1)
         {
             return SubtractOperator(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator -(esQueryItem item1, ulong? literal)
         {
             return SubtractOperator(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator -(ulong? literal, esQueryItem item1)
         {
             return SubtractOperator(item1, literal, esSystemType.UInt64, false);
@@ -4110,13 +4110,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator *(esQueryItem item1, sbyte? literal)
         {
             return MultiplyOperator(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator *(sbyte? literal, esQueryItem item1)
         {
             return MultiplyOperator(item1, literal, esSystemType.SByte, false);
@@ -4134,39 +4134,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator *(esQueryItem item1, ushort? literal)
         {
             return MultiplyOperator(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator *(ushort? literal, esQueryItem item1)
         {
             return MultiplyOperator(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator *(esQueryItem item1, uint? literal)
         {
             return MultiplyOperator(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator *(uint? literal, esQueryItem item1)
         {
             return MultiplyOperator(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator *(esQueryItem item1, ulong? literal)
         {
             return MultiplyOperator(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator *(ulong? literal, esQueryItem item1)
         {
             return MultiplyOperator(item1, literal, esSystemType.UInt64, false);
@@ -4286,13 +4286,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator /(esQueryItem item1, sbyte? literal)
         {
             return DivideOperator(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator /(sbyte? literal, esQueryItem item1)
         {
             return DivideOperator(item1, literal, esSystemType.SByte, false);
@@ -4310,39 +4310,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator /(esQueryItem item1, ushort? literal)
         {
             return DivideOperator(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator /(ushort? literal, esQueryItem item1)
         {
             return DivideOperator(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator /(esQueryItem item1, uint? literal)
         {
             return DivideOperator(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator /(uint? literal, esQueryItem item1)
         {
             return DivideOperator(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator /(esQueryItem item1, ulong? literal)
         {
             return DivideOperator(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator /(ulong? literal, esQueryItem item1)
         {
             return DivideOperator(item1, literal, esSystemType.UInt64, false);
@@ -4462,13 +4462,13 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.SByte
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator %(esQueryItem item1, sbyte? literal)
         {
             return ModuloOperator(item1, literal, esSystemType.SByte, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator %(sbyte? literal, esQueryItem item1)
         {
             return ModuloOperator(item1, literal, esSystemType.SByte, false);
@@ -4486,39 +4486,39 @@ namespace EntitySpaces.DynamicQuery
         }
 
         // esSystemType.UInt16
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator %(esQueryItem item1, ushort? literal)
         {
             return ModuloOperator(item1, literal, esSystemType.UInt16, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator %(ushort? literal, esQueryItem item1)
         {
             return ModuloOperator(item1, literal, esSystemType.UInt16, false);
         }
 
         // esSystemType.UInt32
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator %(esQueryItem item1, uint? literal)
         {
             return ModuloOperator(item1, literal, esSystemType.UInt32, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator %(uint? literal, esQueryItem item1)
         {
             return ModuloOperator(item1, literal, esSystemType.UInt32, false);
         }
 
         // esSystemType.UInt64
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator %(esQueryItem item1, ulong? literal)
         {
             return ModuloOperator(item1, literal, esSystemType.UInt64, true);
         }
 
-        [CLSCompliant(false)]
+       
         public static esQueryItem operator %(ulong? literal, esQueryItem item1)
         {
             return ModuloOperator(item1, literal, esSystemType.UInt64, false);
