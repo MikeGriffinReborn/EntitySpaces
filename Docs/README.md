@@ -1,4 +1,4 @@
-<img src="https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard/blob/master/logo.PNG" alt="EntitySpaces" width="531" height="268">
+<img src="https://repository-images.githubusercontent.com/194275145/55b5b080-1ccf-11ea-8609-15b9de0d2351" alt="EntitySpaces" width="531" height="268">
 
 EntitySpaces Studio has been updated to .NET 4.5 and is now available ...
 
@@ -9,7 +9,7 @@ EntitySpaces Studio has been updated to .NET 4.5 and is now available ...
 2. Install the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") for the SQL Server NuGet package into your Visual Studio project.
 
 ## Generating your Classes via EntitySpaces Studio
-It's very simple. You only need to execute two templates. The Custom classes are generated only once, that is where you can added custom code and overide EntitySpaces functionality if need be. The Generated classes are generated any time your database schema changes, you never edit these classes.
+It's very simple. You only need to execute two templates. The Custom classes are generated only once, that is where you can add custom code and overide EntitySpaces functionality if need be. The Generated classes are generated any time your database schema changes, you never edit these classes.
 
 However, first you will need to go to the "Settings" tab and then the "Connection" tab and connect to your database, there is a dialog box that can help you do that, it's very simple.
 
@@ -223,31 +223,31 @@ Use the native language syntax, it works as you expect it would.
 
 ### Sub Operators
 
-- ToUpper - Convert to lower case
-- ToLower - Left trim any leading spaces
-- LTrim - Left trim any trailing spaces
-- RTrim - - Right trim any trailing spaces
-- Trim - Trim both leading and trailing spaces
-- SubString - Return a sub-string
-- Coalesce - Return the first non null evaluating expression
-- Date - Returns only the date of a datetime type
-- DatePart - Returns the value of part of a datetime value.
-- Length - Return the length
-- Round - Rounds the numeric-expression to the desired places after the decimal point.
-- Avg - Average
-- Count - Count operator
-- Max - Maximum Value
-- Min - Minimum Value
-- StdDev - Standard Deviation
-- Var - Variance
-- Sum - Summation
-- Cast - SQL Cast
+- ToUpper() - Convert to lower case
+- ToLower() - Left trim any leading spaces
+- LTrim() - Left trim any trailing spaces
+- RTrim() - - Right trim any trailing spaces
+- Trim() - Trim both leading and trailing spaces
+- SubString() - Return a sub-string
+- Coalesce() - Return the first non null evaluating expression
+- Date() - Returns only the date of a datetime type
+- DatePart() - Returns the value of part of a datetime value.
+- Length() - Return the length
+- Round() - Rounds the numeric-expression to the desired places after the decimal point.
+- Avg() - Average
+- Count() - Count operator
+- Max() - Maximum Value
+- Min() - Minimum Value
+- StdDev() - Standard Deviation
+- Var() - Variance
+- Sum() - Summation
+- Cast() - SQL Cast
 
 ### More Samples
 
 #### Select Top
 
-```C#
+```c#
 EmployeesQuery q = new EmployeesQuery();
 q.Where(q.ReportsTo.IsNotNull()).OrderBy(q.LastName.Descending).es.Top(1);
 
@@ -452,9 +452,9 @@ oQuery.Select(oQuery.OrderID, oQuery.EmployeeID)
 {
     EmployeesQuery ee = new EmployeesQuery("ee");
     ee.InnerJoin<OrdersQuery>("eo", out var eo).On(ee.EmployeeID == eo.EmployeeID)
-        .InnerJoin<OrderDetailsQuery>("eod", out var eod).On(eo.OrderID == eod.OrderID)
-        .Select(eo.EmployeeID)
-        .es.Distinct();
+      .InnerJoin<OrderDetailsQuery>("eod", out var eod).On(eo.OrderID == eod.OrderID)
+      .Select(eo.EmployeeID)
+      .es.Distinct();
     return ee;
 }));
 
@@ -540,7 +540,7 @@ if(collection.Load(o))
 SELECT o.[CustomerID], o.[OrderDate], sub.OrderTotal
 FROM  
 (
-    SELECT od.[OrderID], SUM((od.[UnitPrice] * od.[Quantity])) AS 'OrderTotal'
+   SELECT od.[OrderID], SUM((od.[UnitPrice] * od.[Quantity])) AS 'OrderTotal'
    FROM [Order Details] od
    GROUP BY od.[OrderID]
 ) AS sub
@@ -656,11 +656,7 @@ OrderItemQuery oiq = new OrderItemQuery("oi");
 oq.Select(oq.CustID, oq.OrderDate, "<sub.OrderTotal>");
 oq.From
 (
-    oiq.Select
-    (
-        oiq.OrderID,
-        (oiq.UnitPrice * oiq.Quantity).Sum().As("OrderTotal")
-    )
+    oiq.Select(oiq.OrderID, (oiq.UnitPrice * oiq.Quantity).Sum().As("OrderTotal"))
     .GroupBy(oiq.OrderID)
 ).As("sub");
 oq.InnerJoin(oq).On(oq.OrderID == oiq.OrderID);
