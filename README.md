@@ -223,25 +223,25 @@ Use the native language syntax, it works as you expect it would.
 
 ### Sub Operators
 
-- ToUpper - Convert to lower case
-- ToLower - Left trim any leading spaces
-- LTrim - Left trim any trailing spaces
-- RTrim - - Right trim any trailing spaces
-- Trim - Trim both leading and trailing spaces
-- SubString - Return a sub-string
-- Coalesce - Return the first non null evaluating expression
-- Date - Returns only the date of a datetime type
-- DatePart - Returns the value of part of a datetime value.
-- Length - Return the length
-- Round - Rounds the numeric-expression to the desired places after the decimal point.
-- Avg - Average
-- Count - Count operator
-- Max - Maximum Value
-- Min - Minimum Value
-- StdDev - Standard Deviation
-- Var - Variance
-- Sum - Summation
-- Cast - SQL Cast
+- ToUpper() - Convert to lower case
+- ToLower() - Left trim any leading spaces
+- LTrim() - Left trim any trailing spaces
+- RTrim() - - Right trim any trailing spaces
+- Trim() - Trim both leading and trailing spaces
+- SubString() - Return a sub-string
+- Coalesce() - Return the first non null evaluating expression
+- Date() - Returns only the date of a datetime type
+- DatePart() - Returns the value of part of a datetime value.
+- Length() - Return the length
+- Round() - Rounds the numeric-expression to the desired places after the decimal point.
+- Avg() - Average
+- Count() - Count operator
+- Max() - Maximum Value
+- Min() - Minimum Value
+- StdDev() - Standard Deviation
+- Var() - Variance
+- Sum() - Summation
+- Cast() - SQL Cast
 
 ### More Samples
 
@@ -452,9 +452,9 @@ oQuery.Select(oQuery.OrderID, oQuery.EmployeeID)
 {
     EmployeesQuery ee = new EmployeesQuery("ee");
     ee.InnerJoin<OrdersQuery>("eo", out var eo).On(ee.EmployeeID == eo.EmployeeID)
-        .InnerJoin<OrderDetailsQuery>("eod", out var eod).On(eo.OrderID == eod.OrderID)
-        .Select(eo.EmployeeID)
-        .es.Distinct();
+      .InnerJoin<OrderDetailsQuery>("eod", out var eod).On(eo.OrderID == eod.OrderID)
+      .Select(eo.EmployeeID)
+      .es.Distinct();
     return ee;
 }));
 
@@ -540,7 +540,7 @@ if(collection.Load(o))
 SELECT o.[CustomerID], o.[OrderDate], sub.OrderTotal
 FROM  
 (
-    SELECT od.[OrderID], SUM((od.[UnitPrice] * od.[Quantity])) AS 'OrderTotal'
+   SELECT od.[OrderID], SUM((od.[UnitPrice] * od.[Quantity])) AS 'OrderTotal'
    FROM [Order Details] od
    GROUP BY od.[OrderID]
 ) AS sub
@@ -656,11 +656,7 @@ OrderItemQuery oiq = new OrderItemQuery("oi");
 oq.Select(oq.CustID, oq.OrderDate, "<sub.OrderTotal>");
 oq.From
 (
-    oiq.Select
-    (
-        oiq.OrderID,
-        (oiq.UnitPrice * oiq.Quantity).Sum().As("OrderTotal")
-    )
+    oiq.Select(oiq.OrderID, (oiq.UnitPrice * oiq.Quantity).Sum().As("OrderTotal"))
     .GroupBy(oiq.OrderID)
 ).As("sub");
 oq.InnerJoin(oq).On(oq.OrderID == oiq.OrderID);
