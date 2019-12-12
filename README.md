@@ -247,7 +247,7 @@ Use the native language syntax, it works as you expect it would.
 
 #### Select Top
 
-```C#
+```c#
 EmployeesQuery q = new EmployeesQuery();
 q.Where(q.ReportsTo.IsNotNull()).OrderBy(q.LastName.Descending).es.Top(1);
 
