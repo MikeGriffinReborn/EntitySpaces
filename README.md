@@ -1,4 +1,4 @@
-<img src="https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard/blob/master/logo.PNG" alt="EntitySpaces" width="531" height="268">
+<img src="https://repository-images.githubusercontent.com/194275145/55b5b080-1ccf-11ea-8609-15b9de0d2351" alt="EntitySpaces" width="531" height="268">
 
 EntitySpaces Studio has been updated to .NET 4.5 and is now available ...
 
