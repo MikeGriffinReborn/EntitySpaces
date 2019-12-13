@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
+using EntitySpaces.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -41,7 +42,7 @@ namespace EntitySpaces.DynamicQuery
     public class esJoinItem
     {
         [NonSerialized]
-        private esDynamicQuerySerializable parentQuery;
+        private esDynamicQuery parentQuery;
 
         /// <summary>
         /// The Constructor
@@ -54,7 +55,7 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// The Constructor
         /// </summary>
-        public esJoinItem(esDynamicQuerySerializable parentQuery)
+        public esJoinItem(esDynamicQuery parentQuery)
         {
             this.parentQuery = parentQuery;
         }
@@ -64,7 +65,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="items"></param>
         /// <returns></returns>
-        public esDynamicQuerySerializable On(params object[] items)
+        public esDynamicQuery On(params object[] items)
         {
             if (this.data.WhereItems == null)
             {
@@ -81,11 +82,11 @@ namespace EntitySpaces.DynamicQuery
                     {
                         foreach (esComparison exp in wi.data.WhereExpression)
                         {
-                            esDynamicQuerySerializable q = exp.Value as esDynamicQuerySerializable;
+                            esDynamicQuery q = exp.Value as esDynamicQuery;
 
                             if (q != null)
                             {
-                                IDynamicQuerySerializableInternal iQ = q as IDynamicQuerySerializableInternal;
+                                IDynamicQueryInternal iQ = q as IDynamicQueryInternal;
                                 iQ.HookupProviderMetadata(q);
                             }                            
                         }
@@ -97,11 +98,11 @@ namespace EntitySpaces.DynamicQuery
                         this.data.WhereItems.Add(wi);
                     }
 
-                    esDynamicQuerySerializable query = wi.Value as esDynamicQuerySerializable;
+                    esDynamicQuery query = wi.Value as esDynamicQuery;
 
                     if (query != null)
                     {
-                        IDynamicQuerySerializableInternal iQ = query as IDynamicQuerySerializableInternal;
+                        IDynamicQueryInternal iQ = query as IDynamicQueryInternal;
                         iQ.HookupProviderMetadata(query);
                     }
                 }
@@ -177,7 +178,7 @@ namespace EntitySpaces.DynamicQuery
             /// The Query that makes up the join
             /// </summary>
             [DataMember(Name = "Query", Order = 99, EmitDefaultValue = false)]
-            public esDynamicQuerySerializable Query;
+            public esDynamicQuery Query;
             /// <summary>
             /// The join type, InnerJoin, LeftJoin, ...
             /// </summary>

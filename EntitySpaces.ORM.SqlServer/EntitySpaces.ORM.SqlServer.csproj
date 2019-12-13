@@ -11,6 +11,7 @@
     <PackageTags>EntitySpaces, ORM</PackageTags>
   </PropertyGroup>
 
+
   <ItemGroup>
     <Compile Include="..\EntitySpaces.Core\esCollectionWCFPacket.cs" Link="EntitySpaces.Core\esCollectionWCFPacket.cs" />
     <Compile Include="..\EntitySpaces.Core\esEntity.cs" Link="EntitySpaces.Core\esEntity.cs" />
@@ -40,16 +41,17 @@
     <Compile Include="..\EntitySpaces.DynamicQuery\esColumnItem.cs" Link="EntitySpaces.DynamicQuery\esColumnItem.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esComparison.cs" Link="EntitySpaces.DynamicQuery\esComparison.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esDataContractSerializer.cs" Link="EntitySpaces.DynamicQuery\esDataContractSerializer.cs" />
-    <Compile Include="..\EntitySpaces.DynamicQuery\esDynamicQuerySerializable.cs" Link="EntitySpaces.DynamicQuery\esDynamicQuerySerializable.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esExpression.cs" Link="EntitySpaces.DynamicQuery\esExpression.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esExpressionOrComparison.cs" Link="EntitySpaces.DynamicQuery\esExpressionOrComparison.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esPartition.cs" Link="EntitySpaces.DynamicQuery\esPartition.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery.cs" Link="EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery2.cs" Link="EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery2.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\DynamicQuery\IDynamicQueryInternal.cs" Link="EntitySpaces.Interfaces\DynamicQuery\IDynamicQueryInternal.cs" />
     <Compile Include="..\Providers\EntitySpaces.SqlClientProvider\Cache.cs" Link="EntitySpaces.SqlClientProvider\Cache.cs" />
     <Compile Include="..\Providers\EntitySpaces.SqlClientProvider\DataProvider.cs" Link="EntitySpaces.SqlClientProvider\DataProvider.cs" />
     <Compile Include="..\Providers\EntitySpaces.SqlClientProvider\Delimiters.cs" Link="EntitySpaces.SqlClientProvider\Delimiters.cs" />
     <Compile Include="..\Providers\EntitySpaces.SqlClientProvider\QueryBuilder.cs" Link="EntitySpaces.SqlClientProvider\QueryBuilder.cs" />
     <Compile Include="..\Providers\EntitySpaces.SqlClientProvider\Shared.cs" Link="EntitySpaces.SqlClientProvider\Shared.cs" />
-    <None Include="..\EntitySpaces.DynamicQuery\esExtraPropertyBinder.cs" Link="EntitySpaces.DynamicQuery\esExtraPropertyBinder.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esGroupByItem.cs" Link="EntitySpaces.DynamicQuery\esGroupByItem.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esJoinItem.cs" Link="EntitySpaces.DynamicQuery\esJoinItem.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esMathmaticalExpression.cs" Link="EntitySpaces.DynamicQuery\esMathmaticalExpression.cs" />
@@ -57,9 +59,6 @@
     <Compile Include="..\EntitySpaces.DynamicQuery\esQueryItem.cs" Link="EntitySpaces.DynamicQuery\esQueryItem.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esQuerySubOperator.cs" Link="EntitySpaces.DynamicQuery\esQuerySubOperator.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esSetOperation.cs" Link="EntitySpaces.DynamicQuery\esSetOperation.cs" />
-    <Compile Include="..\EntitySpaces.DynamicQuery\IDynamicQuerySerializableInternal.cs" Link="EntitySpaces.DynamicQuery\IDynamicQuerySerializableInternal.cs" />
-    <Compile Include="..\EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery.cs" Link="EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery.cs" />
-    <Compile Include="..\EntitySpaces.Interfaces\DynamicQuery\IDynamicQueryInternal.cs" Link="EntitySpaces.Interfaces\DynamicQuery\IDynamicQueryInternal.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\enums.cs" Link="EntitySpaces.Interfaces\enums.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\esColumnMetadata.cs" Link="EntitySpaces.Interfaces\esColumnMetadata.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\esColumnMetadataCollection.cs" Link="EntitySpaces.Interfaces\esColumnMetadataCollection.cs" />
@@ -90,7 +89,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="EntitySpaces.Interfaces\DynamicQuery\" />
     <Folder Include="EntitySpaces.Interfaces\Exceptions\" />
     <Folder Include="EntitySpaces.SqlClientProvider\" />
   </ItemGroup>

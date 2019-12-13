@@ -27,45 +27,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
+using EntitySpaces.DynamicQuery;
+using EntitySpaces.Interfaces;
 using System;
 using System.Collections.Generic;
 
-using EntitySpaces.DynamicQuery;
-
 namespace EntitySpaces.Interfaces
 {
-    /// <summary>
-    /// This interface allows the EntitySpaces DataProviders to gain access to the underlying
-    /// query data without exposing it via intellisense, this way we keep the API clean for
-    /// designing queries
-    /// </summary>
     public interface IDynamicQueryInternal
     {
         /// <summary>
         /// Guid DataID.
         /// </summary>
         /// <returns>Guid DataID.</returns>
-        Guid DataID { get; }
+        Guid DataID { get; set; }
 
         /// <summary>
         /// Taken from the Connection just before the request is made
         /// </summary>
-        string Catalog { get; }
+        string Catalog { get; set; }
 
         /// <summary>
         /// Taken from the Connection just before the request is made
         /// </summary>
-        string Schema { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        esProviderSpecificMetadata ProviderMetadata { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        esColumnMetadataCollection Columns { get; }
+        string Schema { get; set; }
 
         /// <summary>
         /// 
@@ -75,17 +60,37 @@ namespace EntitySpaces.Interfaces
         /// <summary>
         /// 
         /// </summary>
+        bool HasSetOperation { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         string SubQueryAlias { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        string JoinAlias { get; }
+        string JoinAlias { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         string LastQuery { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        string QuerySource { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool SelectAll { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        List<esQueryItem> SelectAllExcept { get; }
 
         /// <summary>
         /// 
@@ -110,6 +115,12 @@ namespace EntitySpaces.Interfaces
         List<esJoinItem> InternalJoinItems { get; }
 
         /// <summary>
+        /// List&lt;esApplyItem&gt; InternalApplyItems.
+        /// </summary>
+        /// <returns>List&lt;esApplyItem&gt; InternalApplyItems.</returns>
+        List<esApplyItem> InternalApplyItems { get; }
+
+        /// <summary>
         /// List&lt;esComparison&gt; InternalWhereItems.
         /// </summary>
         /// <returns>List&lt;esComparison&gt; InternalWhereItems.</returns>
@@ -122,9 +133,68 @@ namespace EntitySpaces.Interfaces
         List<esOrderByItem> InternalOrderByItems { get; set; }
 
         /// <summary>
+        /// List&lt;esComparison&gt; InternalHavingItems.
+        /// </summary>
+        /// <returns>List&lt;esComparison&gt; InternalHavingItems.</returns>
+        List<esComparison> InternalHavingItems { get; }
+
+        /// <summary>
         /// List&lt;esComparison&gt; InternalGroupByItems.
         /// </summary>
         /// <returns>List&lt;esGroupByItem&gt; InternalGroupByItems.</returns>
         List<esGroupByItem> InternalGroupByItems { get; set; }
+
+        /// <summary>
+        /// The Set Operation, if any, Union, UnionAll, Intersect, Except
+        /// </summary>
+        /// <returns>List&lt;esGroupByItem&gt; InternalGroupByItems.</returns>
+        List<esSetOperation> InternalSetOperations { get; set; }
+
+        /// <summary>
+        /// This is of type object because this library cannot link with other 
+        /// assemblies and this is in the EntitySpaces.Interfaces assembly. This
+        /// is filled in just before being sent to the EntitySpaces DataProvider
+        /// and is used only when building the SQL i the provider itself
+        /// </summary>
+        object ProviderMetadata { get; set; }
+
+        /// <summary>
+        /// This is of type object because this library cannot link with other 
+        /// assemblies and this is in the EntitySpaces.Interfaces assembly. This
+        /// is filled in just before being sent to the EntitySpaces DataProvider
+        /// and is used only when building the SQL i the provider itself
+        /// </summary>
+        object Columns { get; set; }
+
+        /// <summary>
+        /// This is used because esDynamicQuery.AssignProviderMetadata is
+        /// not public and esJoinItem needs to be able to execute it
+        /// </summary>
+        void HookupProviderMetadata(esDynamicQuery query);
+
+        /// <summary>
+        /// This is used internally
+        /// </summary>
+        Dictionary<string, esDynamicQuery> queries { get; }
+
+        /// <summary>
+        /// The number of rows to skip in the result set (starting from the beginning)
+        /// </summary>
+        int? Skip { get; }
+
+        /// <summary>
+        /// The number of rows to take from the result set (starting from the Skip)
+        /// </summary>
+        int? Take { get; }
+
+        int? PartitionByTop { get; }
+
+        List<esQueryItem> PartitionByColumns { get; }
+
+        List<esQueryItem> PartitionByDistinctColumns { get; }
+
+        List<esOrderByItem> PartitionByOrderByItems { get; }
+
+        IMetadata Meta { get; }
     }
 }

@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
+using EntitySpaces.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -42,7 +43,7 @@ namespace EntitySpaces.DynamicQuery
     public class esApplyItem
     {
         [NonSerialized]
-        private esDynamicQuerySerializable parentQuery;
+        private esDynamicQuery parentQuery;
 
         /// <summary>
         /// The Constructor
@@ -55,7 +56,7 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// The Constructor
         /// </summary>
-        public esApplyItem(esDynamicQuerySerializable parentQuery)
+        public esApplyItem(esDynamicQuery parentQuery)
         {
             this.parentQuery = parentQuery;
         }
@@ -72,7 +73,7 @@ namespace EntitySpaces.DynamicQuery
             /// The Query that makes up the join
             /// </summary>
             [DataMember(Name = "Query", Order = 99, EmitDefaultValue = false)]
-            public esDynamicQuerySerializable Query;
+            public esDynamicQuery Query;
             /// <summary>
             /// The join type, InnerJoin, LeftJoin, ...
             /// </summary>

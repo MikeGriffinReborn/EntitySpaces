@@ -1027,7 +1027,7 @@ namespace EntitySpaces.SqlClientProvider
                 response.Table = dataTable;
 
                 // Special code to remove the ESRN column if paging is going on
-                esDynamicQuerySerializable.DynamicQueryProps es = request.DynamicQuery.es;
+                esDynamicQuery.DynamicQueryProps es = request.DynamicQuery.es;
                 if ((request.DynamicQuery.pageNumber.HasValue && request.DynamicQuery.pageSize.HasValue) 
                     || (es.PartitionByTop != null && es.PartitionByTop.Value > 0))
                 {

@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
+using EntitySpaces.DynamicQuery;
 using EntitySpaces.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -45,10 +46,10 @@ using System.Linq;
 
 
 
-//SharpArgumentInfo.Create'	EntitySpaces.ORM.SqlServer C:\Users\MikeGriffin\source\repos\EntitySpaces_DotNetStandard\EntitySpaces.DynamicQuery\esDynamicQuerySerializable.cs	349	N/A
+//SharpArgumentInfo.Create'	EntitySpaces.ORM.SqlServer C:\Users\MikeGriffin\source\repos\EntitySpaces_DotNetStandard\EntitySpaces.DynamicQuery\esDynamicQuery.cs	349	N/A
 
 
-namespace EntitySpaces.DynamicQuery
+namespace EntitySpaces.Interfaces
 {
     /// <summary>
     /// This provides the Dynamic Query mechanism used by your Business object (Employees),
@@ -95,27 +96,10 @@ namespace EntitySpaces.DynamicQuery
     /// emps.Query.Load();
     /// </code>
     /// </example>
-    [Serializable]
+  //  [Serializable]
     [DataContract(Namespace = "es", IsReference = true)]
-    public class esDynamicQuerySerializable : DynamicObject, IDynamicQuerySerializableInternal
+    public partial class esDynamicQuery : DynamicObject, IDynamicQueryInternal
     {
-        /// <summary>
-        /// The Constructor
-        /// </summary>
-        public esDynamicQuerySerializable()
-        {
-
-        }
-
-        /// <summary>
-        /// The Constructor used when using this query in a "Join"
-        /// </summary>
-        /// <param name="joinAlias">The alias of the associated Table to be u
-        /// sed in the "Join"</param>
-        public esDynamicQuerySerializable(string joinAlias)
-        {
-            this.joinAlias = joinAlias;
-        }
 
         #region DynamicObject Stuff
 
@@ -274,7 +258,7 @@ namespace EntitySpaces.DynamicQuery
         /// Used by EntitySpaces internally
         /// </summary>
         /// <param name="query">The SubQuery</param>
-        internal void AddQueryToList(esDynamicQuerySerializable query)
+        internal void AddQueryToList(esDynamicQuery query)
         {
             if (!queries.ContainsKey(query.joinAlias) && query != this)
             {
@@ -295,7 +279,7 @@ namespace EntitySpaces.DynamicQuery
         /// </code>
         /// </example>
         /// <returns>An esDynamicQueryTransport containing a select clause.</returns>
-        public esDynamicQuerySerializable Select()
+        public esDynamicQuery Select()
         {
             return this;
         }
@@ -310,7 +294,7 @@ namespace EntitySpaces.DynamicQuery
         /// </example>
         /// <param name="column">The column to place in the select statement.</param>
         /// <returns>An esDynamicQueryTransport containing a select clause.</returns>
-        public esDynamicQuerySerializable Select(object obj)
+        public esDynamicQuery Select(object obj)
         {
             if (this.selectColumns == null)
             {
@@ -340,7 +324,7 @@ namespace EntitySpaces.DynamicQuery
                 else
                 {
                     sItem = new esExpression();
-                    esDynamicQuerySerializable query = obj as esDynamicQuerySerializable;
+                    esDynamicQuery query = obj as esDynamicQuery;
                     if (query != null)
                     {
                         AddQueryToList(query);
@@ -373,7 +357,7 @@ namespace EntitySpaces.DynamicQuery
         /// </example>
         /// <param name="columns">The list of columns or aggregates to place in the select statement.</param>
         /// <returns>An esDynamicQueryTransport containing a select clause.</returns>
-        public esDynamicQuerySerializable Select(params object[] columns)
+        public esDynamicQuery Select(params object[] columns)
         {
             if (this.selectColumns == null)
             {
@@ -403,7 +387,7 @@ namespace EntitySpaces.DynamicQuery
                 else
                 {
                     sItem = new esExpression();
-                    esDynamicQuerySerializable query = obj as esDynamicQuerySerializable;
+                    esDynamicQuery query = obj as esDynamicQuery;
                     if (query != null)
                     {
                         AddQueryToList(query);
@@ -427,37 +411,37 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="columns">The columns which you wish to exclude from the Select statement</param>
         /// <returns></returns>
-        virtual public esDynamicQuerySerializable SelectAllExcept(params esQueryItem[] columns)
-        {
-            if (m_selectAllExcept == null)
-            {
-                m_selectAllExcept = new List<esQueryItem>();
-            }
+        //virtual public esDynamicQuery SelectAllExcept(params esQueryItem[] columns)
+        //{
+        //    if (m_selectAllExcept == null)
+        //    {
+        //        m_selectAllExcept = new List<esQueryItem>();
+        //    }
 
-            foreach (esQueryItem item in columns)
-            {
-                m_selectAllExcept.Add(item);
-            }
-            return this;
-        }
+        //    foreach (esQueryItem item in columns)
+        //    {
+        //        m_selectAllExcept.Add(item);
+        //    }
+        //    return this;
+        //}
 
         /// <summary>
         /// This method will select all of the columns explicity by name that were present when you generated your
         /// classes as opposed to doing a SELECT *
         /// </summary>
         /// <returns></returns>
-        virtual public esDynamicQuerySerializable SelectAll()
-        {
-            m_selectAll = true;
-            return this;
-        }
+        //virtual public esDynamicQuery SelectAll()
+        //{
+        //    m_selectAll = true;
+        //    return this;
+        //}
 
         /// <summary>
         /// Use this method in conjuction with Take()
         /// </summary>
         /// <param name="count">The number of rows to skip</param>
         /// <returns></returns>
-        public esDynamicQuerySerializable Skip(int count)
+        public esDynamicQuery Skip(int count)
         {
             this.skip = count;
             return this;
@@ -468,7 +452,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="count">The number of rows to return</param>
         /// <returns></returns>
-        public esDynamicQuerySerializable Take(int count)
+        public esDynamicQuery Take(int count)
         {
             this.take = count;
             return this;
@@ -479,7 +463,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="joinQuery">This query represents the table you are joining to</param>
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
-        public esJoinItem InnerJoin(esDynamicQuerySerializable joinQuery)
+        public esJoinItem InnerJoin(esDynamicQuery joinQuery)
         {
             dynamic thisAsDynamic = (dynamic)this;
             thisAsDynamic[joinQuery.joinAlias] = joinQuery;
@@ -493,7 +477,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="alias">The desired alias</param>
         /// <param name="query">The name of your output parameter</param>
         /// <returns></returns>
-        public esJoinItem InnerJoin<T>(string alias, out T query) where T : esDynamicQuerySerializable, new()
+        public esJoinItem InnerJoin<T>(string alias, out T query) where T : esDynamicQuery, new()
         {
             query = new T();
             query.joinAlias = alias;
@@ -507,7 +491,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="joinQuery">This query represents the table you are joining to</param>
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
-        public esJoinItem LeftJoin(esDynamicQuerySerializable joinQuery)
+        public esJoinItem LeftJoin(esDynamicQuery joinQuery)
         {
             dynamic thisAsDynamic = (dynamic)this;
             thisAsDynamic[joinQuery.joinAlias] = joinQuery;
@@ -521,7 +505,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="alias">The desired alias</param>
         /// <param name="query">The name of your output parameter</param>
         /// <returns></returns>
-        public esJoinItem LeftJoin<T>(string alias, out T query) where T : esDynamicQuerySerializable, new()
+        public esJoinItem LeftJoin<T>(string alias, out T query) where T : esDynamicQuery, new()
         {
             query = new T();
             query.joinAlias = alias;
@@ -536,7 +520,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="joinQuery">This query represents the table you are joining to</param>
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
-        public esJoinItem RightJoin(esDynamicQuerySerializable joinQuery)
+        public esJoinItem RightJoin(esDynamicQuery joinQuery)
         {
             dynamic thisAsDynamic = (dynamic)this;
             thisAsDynamic[joinQuery.joinAlias] = joinQuery;
@@ -550,7 +534,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="alias">The desired alias</param>
         /// <param name="query">The name of your output parameter</param>
         /// <returns></returns>
-        public esJoinItem RightJoin<T>(string alias, out T query) where T : esDynamicQuerySerializable, new()
+        public esJoinItem RightJoin<T>(string alias, out T query) where T : esDynamicQuery, new()
         {
             query = new T();
             query.joinAlias = alias;
@@ -564,7 +548,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="joinQuery">This query represents the table you are joining to</param>
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
-        public esJoinItem FullJoin(esDynamicQuerySerializable joinQuery)
+        public esJoinItem FullJoin(esDynamicQuery joinQuery)
         {
             dynamic thisAsDynamic = (dynamic)this;
             thisAsDynamic[joinQuery.joinAlias] = joinQuery;
@@ -578,7 +562,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="alias">The desired alias</param>
         /// <param name="query">The name of your output parameter</param>
         /// <returns></returns>
-        public esJoinItem FullJoin<T>(string alias, out T query) where T : esDynamicQuerySerializable, new()
+        public esJoinItem FullJoin<T>(string alias, out T query) where T : esDynamicQuery, new()
         {
             query = new T();
             query.joinAlias = alias;
@@ -592,7 +576,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="joinQuery">This query represents the table you are joining to</param>
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
-        public esJoinItem CrossJoin(esDynamicQuerySerializable joinQuery)
+        public esJoinItem CrossJoin(esDynamicQuery joinQuery)
         {
             dynamic thisAsDynamic = (dynamic)this;
             thisAsDynamic[joinQuery.joinAlias] = joinQuery;
@@ -606,7 +590,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="alias">The desired alias</param>
         /// <param name="query">The name of your output parameter</param>
         /// <returns></returns>
-        public esJoinItem CrossJoin<T>(string alias, out T query) where T : esDynamicQuerySerializable, new()
+        public esJoinItem CrossJoin<T>(string alias, out T query) where T : esDynamicQuery, new()
         {
             query = new T();
             query.joinAlias = alias;
@@ -622,7 +606,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="joinQuery">This query represents the table you are joining to</param>
         /// <param name="joinType">The type of join, ie, Inner, Left, Right, Full</param>
         /// <returns></returns>
-        private esJoinItem JoinCommon(esDynamicQuerySerializable joinQuery, esJoinType joinType)
+        private esJoinItem JoinCommon(esDynamicQuery joinQuery, esJoinType joinType)
         {
             if (joinQuery.joinAlias == " ")
             {
@@ -650,7 +634,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="applyQuery">This query represents the query you want to CROSS APPLY</param>
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
-        public esDynamicQuerySerializable CrossApply(esDynamicQuerySerializable applyQuery)
+        public esDynamicQuery CrossApply(esDynamicQuery applyQuery)
         {
             if (applyQuery.joinAlias == " ")
             {
@@ -676,15 +660,15 @@ namespace EntitySpaces.DynamicQuery
             return this;
         }
 
-        public esDynamicQuerySerializable CrossApply(Func<esDynamicQuery> func)
+        public esDynamicQuery CrossApply(Func<esDynamicQuery> func)
         {
-            esDynamicQuerySerializable query = func();
+            esDynamicQuery query = func();
             return CrossApply(query);
         }
 
-        public esDynamicQuerySerializable CrossApply<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuerySerializable, new()
+        public esDynamicQuery CrossApply<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuerySerializable theQuery = func();
+            esDynamicQuery theQuery = func();
             query = (T)theQuery;
             return CrossApply(theQuery);
         }
@@ -696,7 +680,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="alias">The desired alias</param>
         /// <param name="query">The name of your output parameter</param>
         /// <returns></returns>
-        public esDynamicQuerySerializable CrossApply<T>(string alias, out T query) where T : esDynamicQuerySerializable, new()
+        public esDynamicQuery CrossApply<T>(string alias, out T query) where T : esDynamicQuery, new()
         {
             query = new T();
             query.joinAlias = alias;
@@ -710,7 +694,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="applyQuery">This query represents the query you want to OUTER APPLY</param>
         /// <returns>An esJoinItem, which you then call the On() method.</returns>
-        public esDynamicQuerySerializable OuterApply(esDynamicQuerySerializable applyQuery)
+        public esDynamicQuery OuterApply(esDynamicQuery applyQuery)
         {
             if (applyQuery.joinAlias == " ")
             {
@@ -736,15 +720,15 @@ namespace EntitySpaces.DynamicQuery
             return this;
         }
 
-        public esDynamicQuerySerializable OuterApply(Func<esDynamicQuery> func)
+        public esDynamicQuery OuterApply(Func<esDynamicQuery> func)
         {
-            esDynamicQuerySerializable query = func();
+            esDynamicQuery query = func();
             return OuterApply(query);
         }
 
-        public esDynamicQuerySerializable OuterApply<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuerySerializable, new()
+        public esDynamicQuery OuterApply<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuerySerializable theQuery = func();
+            esDynamicQuery theQuery = func();
             query = (T)theQuery;
             return OuterApply(theQuery);
         }
@@ -756,7 +740,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="alias">The desired alias</param>
         /// <param name="query">The name of your output parameter</param>
         /// <returns></returns>
-        public esDynamicQuerySerializable OuterApply<T>(string alias, out T query) where T : esDynamicQuerySerializable, new()
+        public esDynamicQuery OuterApply<T>(string alias, out T query) where T : esDynamicQuery, new()
         {
             query = new T();
             query.joinAlias = alias;
@@ -770,7 +754,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="fromQuery">The subquery to use as your FROM statement</param>
         /// <returns></returns>
-        public esDynamicQuerySerializable From(esDynamicQuerySerializable fromQuery)
+        public esDynamicQuery From(esDynamicQuery fromQuery)
         {
             this.fromQuery = fromQuery;
             AddQueryToList(fromQuery);
@@ -782,15 +766,15 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="fromQuery">The subquery to use as your FROM statement</param>
         /// <returns></returns>
-        public esDynamicQuerySerializable From(Func<esDynamicQuery> func)
+        public esDynamicQuery From(Func<esDynamicQuery> func)
         {
-            esDynamicQuerySerializable query = func();
+            esDynamicQuery query = func();
             return From(query);
         }
 
-        public esDynamicQuerySerializable From<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuerySerializable, new()
+        public esDynamicQuery From<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuerySerializable theQuery = func();
+            esDynamicQuery theQuery = func();
             query = (T)theQuery;
             return From(theQuery);
         }
@@ -799,7 +783,7 @@ namespace EntitySpaces.DynamicQuery
         /// Performs a UNION between two statements
         /// </summary>
         /// <returns></returns>
-        public esDynamicQuerySerializable Union(esDynamicQuerySerializable query)
+        public esDynamicQuery Union(esDynamicQuery query)
         {
             esSetOperation setOperation = new esSetOperation(query);
             setOperation.SetOperationType = esSetOperationType.Union;
@@ -818,15 +802,15 @@ namespace EntitySpaces.DynamicQuery
         /// Performs a UNION between two statements
         /// </summary>
         /// <returns></returns>
-        public esDynamicQuerySerializable Union(Func<esDynamicQuery> func)
+        public esDynamicQuery Union(Func<esDynamicQuery> func)
         {
-            esDynamicQuerySerializable query = func();
+            esDynamicQuery query = func();
             return Union(query);
         }
 
-        public esDynamicQuerySerializable Union<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuerySerializable, new()
+        public esDynamicQuery Union<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuerySerializable theQuery = func();
+            esDynamicQuery theQuery = func();
             query = (T)theQuery;
             return Union(theQuery);
         }
@@ -835,7 +819,7 @@ namespace EntitySpaces.DynamicQuery
         /// Performs a UNION ALL between two statements
         /// </summary>
         /// <returns></returns>
-        public esDynamicQuerySerializable UnionAll(esDynamicQuerySerializable query)
+        public esDynamicQuery UnionAll(esDynamicQuery query)
         {
             esSetOperation setOperation = new esSetOperation(query);
             setOperation.SetOperationType = esSetOperationType.UnionAll;
@@ -854,15 +838,15 @@ namespace EntitySpaces.DynamicQuery
         /// Performs a UNION ALL between two statements
         /// </summary>
         /// <returns></returns>
-        public esDynamicQuerySerializable UnionAll(Func<esDynamicQuery> func)
+        public esDynamicQuery UnionAll(Func<esDynamicQuery> func)
         {
-            esDynamicQuerySerializable query = func();
+            esDynamicQuery query = func();
             return UnionAll(query);
         }
 
-        public esDynamicQuerySerializable UnionAll<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuerySerializable, new()
+        public esDynamicQuery UnionAll<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuerySerializable theQuery = func();
+            esDynamicQuery theQuery = func();
             query = (T)theQuery;
             return UnionAll(theQuery);
         }
@@ -871,7 +855,7 @@ namespace EntitySpaces.DynamicQuery
         /// Peforms an INTERSECT between two statements
         /// </summary>
         /// <returns></returns>
-        public esDynamicQuerySerializable Intersect(esDynamicQuerySerializable query)
+        public esDynamicQuery Intersect(esDynamicQuery query)
         {
             esSetOperation setOperation = new esSetOperation(query);
             setOperation.SetOperationType = esSetOperationType.Intersect;
@@ -890,15 +874,15 @@ namespace EntitySpaces.DynamicQuery
         /// Peforms an INTERSECT between two statements
         /// </summary>
         /// <returns></returns>
-        public esDynamicQuerySerializable Intersect(Func<esDynamicQuery> func)
+        public esDynamicQuery Intersect(Func<esDynamicQuery> func)
         {
-            esDynamicQuerySerializable query = func();
+            esDynamicQuery query = func();
             return Intersect(query);
         }
 
-        public esDynamicQuerySerializable Intersect<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuerySerializable, new()
+        public esDynamicQuery Intersect<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuerySerializable theQuery = func();
+            esDynamicQuery theQuery = func();
             query = (T)theQuery;
             return Intersect(theQuery);
         }
@@ -907,7 +891,7 @@ namespace EntitySpaces.DynamicQuery
         /// Performs an EXCEPT between two statements
         /// </summary>
         /// <returns></returns>
-        public esDynamicQuerySerializable Except(esDynamicQuerySerializable query)
+        public esDynamicQuery Except(esDynamicQuery query)
         {
             esSetOperation setOperation = new esSetOperation(query);
             setOperation.SetOperationType = esSetOperationType.Except;
@@ -922,15 +906,15 @@ namespace EntitySpaces.DynamicQuery
             return this;
         }
 
-        public esDynamicQuerySerializable Except(Func<esDynamicQuery> func)
+        public esDynamicQuery Except(Func<esDynamicQuery> func)
         {
-            esDynamicQuerySerializable query = func();
+            esDynamicQuery query = func();
             return Except(query);
         }
 
-        public esDynamicQuerySerializable Except<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuerySerializable, new()
+        public esDynamicQuery Except<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuerySerializable theQuery = func();
+            esDynamicQuery theQuery = func();
             query = (T)theQuery;
             return Except(theQuery);
         }
@@ -940,7 +924,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="subQueryAlias"></param>
         /// <returns></returns>
-        public esDynamicQuerySerializable As(string subQueryAlias)
+        public esDynamicQuery As(string subQueryAlias)
         {
             if (this.fromQuery == null)
             {
@@ -967,7 +951,7 @@ namespace EntitySpaces.DynamicQuery
         /// </example>
         /// <param name="items">The list of objects to place in the where statement.</param>
         /// <returns>An esDynamicQueryTransport containing a where clause.</returns>
-        public esDynamicQuerySerializable Where(params object[] items)
+        public esDynamicQuery Where(params object[] items)
         {
             bool first = true;
 
@@ -1008,7 +992,7 @@ namespace EntitySpaces.DynamicQuery
                         {
                             if (expItem.Value != null)
                             {
-                                esDynamicQuerySerializable q = expItem.data.Value as esDynamicQuerySerializable;
+                                esDynamicQuery q = expItem.data.Value as esDynamicQuery;
                                 if (q != null)
                                 {
                                     AddQueryToList(q);
@@ -1027,7 +1011,7 @@ namespace EntitySpaces.DynamicQuery
                         this.whereItems.Add(wi);
                     }
 
-                    esDynamicQuerySerializable query = wi.Value as esDynamicQuerySerializable;
+                    esDynamicQuery query = wi.Value as esDynamicQuery;
 
                     if (query != null)
                     {
@@ -1152,7 +1136,7 @@ namespace EntitySpaces.DynamicQuery
         /// </example>
         /// <param name="items">The list of objects to place in the where statement.</param>
         /// <returns>An esDynamicQueryTransport containing a where clause.</returns>
-        public esDynamicQuerySerializable Having(params object[] items)
+        public esDynamicQuery Having(params object[] items)
         {
             bool first = true;
 
@@ -1193,7 +1177,7 @@ namespace EntitySpaces.DynamicQuery
                         {
                             if (expItem.Value != null)
                             {
-                                esDynamicQuerySerializable q = expItem.data.Value as esDynamicQuerySerializable;
+                                esDynamicQuery q = expItem.data.Value as esDynamicQuery;
                                 if (q != null)
                                 {
                                     AddQueryToList(q);
@@ -1212,7 +1196,7 @@ namespace EntitySpaces.DynamicQuery
                         this.havingItems.Add(wi);
                     }
 
-                    esDynamicQuerySerializable query = wi.Value as esDynamicQuerySerializable;
+                    esDynamicQuery query = wi.Value as esDynamicQuery;
 
                     if (query != null)
                     {
@@ -1238,7 +1222,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public esComparison Exists(esDynamicQuerySerializable query)
+        public esComparison Exists(esDynamicQuery query)
         {
             AddQueryToList(query);
 
@@ -1255,13 +1239,13 @@ namespace EntitySpaces.DynamicQuery
         /// <returns></returns>
         public esComparison Exists(Func<esDynamicQuery> func)
         {
-            esDynamicQuerySerializable query = func();
+            esDynamicQuery query = func();
             return Exists(query);
         }
 
-        public esComparison Exists<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuerySerializable, new()
+        public esComparison Exists<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
-            esDynamicQuerySerializable theQuery = func();
+            esDynamicQuery theQuery = func();
             query = (T)theQuery;
             return Exists(theQuery);
         }
@@ -1271,7 +1255,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public esComparison NotExists(esDynamicQuerySerializable query)
+        public esComparison NotExists(esDynamicQuery query)
         {
             AddQueryToList(query);
 
@@ -1288,7 +1272,7 @@ namespace EntitySpaces.DynamicQuery
         /// <returns></returns>
         public esComparison NotExists(Func<esDynamicQuery> func)
         {
-            esDynamicQuerySerializable query = func();
+            esDynamicQuery query = func();
             AddQueryToList(query);
 
             esComparison where = new esComparison(query);
@@ -1408,7 +1392,7 @@ namespace EntitySpaces.DynamicQuery
         /// </example>
         /// <param name="orderByItems">The list of objects to place in the OrderBy statement.</param>
         /// <returns>An esDynamicQueryTransport containing a OrderBy clause.</returns>
-        public esDynamicQuerySerializable OrderBy(params esOrderByItem[] orderByItems)
+        public esDynamicQuery OrderBy(params esOrderByItem[] orderByItems)
         {
             if (this.orderByItems == null)
             {
@@ -1438,7 +1422,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="columnName">The column to place in the OrderBy statement.</param>
         /// <param name="direction">Sort direction.</param>
         /// <returns>An esDynamicQueryTransport containing a OrderBy clause.</returns>
-        public esDynamicQuerySerializable OrderBy(string columnName, esOrderByDirection direction)
+        public esDynamicQuery OrderBy(string columnName, esOrderByDirection direction)
         {
             if (this.orderByItems == null)
             {
@@ -1478,7 +1462,7 @@ namespace EntitySpaces.DynamicQuery
         /// </example>
         /// <param name="columns">The columns to place in the OrderBy statement.</param>
         /// <returns>An esDynamicQueryTransport containing a GroupBy clause.</returns>
-        public esDynamicQuerySerializable GroupBy(params esQueryItem[] columns)
+        public esDynamicQuery GroupBy(params esQueryItem[] columns)
         {
             if (this.groupByItems == null)
             {
@@ -1514,7 +1498,7 @@ namespace EntitySpaces.DynamicQuery
         /// </example>
         /// <param name="columns">The columns to place in the OrderBy statement.</param>
         /// <returns>An esDynamicQueryTransport containing a GroupBy clause.</returns>
-        public esDynamicQuerySerializable GroupBy(params string[] columns)
+        public esDynamicQuery GroupBy(params string[] columns)
         {
             if (this.groupByItems == null)
             {
@@ -1538,7 +1522,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <typeparam name="T">The Type of the desired Query</typeparam>
         /// <returns>The Query if found, otherwise null</returns>
-        public T GetQuery<T>() where T : esDynamicQuerySerializable
+        public T GetQuery<T>() where T : esDynamicQuery
         {
             Type type = typeof(T);
             string strType = type.ToString();
@@ -1646,13 +1630,13 @@ namespace EntitySpaces.DynamicQuery
             return items;
         }
 
-        protected void HookupWithNoLock(esDynamicQuerySerializable query)
+        protected void HookupWithNoLock(esDynamicQuery query)
         {
             if (query.withNoLock.HasValue && query.withNoLock == true)
             {
                 if (query.queries != null)
                 {
-                    foreach (esDynamicQuerySerializable nestedQuery in query.queries.Values)
+                    foreach (esDynamicQuery nestedQuery in query.queries.Values)
                     {
                         nestedQuery.withNoLock = true;
 
@@ -1693,7 +1677,7 @@ namespace EntitySpaces.DynamicQuery
             /// The Dynamic Query properties.
             /// </summary>
             /// <param name="query">The esDynamicQueryTransport's properties.</param>
-            public DynamicQueryProps(esDynamicQuerySerializable query)
+            public DynamicQueryProps(esDynamicQuery query)
             {
                 this.dynamicQuery = query;
             }
@@ -1702,7 +1686,7 @@ namespace EntitySpaces.DynamicQuery
             /// string QuerySource.
             /// </summary>
             /// <returns>string QuerySource.</returns>
-            public esDynamicQuerySerializable QuerySource(string querySource)
+            public esDynamicQuery QuerySource(string querySource)
             {
                 this.dynamicQuery.querySource = querySource;
                 return this.dynamicQuery;
@@ -1712,7 +1696,7 @@ namespace EntitySpaces.DynamicQuery
             /// string JoinAlias.
             /// </summary>
             /// <returns>string JoinAlias.</returns>
-            public esDynamicQuerySerializable JoinAlias(string alias)
+            public esDynamicQuery JoinAlias(string alias)
             {
                 this.dynamicQuery.joinAlias = alias;
                 return this.dynamicQuery;
@@ -1722,7 +1706,7 @@ namespace EntitySpaces.DynamicQuery
             /// esConjunction DefaultConjunction.
             /// </summary>
             /// <returns>esConjunction DefaultConjunction.</returns>
-            public esDynamicQuerySerializable DefaultConjunction(esConjunction conj)
+            public esDynamicQuery DefaultConjunction(esConjunction conj)
             {
                 this.dynamicQuery.defaultConjunction = conj;
                 return this.dynamicQuery;
@@ -1732,7 +1716,7 @@ namespace EntitySpaces.DynamicQuery
             /// This will limit the number of rows returned, after sorting.
             /// Setting Top to 10 will return the top ten rows after sorting.
             /// </summary>
-            public esDynamicQuerySerializable Top(int top)
+            public esDynamicQuery Top(int top)
             {
                 this.dynamicQuery.top = top;
                 return this.dynamicQuery;
@@ -1815,7 +1799,7 @@ namespace EntitySpaces.DynamicQuery
             /// This will use the WITH (NOLOCK) syntax on all tables joined in the query. Currently
             /// only implemented for Microsoft SQL Server.
             /// </summary>
-            public esDynamicQuerySerializable WithNoLock()
+            public esDynamicQuery WithNoLock()
             {
                 this.dynamicQuery.withNoLock = true;
                 return this.dynamicQuery;
@@ -1825,7 +1809,7 @@ namespace EntitySpaces.DynamicQuery
             /// Used in SubQueries. The Any qualifier works just like the In except it allows for >, >=, 
             /// <, <= as well as the = (In) and != (Not In) operators
             /// </summary>
-            public esDynamicQuerySerializable Any()
+            public esDynamicQuery Any()
             {
                 this.dynamicQuery.subquerySearchCondition = esSubquerySearchCondition.Any;
                 return this.dynamicQuery;
@@ -1835,7 +1819,7 @@ namespace EntitySpaces.DynamicQuery
             /// Used in SubQueries. Used like 'Any' except for one key exception - any operator applied must be true for
             /// ALL the values returned in our subquery.
             /// </summary>
-            public esDynamicQuerySerializable All()
+            public esDynamicQuery All()
             {
                 this.dynamicQuery.subquerySearchCondition = esSubquerySearchCondition.All;
                 return this.dynamicQuery;
@@ -1846,7 +1830,7 @@ namespace EntitySpaces.DynamicQuery
             /// The SQL standard defines these two words with the same meaning to overcome a limitation in the English language, 
             /// particularly for inequality comparisons.
             /// </summary>
-            public esDynamicQuerySerializable Some()
+            public esDynamicQuery Some()
             {
                 this.dynamicQuery.subquerySearchCondition = esSubquerySearchCondition.Some;
                 return this.dynamicQuery;
@@ -1856,7 +1840,7 @@ namespace EntitySpaces.DynamicQuery
             /// This will retrieve a specific row number from a select.
             /// This is useful when paging large sets of data
             /// </summary>
-            public esDynamicQuerySerializable PageNumber(int pageNumber)
+            public esDynamicQuery PageNumber(int pageNumber)
             {
                 this.dynamicQuery.pageNumber = pageNumber;
                 return this.dynamicQuery;
@@ -1866,7 +1850,7 @@ namespace EntitySpaces.DynamicQuery
             /// This will retrieve a specific row number from a select.
             /// This is useful when paging large sets of data
             /// </summary>
-            public esDynamicQuerySerializable PageSize(int pageSize)
+            public esDynamicQuery PageSize(int pageSize)
             {
                 this.dynamicQuery.pageSize = pageSize;
                 return this.dynamicQuery;
@@ -1875,7 +1859,7 @@ namespace EntitySpaces.DynamicQuery
             /// <summary>
             /// Setting Distinct = True will elimate duplicate rows from the data.
             /// </summary>
-            public esDynamicQuerySerializable Distinct()
+            public esDynamicQuery Distinct()
             {
                 this.dynamicQuery.distinct = true;
                 return this.dynamicQuery;
@@ -1884,7 +1868,7 @@ namespace EntitySpaces.DynamicQuery
             /// <summary>
             /// Add a COUNT(*) Aggregate to the selected columns list.
             /// </summary>
-            public esDynamicQuerySerializable CountAll()
+            public esDynamicQuery CountAll()
             {
                 this.dynamicQuery.countAll = true;
                 if (String.IsNullOrEmpty(this.dynamicQuery.countAllAlias))
@@ -1898,7 +1882,7 @@ namespace EntitySpaces.DynamicQuery
             /// <summary>
             /// If CountAll is set to true, use this to add a user-friendly column name.
             /// </summary>
-            public esDynamicQuerySerializable CountAllAlias(string alias)
+            public esDynamicQuery CountAllAlias(string alias)
             {
                 this.dynamicQuery.countAllAlias = alias;
                 return this.dynamicQuery;
@@ -1912,7 +1896,7 @@ namespace EntitySpaces.DynamicQuery
             /// emps.Query.es.WithRollup = true;
             /// </code>
             /// </example>
-            public esDynamicQuerySerializable WithRollup()
+            public esDynamicQuery WithRollup()
             {
                 this.dynamicQuery.withRollup = true;
                 return this.dynamicQuery;
@@ -1958,7 +1942,7 @@ namespace EntitySpaces.DynamicQuery
             //    set { this.dynamicQuery.connection = value; }
             //}
 
-            internal esDynamicQuerySerializable dynamicQuery;
+            internal esDynamicQuery dynamicQuery;
         }
         #endregion
 
@@ -1969,40 +1953,40 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         static public class SerializeHelper
         {
-            static public List<System.Type> GetKnownTypes(esDynamicQuerySerializable query)
+            static public List<System.Type> GetKnownTypes(esDynamicQuery query)
             {
                 List<System.Type> types = new List<Type>();
                 GetKnownTypes(query, types);
                 return types;
             }
 
-            static public DataContractSerializer GetSerializer(esDynamicQuerySerializable query)
+            static public DataContractSerializer GetSerializer(esDynamicQuery query)
             {
                 List<System.Type> types = GetKnownTypes(query);
                 return new DataContractSerializer(query.GetType(), query.GetQueryName(),
                     "http://www.entityspaces.net", types);
             }
 
-            static public DataContractSerializer GetSerializer(esDynamicQuerySerializable query, Type type)
+            static public DataContractSerializer GetSerializer(esDynamicQuery query, Type type)
             {
                 List<System.Type> types = GetKnownTypes(query);
                 return new DataContractSerializer(type, query.GetQueryName(),
                     "http://www.entityspaces.net", types);
             }
 
-            static public DataContractSerializer GetSerializer(esDynamicQuerySerializable query, List<System.Type> knownTypes)
+            static public DataContractSerializer GetSerializer(esDynamicQuery query, List<System.Type> knownTypes)
             {
                 return new DataContractSerializer(query.GetType(), query.GetQueryName(),
                     "http://www.entityspaces.net", knownTypes);
             }
 
-            static public DataContractSerializer GetSerializer(esDynamicQuerySerializable query, Type type, List<System.Type> knownTypes)
+            static public DataContractSerializer GetSerializer(esDynamicQuery query, Type type, List<System.Type> knownTypes)
             {
                 return new DataContractSerializer(type, query.GetQueryName(),
                     "http://www.entityspaces.net", knownTypes);
             }
 
-            static public string ToXml(esDynamicQuerySerializable query)
+            static public string ToXml(esDynamicQuery query)
             {
                 string xml = "";
 
@@ -2022,9 +2006,9 @@ namespace EntitySpaces.DynamicQuery
                 return xml;
             }
 
-            static public esDynamicQuerySerializable FromXml(string xml, Type type)
+            static public esDynamicQuery FromXml(string xml, Type type)
             {
-                esDynamicQuerySerializable query = null;
+                esDynamicQuery query = null;
 
                 using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(xml)))
                 {
@@ -2036,16 +2020,16 @@ namespace EntitySpaces.DynamicQuery
                     {
                         // Deserialize
                         DataContractSerializer serializer = new DataContractSerializer(type, type.Name, "http://www.entityspaces.net");
-                        query = serializer.ReadObject(reader) as esDynamicQuerySerializable;
+                        query = serializer.ReadObject(reader) as esDynamicQuery;
                     }
                 }
 
                 return query;
             }
 
-            static public esDynamicQuerySerializable FromXml(string xml, Type type, List<System.Type> knownTypes)
+            static public esDynamicQuery FromXml(string xml, Type type, List<System.Type> knownTypes)
             {
-                esDynamicQuerySerializable query = null;
+                esDynamicQuery query = null;
 
                 using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(xml)))
                 {
@@ -2058,14 +2042,14 @@ namespace EntitySpaces.DynamicQuery
                         // Deserialize
                         DataContractSerializer serializer = new DataContractSerializer(type, type.Name, "http://www.entityspaces.net",
                             knownTypes);
-                        query = serializer.ReadObject(reader) as esDynamicQuerySerializable;
+                        query = serializer.ReadObject(reader) as esDynamicQuery;
                     }
                 }
 
                 return query;
             }
 
-            static private void GetKnownTypes(esDynamicQuerySerializable query, List<System.Type> types)
+            static private void GetKnownTypes(esDynamicQuery query, List<System.Type> types)
             {
                 bool found = false;
 
@@ -2084,7 +2068,7 @@ namespace EntitySpaces.DynamicQuery
                     types.Add(query.GetType());
                 }
 
-                foreach (esDynamicQuerySerializable subQuery in query.queries.Values)
+                foreach (esDynamicQuery subQuery in query.queries.Values)
                 {
                     GetKnownTypes(subQuery, types);
                 }
@@ -2130,7 +2114,7 @@ namespace EntitySpaces.DynamicQuery
         // Holds the name of the metadata maps that will eventually be turned into 
         // the real ones by esDynamicQuery
         [DataMember(Name = "Queries", EmitDefaultValue = false)]
-        internal protected Dictionary<string, esDynamicQuerySerializable> queries = new Dictionary<string, esDynamicQuerySerializable>();
+        internal protected Dictionary<string, esDynamicQuery> queries = new Dictionary<string, esDynamicQuery>();
         // Filled in by SelectAllExcept()
         [DataMember(Name = "SelectAllExcept", EmitDefaultValue = false)]
         internal protected List<esQueryItem> m_selectAllExcept;
@@ -2167,7 +2151,7 @@ namespace EntitySpaces.DynamicQuery
         internal List<esExpression> selectColumns;
 
         [DataMember(Name = "FromQuery", Order = 100, EmitDefaultValue = false)]
-        internal esDynamicQuerySerializable fromQuery;
+        internal esDynamicQuery fromQuery;
 
         [DataMember(Name = "JoinItems", Order = 101, EmitDefaultValue = false)]
         internal List<esJoinItem> joinItems;
@@ -2269,31 +2253,31 @@ namespace EntitySpaces.DynamicQuery
 
         #region IDynamicQueryTransportInternal Members
 
-        Guid IDynamicQuerySerializableInternal.DataID
+        Guid IDynamicQueryInternal.DataID
         {
             get { return this.dataID; }
             set { this.dataID = value; }
         }
 
-        string IDynamicQuerySerializableInternal.Catalog
+        string IDynamicQueryInternal.Catalog
         {
             get { return this.catalog; }
             set { this.catalog = value; }
         }
 
-        string IDynamicQuerySerializableInternal.Schema
+        string IDynamicQueryInternal.Schema
         {
             get { return this.schema; }
             set { this.schema = value; }
         }
 
-        bool IDynamicQuerySerializableInternal.IsInSubQuery
+        bool IDynamicQueryInternal.IsInSubQuery
         {
             get { return this.isInSubQuery; }
             set { this.isInSubQuery = value; }
         }
 
-        bool IDynamicQuerySerializableInternal.HasSetOperation
+        bool IDynamicQueryInternal.HasSetOperation
         {
             get
             {
@@ -2301,88 +2285,88 @@ namespace EntitySpaces.DynamicQuery
             }
         }
 
-        string IDynamicQuerySerializableInternal.SubQueryAlias
+        string IDynamicQueryInternal.SubQueryAlias
         {
             get { return this.subQueryAlias; }
         }
 
-        string IDynamicQuerySerializableInternal.JoinAlias
+        string IDynamicQueryInternal.JoinAlias
         {
             get { return this.joinAlias; }
             set { this.joinAlias = value; }
         }
 
-        string IDynamicQuerySerializableInternal.LastQuery
+        string IDynamicQueryInternal.LastQuery
         {
             get { return this.lastQuery; }
             set { this.lastQuery = value; }
         }
 
-        string IDynamicQuerySerializableInternal.QuerySource
+        string IDynamicQueryInternal.QuerySource
         {
             get { return this.querySource; }
             set { this.querySource = value; }
         }
 
-        bool IDynamicQuerySerializableInternal.SelectAll
+        bool IDynamicQueryInternal.SelectAll
         {
             get { return this.m_selectAll; }
         }
 
-        List<esQueryItem> IDynamicQuerySerializableInternal.SelectAllExcept
+        List<esQueryItem> IDynamicQueryInternal.SelectAllExcept
         {
             get { return this.m_selectAllExcept; }
         }
 
-        esSubquerySearchCondition IDynamicQuerySerializableInternal.SubquerySearchCondition
+        esSubquerySearchCondition IDynamicQueryInternal.SubquerySearchCondition
         {
             get { return this.subquerySearchCondition; }
         }
 
-        List<esExpression> IDynamicQuerySerializableInternal.InternalSelectColumns
+        List<esExpression> IDynamicQueryInternal.InternalSelectColumns
         {
             get { return this.selectColumns; }
             set { this.selectColumns = value; }
         }
 
-        esDynamicQuerySerializable IDynamicQuerySerializableInternal.InternalFromQuery
+        esDynamicQuery IDynamicQueryInternal.InternalFromQuery
         {
             get { return this.fromQuery; }
         }
 
-        List<esJoinItem> IDynamicQuerySerializableInternal.InternalJoinItems
+        List<esJoinItem> IDynamicQueryInternal.InternalJoinItems
         {
             get { return this.joinItems; }
         }
 
-        List<esApplyItem> IDynamicQuerySerializableInternal.InternalApplyItems
+        List<esApplyItem> IDynamicQueryInternal.InternalApplyItems
         {
             get { return this.applyItems; }
         }
 
-        List<esComparison> IDynamicQuerySerializableInternal.InternalWhereItems
+        List<esComparison> IDynamicQueryInternal.InternalWhereItems
         {
             get { return this.whereItems; }
         }
 
-        List<esOrderByItem> IDynamicQuerySerializableInternal.InternalOrderByItems
+        List<esOrderByItem> IDynamicQueryInternal.InternalOrderByItems
         {
             get { return this.orderByItems; }
             set { this.orderByItems = value; }
         }
 
-        List<esComparison> IDynamicQuerySerializableInternal.InternalHavingItems
+        List<esComparison> IDynamicQueryInternal.InternalHavingItems
         {
             get { return this.havingItems; }
         }
 
-        List<esGroupByItem> IDynamicQuerySerializableInternal.InternalGroupByItems
+        List<esGroupByItem> IDynamicQueryInternal.InternalGroupByItems
         {
             get { return this.groupByItems; }
             set { this.groupByItems = value; }
         }
 
-        List<esSetOperation> IDynamicQuerySerializableInternal.InternalSetOperations
+        List<esSetOperation> IDynamicQueryInternal.InternalSetOperations
         {
             get { return this.setOperations; }
             set { this.setOperations = value; }
@@ -2391,7 +2375,7 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// 
         /// </summary>
-        object IDynamicQuerySerializableInternal.ProviderMetadata
+        object IDynamicQueryInternal.ProviderMetadata
         {
             get { return this.providerMetadata; }
             set { this.providerMetadata = value; }
@@ -2400,7 +2384,7 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// 
         /// </summary>
-        object IDynamicQuerySerializableInternal.Columns
+        object IDynamicQueryInternal.Columns
         {
             get { return this.columns; }
             set { this.columns = value; }
@@ -2409,7 +2393,7 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// 
         /// </summary>
-        void IDynamicQuerySerializableInternal.HookupProviderMetadata(esDynamicQuerySerializable query)
+        void IDynamicQueryInternal.HookupProviderMetadata(esDynamicQuery query)
         {
             AddQueryToList(query);
         }
@@ -2417,30 +2401,30 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// 
         /// </summary>
-        Dictionary<string, esDynamicQuerySerializable> IDynamicQuerySerializableInternal.queries => this.queries;
+        Dictionary<string, esDynamicQuery> IDynamicQueryInternal.queries => this.queries;
 
         /// <summary>
         /// The number of rows to skip in the result set (starting from the beginning)
         /// </summary>
-        int? IDynamicQuerySerializableInternal.Skip => this.skip;
+        int? IDynamicQueryInternal.Skip => this.skip;
 
         /// <summary>
         /// The number of rows to take from the result set (starting from the Skip)
         /// </summary>
-        int? IDynamicQuerySerializableInternal.Take => this.take;
+        int? IDynamicQueryInternal.Take => this.take;
 
-        int? IDynamicQuerySerializableInternal.PartitionByTop => this.es.dynamicQuery.partitionByTop;
+        int? IDynamicQueryInternal.PartitionByTop => this.es.dynamicQuery.partitionByTop;
 
-        List<esQueryItem> IDynamicQuerySerializableInternal.PartitionByColumns => this.es.dynamicQuery.partitionByColumns;
+        List<esQueryItem> IDynamicQueryInternal.PartitionByColumns => this.es.dynamicQuery.partitionByColumns;
 
-        List<esQueryItem> IDynamicQuerySerializableInternal.PartitionByDistinctColumns => this.es.dynamicQuery.partitionByDistinctColumns;
+        List<esQueryItem> IDynamicQueryInternal.PartitionByDistinctColumns => this.es.dynamicQuery.partitionByDistinctColumns;
 
-        List<esOrderByItem> IDynamicQuerySerializableInternal.PartitionByOrderByItems => this.es.dynamicQuery.partitionByOrderByItems;
+        List<esOrderByItem> IDynamicQueryInternal.PartitionByOrderByItems => this.es.dynamicQuery.partitionByOrderByItems;
 
         /// <summary>
         /// Allow you to gain access to the on-board metadata
         /// </summary>
-        IMetadata IDynamicQuerySerializableInternal.Meta
+        IMetadata IDynamicQueryInternal.Meta
         {
             get { return this.Meta; }
         }

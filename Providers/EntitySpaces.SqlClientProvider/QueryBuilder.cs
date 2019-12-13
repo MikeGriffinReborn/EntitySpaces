@@ -51,14 +51,14 @@ namespace EntitySpaces.SqlClientProvider
             return (SqlCommand)std.cmd;
         }
 
-        protected static string BuildQuery(StandardProviderParameters std, esDynamicQuerySerializable query)
+        protected static string BuildQuery(StandardProviderParameters std, esDynamicQuery query)
         {
             bool paging = false;
 
             if (query.pageNumber.HasValue && query.pageSize.HasValue)
                 paging = true;
 
-            IDynamicQuerySerializableInternal iQuery = query as IDynamicQuerySerializableInternal;
+            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
 
             string select = GetSelectStatement(std, query);
             string from = GetFromStatement(std, query);
@@ -174,9 +174,9 @@ namespace EntitySpaces.SqlClientProvider
             return sql;
         }
 
-        protected static string GetFromStatement(StandardProviderParameters std, esDynamicQuerySerializable query)
+        protected static string GetFromStatement(StandardProviderParameters std, esDynamicQuery query)
         {
-            IDynamicQuerySerializableInternal iQuery = query as IDynamicQuerySerializableInternal;
+            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
 
             string sql = String.Empty;
 
@@ -196,7 +196,7 @@ namespace EntitySpaces.SqlClientProvider
             }
             else
             {
-                IDynamicQuerySerializableInternal iSubQuery = iQuery.InternalFromQuery as IDynamicQuerySerializableInternal;
+                IDynamicQueryInternal iSubQuery = iQuery.InternalFromQuery as IDynamicQueryInternal;
 
                 iSubQuery.IsInSubQuery = true;
 
@@ -215,13 +215,13 @@ namespace EntitySpaces.SqlClientProvider
             return sql;
         }
 
-        protected static string GetSelectStatement(StandardProviderParameters std, esDynamicQuerySerializable query)
+        protected static string GetSelectStatement(StandardProviderParameters std, esDynamicQuery query)
         {
             string sql = String.Empty;
             string comma = String.Empty;
             bool selectAll = true;
 
-            IDynamicQuerySerializableInternal iQuery = query as IDynamicQuerySerializableInternal;
+            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
 
             if (query.distinct) sql += " DISTINCT ";
             if (query.top >= 0) sql += " TOP " + query.top.ToString() + " ";
@@ -234,7 +234,7 @@ namespace EntitySpaces.SqlClientProvider
                 {
                     if (expressionItem.Query != null)
                     {
-                        IDynamicQuerySerializableInternal iSubQuery = expressionItem.Query as IDynamicQuerySerializableInternal;
+                        IDynamicQueryInternal iSubQuery = expressionItem.Query as IDynamicQueryInternal;
 
                         sql += comma;
 
@@ -245,7 +245,7 @@ namespace EntitySpaces.SqlClientProvider
                         else
                         {
                             iSubQuery.IsInSubQuery = true;
-                            sql += " (" + BuildQuery(std, expressionItem.Query as esDynamicQuerySerializable) + ") AS " + iSubQuery.SubQueryAlias;
+                            sql += " (" + BuildQuery(std, expressionItem.Query as esDynamicQuery) + ") AS " + iSubQuery.SubQueryAlias;
                             iSubQuery.IsInSubQuery = false;
                         }
 
@@ -290,11 +290,11 @@ namespace EntitySpaces.SqlClientProvider
             return sql;
         }
 
-        protected static string GetJoinStatement(StandardProviderParameters std, esDynamicQuerySerializable query)
+        protected static string GetJoinStatement(StandardProviderParameters std, esDynamicQuery query)
         {
             string sql = String.Empty;
 
-            IDynamicQuerySerializableInternal iQuery = query as IDynamicQuerySerializableInternal;
+            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
 
             if (iQuery.InternalJoinItems != null)
             {
@@ -318,7 +318,7 @@ namespace EntitySpaces.SqlClientProvider
                             break;
                     }
 
-                    IDynamicQuerySerializableInternal iSubQuery = joinData.Query as IDynamicQuerySerializableInternal;
+                    IDynamicQueryInternal iSubQuery = joinData.Query as IDynamicQueryInternal;
 
                     sql += Shared.CreateFullName(std.request, joinData.Query);
 
@@ -337,11 +337,11 @@ namespace EntitySpaces.SqlClientProvider
             return sql;
         }
 
-        protected static string GetApplyStatement(StandardProviderParameters std, esDynamicQuerySerializable query)
+        protected static string GetApplyStatement(StandardProviderParameters std, esDynamicQuery query)
         {
             string sql = String.Empty;
 
-            IDynamicQuerySerializableInternal iQuery = query as IDynamicQuerySerializableInternal;
+            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
 
             if (iQuery.InternalApplyItems != null)
             {
@@ -360,7 +360,7 @@ namespace EntitySpaces.SqlClientProvider
                             break;
                     }
 
-                    IDynamicQuerySerializableInternal iSubQuery = applyData.Query as IDynamicQuerySerializableInternal;
+                    IDynamicQueryInternal iSubQuery = applyData.Query as IDynamicQueryInternal;
 
                     iSubQuery.IsInSubQuery = true;
 
@@ -380,12 +380,12 @@ namespace EntitySpaces.SqlClientProvider
             return sql;
         }
 
-        protected static string GetComparisonStatement(StandardProviderParameters std, esDynamicQuerySerializable query, List<esComparison> items, string prefix)
+        protected static string GetComparisonStatement(StandardProviderParameters std, esDynamicQuery query, List<esComparison> items, string prefix)
         {
             string sql = String.Empty;
             string comma = String.Empty;
 
-            IDynamicQuerySerializableInternal iQuery = query as IDynamicQuerySerializableInternal;
+            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
 
             //=======================================
             // WHERE
@@ -402,7 +402,7 @@ namespace EntitySpaces.SqlClientProvider
                     paramType = DbType.String;
 
                     esComparison.esComparisonData comparisonData = (esComparison.esComparisonData)comparisonItem;
-                    esDynamicQuerySerializable subQuery = null;
+                    esDynamicQuery subQuery = null;
 
                     bool requiresParam = true;
                     bool needsStringParameter = false;
@@ -433,7 +433,7 @@ namespace EntitySpaces.SqlClientProvider
                     Dictionary<string, SqlParameter> types = null;
                     if (comparisonData.Column.Query != null)
                     {
-                        IDynamicQuerySerializableInternal iLocalQuery = comparisonData.Column.Query as IDynamicQuerySerializableInternal;
+                        IDynamicQueryInternal iLocalQuery = comparisonData.Column.Query as IDynamicQueryInternal;
                         types = Cache.GetParameters(iLocalQuery.DataID, (esProviderSpecificMetadata)iLocalQuery.ProviderMetadata, (esColumnMetadataCollection)iLocalQuery.Columns);
                     }
 
@@ -452,13 +452,13 @@ namespace EntitySpaces.SqlClientProvider
 
                     if (comparisonData.ComparisonColumn.Name == null)
                     {
-                        subQuery = comparisonData.Value as esDynamicQuerySerializable;
+                        subQuery = comparisonData.Value as esDynamicQuery;
 
                         if (subQuery == null)
                         {
                             if (comparisonData.Column.Name != null)
                             {
-                                IDynamicQuerySerializableInternal iColQuery = comparisonData.Column.Query as IDynamicQuerySerializableInternal;
+                                IDynamicQueryInternal iColQuery = comparisonData.Column.Query as IDynamicQueryInternal;
                                 esColumnMetadataCollection columns = (esColumnMetadataCollection)iColQuery.Columns;
                                 compareTo = Delimiters.Param + columns[comparisonData.Column.Name].PropertyName + (++std.pindex).ToString();
                             }
@@ -650,7 +650,7 @@ namespace EntitySpaces.SqlClientProvider
 
                             if (comparisonData.ComparisonColumn2.Name == null)
                             {
-                                IDynamicQuerySerializableInternal iColQuery = comparisonData.Column.Query as IDynamicQuerySerializableInternal;
+                                IDynamicQueryInternal iColQuery = comparisonData.Column.Query as IDynamicQueryInternal;
                                 esColumnMetadataCollection columns = (esColumnMetadataCollection)iColQuery.Columns;
                                 compareTo = Delimiters.Param + columns[comparisonData.Column.Name].PropertyName + (++std.pindex).ToString();
 
@@ -700,12 +700,12 @@ namespace EntitySpaces.SqlClientProvider
             return sql;
         }
 
-        protected static string GetOrderByStatement(StandardProviderParameters std, esDynamicQuerySerializable query)
+        protected static string GetOrderByStatement(StandardProviderParameters std, esDynamicQuery query)
         {
             string sql = String.Empty;
             string comma = String.Empty;
 
-            IDynamicQuerySerializableInternal iQuery = query as IDynamicQuerySerializableInternal;
+            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
 
             if (iQuery.InternalOrderByItems != null)
             {
@@ -748,12 +748,12 @@ namespace EntitySpaces.SqlClientProvider
             return sql;
         }
 
-        protected static string GetGroupByStatement(StandardProviderParameters std, esDynamicQuerySerializable query)
+        protected static string GetGroupByStatement(StandardProviderParameters std, esDynamicQuery query)
         {
             string sql = String.Empty;
             string comma = String.Empty;
 
-            IDynamicQuerySerializableInternal iQuery = query as IDynamicQuerySerializableInternal;
+            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
 
             if (iQuery.InternalGroupByItems != null)
             {
@@ -782,11 +782,11 @@ namespace EntitySpaces.SqlClientProvider
             return sql;
         }
 
-        protected static string GetSetOperationStatement(StandardProviderParameters std, esDynamicQuerySerializable query)
+        protected static string GetSetOperationStatement(StandardProviderParameters std, esDynamicQuery query)
         {
             string sql = String.Empty;
 
-            IDynamicQuerySerializableInternal iQuery = query as IDynamicQuerySerializableInternal;
+            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
 
             if (iQuery.InternalSetOperations != null)
             {
@@ -807,7 +807,7 @@ namespace EntitySpaces.SqlClientProvider
             return sql;
         }
 
-        protected static string GetExpressionColumn(StandardProviderParameters std, esDynamicQuerySerializable query, esExpression expression, bool inExpression, bool useAlias)
+        protected static string GetExpressionColumn(StandardProviderParameters std, esDynamicQuery query, esExpression expression, bool inExpression, bool useAlias)
         {
             string sql = String.Empty;
 
@@ -848,7 +848,7 @@ namespace EntitySpaces.SqlClientProvider
             return sql;
         }
 
-        protected static string GetCaseWhenThenEnd(StandardProviderParameters std, esDynamicQuerySerializable query, esCase caseWhenThen)
+        protected static string GetCaseWhenThenEnd(StandardProviderParameters std, esDynamicQuery query, esCase caseWhenThen)
         {
             string sql = string.Empty;
 
@@ -932,7 +932,7 @@ namespace EntitySpaces.SqlClientProvider
             return sql;
         }
 
-        protected static string GetMathmaticalExpressionColumn(StandardProviderParameters std, esDynamicQuerySerializable query, esMathmaticalExpression mathmaticalExpression)
+        protected static string GetMathmaticalExpressionColumn(StandardProviderParameters std, esDynamicQuery query, esMathmaticalExpression mathmaticalExpression)
         {
             string sql = "(";
 
@@ -998,7 +998,7 @@ namespace EntitySpaces.SqlClientProvider
              }
         }
 
-        protected static string ApplyWhereSubOperations(StandardProviderParameters std, esDynamicQuerySerializable query, esComparison.esComparisonData comparisonData)
+        protected static string ApplyWhereSubOperations(StandardProviderParameters std, esDynamicQuery query, esComparison.esComparisonData comparisonData)
         {
             string sql = string.Empty;
 
@@ -1234,7 +1234,7 @@ namespace EntitySpaces.SqlClientProvider
             }
             else
             {
-                IDynamicQuerySerializableInternal iQuery = column.Query as IDynamicQuerySerializableInternal;
+                IDynamicQueryInternal iQuery = column.Query as IDynamicQueryInternal;
 
                 if (iQuery.IsInSubQuery)
                 {
@@ -1253,11 +1253,11 @@ namespace EntitySpaces.SqlClientProvider
             return cmd.Parameters.Count;
         }
 
-        private static string GetSubquerySearchCondition(esDynamicQuerySerializable query)
+        private static string GetSubquerySearchCondition(esDynamicQuery query)
         {
             string searchCondition = String.Empty;
 
-            IDynamicQuerySerializableInternal iQuery = query as IDynamicQuerySerializableInternal;
+            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
 
             switch (iQuery.SubquerySearchCondition)
             {

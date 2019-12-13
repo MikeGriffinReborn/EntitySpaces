@@ -85,7 +85,7 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="query">The esDynamicQueryTransport passed in via DynamicQuery</param>
         /// <param name="columnName">The columnName passed in via DynamicQuery</param>
         /// <param name="datatype">The esSystemType</param>
-        public esQueryItem(esDynamicQuerySerializable query, string columnName, esSystemType datatype)
+        public esQueryItem(esDynamicQuery query, string columnName, esSystemType datatype)
         {
             this.query = query;
             this.Column.Query = query;
@@ -5081,7 +5081,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="value">The Query to provide the matching values for the IN comparison</param>
         /// <returns></returns>
-        public esComparison In(esDynamicQuerySerializable subQuery)
+        public esComparison In(esDynamicQuery subQuery)
         {
             esComparison comparison = new esComparison(this.query);
             comparison.Operand = esComparisonOperand.In;
@@ -5171,7 +5171,7 @@ namespace EntitySpaces.DynamicQuery
         /// </summary>
         /// <param name="value">The Query to provide the matching values for the NOT IN comparison</param>
         /// <returns></returns>
-        public esComparison NotIn(esDynamicQuerySerializable subQuery)
+        public esComparison NotIn(esDynamicQuery subQuery)
         {
             esComparison comparison = new esComparison(this.query);
             comparison.Operand = esComparisonOperand.NotIn;
@@ -5821,7 +5821,7 @@ namespace EntitySpaces.DynamicQuery
         internal esColumnItem Column;
         internal List<esQuerySubOperator> SubOperators;
         internal esCase CaseWhen;
-        private esDynamicQuerySerializable query;
+        private esDynamicQuery query;
 
         /// <summary>
         /// Used Internally by EntitySpaces

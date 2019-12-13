@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
+using EntitySpaces.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -46,7 +47,7 @@ namespace EntitySpaces.DynamicQuery
         /// Back Pointer to the Parent Query
         /// </summary>
         [DataMember(Name = "ParentQuery", Order = 99, EmitDefaultValue = false)]
-        public esDynamicQuerySerializable Query;
+        public esDynamicQuery Query;
 
         /// <summary>
         /// Contains the necessary information to describe this column

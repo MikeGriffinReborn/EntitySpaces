@@ -105,7 +105,7 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// The From SubQuery
         /// </summary>
-        esDynamicQuerySerializable InternalFromQuery { get; }
+        esDynamicQuery InternalFromQuery { get; }
 
         /// <summary>
         /// List&lt;esJoinItem&gt; InternalJoinItems.
@@ -166,15 +166,15 @@ namespace EntitySpaces.DynamicQuery
         object Columns { get; set; }
 
         /// <summary>
-        /// This is used because esDynamicQuerySerializable.AssignProviderMetadata is
+        /// This is used because esDynamicQuery.AssignProviderMetadata is
         /// not public and esJoinItem needs to be able to execute it
         /// </summary>
-        void HookupProviderMetadata(esDynamicQuerySerializable query);
+        void HookupProviderMetadata(esDynamicQuery query);
 
         /// <summary>
         /// This is used internally
         /// </summary>
-        Dictionary<string, esDynamicQuerySerializable> queries { get; }
+        Dictionary<string, esDynamicQuery> queries { get; }
 
         /// <summary>
         /// The number of rows to skip in the result set (starting from the beginning)

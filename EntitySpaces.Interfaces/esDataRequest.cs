@@ -160,7 +160,7 @@ namespace EntitySpaces.Interfaces
         /// <summary>
         /// Automatically populated whenver you use the EntitySpaces dynamic query mechanism.
         /// </summary>
-        public esDynamicQuerySerializable DynamicQuery;
+        public esDynamicQuery DynamicQuery;
 
 #if (LINQ)
         /// <summary>

@@ -687,9 +687,9 @@ namespace EntitySpaces.SqlClientProvider
             return param.Clone() as SqlParameter;
         }
 
-        static public string CreateFullName(esDataRequest request, esDynamicQuerySerializable query)
+        static public string CreateFullName(esDataRequest request, esDynamicQuery query)
         {
-            IDynamicQuerySerializableInternal iQuery = query as IDynamicQuerySerializableInternal;
+            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
 
             esProviderSpecificMetadata providerMetadata = iQuery.ProviderMetadata as esProviderSpecificMetadata;
 

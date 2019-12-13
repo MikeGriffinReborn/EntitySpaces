@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
+using EntitySpaces.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -61,7 +62,7 @@ namespace EntitySpaces.DynamicQuery
         /// The esComparison class is dynamically created by your
         /// BusinessEntity's DynamicQuery mechanism.
         /// </summary>
-        public esComparison(esDynamicQuerySerializable query) 
+        public esComparison(esDynamicQuery query) 
         {
             this.data.Query = query;
         }
@@ -414,7 +415,7 @@ namespace EntitySpaces.DynamicQuery
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.
             /// </summary>
             [DataMember(Name = "ParentQuery", Order = 99, EmitDefaultValue = false)]
-            public esDynamicQuerySerializable Query;
+            public esDynamicQuery Query;
 
             /// <summary>
             /// Internal data used by <see cref="esComparison"/> and accessed by the EntitySpaces data providers.

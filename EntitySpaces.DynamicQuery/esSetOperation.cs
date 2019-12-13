@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
+using EntitySpaces.Interfaces;
 using System;
 using System.Runtime.Serialization;
 
@@ -47,7 +48,7 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// The Constructor
         /// </summary>
-        public esSetOperation(esDynamicQuerySerializable query)
+        public esSetOperation(esDynamicQuery query)
         {
             this.Query = query;
         }
@@ -56,7 +57,7 @@ namespace EntitySpaces.DynamicQuery
         /// The Query to form the Set with
         /// </summary>
         [DataMember(Name = "Query", EmitDefaultValue = false)]
-        public esDynamicQuerySerializable Query;
+        public esDynamicQuery Query;
         /// <summary>
         /// The Set Type, Union/Unionall/Intersect/Except
         /// </summary>

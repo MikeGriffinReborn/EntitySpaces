@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
+using EntitySpaces.Interfaces;
 using System;
 using System.Runtime.Serialization;
 
@@ -93,7 +94,7 @@ namespace EntitySpaces.DynamicQuery
         /// 
         /// </summary>
         [DataMember(Name = "ParentQuery", Order = 99, EmitDefaultValue = false)]
-        public esDynamicQuerySerializable Query;
+        public esDynamicQuery Query;
 
         /// <summary>
         /// This is passed into the esQueryItem's constructor, it ultimately makes its 

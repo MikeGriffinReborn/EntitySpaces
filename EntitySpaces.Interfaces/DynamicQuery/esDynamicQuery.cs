@@ -152,7 +152,7 @@ namespace EntitySpaces.Interfaces
     /// </code>
     /// </example>
     [Serializable] 
-    public class esDynamicQuery : esDynamicQuerySerializable
+    public partial class esDynamicQuery
     {
         /// <summary>
         /// The Constructor
@@ -180,28 +180,18 @@ namespace EntitySpaces.Interfaces
             }
         }
 
-        /// <summary>
-        /// Called whenever the Entity needs a connection. This can be used to override the default connection 
-        /// per object manually, or automatically by filling in the "Connection Name" on the "Generated Master"
-        /// template. 
-        /// </summary>
-        /// <returns></returns>
-        override protected string GetConnectionName()
-        {
-            return null;
-        }
 
         /// <summary>
         /// 
         /// </summary>
-        private void AssignProviderMetadata(esDynamicQuerySerializable query, List<esDynamicQuerySerializable> beenThere)
+        private void AssignProviderMetadata(esDynamicQuery query, List<esDynamicQuery> beenThere)
         {
             if (beenThere.Contains(query)) return;
 
             beenThere.Add(query);
 
             esDynamicQuery theQuery = query as esDynamicQuery;
-            IDynamicQuerySerializableInternal iQuery = query as IDynamicQuerySerializableInternal;
+            IDynamicQueryInternal iQuery = query as IDynamicQueryInternal;
 
             if (theQuery != null)
             {
@@ -256,7 +246,7 @@ namespace EntitySpaces.Interfaces
                 }
             }
 
-            foreach (esDynamicQuerySerializable subQuery in iQuery.queries.Values)
+            foreach (esDynamicQuery subQuery in iQuery.queries.Values)
             {
                 AssignProviderMetadata(subQuery, beenThere);
             }
@@ -301,11 +291,11 @@ namespace EntitySpaces.Interfaces
             esConnection conn = this.es2.Connection;
             esProviderSpecificMetadata providerMetadata = meta.GetProviderMetadata(conn.ProviderMetadataKey);
 
-            IDynamicQuerySerializableInternal iQuery = this as IDynamicQuerySerializableInternal;
+            IDynamicQueryInternal iQuery = this as IDynamicQueryInternal;
 
             if ((this.queries != null && this.queries.Count > 0) || iQuery.InternalSetOperations != null)
             {
-                AssignProviderMetadata(this, new List<esDynamicQuerySerializable>());
+                AssignProviderMetadata(this, new List<esDynamicQuery>());
             }
 
             string catalog = conn.Catalog;
@@ -670,7 +660,7 @@ namespace EntitySpaces.Interfaces
         /// </summary>
         /// <param name="columns">The columns which you wish to exclude from the Select statement</param>
         /// <returns></returns>
-        override public esDynamicQuerySerializable SelectAllExcept(params esQueryItem[] columns)
+        public esDynamicQuery SelectAllExcept(params esQueryItem[] columns)
         {
             foreach (esColumnMetadata col in this.Meta.Columns)
             {
@@ -696,10 +686,10 @@ namespace EntitySpaces.Interfaces
 
         /// <summary>
         /// This method will select all of the columns that were present when you generated your
-        /// classes as opposed to doing a SELECT *
+        /// classes as opposed to doing a SELECT*
         /// </summary>
         /// <returns></returns>
-        override public esDynamicQuerySerializable SelectAll()
+        public esDynamicQuery SelectAll()
         {
             foreach (esColumnMetadata col in this.Meta.Columns)
             {
@@ -713,54 +703,60 @@ namespace EntitySpaces.Interfaces
         #endregion
 
         #region Helper Routine
-        private List<esComparison> ProcessWhereItems(esConjunction conj, params object[] theItems)
-        {
-            List<esComparison> items = new List<esComparison>();
+        //private List<esComparison> ProcessWhereItems(esConjunction conj, params object[] theItems)
+        //{
+        //    List<esComparison> items = new List<esComparison>();
 
-            items.Add(new esComparison(esParenthesis.Open));
+        //    items.Add(new esComparison(esParenthesis.Open));
 
-            bool first = true;
+        //    bool first = true;
 
-            esComparison whereItem;
-            int count = theItems.Length;
+        //    esComparison whereItem;
+        //    int count = theItems.Length;
 
-            for (int i = 0; i < count; i++)
-            {
-                object o = theItems[i];
+        //    for (int i = 0; i < count; i++)
+        //    {
+        //        object o = theItems[i];
 
-                whereItem = o as esComparison;
-                if (whereItem != null)
-                {
-                    if (!first)
-                    {
-                        items.Add(new esComparison(conj));
-                    }
-                    items.Add(whereItem);
-                    first = false;
-                }
-                else
-                {
-                    List<esComparison> listItem = o as List<esComparison>;
-                    if (listItem != null)
-                    {
-                        if (!first)
-                        {
-                            items.Add(new esComparison(conj));
-                        }
-                        items.AddRange(listItem);
-                        first = false;
-                    }
-                    else
-                    {
-                        throw new Exception("Unsupported Type");
-                    }
-                }
-            }
+        //        whereItem = o as esComparison;
+        //        if (whereItem != null)
+        //        {
+        //            if (!first)
+        //            {
+        //                items.Add(new esComparison(conj));
+        //            }
+        //            items.Add(whereItem);
+        //            first = false;
+        //        }
+        //        else
+        //        {
+        //            List<esComparison> listItem = o as List<esComparison>;
+        //            if (listItem != null)
+        //            {
+        //                if (!first)
+        //                {
+        //                    items.Add(new esComparison(conj));
+        //                }
+        //                items.AddRange(listItem);
+        //                first = false;
+        //            }
+        //            else
+        //            {
+        //                if (o is string)
+        //                {
+        //                    whereItem = new esComparison(this);
+        //                    whereItem.ColumnName = o as string;
+        //                    whereItem.IsLiteral = true;
+        //                    items.Add(whereItem);
+        //                }
+        //            }
+        //        }
+        //    }
 
-            items.Add(new esComparison(esParenthesis.Close));
+        //    items.Add(new esComparison(esParenthesis.Close));
 
-            return items;
-        }
+        //    return items;
+        //}
         #endregion Helper Routine
 
         #region es2
@@ -768,32 +764,32 @@ namespace EntitySpaces.Interfaces
         /// <summary>
         /// This is to help hide some details from Intellisense.
         /// </summary>
-        public DynamicQueryProps es2
+        public DynamicQueryProps2 es2
         {
             get
             {
-                if (this.props == null)
+                if (this.props2 == null)
                 {
-                    this.props = new DynamicQueryProps(this);
+                    this.props2 = new DynamicQueryProps2(this);
                 }
 
-                return this.props;
+                return this.props2;
             }
         }
 
         [NonSerialized]
-        private DynamicQueryProps props;
+        private DynamicQueryProps2 props2;
 
         /// <summary>
         /// The Dynamic Query properties.
         /// </summary>
-        public new class DynamicQueryProps
+        public new class DynamicQueryProps2
         {
             /// <summary>
             /// The Dynamic Query properties.
             /// </summary>
             /// <param name="query">The esDynamicQuery's properties.</param>
-            public DynamicQueryProps(esDynamicQuery query)
+            public DynamicQueryProps2(esDynamicQuery query)
             {
                 this.dynamicQuery = query;
             }
@@ -855,11 +851,11 @@ namespace EntitySpaces.Interfaces
         }
         #endregion
 
-        private IDynamicQuerySerializableInternal iData
+        private IDynamicQueryInternal iData
         {
             get
             {
-                return this as IDynamicQuerySerializableInternal;
+                return this as IDynamicQueryInternal;
             }
         }
 

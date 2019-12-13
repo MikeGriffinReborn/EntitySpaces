@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EntitySpaces.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
@@ -14,7 +15,7 @@ namespace EntitySpaces.DynamicQuery
 
     public class esPartionOrderBy
     {
-        public esPartionOrderBy(esDynamicQuerySerializable query)
+        public esPartionOrderBy(esDynamicQuery query)
         {
             this.query = query;
         }
@@ -25,12 +26,12 @@ namespace EntitySpaces.DynamicQuery
             return new esPartionDistinctBy(query);
         }
 
-        private esDynamicQuerySerializable query;
+        private esDynamicQuery query;
     }
 
     public class esPartionDistinctBy
     {
-        public esPartionDistinctBy(esDynamicQuerySerializable query)
+        public esPartionDistinctBy(esDynamicQuery query)
         {
             this.query = query;
         }
@@ -41,12 +42,12 @@ namespace EntitySpaces.DynamicQuery
             return new esPartionTop(query);
         }
 
-        private esDynamicQuerySerializable query;
+        private esDynamicQuery query;
     }
 
     public class esPartionTop
     {
-        public esPartionTop(esDynamicQuerySerializable query)
+        public esPartionTop(esDynamicQuery query)
         {
             this.query = query;
         }
@@ -59,6 +60,6 @@ namespace EntitySpaces.DynamicQuery
             }
         }
 
-        private esDynamicQuerySerializable query;
+        private esDynamicQuery query;
     }
 }

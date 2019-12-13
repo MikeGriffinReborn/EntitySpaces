@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
+using EntitySpaces.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -43,7 +44,7 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// The Constructor
         /// </summary>
-        public esCase(esDynamicQuerySerializable query, esQueryItem queryItem)
+        public esCase(esDynamicQuery query, esQueryItem queryItem)
         {
             this.data.Query = query;
             this.data.QueryItem = queryItem;
@@ -52,7 +53,7 @@ namespace EntitySpaces.DynamicQuery
         /// <summary>
         /// The Constructor
         /// </summary>
-        public esCase(esDynamicQuerySerializable query)
+        public esCase(esDynamicQuery query)
         {
             this.data.Query = query;
         }
@@ -87,11 +88,11 @@ namespace EntitySpaces.DynamicQuery
                 {
                     foreach (esComparison exp in comparison.data.WhereExpression)
                     {
-                        esDynamicQuerySerializable q = exp.Value as esDynamicQuerySerializable;
+                        esDynamicQuery q = exp.Value as esDynamicQuery;
 
                         if (q != null)
                         {
-                            IDynamicQuerySerializableInternal iQ = q as IDynamicQuerySerializableInternal;
+                            IDynamicQueryInternal iQ = q as IDynamicQueryInternal;
                             iQ.HookupProviderMetadata(q);
                         }
                     }
@@ -103,11 +104,11 @@ namespace EntitySpaces.DynamicQuery
                     this.WhenItem.Comparisons.Add(comparison);
                 }
 
-                esDynamicQuerySerializable query = comparison.Value as esDynamicQuerySerializable;
+                esDynamicQuery query = comparison.Value as esDynamicQuery;
 
                 if (query != null)
                 {
-                    IDynamicQuerySerializableInternal iQ = query as IDynamicQuerySerializableInternal;
+                    IDynamicQueryInternal iQ = query as IDynamicQueryInternal;
                     iQ.HookupProviderMetadata(query);
                 }
             }
@@ -220,7 +221,7 @@ namespace EntitySpaces.DynamicQuery
                 public esExpression Then;
             }
 
-            public esDynamicQuerySerializable Query;
+            public esDynamicQuery Query;
             public esQueryItem QueryItem;
 
             public List<esCaseClause> Cases;
