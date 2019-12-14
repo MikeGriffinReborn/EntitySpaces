@@ -199,7 +199,23 @@ eQuery.Select(eQuery.EmployeeID)
 EmployeesCollection coll = new EmployeesCollection();
 if(coll.Load(eQuery))
 {
+    // records were loaded
+}
+```
 
+Even more streamlined
+
+```c#
+EmployeesCollection coll = new EmployeesQuery("e", out var eQuery)
+ .Select(eQuery.EmployeeID)
+ .InnerJoin<OrdersQuery>("o", out var o).On(eQuery.EmployeeID == o.EmployeeID)
+ .InnerJoin<OrderDetailsQuery>("od", out var od).On(o.OrderID == od.OrderID)
+ .Where(o.Freight > 20)
+ .ToCollection<EmployeesCollection>();
+
+if(coll.Count > 0)
+{
+    // records were loaded
 }
 ```
 
