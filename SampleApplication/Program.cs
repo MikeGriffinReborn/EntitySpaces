@@ -18,15 +18,15 @@ namespace ConsoleApp
             conn.Provider = "EntitySpaces.SqlClientProvider";
             conn.ProviderClass = "DataProvider";
             conn.SqlAccessType = esSqlAccessType.DynamicSQL;
-            conn.ConnectionString = "User ID=sa;Password=abc;Initial Catalog=Northwind;Data Source=localhost";
+            conn.ConnectionString = "User ID=sa;Password=blank;Initial Catalog=Northwind;Data Source=localhost";
             conn.DatabaseVersion = "2012";
             esConfigSettings.ConnectionInfo.Connections.Add(conn);
-
 
             // Assign the Default Connection
             esConfigSettings.ConnectionInfo.Default = "RemoteDb";
 
             AddLoadSaveDeleteSingleEntity();
+            StreamlinedDynamicQueryAPI();
             CollectionLoadAll();
 
             SaveEntity();
@@ -76,6 +76,18 @@ namespace ConsoleApp
                 employee.MarkAsDeleted();
                 employee.Save();
             }
+        }
+
+        static private void StreamlinedDynamicQueryAPI()
+        {
+            Employees emp = new EmployeesQuery("e", out var q)
+                .Select(q.EmployeeID, q.FirstName, q.LastName)
+                .Where(q.EmployeeID == 5)
+                .ToEntity<Employees>();
+
+            EmployeesCollection coll = new EmployeesQuery("e", out var c)
+                .Select(c.EmployeeID, c.FirstName, c.LastName)
+                .ToCollection<EmployeesCollection>();
         }
 
         static private void CollectionLoadAll()

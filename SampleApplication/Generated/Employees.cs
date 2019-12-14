@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0807.0
+EntitySpaces Version : 2019.1.1214.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/8/2019 8:05:38 AM
+Date Generated       : 12/14/2019 5:29:48 PM
 ===============================================================================
 */
 
@@ -104,8 +104,14 @@ namespace BusinessObjects
 	{
 		public EmployeesQuery(string joinAlias)
 		{
-			this.es.JoinAlias(joinAlias);
+			this.es.JoinAlias = joinAlias;
 		}	
+
+		public EmployeesQuery(string joinAlias, out EmployeesQuery query)
+		{
+			query = this;
+			this.es.JoinAlias = joinAlias;
+		}
 
 		override protected string GetQueryName()
 		{
@@ -573,7 +579,7 @@ namespace BusinessObjects
 			InitQuery(this.query);
 			return this.Query.Load();
 		}
-		
+
 		protected void InitQuery(EmployeesQuery query)
 		{
 			query.OnLoadDelegate = this.OnQueryLoaded;
@@ -582,6 +588,11 @@ namespace BusinessObjects
 			{
 				query.es2.Connection = ((IEntity)this).Connection;
 			}			
+		}
+
+		protected override void HookupQuery(esDynamicQuery query)
+		{
+			this.InitQuery((EmployeesQuery)query);
 		}
 
 		#endregion
@@ -812,16 +823,16 @@ namespace BusinessObjects
 	public partial class Employees : esEmployees
 	{
 
-		#region SubordinatesCollection - Zero To Many (FK_Employees_Employees)
+		#region EmployeesCollection - Zero To Many (FK_Employees_Employees)
 		
-		static public esPrefetchMap Prefetch_SubordinatesCollection
+		static public esPrefetchMap Prefetch_EmployeesCollection
 		{
 			get
 			{
 				esPrefetchMap map = new esPrefetchMap
 				{
-					PrefetchDelegate = BusinessObjects.Employees.SubordinatesCollection_Delegate,
-					PropertyName = "SubordinatesCollection",
+					PrefetchDelegate = BusinessObjects.Employees.EmployeesCollection_Delegate,
+					PropertyName = "EmployeesCollection",
 					MyColumnName = "EmployeeID",
 					ParentColumnName = "ReportsTo",
 					IsMultiPartKey = false
@@ -830,7 +841,7 @@ namespace BusinessObjects
 			}
 		}		
 		
-		static private void SubordinatesCollection_Delegate(esPrefetchParameters data)
+		static private void EmployeesCollection_Delegate(esPrefetchParameters data)
 		{
 			EmployeesQuery parent = new EmployeesQuery(data.NextAlias());
 
@@ -851,50 +862,50 @@ namespace BusinessObjects
 		/// Foreign Key Name - FK_Employees_Employees
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public bool ShouldSerializeSubordinatesCollection()
+		public bool ShouldSerializeEmployeesCollection()
 		{
-		    if(this._SubordinatesCollection != null && this._SubordinatesCollection.Count > 0)
+		    if(this._EmployeesCollection != null && this._EmployeesCollection.Count > 0)
 				return true;
             else
 				return false;
 		}	
 		
 
-		[DataMember(Name="SubordinatesCollection", EmitDefaultValue = false)]
-		public EmployeesCollection SubordinatesCollection
+		[DataMember(Name="EmployeesCollection", EmitDefaultValue = false)]
+		public EmployeesCollection EmployeesCollection
 		{
 			get
 			{
-				if(this._SubordinatesCollection == null)
+				if(this._EmployeesCollection == null)
 				{
-					this._SubordinatesCollection = new EmployeesCollection();
-					this._SubordinatesCollection.es.Connection.Name = this.es.Connection.Name;
-					this.SetPostSave("SubordinatesCollection", this._SubordinatesCollection);
+					this._EmployeesCollection = new EmployeesCollection();
+					this._EmployeesCollection.es.Connection.Name = this.es.Connection.Name;
+					this.SetPostSave("EmployeesCollection", this._EmployeesCollection);
 				
 					if (this.EmployeeID != null)
 					{
 						if (!this.es.IsLazyLoadDisabled)
 						{
-							this._SubordinatesCollection.Query.Where(this._SubordinatesCollection.Query.ReportsTo == this.EmployeeID);
-							this._SubordinatesCollection.Query.Load();
+							this._EmployeesCollection.Query.Where(this._EmployeesCollection.Query.ReportsTo == this.EmployeeID);
+							this._EmployeesCollection.Query.Load();
 						}
 
 						// Auto-hookup Foreign Keys
-						this._SubordinatesCollection.fks.Add(EmployeesMetadata.ColumnNames.ReportsTo, this.EmployeeID);
+						this._EmployeesCollection.fks.Add(EmployeesMetadata.ColumnNames.ReportsTo, this.EmployeeID);
 					}
 				}
 
-				return this._SubordinatesCollection;
+				return this._EmployeesCollection;
 			}
 			
 			set 
 			{ 
 				if (value != null) throw new Exception("'value' Must be null"); 
 			 
-				if (this._SubordinatesCollection != null) 
+				if (this._EmployeesCollection != null) 
 				{ 
-					this.RemovePostSave("SubordinatesCollection"); 
-					this._SubordinatesCollection = null;
+					this.RemovePostSave("EmployeesCollection"); 
+					this._EmployeesCollection = null;
 					
 				} 
 			} 			
@@ -904,7 +915,7 @@ namespace BusinessObjects
 		
 			
 		
-		private EmployeesCollection _SubordinatesCollection;
+		private EmployeesCollection _EmployeesCollection;
 		#endregion
 
 		
@@ -1254,8 +1265,8 @@ namespace BusinessObjects
 
 			switch (name)
 			{
-				case "SubordinatesCollection":
-					coll = this.SubordinatesCollection;
+				case "EmployeesCollection":
+					coll = this.EmployeesCollection;
 					break;
 				case "EmployeeTerritoriesCollection":
 					coll = this.EmployeeTerritoriesCollection;
@@ -1274,7 +1285,7 @@ namespace BusinessObjects
 		{
 			List<esPropertyDescriptor> props = new List<esPropertyDescriptor>();
 			
-			props.Add(new esPropertyDescriptor(this, "SubordinatesCollection", typeof(EmployeesCollection), new Employees()));
+			props.Add(new esPropertyDescriptor(this, "EmployeesCollection", typeof(EmployeesCollection), new Employees()));
 			props.Add(new esPropertyDescriptor(this, "EmployeeTerritoriesCollection", typeof(EmployeeTerritoriesCollection), new EmployeeTerritories()));
 			props.Add(new esPropertyDescriptor(this, "OrdersCollection", typeof(OrdersCollection), new Orders()));
 		
@@ -1315,9 +1326,9 @@ namespace BusinessObjects
 		/// </summary>
 		protected override void ApplyPostSaveKeys()
 		{
-			if(this._SubordinatesCollection != null)
+			if(this._EmployeesCollection != null)
 			{
-				Apply(this._SubordinatesCollection, "ReportsTo", this.EmployeeID);
+				Apply(this._EmployeesCollection, "ReportsTo", this.EmployeeID);
 			}
 			if(this._EmployeeTerritoriesCollection != null)
 			{

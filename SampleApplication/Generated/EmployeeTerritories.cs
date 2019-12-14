@@ -6,9 +6,9 @@
              EntitySpaces(TM) is a legal trademark of EntitySpaces, LLC
                           http://www.entityspaces.net
 ===============================================================================
-EntitySpaces Version : 2019.1.0807.0
+EntitySpaces Version : 2019.1.1214.0
 EntitySpaces Driver  : SQL
-Date Generated       : 8/8/2019 8:05:38 AM
+Date Generated       : 12/14/2019 5:29:49 PM
 ===============================================================================
 */
 
@@ -106,8 +106,14 @@ namespace BusinessObjects
 	{
 		public EmployeeTerritoriesQuery(string joinAlias)
 		{
-			this.es.JoinAlias(joinAlias);
+			this.es.JoinAlias = joinAlias;
 		}	
+
+		public EmployeeTerritoriesQuery(string joinAlias, out EmployeeTerritoriesQuery query)
+		{
+			query = this;
+			this.es.JoinAlias = joinAlias;
+		}
 
 		override protected string GetQueryName()
 		{
@@ -258,7 +264,7 @@ namespace BusinessObjects
 			InitQuery(this.query);
 			return this.Query.Load();
 		}
-		
+
 		protected void InitQuery(EmployeeTerritoriesQuery query)
 		{
 			query.OnLoadDelegate = this.OnQueryLoaded;
@@ -267,6 +273,11 @@ namespace BusinessObjects
 			{
 				query.es2.Connection = ((IEntity)this).Connection;
 			}			
+		}
+
+		protected override void HookupQuery(esDynamicQuery query)
+		{
+			this.InitQuery((EmployeeTerritoriesQuery)query);
 		}
 
 		#endregion

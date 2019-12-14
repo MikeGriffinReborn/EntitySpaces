@@ -1698,10 +1698,17 @@ namespace EntitySpaces.Interfaces
             /// string JoinAlias.
             /// </summary>
             /// <returns>string JoinAlias.</returns>
-            public esDynamicQuery JoinAlias(string alias)
+            public string JoinAlias
             {
-                this.dynamicQuery.joinAlias = alias;
-                return this.dynamicQuery;
+                set
+                {
+                    this.dynamicQuery.joinAlias = value;
+                }
+
+                get
+                {
+                    return this.dynamicQuery.joinAlias;
+                }
             }
 
             /// <summary>
