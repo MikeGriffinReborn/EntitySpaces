@@ -203,6 +203,22 @@ if(coll.Load(eQuery))
 }
 ```
 
+Even more streamlined
+
+```c#
+EmployeesCollection coll = new EmployeesQuery("e", out var eQuery)
+ .Select(eQuery.EmployeeID)
+ .InnerJoin<OrdersQuery>("o", out var o).On(eQuery.EmployeeID == o.EmployeeID)
+ .InnerJoin<OrderDetailsQuery>("od", out var od).On(o.OrderID == od.OrderID)
+ .Where(o.Freight > 20)
+ .ToCollection<EmployeesCollection>();
+
+if(coll.Count > 0)
+{
+    // records were loaded
+}
+```
+
 ### Supported Operators
 
 Use the native language syntax, it works as you expect it would.
