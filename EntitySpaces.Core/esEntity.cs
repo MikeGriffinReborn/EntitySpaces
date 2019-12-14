@@ -242,6 +242,11 @@ namespace EntitySpaces.Core
             }
         }
 
+        virtual protected internal void HookupQuery(esDynamicQuery query)
+        {
+
+        }
+
         /// <summary>
         /// Invoked when a DynamicQuery has successfully executed on a single
         /// Entity. Throws an exception if more than one row is returned.

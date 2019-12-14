@@ -128,7 +128,7 @@ namespace EntitySpaces.Core
             return null;
         }
 
-        virtual protected void HookupQuery(esDynamicQuery query)
+        virtual protected internal void HookupQuery(esDynamicQuery query)
         {
 
         }

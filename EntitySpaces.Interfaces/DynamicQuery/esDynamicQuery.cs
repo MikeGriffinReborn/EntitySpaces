@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 using EntitySpaces.DynamicQuery;
+using EntitySpaces.Core;
 
 namespace EntitySpaces.Interfaces
 {
@@ -169,6 +170,36 @@ namespace EntitySpaces.Interfaces
         public esDynamicQuery(string joinAlias)
         {
             iData.JoinAlias = joinAlias;
+        }
+
+        /// <summary>
+        /// Loads and returns the Collection
+        /// </summary>
+        /// <typeparam name="T">Generated Collection class</typeparam>
+        /// <returns>The collection, Count is zero if no data was loaded</returns>
+        public T ToCollection<T>() where T : esEntityCollectionBase, new()
+        {
+            T coll = new T();
+            coll.HookupQuery(this);
+            this.Load();
+
+            return coll;
+        }
+
+        /// <summary>
+        /// Loads and returns the Entity
+        /// </summary>
+        /// <typeparam name="T">Generated Entity class</typeparam>
+        /// <returns>Null if no record found</returns>
+        public T ToEntity<T>() where T : esEntity, new()
+        {
+            T entity = new T();
+            entity.HookupQuery(this);
+
+            if (this.Load())
+                return entity;
+            else
+                return default(T);
         }
 
         [IgnoreDataMember]

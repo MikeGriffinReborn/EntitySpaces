@@ -1273,12 +1273,14 @@ namespace EntitySpaces.Interfaces
         public esComparison NotExists(Func<esDynamicQuery> func)
         {
             esDynamicQuery query = func();
-            AddQueryToList(query);
+            return NotExists(query);
+        }
 
-            esComparison where = new esComparison(query);
-            where.Operand = esComparisonOperand.NotExists;
-            where.Value = query;
-            return where;
+        public esComparison NotExists<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
+        {
+            esDynamicQuery theQuery = func();
+            query = (T)theQuery;
+            return NotExists(theQuery);
         }
 
         /// <summary>
