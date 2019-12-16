@@ -167,8 +167,7 @@ EmployeesCollection coll = new EmployeesQuery("e", out var e)   // Employees
     .InnerJoin<EmployeesQuery>("r", out var reportsTo).On(e.ReportsTo == reportsTo.EmployeeID)
     .Select(e.EmployeeID, e.LastName, reportsTo.LastName.As("SupervisorName"))
     .Where(reportsTo.LastName.Like("%a%"))
-    .OrderBy(reportsTo.LastName.Descending)
-    .es.Distinct()
+    .OrderBy(reportsTo.LastName.Descending).es.Distinct()
     .ToCollection<EmployeesCollection>();
 
 if (coll.Count > 0)
