@@ -267,7 +267,7 @@ if (emp.Load(q))
 }
 ```
 
-Result:
+SQL Generated:
 
 ```sql
 SELECT  TOP 1 * 
@@ -292,7 +292,7 @@ if (coll.Load(q))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT [EmployeeID],[LastName],[FirstName],[Supervisor],[Age], -- ... not [Photo]
@@ -308,7 +308,7 @@ q.Where(q.ReportsTo.IsNull()).es.CountAll();
 int count = q.ExecuteScalar<int>();
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT COUNT(*) AS 'Count' 
@@ -336,7 +336,7 @@ if (coll.Load(q))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 WITH [withStatement] AS 
@@ -366,7 +366,7 @@ if (coll.Load(q))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT [EmployeeID],[LastName]
@@ -395,7 +395,7 @@ if(coll.Load(oq))
 
 Notice that even though many query objects are being used you only need to set WithNoLock to true for the parent or main query object. The SQL generated is as follows:
 
-Results: (Notice that "WITH (NOLOCK)" was applied on both tables involved in the query)
+SQL Generated: (Notice that "WITH (NOLOCK)" was applied on both tables involved in the query)
 
 ```sql
 SELECT e.[EmployeeID]  
@@ -417,7 +417,7 @@ e.Select(e.EmployeeID)
 .es.Distinct();
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT DISTINCT e.[EmployeeID]
@@ -442,7 +442,7 @@ if(coll.Load(c1))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT c1.[CustomerID], c1.[CompanyName], c1.[PostalCode]
@@ -480,7 +480,7 @@ if (coll.Load(oQuery))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT o.[OrderID],  o.[EmployeeID]
@@ -516,7 +516,7 @@ if (coll.Load(eq))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT e.[EmployeeID], e.[ReportsTo]
@@ -551,6 +551,8 @@ if(collection.Load(o))
 }
 ```
 
+SQL Generated:
+
 ```sql
 SELECT o.[CustomerID], o.[OrderDate], sub.OrderTotal
 FROM  
@@ -579,7 +581,7 @@ if(coll.Load(q))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT SUBSTRING(LOWER([LastName]),2,4) AS 'LastName' 
@@ -614,7 +616,7 @@ if(coll.Load(orders))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT o.[OrderID],o.[OrderDate], 
@@ -649,7 +651,7 @@ if(coll.Load(orders))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT o.* 
@@ -686,7 +688,7 @@ if(coll.Load(oq))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT o.[CustID],o.[OrderDate],sub.OrderTotal  
@@ -723,7 +725,7 @@ if (coll.Load(tq))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT t.[Description]  
@@ -760,7 +762,7 @@ if (coll.Load(eq))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT e.[EmployeeID],e.[Supervisor]  
@@ -795,7 +797,7 @@ if(coll.Load(oq))
 }   
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT o.[OrderID],oi.[Discount]  
@@ -836,7 +838,7 @@ if(coll.Load(oiq))
 }   
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT oi.[OrderID],SUM((oi.[Quantity]*oi.[UnitPrice])) AS 'Total'  
@@ -886,7 +888,7 @@ if(coll.Load(oq))
 }   
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT o.[OrderID],o.[CustID]  
@@ -930,7 +932,7 @@ if(coll.Load(oq))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT o.[OrderID],o.[CustID]  
@@ -972,7 +974,7 @@ if(coll.Load(oq))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT o.[OrderID],o.[CustID]  
@@ -1008,7 +1010,7 @@ if(coll.Load(oq))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT o.[OrderID],o.[CustID]  
@@ -1057,7 +1059,7 @@ if(coll.Load(OrderDetails))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT 
@@ -1119,7 +1121,7 @@ if(coll.Load(q))
 }
 ```
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT [EmployeeID] AS 'EmployeeID',SUM([Age]) AS 'TotalAge' 
@@ -1190,7 +1192,7 @@ if(coll.Load(q))
 
 The SQL Generated is as follows (and works)
 
-Results:
+SQL Generated:
 
 ```sql
 SELECT FirstName,[HireDate] AS 'HireDate'  
