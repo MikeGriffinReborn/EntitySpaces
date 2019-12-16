@@ -78,40 +78,6 @@ order.OrderDetailsCollection.Add(new OrderDetails
 
 order.Save(); // Saves hierarchically
 ```
-
-# Setup
-
-1. Install [EntitySpaces Studio](https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard/raw/master/EntitySpaces.Studio/EntitySpacesStudio_2019.0.1214.0.zip/ "Zip File")
-
-2. Install the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") for the SQL Server NuGet package into your Visual Studio project.
-
-## Generating your Classes via EntitySpaces Studio
-It's very simple. You only need to execute two templates. The Custom classes are generated only once, that is where you can add custom code and overide EntitySpaces functionality if need be. The Generated classes are generated any time your database schema changes, you never edit these classes.
-
-However, first you will need to go to the "Settings" tab and then the "Connection" tab and connect to your database, there is a dialog box that can help you do that, it's very simple.
-
-<img src="docs\Studio.PNG" alt="EntitySpaces Studio" width="632" height="406">
-
-## Setup SQL Connection in your C# .NET Project
-
-```c#
-// esDataProviderFactory is a one time setup 
-esProviderFactory.Factory = new EntitySpaces.Loader.esDataProviderFactory();
-
-// Add a connection
-esConnectionElement conn = new esConnectionElement();
-conn.Name = "RemoteDb";
-conn.ProviderMetadataKey = "esDefault";
-conn.Provider = "EntitySpaces.SqlClientProvider";
-conn.ProviderClass = "DataProvider";
-conn.SqlAccessType = esSqlAccessType.DynamicSQL;
-conn.ConnectionString = "User ID=mydmin;Password=abc123;Initial Catalog=Northwind;Data Source=localhost";
-conn.DatabaseVersion = "2017";
-esConfigSettings.ConnectionInfo.Connections.Add(conn);
-
-// Assign the Default Connection
-esConfigSettings.ConnectionInfo.Default = "RemoteDb";
-```
 # Coding Examples
 
 ## Add/Load/Save/Delete Single Entity
@@ -1280,3 +1246,37 @@ q.Select(q.FirstName);
 ```
 
 Using the raw SQL injection techniques above will allow you to invoke SQL functions that we don’t support, including database vender specific SQL, and so on. Hopefully, you will almost never have to resort to writing a custom load method to invoke a stored procedure or an entirely hand written SQL statement. Of course, you can use our native API everywhere and just inject the raw SQL on the GroupBy for instance. You can mix and match to get the desired SQL.
+
+# Setup
+
+1. Install [EntitySpaces Studio](https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard/raw/master/EntitySpaces.Studio/EntitySpacesStudio_2019.0.1214.0.zip/ "Zip File")
+
+2. Install the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") for the SQL Server NuGet package into your Visual Studio project.
+
+## Generating your Classes via EntitySpaces Studio
+It's very simple. You only need to execute two templates. The Custom classes are generated only once, that is where you can add custom code and overide EntitySpaces functionality if need be. The Generated classes are generated any time your database schema changes, you never edit these classes.
+
+However, first you will need to go to the "Settings" tab and then the "Connection" tab and connect to your database, there is a dialog box that can help you do that, it's very simple.
+
+<img src="docs\Studio.PNG" alt="EntitySpaces Studio" width="632" height="406">
+
+## Setup SQL Connection in your C# .NET Project
+
+```c#
+// esDataProviderFactory is a one time setup 
+esProviderFactory.Factory = new EntitySpaces.Loader.esDataProviderFactory();
+
+// Add a connection
+esConnectionElement conn = new esConnectionElement();
+conn.Name = "RemoteDb";
+conn.ProviderMetadataKey = "esDefault";
+conn.Provider = "EntitySpaces.SqlClientProvider";
+conn.ProviderClass = "DataProvider";
+conn.SqlAccessType = esSqlAccessType.DynamicSQL;
+conn.ConnectionString = "User ID=mydmin;Password=abc123;Initial Catalog=Northwind;Data Source=localhost";
+conn.DatabaseVersion = "2017";
+esConfigSettings.ConnectionInfo.Connections.Add(conn);
+
+// Assign the Default Connection
+esConfigSettings.ConnectionInfo.Default = "RemoteDb";
+```
