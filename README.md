@@ -219,19 +219,19 @@ if(coll.Load(eQuery))
 
 Use the native language syntax, it works as you expect it would.
 
-- \+
-- \-
-- \*
-- \/
-- \%
-- \>
+- \+ plus operator
+- \- minus operator
+- \* multiple operator
+- \/ divison operator
+- \% mod operator
+- \> greater-than operator
 - \<
 - \<=
 - \>=
 - \==
 - \!=
-- \&&& 
-- \|||
+- \&&
+- \||
 
 ## Sub Operators
 
