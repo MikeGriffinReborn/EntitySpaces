@@ -257,11 +257,12 @@ Use the native language syntax, it works as you expect it would.
 ## Select Top
 
 ```c#
-EmployeesQuery q = new EmployeesQuery();
-q.Where(q.ReportsTo.IsNotNull()).OrderBy(q.LastName.Descending).es.Top(1);
+Employees emp = new EmployeesQuery("q", out var q)
+.Where(q.ReportsTo.IsNotNull())
+.OrderBy(q.LastName.Descending).es.Top(1)
+.ToEntity<Employees>();
 
-EmployeesCollection emp = new EmployeesCollection();
-if (emp.Load(q))
+if (emp != null)
 {
     // Then we loaded at least one record
 }
