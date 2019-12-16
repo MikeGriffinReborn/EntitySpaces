@@ -329,14 +329,15 @@ WHERE [ReportsTo] IS NULL
 
 Let's get the count 
 
-** Paging**
+**Paging**
 Using PageSize and PageNumber.
 
 This is the traditional way of paging and works on all versions of SQL Server. You always need an OrderBy when sorting.
 
 ```c#
 EmployeesQuery q = new EmployeesQuery();
-q.Select(q.EmployeeID, q.LastName).OrderBy(q.LastName.Ascending).es.PageNumber(2).es.PageSize(20);
+q.Select(q.EmployeeID, q.LastName)
+.OrderBy(q.LastName.Ascending).es.PageNumber(2).es.PageSize(20);
 
 EmployeesCollection coll = new EmployeesCollection();
 if (coll.Load(q))
@@ -469,15 +470,17 @@ WHERE c1.[PostalCode] > ALL
 OrdersQuery oQuery = new OrdersQuery("o");
 oQuery.Select(oQuery.OrderID, oQuery.EmployeeID)
 .InnerJoin<OrderDetailsQuery>("od", out var od).On(oQuery.OrderID == od.OrderID)
-.InnerJoin<EmployeesQuery>("e", out var e).On(e.EmployeeID == oQuery.EmployeeID && oQuery.EmployeeID.In(() =>
-{
+.InnerJoin<EmployeesQuery>("e", out var e)
+  .On(e.EmployeeID == oQuery.EmployeeID && oQuery.EmployeeID.In(() =>
+  {
     EmployeesQuery ee = new EmployeesQuery("ee");
     ee.InnerJoin<OrdersQuery>("eo", out var eo).On(ee.EmployeeID == eo.EmployeeID)
       .InnerJoin<OrderDetailsQuery>("eod", out var eod).On(eo.OrderID == eod.OrderID)
       .Select(eo.EmployeeID)
       .es.Distinct();
     return ee;
-}));
+  })
+);
 
 OrdersCollection coll = new OrdersCollection();
 if (coll.Load(oQuery))
