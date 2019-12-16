@@ -283,8 +283,8 @@ Here the Orders table is joined with the OrderDetails table. The Orders.OrderID 
 ```c#
 OrdersCollection coll = new OrdersQuery("oq", out var o)
 .InnerJoin<OrderDetailsQuery>("od", out var od).On(o.OrderID == od.OrderID)
-.Where(od.Discount > 0)
 .Select(o.OrderID, od) // Notice the 'od' results in 'od.*'
+.Where(od.Discount > 0)
 .ToCollection<OrdersCollection>();
 
 if (coll.Count > 0)
