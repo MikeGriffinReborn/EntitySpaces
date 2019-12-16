@@ -284,19 +284,19 @@ Notice how the Select() statement has just 'od' in it without a column declared.
 OrdersCollection coll = new OrdersQuery("oq", out var o)
 .InnerJoin<OrderDetailsQuery>("od", out var od).On(o.OrderID == od.OrderID)
 .Where(od.Discount > 0)
-.Select(o.OrderID, od) // Notice the odq results in od.*
+.Select(o.OrderID, od) // Notice the 'od' results in 'od.*'
 .ToCollection<OrdersCollection>();
 
 if (coll.Count > 0)
 {
     // data was loaded
 }
-```c#
+```
 
 SQL Generated:
 
 ```sql
-SELECT oq.[OrderID], od.*
+SELECT oq.[OrderID], od.* -- od.*
 FROM [Orders] oq 
 INNER JOIN [Order Details] od ON oq.[OrderID] = od.[OrderID]
 WHERE od.[Discount] > @Discount1
