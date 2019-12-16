@@ -278,7 +278,7 @@ ORDER BY [LastName] DESC
 ```
 
 ## Select * from Joined Table
-Notice how the Select() statement has just 'od' in it without a column declared. This results in 'od.*' in the SQL.
+Here the Orders table is joined with the OrderDetails table. The Orders.OrderID column is brought back along with all columns from the OrderDetails table. Notice how the Select() statement uses 'od' without a column declared. This results in 'od.*' in the SQL.
 
 ```c#
 OrdersCollection coll = new OrdersQuery("oq", out var o)
@@ -296,7 +296,7 @@ if (coll.Count > 0)
 SQL Generated:
 
 ```sql
-SELECT oq.[OrderID], od.* -- od.*
+SELECT oq.[OrderID], od.*
 FROM [Orders] oq 
 INNER JOIN [Order Details] od ON oq.[OrderID] = od.[OrderID]
 WHERE od.[Discount] > @Discount1
