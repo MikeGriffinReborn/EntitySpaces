@@ -23,11 +23,13 @@ foreach(Orders order in coll)
 
 The data return is ...
 
-| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
+|OrderID | Total Quantity|
+|--------|:-------------:|
+|10248	 |27|
+|10249	 |49|
+|10250	 |60|
+|10251	 |41|
+|10252	 |105| 
 
 The SQL generated is just as you would expect.
 
