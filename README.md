@@ -78,25 +78,23 @@ order.OrderDetailsCollection.Add(new OrderDetails
 
 order.Save(); // Saves hierarchically
 ```
-# Coding Examples
-
-## Add/Load/Save/Delete Single Entity
+## Crud Example
 ```c#
-// Add
+// Create a new Employee
 Employees newEmp = new Employees();
 newEmp.FirstName = "Joe";
 newEmp.LastName = "Smith";
 newEmp.Save();
 
-// Load
+// Load that same Employee
 Employees employee = new Employees();
 if (employee.LoadByPrimaryKey(newEmp.EmployeeID.Value))
 {
-    // Save
+    // Modify that Employee
     employee.FirstName = "Bob";
     employee.Save();
 
-    // Delete
+    // Delete that Employee
     employee.MarkAsDeleted();
     employee.Save();
 }
