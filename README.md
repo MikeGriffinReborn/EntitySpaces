@@ -21,15 +21,6 @@ foreach(Orders order in coll)
 }
 ```
 
-The out is as follows is ...
-
-|OrderID | TotalQuantity |
-|-|-|
-|10248	 |27|
-|10249	 |49|
-|10250	 |60|
-
-
 The SQL generated is just as you would expect.
 
 ```sql
@@ -39,6 +30,14 @@ INNER JOIN [Order Details] od ON o.[OrderID] = od.[OrderID]
 GROUP BY o.[OrderID] 
 ORDER BY o.[OrderID] ASC
 ```
+
+The out is as follows is ...
+
+|OrderID | TotalQuantity |
+|-|-|
+|10248	 |27|
+|10249	 |49|
+|10250	 |60|
 
 
 # Setup
