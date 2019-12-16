@@ -60,13 +60,13 @@ using (esTransactionScope scope = new esTransactionScope())
 In this case we are using the hierarchical object model and there is no need to declare an esTransactionScope.
 
 ```c#
-// New an order
+// Create an order
 Orders order = new Orders
 {
     OrderDate = DateTime.Now
 };
 
-// Add an OrderDetails Record
+// Add an OrderDetails Record to the Order
 order.OrderDetailsCollection.Add(new OrderDetails
 {
     UnitPrice = 55.00M,
