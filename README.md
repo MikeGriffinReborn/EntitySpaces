@@ -22,7 +22,7 @@ foreach(Orders order in coll)
 }
 ```
 
-The data return is ...
+The data returned is ...
 
 |OrderID | TotalQuantity|
 |--------|:-------------:|
