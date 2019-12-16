@@ -599,6 +599,7 @@ OrdersCollection coll = new OrdersQuery("o", out var orders)
 .Select
 (
     orders.OrderID, orders.OrderDate,
+    // Embed another query (see 'SQL Generated' below)
     new OrderDetailsQuery("oi", out var details).Select(details.UnitPrice.Max())
     .Where(orders.OrderID == details.OrderID).As("MaxUnitPrice")
 )
