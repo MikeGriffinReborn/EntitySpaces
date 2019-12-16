@@ -595,22 +595,16 @@ ORDER BY SUBSTRING(LOWER([LastName]),2,4) DESC
 A SubQuery in a Select clause must return a single value.
 
 ```c#
-OrderQuery orders = new OrderQuery("o");
-OrderItemQuery details = new OrderItemQuery("oi");
-
-orders.Select
+OrdersCollection coll = new OrdersQuery("o", out var orders)
+.Select
 (
-    orders.OrderID,
-    orders.OrderDate,
-    details.Select
-    (
-        details.UnitPrice.Max()
-    )
+    orders.OrderID, orders.OrderDate,
+    new OrderDetailsQuery("oi", out var details).Select(details.UnitPrice.Max())
     .Where(orders.OrderID == details.OrderID).As("MaxUnitPrice")
-);
+)
+.ToCollection<OrdersCollection>();
 
-OrderCollection coll = new OrderCollection();
-if(coll.Load(orders))
+if (coll.Count > 0)
 {
     // Then we loaded at least one record
 }
@@ -621,11 +615,11 @@ SQL Generated:
 ```sql
 SELECT o.[OrderID],o.[OrderDate], 
 (
-    SELECT MAX(oi.[UnitPrice]) AS 'UnitPrice'  
-    FROM [dbo].[OrderItem] oi 
-    WHERE o.[OrderID] = oi.[OrderID]
+   SELECT MAX(oi.[UnitPrice]) AS 'UnitPrice'  
+   FROM [Order Details] oi 
+   WHERE o.[OrderID] = oi.[OrderID]
 ) AS MaxUnitPrice  
-FROM [dbo].[Order] o
+FROM [Orders] o
 ```
 
 This is the same as the query above, but returns all columns in the Order table, instead of just OrderID and OrderDate. Notice that the Select clause contains orders, not orders.. The SQL produced will use the supplied alias o..
