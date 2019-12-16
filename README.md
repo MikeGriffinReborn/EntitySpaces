@@ -37,6 +37,23 @@ The out is as follows is ...
 |10249	 |49|
 |10250	 |60|
 
+# Transaction Support
+EntitySpaces is both Hiearchical and Transactional. If you are saving a nested set of hierarchical objects then a transaction is implicitly used and there is no need for you to declare one. However, if you have created and need to save two disparate objects such as the sample shown below then you can use an esTransactionScope to ensure they both succeed or fail as a unit.
+
+```c#
+using (esTransactionScope scope = new esTransactionScope())
+{
+    Employees employee = new Employees();
+    employee.FirstName = "Mike";
+    employee.LastName = "Griffin";
+    employee.Save();
+
+    Products product = new Products();
+    product.ProductName = "Some Gadget";
+
+    scope.Complete(); // last line of using statement
+}
+```
 
 # Setup
 
