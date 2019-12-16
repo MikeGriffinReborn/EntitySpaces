@@ -140,7 +140,7 @@ Notice that the SQL is extremely lean.
 
 **NOTE**: InnerJoin is used above, also supported are RightJoin, LeftJoin, CrossJoin, and FullJoin.
 
-Results from the Query Above
+Results from the Query Above. SQL Parameters are always used to avoid SQL Injection Attacks.
 
 ```sql
 SELECT  DISTINCT e.[EmployeeID],e.[LastName],r.[LastName] AS 'SupervisorName'  
