@@ -196,10 +196,9 @@ Notice the "fullName" column is present in the JSON, no need for intermediate cl
 ]
 ``` 
 
-### Improved Join Syntax
-It's important to note that both syntaxes shown below are valid. Use whichever one you are comfortable with.
+## Old School Syntax
+If you prefer you can use the old school syntax which doesn't use the generic methods with the "out var" technique. See the example below:
 
-#### Traditional syntax
 ```c#
 OrdersQuery o = new OrdersQuery("o");
 OrderDetailsQuery od = new OrderDetailsQuery("od");
@@ -213,44 +212,10 @@ EmployeesQuery eQuery = new EmployeesQuery("e");
 EmployeesCollection coll = new EmployeesCollection();
 if(coll.Load(eQuery))
 {
-
+    // The data was loaded
 }
 ```
-#### Streamlined Syntax
-The newer streamlined creates the sub-queries for you and provides the local variable as an "out" parameter. You no longer have to predeclare "out" parameters which makes this syntax very clean.
-
-```c#
-EmployeesQuery eQuery = new EmployeesQuery("e");
-
-eQuery.Select(eQuery.EmployeeID)
-.InnerJoin<OrdersQuery>("o", out var o).On(eQuery.EmployeeID == o.EmployeeID)
-.InnerJoin<OrderDetailsQuery>("od", out var od).On(o.OrderID == od.OrderID)
-.Where(o.Freight > 20);
-
-EmployeesCollection coll = new EmployeesCollection();
-if(coll.Load(eQuery))
-{
-    // records were loaded
-}
-```
-
-Even more streamlined
-
-```c#
-EmployeesCollection coll = new EmployeesQuery("e", out var eQuery)
- .Select(eQuery.EmployeeID)
- .InnerJoin<OrdersQuery>("o", out var o).On(eQuery.EmployeeID == o.EmployeeID)
- .InnerJoin<OrderDetailsQuery>("od", out var od).On(o.OrderID == od.OrderID)
- .Where(o.Freight > 20)
- .ToCollection<EmployeesCollection>();
-
-if(coll.Count > 0)
-{
-    // records were loaded
-}
-```
-
-### Supported Operators
+## Supported Operators
 
 Use the native language syntax, it works as you expect it would.
 
@@ -265,10 +230,10 @@ Use the native language syntax, it works as you expect it would.
 - \>=
 - \==
 - \!=
-- \&& 
-- \|| 
+- \&&& 
+- \|||
 
-### Sub Operators
+## Sub Operators
 
 - ToUpper() - Convert to lower case
 - ToLower() - Left trim any leading spaces
