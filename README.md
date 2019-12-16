@@ -79,8 +79,6 @@ order.OrderDetailsCollection.Add(new OrderDetails
 order.Save(); // Saves hierarchically
 ```
 
-### test tag
-
 ## CRUD Example
 ```c#
 // Create a new Employee
@@ -118,7 +116,7 @@ if (coll.LoadAll())
 
 ## More Dynamic Query API ...
 
-### A Simple Sample with an InnerJoin
+**A Simple Sample with an InnerJoin**
 
 The sample below demonstrates a self join on the Employees table which is looking for all employees with an 'a' in their last name who have people reporting to them. Kind of silly but it shows off the syntax.
 
@@ -262,9 +260,9 @@ Use the native language syntax, it works as you expect it would.
 | Sum() | Summation|
 | Cast() | SQL Cast|
 
-### More Samples
+## More Samples
 
-#### Select Top
+**Select Top**
 
 ```c#
 EmployeesQuery q = new EmployeesQuery();
@@ -286,7 +284,7 @@ WHERE [ReportsTo] IS NOT NULL
 ORDER BY [LastName] DESC
 ```
 
-#### SelectAllExcept
+**SelectAllExcept**
 SelectAllExcept() is not really a SubQuery, just a convenient enhancement that allows you to select all except one or more listed columns.
 
 ```c#
@@ -308,7 +306,7 @@ SELECT [EmployeeID],[LastName],[FirstName],[Supervisor],[Age], -- ... not [Photo
 FROM [dbo].[Employee]
 ```
 
-#### Getting the Count
+**Getting the Count**
 
 ```c#
 EmployeesQuery q = new EmployeesQuery();
@@ -327,7 +325,7 @@ WHERE [ReportsTo] IS NULL
 
 Let's get the count 
 
-#### Paging
+** Paging**
 Using PageSize and PageNumber.
 
 This is the traditional way of paging and works on all versions of SQL Server. You always need an OrderBy when sorting.
@@ -382,7 +380,7 @@ OFFSET 40 ROWS
 FETCH NEXT 20 ROWS ONLY 
 ```
 
-#### With NoLock
+**With NoLock**
 ```c#
 EmployeesQuery e = new EmployeesQuery("e");
 
@@ -409,7 +407,7 @@ INNER JOIN [Orders] o WITH (NOLOCK) ON e.[EmployeeID] = o.[EmployeeID]
 WHERE o.[Freight] > @Freight1
 ```
 
-### Distinct
+**Distinct**
 SelectT DISTINCT clause to retrieve the only distinct values in a specified list of columns.
 
 ```c#
@@ -429,7 +427,7 @@ FROM [Employees] e
 INNER JOIN [Orders] o ON e.[EmployeeID] = o.[EmployeeID]
 ```
 
-### Any, All, and Some
+**Any, All, and Some**
 
 ```c#
 CustomersQuery c2 = new CustomersQuery("c2");
@@ -459,9 +457,9 @@ WHERE c1.[PostalCode] > ALL
 )
 ```
 
-### Nested SubQueries (literally) ...
+## Nested SubQueries (literally) ...
 
-#### The In() and NotIn() clauses ....
+**The In() and NotIn() clauses**
 
 ```c#
 OrdersQuery oQuery = new OrdersQuery("o");
@@ -498,7 +496,7 @@ INNER JOIN [Employees] e ON (e.[EmployeeID] = o.[EmployeeID] AND o.[EmployeeID] 
 )
 ```
 
-### The Exists() clause
+**The Exists() clause**
 
 Exists evaluates to true, if the SubQuery returns a result set.
 
@@ -532,7 +530,7 @@ WHERE EXISTS (
 )
 ```
 
-### The From() clause
+**The From() clause**
 
 ```c#
 OrderDetailsQuery od = null;
@@ -566,7 +564,7 @@ FROM
 INNER JOIN [Orders] o ON o.[OrderID] = sub.[OrderID]
 ```
 
-#### Full Expressions in OrderBy and GroupBy
+**Full Expressions in OrderBy and GroupBy**
 This query doesn’t really make sense, but we wanted to show you what will is possible.
 
 ```c#
@@ -591,7 +589,7 @@ GROUP BY SUBSTRING(LOWER([LastName]),2,4)
 ORDER BY SUBSTRING(LOWER([LastName]),2,4) DESC
 ```
 
-#### Select SubQuery
+**Select SubQuery**
 A SubQuery in a Select clause must return a single value.
 
 ```c#
@@ -663,7 +661,7 @@ SELECT o.*
 FROM [ForeignKeyTest].[dbo].[Order] o
 ```
 
-#### From SubQuery
+**From SubQuery**
 An aggregate requires a GROUP BY for each column in the SELECT that is not an aggregate. Sometimes you wish to include columns in your result set that you do not wish to group by. One way to accomplish this is by using a SubQuery in the From clause that contains the aggregate the way you want it grouped. The outer query contains the results of the aggregate, plus any additional columns.
 
 If you use a SubQuery in a From clause, you must give the From clause its own alias (shown below as "sub"). In the outer query, to refer to an aliased element in the From SubQuery, use the inline raw SQL technique to qualify the aggregate's alias with the From clause alias, i.e., "".
@@ -701,7 +699,7 @@ FROM
 INNER JOIN [dbo].[Order] o ON o.[OrderID] = sub.[OrderID]
 ```
 
-#### Where SubQuery
+**Where SubQuery**
 In and NotIn are two of the most common operators used in a Where SubQuery. The following produces a result set containing Territories that an Employee is not associated with.
 
 ```c#
@@ -808,7 +806,7 @@ ON (o.[OrderID] = oi.[OrderID] AND oi.[Discount] IN
 )
 ```
 
-#### Correlated SubQuery
+**Correlated SubQuery**
 A correlated SubQuery is where the inner query relies on an element of the outer query. The inner select cannot run on its own. Below, the inner pq query uses the outer query's oiq.ProductID in the Where() clause.
 
 ```c#
@@ -848,7 +846,7 @@ WHERE oi.[ProductID] IN
 GROUP BY oi.[OrderID]
 ```
 
-#### Nested SubQuery
+**Nested SubQuery**
 EntitySpaces supports nesting of SubQueries. Each database vendor has their own limits on just how deep the nesting can go. EntitySpaces supports two different syntax approaches to nested SubQueries.
 
 Traditional SQL-style syntax is most useful if you already have a query designed using standard SQL, and are just converting it to a DynamicQuery.
@@ -945,7 +943,7 @@ WHERE o.[OrderDate] IN
 )
 ```
 
-#### Any, All, and Some
+**Any, All, and Some**
 ANY, ALL, and SOME are SubQuery qualifiers. They precede the SubQuery they apply to. For most databases, ANY and SOME are synonymous. Usually, if you use an operator (>, >=, =, <, <=) in a Where clause against a SubQuery, then the SubQuery must return a single value. By applying a qualifier to the SubQuery, you can use operators against SubQueries that return multiple results.
 
 Notice, below, that the ALL qualifier is set to true for the SubQuery with "cq.es.All = true;".
@@ -1022,7 +1020,7 @@ WHERE o.[OrderDate] < ANY
 )
 ```
 
-#### Case().When().Then().End() Syntax
+**Case().When().Then().End() Syntax**
 
 ```c#
 EmployeesQuery q = new EmployeesQuery();
@@ -1077,7 +1075,7 @@ WHERE (SUM([Quantity]) >= @Quantity8 AND AVG([Quantity]) < @Quantity9)
 ORDER BY [OrderID] DESC,[Quantity] DESC
 ```
 
-#### Another Case/When Query
+**Another Case/When Query**
 
 ```c#
 EmployeeQuery q = new EmployeeQuery();
@@ -1098,7 +1096,7 @@ if(coll.Load(q))
 }
 ```
 
-#### Having Clause
+**Having Clause**
 
 ```c#
 EmployeeQuery q = new EmployeeQuery();
@@ -1126,10 +1124,10 @@ HAVING SUM([Age]) > @Age2
 ORDER BY [EmployeeID] DESC
 ```
 
-#### Union, Intersect, and Except
+## Union, Intersect, and Except
 These might be kind of silly but they demonstrate syntax.
 
-##### Union
+**Union**
 
 ```c#
 EmployeeQuery eq1 = new EmployeeQuery("eq1");
@@ -1141,7 +1139,7 @@ eq1.Union(eq2);
 eq2.Where(eq2.Age > 30);
 ```
 
-##### Intersect
+**Intersect**
 
 ```c#
 EmployeeQuery eq1 = new EmployeeQuery("eq1");
@@ -1153,7 +1151,7 @@ eq1.Intersect(eq2);
 eq2.Where(eq2.FirstName.Like("%a%"));
 ```
 
-##### Except
+**Except**
 
 ```c#
 EmployeeQuery eq1 = new EmployeeQuery("eq1");
@@ -1165,7 +1163,7 @@ eq1.Except(eq2);
 eq2.Where(eq2.FirstName == "Jim");
 ```
 
-#### Raw SQL Injection Everywhere
+## Raw SQL Injection Everywhere
 There may be times when you need to access some SQL feature that is not supported by the DynamicQuery API. But, now having used and fallen in love with DynamicQuery, the last thing you want to do is stop and go write a stored procedure or create a view. We have always supported the raw injection feature in our Select statement, but it will soon be available almost everywhere. The way it works is you pass in raw SQL in the form of a string surrounded by < > angle brackets. That indicates that you want the raw SQL passed directly to the database engine “as is”.
 
 Here is an example query. You would never write a query like this in reality. Tiraggo supports this simple query without having to use < > angle brackets. This is just to show all of the places that can accept the raw SQL injection technique:
@@ -1213,14 +1211,14 @@ Using the raw SQL injection techniques above will allow you to invoke SQL functi
 
 2. Install the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") for the SQL Server NuGet package into your Visual Studio project.
 
-## Generating your Classes via EntitySpaces Studio
+**Generating your Classes via EntitySpaces Studio**
 It's very simple. You only need to execute two templates. The Custom classes are generated only once, that is where you can add custom code and overide EntitySpaces functionality if need be. The Generated classes are generated any time your database schema changes, you never edit these classes.
 
 However, first you will need to go to the "Settings" tab and then the "Connection" tab and connect to your database, there is a dialog box that can help you do that, it's very simple.
 
 <img src="docs\Studio.PNG" alt="EntitySpaces Studio" width="632" height="406">
 
-## Setup SQL Connection in your C# .NET Project
+**Setup SQL Connection in your C# .NET Project**
 
 ```c#
 // esDataProviderFactory is a one time setup 
@@ -1233,7 +1231,8 @@ conn.ProviderMetadataKey = "esDefault";
 conn.Provider = "EntitySpaces.SqlClientProvider";
 conn.ProviderClass = "DataProvider";
 conn.SqlAccessType = esSqlAccessType.DynamicSQL;
-conn.ConnectionString = "User ID=mydmin;Password=abc123;Initial Catalog=Northwind;Data Source=localhost";
+conn.ConnectionString = 
+   "User ID=mydmin;Password=abc123;Initial Catalog=Northwind;Data Source=localhost";
 conn.DatabaseVersion = "2017";
 esConfigSettings.ConnectionInfo.Connections.Add(conn);
 
