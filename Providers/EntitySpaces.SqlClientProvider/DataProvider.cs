@@ -1029,7 +1029,7 @@ namespace EntitySpaces.SqlClientProvider
                 // Special code to remove the ESRN column if paging is going on
                 esDynamicQuery.DynamicQueryProps es = request.DynamicQuery.es;
                 if ((request.DynamicQuery.pageNumber.HasValue && request.DynamicQuery.pageSize.HasValue) 
-                    || (es.PartitionByTop != null && es.PartitionByTop.Value > 0))
+                    || (request.DynamicQuery.PartitionByTop != null && request.DynamicQuery.PartitionByTop.Value > 0))
                 {
                     DataColumnCollection cols = response.Table.Columns;
 

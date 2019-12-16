@@ -406,37 +406,6 @@ namespace EntitySpaces.Interfaces
         }
 
         /// <summary>
-        /// This method will create a Select statement for all of the columns in the entity except for the ones passed in.
-        /// This is very useful when you want to eliminate blobs and other fields for performance.
-        /// </summary>
-        /// <param name="columns">The columns which you wish to exclude from the Select statement</param>
-        /// <returns></returns>
-        //virtual public esDynamicQuery SelectAllExcept(params esQueryItem[] columns)
-        //{
-        //    if (m_selectAllExcept == null)
-        //    {
-        //        m_selectAllExcept = new List<esQueryItem>();
-        //    }
-
-        //    foreach (esQueryItem item in columns)
-        //    {
-        //        m_selectAllExcept.Add(item);
-        //    }
-        //    return this;
-        //}
-
-        /// <summary>
-        /// This method will select all of the columns explicity by name that were present when you generated your
-        /// classes as opposed to doing a SELECT *
-        /// </summary>
-        /// <returns></returns>
-        //virtual public esDynamicQuery SelectAll()
-        //{
-        //    m_selectAll = true;
-        //    return this;
-        //}
-
-        /// <summary>
         /// Use this method in conjuction with Take()
         /// </summary>
         /// <param name="count">The number of rows to skip</param>
@@ -1649,6 +1618,79 @@ namespace EntitySpaces.Interfaces
         }
         #endregion Helper Routine
 
+        #region Partion Code
+
+        public esPartionOrderBy PartitionBy(params esQueryItem[] partitionByColumns)
+        {
+            this.PartitionByColumns(partitionByColumns);
+
+            return new esPartionOrderBy(this);
+        }
+
+
+        /// <summary>
+        ///  Allows you use Top within a Group without using GroupBy
+        /// </summary>
+        /// <param name="partitionByTop"></param>
+        internal int? PartitionByTop
+        {
+            get { return this.partitionByTop; }
+            set { this.partitionByTop = value; }
+        }
+
+        /// <summary>
+        ///  Allows you use Top within a Group without using GroupBy
+        /// </summary>
+        /// <param name="partitionByColumns"></param>
+        internal void PartitionByColumns(params esQueryItem[] partitionByColumns)
+        {
+            if (this.partitionByColumns == null)
+            {
+                this.partitionByColumns = new List<esQueryItem>();
+            }
+
+            foreach (esQueryItem item in partitionByColumns)
+            {
+                this.partitionByColumns.Add(item);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="partitionDistinctColumns"></param>
+        internal void PartitionDistinctColumns(params esQueryItem[] partitionDistinctColumns)
+        {
+            if (this.partitionByDistinctColumns == null)
+            {
+                this.partitionByDistinctColumns = new List<esQueryItem>();
+            }
+
+            foreach (esQueryItem item in partitionDistinctColumns)
+            {
+                this.partitionByDistinctColumns.Add(item);
+            }
+        }
+
+        /// <summary>
+        ///  Allows you use Top within a Group without using GroupBy
+        /// </summary>
+        /// <param name="partitionByorderByItems"></param>
+        internal void PartitionByOrderBy(params esOrderByItem[] partitionByorderByItems)
+        {
+            if (this.partitionByOrderByItems == null)
+            {
+                this.partitionByOrderByItems = new List<esOrderByItem>();
+            }
+
+            foreach (esOrderByItem item in partitionByorderByItems)
+            {
+                this.partitionByOrderByItems.Add(item);
+            }
+        }
+
+        #endregion
+
         #region es
 
         /// <summary>
@@ -1731,78 +1773,6 @@ namespace EntitySpaces.Interfaces
                 return this.dynamicQuery;
             }
 
-            #region Partion Code
-
-            public esPartionOrderBy PartitionBy(params esQueryItem[] partitionByColumns)
-            {
-                this.dynamicQuery.es.PartitionByColumns(partitionByColumns);
-
-                return new esPartionOrderBy(this.dynamicQuery);
-            }
-
-
-            /// <summary>
-            ///  Allows you use Top within a Group without using GroupBy
-            /// </summary>
-            /// <param name="partitionByTop"></param>
-            internal int? PartitionByTop
-            {
-                get { return this.dynamicQuery.partitionByTop; }
-                set { this.dynamicQuery.partitionByTop = value; }
-            }
-
-            /// <summary>
-            ///  Allows you use Top within a Group without using GroupBy
-            /// </summary>
-            /// <param name="partitionByColumns"></param>
-            internal void PartitionByColumns(params esQueryItem[] partitionByColumns)
-            {
-                if(this.dynamicQuery.partitionByColumns == null)
-                {
-                    this.dynamicQuery.partitionByColumns = new List<esQueryItem>();
-                }
-
-                foreach(esQueryItem item in partitionByColumns) 
-                {
-                    this.dynamicQuery.partitionByColumns.Add(item);
-                }
-            }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="partitionDistinctColumns"></param>
-            internal void PartitionDistinctColumns(params esQueryItem[] partitionDistinctColumns)
-            {
-                if (this.dynamicQuery.partitionByDistinctColumns == null)
-                {
-                    this.dynamicQuery.partitionByDistinctColumns = new List<esQueryItem>();
-                }
-
-                foreach (esQueryItem item in partitionDistinctColumns)
-                {
-                    this.dynamicQuery.partitionByDistinctColumns.Add(item);
-                }
-            }
-
-            /// <summary>
-            ///  Allows you use Top within a Group without using GroupBy
-            /// </summary>
-            /// <param name="partitionByorderByItems"></param>
-            internal void PartitionByOrderBy(params esOrderByItem[] partitionByorderByItems)
-            {
-                if (this.dynamicQuery.partitionByOrderByItems == null)
-                {
-                    this.dynamicQuery.partitionByOrderByItems = new List<esOrderByItem>();
-                }
-
-                foreach (esOrderByItem item in partitionByorderByItems)
-                {
-                    this.dynamicQuery.partitionByOrderByItems.Add(item);
-                }
-            }
-
-            #endregion
 
             /// <summary>
             /// This will use the WITH (NOLOCK) syntax on all tables joined in the query. Currently

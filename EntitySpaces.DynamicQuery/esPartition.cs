@@ -7,7 +7,7 @@ using System.Text;
 namespace EntitySpaces.DynamicQuery
 {
     /*
-    oQuery.es.PartitionBy(oQuery.EmployeeID, oQuery.FirstName)
+    oQuery.PartitionBy(oQuery.EmployeeID, oQuery.FirstName)
         .OrderBy(odq.Quantity)
         .DistinctOn(oq.OrderID)
         .Count(4);
@@ -22,7 +22,7 @@ namespace EntitySpaces.DynamicQuery
 
         public esPartionDistinctBy OrderBy(params esOrderByItem[] partitionByorderByItems)
         {
-            query.es.PartitionByOrderBy(partitionByorderByItems);
+            query.PartitionByOrderBy(partitionByorderByItems);
             return new esPartionDistinctBy(query);
         }
 
@@ -38,7 +38,7 @@ namespace EntitySpaces.DynamicQuery
 
         public esPartionTop DistinctBy(params esQueryItem[] partitionDistinctColumns)
         {
-            query.es.PartitionDistinctColumns(partitionDistinctColumns);
+            query.PartitionDistinctColumns(partitionDistinctColumns);
             return new esPartionTop(query);
         }
 
@@ -56,7 +56,7 @@ namespace EntitySpaces.DynamicQuery
         {
             set
             {
-                this.query.es.PartitionByTop = value;
+                this.query.PartitionByTop = value;
             }
         }
 

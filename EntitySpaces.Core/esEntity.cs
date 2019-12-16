@@ -658,6 +658,12 @@ namespace EntitySpaces.Core
         }
 
         [XmlIgnore]
+        public dynamic dynamic
+        {
+            get { return this as dynamic; }
+        }
+
+        [XmlIgnore]
      // [DataMember(Name = "ExtraColumns", EmitDefaultValue = false)]
         private Dictionary<string, object> ExtraColumns
         {
