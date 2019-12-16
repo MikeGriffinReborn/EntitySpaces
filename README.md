@@ -20,6 +20,15 @@ foreach(Orders order in coll)
 
 }
 ```
+The SQL generated is just as you would expect.
+
+```sql
+SELECT o.[OrderID],SUM(od.[Quantity]) AS 'Total Quantity'  
+FROM [Orders] o 
+INNER JOIN [Order Details] od ON o.[OrderID] = od.[OrderID] 
+GROUP BY o.[OrderID] 
+ORDER BY o.[OrderID] ASC
+```
 
 
 # Setup
