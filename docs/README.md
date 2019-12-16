@@ -1213,7 +1213,7 @@ Using the raw SQL injection techniques above will allow you to invoke SQL functi
 
 # Setup
 
-1. Install [EntitySpaces Studio](https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard/raw/master/EntitySpaces.Studio/EntitySpacesStudio_2019.0.1214.0.zip/ "Zip File")
+1. Install [EntitySpaces Studio](https://github.com/MikeGriffinReborn/EntitySpaces/blob/master/EntitySpaces.Studio/EntitySpacesStudio_2019.0.1214.0.zip?raw=true/ "Zip File")
 
 2. Install the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") for the SQL Server NuGet package into your Visual Studio project.
 
