@@ -219,41 +219,45 @@ if(coll.Load(eQuery))
 
 Use the native language syntax, it works as you expect it would.
 
-- (+) plus operator
-- (-) minus operator
-- (*) multiple operator
-- (/) divison operator
-- (%) mod operator
-- (>) greater-than operator
-- (<) less-than operator
-- (<=) less-than or equal-to operator
-- (>=) greater-than or equal to operator
-- (==) equal to operator
-- (!=) not-equal to operator
-- (&&) and operator
-- (||) or operator
+|Operator | Description |
+|:-|:-|
+| + |plus operator|
+| - |minus operator|
+| * |multiple operator|
+| / |divison operator|
+| % |mod operator|
+| > |greater-than operator|
+| < |less-than operator|
+| <= |less-than or equal-to operator|
+| >= |greater-than or equal to operator|
+| == |equal to operator|
+| != |not-equal to operator|
+| \&\& |and operator|
+| \|\| |or operator|
 
 ## Sub Operators
 
-- ToUpper() - Convert to lower case
-- ToLower() - Left trim any leading spaces
-- LTrim() - Left trim any trailing spaces
-- RTrim() - - Right trim any trailing spaces
-- Trim() - Trim both leading and trailing spaces
-- SubString() - Return a sub-string
-- Coalesce() - Return the first non null evaluating expression
-- Date() - Returns only the date of a datetime type
-- DatePart() - Returns the value of part of a datetime value.
-- Length() - Return the length
-- Round() - Rounds the numeric-expression to the desired places after the decimal point.
-- Avg() - Average
-- Count() - Count operator
-- Max() - Maximum Value
-- Min() - Minimum Value
-- StdDev() - Standard Deviation
-- Var() - Variance
-- Sum() - Summation
-- Cast() - SQL Cast
+|Sub Operator | Description |
+|:-|:-|
+| ToUpper() | Convert to lower case|
+| ToLower() | Left trim any leading spaces|
+| LTrim() | Left trim any trailing spaces|
+| RTrim() | Right trim any trailing spaces|
+| Trim() | Trim both leading and trailing spaces|
+| SubString() | Return a sub-string|
+| Coalesce() | Return the first non null evaluating expression|
+| Date() | Returns only the date of a datetime type|
+| DatePart() | Returns the value of part of a datetime value|
+| Length() | Return the length|
+| Round() | Rounds the numeric-expression to the desired places after the decimal point|
+| Avg() | Average|
+| Count() | Count operator|
+| Max() | Maximum Value|
+| Min() | Minimum Value|
+| StdDev() | Standard Deviation|
+| Var() | Variance|
+| Sum() | Summation|
+| Cast() | SQL Cast|
 
 ### More Samples
 
