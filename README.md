@@ -10,7 +10,7 @@ In this sample query we are going to find the total # of items in each order. Ea
 ```c#
 OrdersCollection coll = new OrdersQuery("o", out var o)
     .InnerJoin<OrderDetailsQuery>("od", out var od).On(o.OrderID == od.OrderID)
-    .Select(o.OrderID, od.Quantity.Sum().As("Total Quantity"))
+    .Select(o.OrderID, od.Quantity.Sum().As("TotalQuantity"))
     .GroupBy(o.OrderID)
     .OrderBy(o.OrderID.Ascending)
     .ToCollection<OrdersCollection>();
@@ -23,18 +23,17 @@ foreach(Orders order in coll)
 
 The data return is ...
 
-|OrderID | Total Quantity|
+|OrderID | TotalQuantity|
 |--------|:-------------:|
 |10248	 |27|
 |10249	 |49|
 |10250	 |60|
-|10251	 |41|
-|10252	 |105| 
+and so on ...
 
 The SQL generated is just as you would expect.
 
 ```sql
-SELECT o.[OrderID],SUM(od.[Quantity]) AS 'Total Quantity'  
+SELECT o.[OrderID],SUM(od.[Quantity]) AS 'TotalQuantity'  
 FROM [Orders] o 
 INNER JOIN [Order Details] od ON o.[OrderID] = od.[OrderID] 
 GROUP BY o.[OrderID] 
