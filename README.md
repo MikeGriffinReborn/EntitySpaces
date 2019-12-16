@@ -320,8 +320,8 @@ if (coll.Count > 0)
 SQL Generated:
 
 ```sql
-SELECT [EmployeeID],[LastName],[FirstName],[Supervisor],[Age], -- ... not [Photo]
-FROM [dbo].[Employee]
+SELECT q.[EmployeeID],q.[LastName],q.[FirstName],q.[Title], -- all except q.Photo
+FROM [Employees] q
 ```
 
 ## Getting the Count
