@@ -3,7 +3,7 @@
 EntitySpaces Studio has been updated to .NET 4.5 and is now available ...
 
 # A Fluent SQL API
-EntitySpaces is a C# Fluent SQL API. EntitiySpaces is also high performance, transactional, and very intuitive. If you are familiar with the SQL syntax then you are already an expert in EntitySpaces. 
+EntitySpaces is a Fluent API for SQL server. EntitiySpaces is also high performance, transactional, and very intuitive. If you are familiar with the SQL syntax then you are already an expert in EntitySpaces. 
 
 In this sample query we are going to find the total # of items in each order. Each order can have many order detail records, so we group our query by OrderId and sum up the quantity as 'Total Quantity'.
 
@@ -17,14 +17,13 @@ OrdersCollection coll = new OrdersQuery("o", out var o)
 
 foreach(Orders order in coll)
 {
-    Console.WriteLine(order.OrderID);
-    Console.WriteLine(order.dynamic.TotalQuantity);
+    Console.WriteLine(order.OrderID + " : " + order.dynamic.TotalQuantity);
 }
 ```
 
 The out is as follows is ...
 
-| | |
+|OrderID | TotalQuantity |
 |-|-|
 |10248	 |27|
 |10249	 |49|
