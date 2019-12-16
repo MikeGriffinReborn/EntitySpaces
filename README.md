@@ -32,7 +32,7 @@ GROUP BY o.[OrderID]
 ORDER BY o.[OrderID] ASC
 ```
 
-The out is as follows is ...
+The output is as follows is ...
 
 |OrderID | TotalQuantity |
 |-|-|
@@ -41,7 +41,7 @@ The out is as follows is ...
 |10250	 |60|
 
 ## Transaction Support
-EntitySpaces is both Hiearchical and Transactional. If you are saving a nested set of hierarchical objects then a transaction is implicitly created for you. However, if you need to save two disparate objects as shown in the sample below then you can use an esTransactionScope to ensure they both succeed or fail as a unit.
+EntitySpaces is both Hiearchical and Transactional. If you are saving a nested set of hierarchical objects then a transaction is implicitly created for you. However, if you need to save two disparate unrelated objects as shown in the sample below then you should use an esTransactionScope to ensure they both succeed or fail as a unit.
 
 ```c#
 using (esTransactionScope scope = new esTransactionScope())
@@ -59,7 +59,7 @@ using (esTransactionScope scope = new esTransactionScope())
 }
 ```
 
-In this case we are using the hierarchical object model and there is no need to declare an esTransactionScope.
+In this example below we are using the EntitySpaces hierarchical model and there is no need to declare an esTransactionScope.
 
 ```c#
 // Create an order
@@ -114,8 +114,8 @@ if (coll.LoadAll())
 }
 ```
 
-## JSON Serialization is Smooth
-EntitySpaces will serialize any extra columns which are brought back by a query via a JOIN, aggregates, or by creating an extra column on the fly via concatenation such as is done with "fullName" column shown in the example below. Even though there is not a "fullName" property on the Employees object the "fullName" value will still serialize correctly. 
+## JSON Serialization of Derived Columns
+EntitySpaces will serialize any derived columns which are brought back by a query via a JOIN, aggregates, or by creating an extra column on the fly via concatenation such as is done with "fullName" column shown in the example below. Even though there is not a "fullName" property on the Employees object the "fullName" value will still serialize correctly. 
 
 ```c#
 EmployeesCollection coll = new EmployeesQuery("e", out var e)
@@ -129,7 +129,7 @@ EmployeesCollection coll = new EmployeesQuery("e", out var e)
 
 if (coll.Count > 0)
 {
-    string s = JsonConvert.SerializeObject(coll);
+    string json = JsonConvert.SerializeObject(coll);
 }
 ```
 
@@ -160,7 +160,7 @@ Notice the "fullName" column is present in the JSON, no need for intermediate cl
 
 ## InnerJoin, RightJoin, LeftJoin, CrossJoin, and FullJoin
 
-The sample below demonstrates a self join on the Employees table which is looking for all employees with an 'a' in their last name who have people reporting to them. Kind of silly but it shows off the syntax. 
+The sample below demonstrates a self join on the Employees table which is looking for all employees whose Supervisor has an 'a' in their last name. Kind of silly but it shows off the syntax. 
 
 ```c#
 EmployeesCollection coll = new EmployeesQuery("e", out var e)   // Employees
