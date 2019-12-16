@@ -350,12 +350,13 @@ Let's get the count
 This is the traditional way of paging and works on all versions of SQL Server. You always need an OrderBy when sorting.
 
 ```c#
-EmployeesQuery q = new EmployeesQuery();
-q.Select(q.EmployeeID, q.LastName)
-.OrderBy(q.LastName.Ascending).es.PageNumber(2).es.PageSize(20);
+EmployeesCollection coll = new EmployeesQuery("q", out var q)
+ .Select(q.EmployeeID, q.LastName)
+ .OrderBy(q.LastName.Ascending)
+ .es.PageNumber(2).es.PageSize(20)
+ .ToCollection<EmployeesCollection>();
 
-EmployeesCollection coll = new EmployeesCollection();
-if (coll.Load(q))
+if (coll.Count > 0)
 {
 
 }
@@ -381,11 +382,13 @@ ORDER BY ESRN ASC
 Skip and Take Require Microsoft SQL 2012 at a minimum and is a much nicer syntax.
 
 ```c#
-EmployeesQuery q = new EmployeesQuery();
-q.Select(q.EmployeeID, q.LastName).OrderBy(q.LastName.Ascending).Skip(40).Take(20);
+EmployeesCollection coll = new EmployeesQuery("q", out var q)
+ .Select(q.EmployeeID, q.LastName)
+ .OrderBy(q.LastName.Ascending)
+ .Skip(40).Take(20)
+ .ToCollection<EmployeesCollection>();
 
-EmployeesCollection coll = new EmployeesCollection();
-if (coll.Load(q))
+if (coll.Count > 0)
 {
 
 }
