@@ -3,6 +3,7 @@
 # EntitySpaces - A Fluent SQL API
 EntitySpaces is a Fluent API for SQL server. If you are familiar with the SQL syntax then you are already an expert in EntitySpaces. EntitiySpaces is also high performance, transactional, and very intuitive. EntitySpaces Studio is used to generate your C# classes from your database schema.
 
+## Example Query
 In this example we are going to sum the total # of items for each order. Each order can have many order detail records so we group our query by OrderId and sum up the quantity as 'TotalQuantity'. Notice that we can access the derived 'TotalQuantity' column through the dynamic property.
 
 ```c#
@@ -37,7 +38,7 @@ The out is as follows is ...
 |10249	 |49|
 |10250	 |60|
 
-# Transaction Support
+## Transaction Support
 EntitySpaces is both Hiearchical and Transactional. If you are saving a nested set of hierarchical objects then a transaction is implicitly created for you. However, if you need to save two disparate objects as shown in the sample below then you can use an esTransactionScope to ensure they both succeed or fail as a unit.
 
 ```c#
