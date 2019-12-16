@@ -24,10 +24,12 @@ foreach(Orders order in coll)
 
 The out is as follows is ...
 
+| | |
+|-|-|
 |10248	 |27|
 |10249	 |49|
 |10250	 |60|
-and so on ...
+
 
 The SQL generated is just as you would expect.
 
