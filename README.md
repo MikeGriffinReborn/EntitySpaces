@@ -225,7 +225,7 @@ Use the native language syntax, it works as you expect it would.
 | >= |greater-than or equal to operator|
 | == |equal to operator|
 | != |not-equal to operator|
-| \&\& |and operator|
+| && |and operator|
 | \|\| |or operator|
 
 ## Sub Operators
