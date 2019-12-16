@@ -1,5 +1,7 @@
 <img src="https://repository-images.githubusercontent.com/194275145/55b5b080-1ccf-11ea-8609-15b9de0d2351" alt="EntitySpaces" width="531" height="268">
 
+Available on Nuget @ [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer) See the [Setup Section](#setup) for more details ...
+
 # EntitySpaces - A Fluent SQL API
 EntitySpaces is a Fluent API for SQL server. If you are familiar with the SQL syntax then you are already an expert in EntitySpaces. EntitiySpaces is also high performance, transactional, and very intuitive. EntitySpaces Studio is used to generate your C# classes from your database schema.
 
@@ -76,59 +78,23 @@ order.OrderDetailsCollection.Add(new OrderDetails
 
 order.Save(); // Saves hierarchically
 ```
-
-# Setup
-
-1. Install [EntitySpaces Studio](https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard/raw/master/EntitySpaces.Studio/EntitySpacesStudio_2019.0.1214.0.zip/ "Zip File")
-
-2. Install the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") for the SQL Server NuGet package into your Visual Studio project.
-
-## Generating your Classes via EntitySpaces Studio
-It's very simple. You only need to execute two templates. The Custom classes are generated only once, that is where you can add custom code and overide EntitySpaces functionality if need be. The Generated classes are generated any time your database schema changes, you never edit these classes.
-
-However, first you will need to go to the "Settings" tab and then the "Connection" tab and connect to your database, there is a dialog box that can help you do that, it's very simple.
-
-<img src="docs\Studio.PNG" alt="EntitySpaces Studio" width="632" height="406">
-
-## Setup SQL Connection in your C# .NET Project
-
+## CRUD Example
 ```c#
-// esDataProviderFactory is a one time setup 
-esProviderFactory.Factory = new EntitySpaces.Loader.esDataProviderFactory();
-
-// Add a connection
-esConnectionElement conn = new esConnectionElement();
-conn.Name = "RemoteDb";
-conn.ProviderMetadataKey = "esDefault";
-conn.Provider = "EntitySpaces.SqlClientProvider";
-conn.ProviderClass = "DataProvider";
-conn.SqlAccessType = esSqlAccessType.DynamicSQL;
-conn.ConnectionString = "User ID=mydmin;Password=abc123;Initial Catalog=Northwind;Data Source=localhost";
-conn.DatabaseVersion = "2017";
-esConfigSettings.ConnectionInfo.Connections.Add(conn);
-
-// Assign the Default Connection
-esConfigSettings.ConnectionInfo.Default = "RemoteDb";
-```
-# Coding Examples
-
-## Add/Load/Save/Delete Single Entity
-```c#
-// Add
+// Create a new Employee
 Employees newEmp = new Employees();
 newEmp.FirstName = "Joe";
 newEmp.LastName = "Smith";
 newEmp.Save();
 
-// Load
+// Load that same Employee
 Employees employee = new Employees();
 if (employee.LoadByPrimaryKey(newEmp.EmployeeID.Value))
 {
-    // Save
+    // Modify that Employee
     employee.FirstName = "Bob";
     employee.Save();
 
-    // Delete
+    // Delete that Employee
     employee.MarkAsDeleted();
     employee.Save();
 }
@@ -147,7 +113,7 @@ if (coll.LoadAll())
 }
 ```
 
-## Dynamic Query API ...
+## More Dynamic Query API ...
 
 ### A Simple Sample with an InnerJoin
 
@@ -155,22 +121,18 @@ The sample below demonstrates a self join on the Employees table which is lookin
 
 
 ```c#
-EmployeeQuery q = new EmployeeQuery("e");   // Employees
-EmployeeQuery q1 = new EmployeeQuery("e1"); // ReportsTo
+EmployeesCollection coll = new EmployeesQuery("e", out var e)   // Employees
+    .InnerJoin<EmployeesQuery>("r", out var reportsTo)
+    	.On(e.ReportsTo == reportsTo.EmployeeID)
+    .Select(e.EmployeeID, e.LastName, reportsTo.LastName.As("SupervisorName"))
+    .Where(reportsTo.LastName.Like("%a%"))
+    .OrderBy(reportsTo.LastName.Descending)
+    .es.Distinct()
+    .ToCollection<EmployeesCollection>();
 
-q.Select(q.EmployeeID, q.LastName)  // To bind to combobox
-    .Where(q.LastName.Like("%a%"))
-    .InnerJoin(q1).On(q.EmployeeID == q1.ReportsTo)
-    .OrderBy(q.LastName.Descending);
-
-EmployeesCollection coll = new  EmployeesCollection();
-if(coll.Load(q))
+if (coll.Count > 0)
 {
     // Then we loaded at least one record
-    foreach(Empoyees emp in coll)
-    {
-        // do something
-    }
 }
 ```
 
@@ -178,20 +140,14 @@ Notice that the SQL is extremely lean.
 
 **NOTE**: InnerJoin is used above, also supported are RightJoin, LeftJoin, CrossJoin, and FullJoin.
 
-Results from the Query Above
+Results from the Query Above. SQL Parameters are always used to avoid SQL Injection Attacks.
 
 ```sql
-SELECT
-   e.[EmployeeID],
-   e.[LastName]  
-FROM
-   [Employees] e 
-INNER JOIN [Employees] e1 
-   ON e.[EmployeeID] = e1.[ReportsTo] 
-WHERE
-   e.[LastName] LIKE @LastName1 
-ORDER BY
-   e.[LastName] DESC
+SELECT  DISTINCT e.[EmployeeID],e.[LastName],r.[LastName] AS 'SupervisorName'  
+FROM [Employees] e 
+INNER JOIN [Employees] r ON e.[ReportsTo] = r.[EmployeeID] 
+WHERE r.[LastName] LIKE @LastName1 
+ORDER BY r.[LastName] DESC
 ```
 
 Compare that SQL to the SQL generated by a Entity Framework query which does the same thing and you'll be shocked.
@@ -200,16 +156,16 @@ Compare that SQL to the SQL generated by a Entity Framework query which does the
 EntitySpaces will serialize any extra columns which are brought back by a query via a JOIN, aggregates, or by creating an extra column on the fly via concatenation such as is done with "fullName" column shown in the example below. Even though there is not a "fullName" property on the Employees object the "fullName" value will still serialize correctly. 
 
 ```c#
-EmployeesQuery e = new EmployeesQuery("e");
-e.Select
+EmployeesCollection coll = new EmployeesQuery("e", out var e)
+.Select
 (
-    e.EmployeeID, e.LastName, e.FirstName, 
+    e.EmployeeID, e.LastName, e.FirstName,
     (e.LastName + ", " + e.FirstName).As("fullName") // extra column 
 )
-.OrderBy(e.LastName.Descending);
+.OrderBy(e.LastName.Descending)
+.ToCollection<EmployeesCollection>();
 
-EmployeesCollection coll = new EmployeesCollection();
-if (coll.Load(e))
+if (coll.Count > 0)
 {
     string s = JsonConvert.SerializeObject(coll);
 }
@@ -240,10 +196,9 @@ Notice the "fullName" column is present in the JSON, no need for intermediate cl
 ]
 ``` 
 
-### Improved Join Syntax
-It's important to note that both syntaxes shown below are valid. Use whichever one you are comfortable with.
+## Old School Syntax
+If you prefer you can use the old school syntax which doesn't use the generic methods with the "out var" technique. See the example below:
 
-#### Traditional syntax
 ```c#
 OrdersQuery o = new OrdersQuery("o");
 OrderDetailsQuery od = new OrderDetailsQuery("od");
@@ -257,82 +212,52 @@ EmployeesQuery eQuery = new EmployeesQuery("e");
 EmployeesCollection coll = new EmployeesCollection();
 if(coll.Load(eQuery))
 {
-
+    // The data was loaded
 }
 ```
-#### Streamlined Syntax
-The newer streamlined creates the sub-queries for you and provides the local variable as an "out" parameter. You no longer have to predeclare "out" parameters which makes this syntax very clean.
-
-```c#
-EmployeesQuery eQuery = new EmployeesQuery("e");
-
-eQuery.Select(eQuery.EmployeeID)
-.InnerJoin<OrdersQuery>("o", out var o).On(eQuery.EmployeeID == o.EmployeeID)
-.InnerJoin<OrderDetailsQuery>("od", out var od).On(o.OrderID == od.OrderID)
-.Where(o.Freight > 20);
-
-EmployeesCollection coll = new EmployeesCollection();
-if(coll.Load(eQuery))
-{
-    // records were loaded
-}
-```
-
-Even more streamlined
-
-```c#
-EmployeesCollection coll = new EmployeesQuery("e", out var eQuery)
- .Select(eQuery.EmployeeID)
- .InnerJoin<OrdersQuery>("o", out var o).On(eQuery.EmployeeID == o.EmployeeID)
- .InnerJoin<OrderDetailsQuery>("od", out var od).On(o.OrderID == od.OrderID)
- .Where(o.Freight > 20)
- .ToCollection<EmployeesCollection>();
-
-if(coll.Count > 0)
-{
-    // records were loaded
-}
-```
-
-### Supported Operators
+## Supported Operators
 
 Use the native language syntax, it works as you expect it would.
 
-- \+
-- \-
-- \*
-- \/
-- \%
-- \>
-- \<
-- \<=
-- \>=
-- \==
-- \!=
-- \&& 
-- \|| 
+|Operator | Description |
+|:-|:-|
+| + |plus operator|
+| - |minus operator|
+| * |multiple operator|
+| / |divison operator|
+| % |mod operator|
+| > |greater-than operator|
+| < |less-than operator|
+| <= |less-than or equal-to operator|
+| >= |greater-than or equal to operator|
+| == |equal to operator|
+| != |not-equal to operator|
+| \&\& |and operator|
+| \|\| |or operator|
 
-### Sub Operators
+## Sub Operators
 
-- ToUpper() - Convert to lower case
-- ToLower() - Left trim any leading spaces
-- LTrim() - Left trim any trailing spaces
-- RTrim() - - Right trim any trailing spaces
-- Trim() - Trim both leading and trailing spaces
-- SubString() - Return a sub-string
-- Coalesce() - Return the first non null evaluating expression
-- Date() - Returns only the date of a datetime type
-- DatePart() - Returns the value of part of a datetime value.
-- Length() - Return the length
-- Round() - Rounds the numeric-expression to the desired places after the decimal point.
-- Avg() - Average
-- Count() - Count operator
-- Max() - Maximum Value
-- Min() - Minimum Value
-- StdDev() - Standard Deviation
-- Var() - Variance
-- Sum() - Summation
-- Cast() - SQL Cast
+|Sub Operator | Description |
+|:-|:-|
+| ToUpper() | Convert to lower case|
+| ToLower() | Left trim any leading spaces|
+| LTrim() | Left trim any trailing spaces|
+| RTrim() | Right trim any trailing spaces|
+| Trim() | Trim both leading and trailing spaces|
+| SubString() | Return a sub-string|
+| Coalesce() | Return the first non null evaluating expression|
+| Date() | Returns only the date of a datetime type|
+| DatePart() | Returns the value of part of a datetime value|
+| Length() | Return the length|
+| Round() | Rounds the numeric-expression to the desired places after the decimal point|
+| Avg() | Average|
+| Count() | Count operator|
+| Max() | Maximum Value|
+| Min() | Minimum Value|
+| StdDev() | Standard Deviation|
+| Var() | Variance|
+| Sum() | Summation|
+| Cast() | SQL Cast|
 
 ### More Samples
 
@@ -1278,3 +1203,37 @@ q.Select(q.FirstName);
 ```
 
 Using the raw SQL injection techniques above will allow you to invoke SQL functions that we don’t support, including database vender specific SQL, and so on. Hopefully, you will almost never have to resort to writing a custom load method to invoke a stored procedure or an entirely hand written SQL statement. Of course, you can use our native API everywhere and just inject the raw SQL on the GroupBy for instance. You can mix and match to get the desired SQL.
+
+# Setup
+
+1. Install [EntitySpaces Studio](https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard/raw/master/EntitySpaces.Studio/EntitySpacesStudio_2019.0.1214.0.zip/ "Zip File")
+
+2. Install the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") for the SQL Server NuGet package into your Visual Studio project.
+
+## Generating your Classes via EntitySpaces Studio
+It's very simple. You only need to execute two templates. The Custom classes are generated only once, that is where you can add custom code and overide EntitySpaces functionality if need be. The Generated classes are generated any time your database schema changes, you never edit these classes.
+
+However, first you will need to go to the "Settings" tab and then the "Connection" tab and connect to your database, there is a dialog box that can help you do that, it's very simple.
+
+<img src="docs\Studio.PNG" alt="EntitySpaces Studio" width="632" height="406">
+
+## Setup SQL Connection in your C# .NET Project
+
+```c#
+// esDataProviderFactory is a one time setup 
+esProviderFactory.Factory = new EntitySpaces.Loader.esDataProviderFactory();
+
+// Add a connection
+esConnectionElement conn = new esConnectionElement();
+conn.Name = "RemoteDb";
+conn.ProviderMetadataKey = "esDefault";
+conn.Provider = "EntitySpaces.SqlClientProvider";
+conn.ProviderClass = "DataProvider";
+conn.SqlAccessType = esSqlAccessType.DynamicSQL;
+conn.ConnectionString = "User ID=mydmin;Password=abc123;Initial Catalog=Northwind;Data Source=localhost";
+conn.DatabaseVersion = "2017";
+esConfigSettings.ConnectionInfo.Connections.Add(conn);
+
+// Assign the Default Connection
+esConfigSettings.ConnectionInfo.Default = "RemoteDb";
+```
