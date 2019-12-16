@@ -17,7 +17,8 @@ OrdersCollection coll = new OrdersQuery("o", out var o)
 
 foreach(Orders order in coll)
 {
-
+    Console.WriteLine(order.OrderID);
+    Console.WriteLine(order.dynamic.TotalQuantity);
 }
 ```
 
