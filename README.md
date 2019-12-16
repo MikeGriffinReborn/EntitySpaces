@@ -78,7 +78,7 @@ order.OrderDetailsCollection.Add(new OrderDetails
 
 order.Save(); // Saves hierarchically
 ```
-## Crud Example
+## CRUD Example
 ```c#
 // Create a new Employee
 Employees newEmp = new Employees();
@@ -113,7 +113,7 @@ if (coll.LoadAll())
 }
 ```
 
-## Dynamic Query API ...
+## More Dynamic Query API ...
 
 ### A Simple Sample with an InnerJoin
 
