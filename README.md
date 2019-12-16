@@ -22,10 +22,8 @@ foreach(Orders order in coll)
 }
 ```
 
-The data returned is ...
+The out is as follows is ...
 
-|OrderID | TotalQuantity|
-|--------|:-------------:|
 |10248	 |27|
 |10249	 |49|
 |10250	 |60|
