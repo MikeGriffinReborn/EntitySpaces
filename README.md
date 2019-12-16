@@ -73,6 +73,8 @@ order.OrderDetailsCollection.Add(new OrderDetails
     Quantity = 4,
     ProductID = 8
 });
+
+order.Save(); // Saves hierarchically
 ```
 
 # Setup
