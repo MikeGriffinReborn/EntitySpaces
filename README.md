@@ -1,9 +1,7 @@
 <img src="https://repository-images.githubusercontent.com/194275145/55b5b080-1ccf-11ea-8609-15b9de0d2351" alt="EntitySpaces" width="531" height="268">
 
-EntitySpaces Studio has been updated to .NET 4.5 and is now available ...
-
-# A Fluent SQL API
-EntitySpaces is a Fluent API for SQL server. If you are familiar with the SQL syntax then you are already an expert in EntitySpaces. EntitiySpaces is also high performance, transactional, and very intuitive. 
+# EntitySpaces - A Fluent SQL API
+EntitySpaces is a Fluent API for SQL server. If you are familiar with the SQL syntax then you are already an expert in EntitySpaces. EntitiySpaces is also high performance, transactional, and very intuitive. EntitySpaces Studio is used to generate your C# classes from your database schema.
 
 In this example we are going to sum the total # of items for each order. Each order can have many order detail records so we group our query by OrderId and sum up the quantity as 'TotalQuantity'. Notice that we can access the derived 'TotalQuantity' column through the dynamic property.
 
@@ -24,7 +22,7 @@ foreach(Orders order in coll)
 The SQL generated is just as you would expect.
 
 ```sql
-SELECT o.[OrderID],SUM(od.[Quantity]) AS 'TotalQuantity'  
+SELECT o.[OrderID], SUM(od.[Quantity]) AS 'TotalQuantity'  
 FROM [Orders] o 
 INNER JOIN [Order Details] od ON o.[OrderID] = od.[OrderID] 
 GROUP BY o.[OrderID] 
