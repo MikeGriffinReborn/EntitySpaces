@@ -5,7 +5,7 @@ EntitySpaces Studio has been updated to .NET 4.5 and is now available ...
 # A Fluent SQL API
 EntitySpaces is a Fluent API for SQL server. EntitiySpaces is also high performance, transactional, and very intuitive. If you are familiar with the SQL syntax then you are already an expert in EntitySpaces. 
 
-In this sample query we are going to find the total # of items in each order. Each order can have many order detail records, so we group our query by OrderId and sum up the quantity as 'Total Quantity'.
+In this example we are going to sum the total # of items for each order. Each order can have many order detail records so we group our query by OrderId and sum up the quantity as 'TotalQuantity'. Notice that we can access the derived 'TotalQuantity' column through the dynamic property.
 
 ```c#
 OrdersCollection coll = new OrdersQuery("o", out var o)
