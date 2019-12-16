@@ -167,8 +167,7 @@ EmployeesCollection coll = new EmployeesQuery("e", out var e)   // Employees
     .InnerJoin<EmployeesQuery>("r", out var reportsTo).On(e.ReportsTo == reportsTo.EmployeeID)
     .Select(e.EmployeeID, e.LastName, reportsTo.LastName.As("SupervisorName"))
     .Where(reportsTo.LastName.Like("%a%"))
-    .OrderBy(reportsTo.LastName.Descending)
-    .es.Distinct()
+    .OrderBy(reportsTo.LastName.Descending).es.Distinct()
     .ToCollection<EmployeesCollection>();
 
 if (coll.Count > 0)
@@ -346,7 +345,7 @@ Let's get the count
 
 ## Paging
 
-### PageSize and PageNumber
+**Using PageSize and PageNumber**
 
 This is the traditional way of paging and works on all versions of SQL Server. You always need an OrderBy when sorting.
 
@@ -377,7 +376,7 @@ WHERE ESRN BETWEEN 21 AND 40
 ORDER BY ESRN ASC
 ```
 
-### Skip and Take
+**Skip and Take**
 
 Skip and Take Require Microsoft SQL 2012 at a minimum and is a much nicer syntax.
 
@@ -1245,7 +1244,7 @@ It's very simple. You only need to execute two templates. The Custom classes are
 
 However, first you will need to go to the "Settings" tab and then the "Connection" tab and connect to your database, there is a dialog box that can help you do that, it's very simple.
 
-<img src="docs\Studio.PNG" alt="EntitySpaces Studio" width="632" height="406">
+<img src="https://raw.githubusercontent.com/MikeGriffinReborn/EntitySpaces/master/docs/Studio.PNG" alt="EntitySpaces Studio" width="632" height="406">
 
 **Setup SQL Connection in your C# .NET Project**
 
