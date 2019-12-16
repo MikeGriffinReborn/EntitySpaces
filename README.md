@@ -263,7 +263,6 @@ Use the native language syntax, it works as you expect it would.
 ## More Samples
 
 **Select Top**
----
 
 ```c#
 EmployeesQuery q = new EmployeesQuery();
@@ -286,7 +285,6 @@ ORDER BY [LastName] DESC
 ```
 
 **SelectAllExcept**
----
 
 SelectAllExcept() is not really a SubQuery, just a convenient enhancement that allows you to select all except one or more listed columns.
 
@@ -310,7 +308,7 @@ FROM [dbo].[Employee]
 ```
 
 **Getting the Count**
----
+
 
 ```c#
 EmployeesQuery q = new EmployeesQuery();
@@ -330,7 +328,7 @@ WHERE [ReportsTo] IS NULL
 Let's get the count 
 
 **Paging**
----
+
 Using PageSize and PageNumber.
 
 This is the traditional way of paging and works on all versions of SQL Server. You always need an OrderBy when sorting.
@@ -363,7 +361,7 @@ ORDER BY ESRN ASC
 ```
 
 **Skip and Take**
----
+
 Skip and Take Require Microsoft SQL 2012 at a minimum and is a much nicer syntax.
 
 ```c#
@@ -388,7 +386,6 @@ FETCH NEXT 20 ROWS ONLY
 ```
 
 **With NoLock**
----
 
 ```c#
 EmployeesQuery e = new EmployeesQuery("e");
@@ -417,7 +414,7 @@ WHERE o.[Freight] > @Freight1
 ```
 
 **Distinct**
----
+
 SelectT DISTINCT clause to retrieve the only distinct values in a specified list of columns.
 
 ```c#
@@ -438,7 +435,7 @@ INNER JOIN [Orders] o ON e.[EmployeeID] = o.[EmployeeID]
 ```
 
 **Any, All, and Some**
----
+
 
 ```c#
 CustomersQuery c2 = new CustomersQuery("c2");
@@ -471,7 +468,6 @@ WHERE c1.[PostalCode] > ALL
 ## Nested SubQueries (literally) ...
 
 **The In() and NotIn() clauses**
----
 
 ```c#
 OrdersQuery oQuery = new OrdersQuery("o");
@@ -511,7 +507,6 @@ INNER JOIN [Employees] e ON (e.[EmployeeID] = o.[EmployeeID] AND o.[EmployeeID] 
 ```
 
 **The Exists() clause**
----
 
 Exists evaluates to true, if the SubQuery returns a result set.
 
@@ -546,7 +541,6 @@ WHERE EXISTS (
 ```
 
 **The From() clause**
----
 
 ```c#
 OrderDetailsQuery od = null;
@@ -581,7 +575,7 @@ INNER JOIN [Orders] o ON o.[OrderID] = sub.[OrderID]
 ```
 
 **Full Expressions**
----
+
 This query doesn’t really make sense, but we wanted to show you what will is possible.
 
 ```c#
@@ -607,7 +601,7 @@ ORDER BY SUBSTRING(LOWER([LastName]),2,4) DESC
 ```
 
 **Select SubQuery**
----
+
 A SubQuery in a Select clause must return a single value.
 
 ```c#
@@ -680,7 +674,7 @@ FROM [ForeignKeyTest].[dbo].[Order] o
 ```
 
 **From SubQuery**
----
+
 An aggregate requires a GROUP BY for each column in the SELECT that is not an aggregate. Sometimes you wish to include columns in your result set that you do not wish to group by. One way to accomplish this is by using a SubQuery in the From clause that contains the aggregate the way you want it grouped. The outer query contains the results of the aggregate, plus any additional columns.
 
 If you use a SubQuery in a From clause, you must give the From clause its own alias (shown below as "sub"). In the outer query, to refer to an aliased element in the From SubQuery, use the inline raw SQL technique to qualify the aggregate's alias with the From clause alias, i.e., "".
@@ -719,7 +713,7 @@ INNER JOIN [dbo].[Order] o ON o.[OrderID] = sub.[OrderID]
 ```
 
 **Where SubQuery**
----
+
 In and NotIn are two of the most common operators used in a Where SubQuery. The following produces a result set containing Territories that an Employee is not associated with.
 
 ```c#
@@ -828,7 +822,7 @@ ON (o.[OrderID] = oi.[OrderID] AND oi.[Discount] IN
 ```
 
 **Correlated SubQuery**
----
+
 A correlated SubQuery is where the inner query relies on an element of the outer query. The inner select cannot run on its own. Below, the inner pq query uses the outer query's oiq.ProductID in the Where() clause.
 
 ```c#
@@ -869,7 +863,7 @@ GROUP BY oi.[OrderID]
 ```
 
 **Nested SubQuery**
----
+
 EntitySpaces supports nesting of SubQueries. Each database vendor has their own limits on just how deep the nesting can go. EntitySpaces supports two different syntax approaches to nested SubQueries.
 
 Traditional SQL-style syntax is most useful if you already have a query designed using standard SQL, and are just converting it to a DynamicQuery.
@@ -967,7 +961,7 @@ WHERE o.[OrderDate] IN
 ```
 
 **Any, All, and Some**
----
+
 ANY, ALL, and SOME are SubQuery qualifiers. They precede the SubQuery they apply to. For most databases, ANY and SOME are synonymous. Usually, if you use an operator (>, >=, =, <, <=) in a Where clause against a SubQuery, then the SubQuery must return a single value. By applying a qualifier to the SubQuery, you can use operators against SubQueries that return multiple results.
 
 Notice, below, that the ALL qualifier is set to true for the SubQuery with "cq.es.All = true;".
@@ -1045,7 +1039,6 @@ WHERE o.[OrderDate] < ANY
 ```
 
 **Case().When().Then().End() Syntax**
----
 
 ```c#
 EmployeesQuery q = new EmployeesQuery();
@@ -1101,7 +1094,6 @@ ORDER BY [OrderID] DESC,[Quantity] DESC
 ```
 
 **Another Case/When Query**
----
 
 ```c#
 EmployeeQuery q = new EmployeeQuery();
@@ -1123,7 +1115,6 @@ if(coll.Load(q))
 ```
 
 **Having Clause**
----
 
 ```c#
 EmployeeQuery q = new EmployeeQuery();
@@ -1155,7 +1146,6 @@ ORDER BY [EmployeeID] DESC
 These might be kind of silly but they demonstrate syntax.
 
 **Union**
----
 
 ```c#
 EmployeeQuery eq1 = new EmployeeQuery("eq1");
@@ -1168,7 +1158,6 @@ eq2.Where(eq2.Age > 30);
 ```
 
 **Intersect**
----
 
 ```c#
 EmployeeQuery eq1 = new EmployeeQuery("eq1");
@@ -1181,7 +1170,6 @@ eq2.Where(eq2.FirstName.Like("%a%"));
 ```
 
 **Except**
----
 
 ```c#
 EmployeeQuery eq1 = new EmployeeQuery("eq1");
