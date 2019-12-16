@@ -1245,7 +1245,7 @@ It's very simple. You only need to execute two templates. The Custom classes are
 
 However, first you will need to go to the "Settings" tab and then the "Connection" tab and connect to your database, there is a dialog box that can help you do that, it's very simple.
 
-<img src="docs\Studio.PNG" alt="EntitySpaces Studio" width="632" height="406">
+<img src="https://raw.githubusercontent.com/MikeGriffinReborn/EntitySpaces/master/docs/Studio.PNG" alt="EntitySpaces Studio" width="632" height="406">
 
 **Setup SQL Connection in your C# .NET Project**
 
