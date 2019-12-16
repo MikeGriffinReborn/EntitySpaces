@@ -2,6 +2,26 @@
 
 EntitySpaces Studio has been updated to .NET 4.5 and is now available ...
 
+# A Fluent SQL API
+EntitySpaces is a C# Fluent SQL API. EntitiySpaces is also high performance, transactional, and very intuitive. If you are familiar with the SQL syntax then you are already an expert in EntitySpaces. 
+
+In this sample query we are going to find the total # of items in each order. Each order can have many order detail records, so we group our query by OrderId and sum up the quantity as 'Total Quantity'.
+
+```c#
+OrdersCollection coll = new OrdersQuery("o", out var o)
+    .InnerJoin<OrderDetailsQuery>("od", out var od).On(o.OrderID == od.OrderID)
+    .Select(o.OrderID, od.Quantity.Sum().As("Total Quantity"))
+    .GroupBy(o.OrderID)
+    .OrderBy(o.OrderID.Ascending)
+    .ToCollection<OrdersCollection>();
+
+foreach(Orders order in coll)
+{
+
+}
+```
+
+
 # Setup
 
 1. Install [EntitySpaces Studio](https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard/raw/master/EntitySpaces.Studio/EntitySpacesStudio_2019.0.1214.0.zip/ "Zip File")
