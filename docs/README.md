@@ -1,6 +1,81 @@
 <img src="https://repository-images.githubusercontent.com/194275145/55b5b080-1ccf-11ea-8609-15b9de0d2351" alt="EntitySpaces" width="531" height="268">
 
-EntitySpaces Studio has been updated to .NET 4.5 and is now available ...
+# EntitySpaces - A Fluent SQL API
+EntitySpaces is a Fluent API for SQL server. If you are familiar with the SQL syntax then you are already an expert in EntitySpaces. EntitiySpaces is also high performance, transactional, and very intuitive. EntitySpaces Studio is used to generate your C# classes from your database schema.
+
+## Example Query
+In this example we are going to sum the total # of items for each order. Each order can have many order detail records so we group our query by OrderId and sum up the quantity as 'TotalQuantity'. Notice that we can access the derived 'TotalQuantity' column through the dynamic property.
+
+```c#
+OrdersCollection coll = new OrdersQuery("o", out var o)
+    .InnerJoin<OrderDetailsQuery>("od", out var od).On(o.OrderID == od.OrderID)
+    .Select(o.OrderID, od.Quantity.Sum().As("TotalQuantity"))
+    .GroupBy(o.OrderID)
+    .OrderBy(o.OrderID.Ascending)
+    .ToCollection<OrdersCollection>();
+
+foreach(Orders order in coll)
+{
+    Console.WriteLine(order.OrderID + " : " + order.dynamic.TotalQuantity);
+}
+```
+
+The SQL generated is just as you would expect.
+
+```sql
+SELECT o.[OrderID], SUM(od.[Quantity]) AS 'TotalQuantity'  
+FROM [Orders] o 
+INNER JOIN [Order Details] od ON o.[OrderID] = od.[OrderID] 
+GROUP BY o.[OrderID] 
+ORDER BY o.[OrderID] ASC
+```
+
+The out is as follows is ...
+
+|OrderID | TotalQuantity |
+|-|-|
+|10248	 |27|
+|10249	 |49|
+|10250	 |60|
+
+## Transaction Support
+EntitySpaces is both Hiearchical and Transactional. If you are saving a nested set of hierarchical objects then a transaction is implicitly created for you. However, if you need to save two disparate objects as shown in the sample below then you can use an esTransactionScope to ensure they both succeed or fail as a unit.
+
+```c#
+using (esTransactionScope scope = new esTransactionScope())
+{
+    Employees employee = new Employees();
+    employee.FirstName = "Mike";
+    employee.LastName = "Griffin";
+    employee.Save();
+
+    Products product = new Products();
+    product.ProductName = "Some Gadget";
+    product.Save();
+
+    scope.Complete(); // last line of using statement
+}
+```
+
+In this case we are using the hierarchical object model and there is no need to declare an esTransactionScope.
+
+```c#
+// Create an order
+Orders order = new Orders
+{
+    OrderDate = DateTime.Now
+};
+
+// Add an OrderDetails Record to the Order
+order.OrderDetailsCollection.Add(new OrderDetails
+{
+    UnitPrice = 55.00M,
+    Quantity = 4,
+    ProductID = 8
+});
+
+order.Save(); // Saves hierarchically
+```
 
 # Setup
 
@@ -13,7 +88,7 @@ It's very simple. You only need to execute two templates. The Custom classes are
 
 However, first you will need to go to the "Settings" tab and then the "Connection" tab and connect to your database, there is a dialog box that can help you do that, it's very simple.
 
-<img src="Studio.PNG" alt="EntitySpaces Studio" width="632" height="406">
+<img src="docs\Studio.PNG" alt="EntitySpaces Studio" width="632" height="406">
 
 ## Setup SQL Connection in your C# .NET Project
 
@@ -199,7 +274,7 @@ eQuery.Select(eQuery.EmployeeID)
 EmployeesCollection coll = new EmployeesCollection();
 if(coll.Load(eQuery))
 {
-
+    // records were loaded
 }
 ```
 
