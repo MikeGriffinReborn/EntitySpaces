@@ -263,7 +263,7 @@ Use the native language syntax, it works as you expect it would.
 ## More Samples
 
 **Select Top**
-
+<hr>
 ```c#
 EmployeesQuery q = new EmployeesQuery();
 q.Where(q.ReportsTo.IsNotNull()).OrderBy(q.LastName.Descending).es.Top(1);
@@ -285,6 +285,7 @@ ORDER BY [LastName] DESC
 ```
 
 **SelectAllExcept**
+<hr>
 SelectAllExcept() is not really a SubQuery, just a convenient enhancement that allows you to select all except one or more listed columns.
 
 ```c#
@@ -307,6 +308,7 @@ FROM [dbo].[Employee]
 ```
 
 **Getting the Count**
+<hr>
 
 ```c#
 EmployeesQuery q = new EmployeesQuery();
