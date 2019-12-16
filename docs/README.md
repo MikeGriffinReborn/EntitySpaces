@@ -307,11 +307,11 @@ SelectAllExcept() is not really a SubQuery, just a convenient enhancement that a
 
 ```c#
 // We don't want to bring back the huge photo
-EmployeesQuery q = new EmployeesQuery();
-q.SelectAllExcept(q.Photo);
+EmployeesCollection coll = new EmployeesQuery("q", out var q)
+    .SelectAllExcept(q.Photo)
+    .ToCollection<EmployeesCollection>();
 
-EmployeesCollection coll = new EmployeesCollection();
-if (coll.Load(q))
+if (coll.Count > 0)
 {
     // Then we loaded at least one record
 }
@@ -320,8 +320,8 @@ if (coll.Load(q))
 SQL Generated:
 
 ```sql
-SELECT [EmployeeID],[LastName],[FirstName],[Supervisor],[Age], -- ... not [Photo]
-FROM [dbo].[Employee]
+SELECT q.[EmployeeID],q.[LastName],q.[FirstName],q.[Title], -- all except q.Photo
+FROM [Employees] q
 ```
 
 ## Getting the Count
