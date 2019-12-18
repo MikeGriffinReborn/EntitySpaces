@@ -1238,7 +1238,7 @@ Using the raw SQL injection techniques above will allow you to invoke SQL functi
 
 # Setup
 
-1. Install [EntitySpaces Studio](https://github.com/MikeGriffinReborn/EntitySpaces/blob/master/EntitySpaces.Studio/EntitySpacesStudio_2019.1.1218.0.zip?raw=true/ "Zip File")
+1. Install [EntitySpaces Studio](https://github.com/MikeGriffinReborn/EntitySpaces/raw/master/EntitySpaces.Studio/EntitySpacesStudio_20191.1218.0.zip?raw=true/ "Zip File")
 
 ## NuGet Package(s)
 
