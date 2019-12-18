@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyVersion>2019.12.16.0</AssemblyVersion>
-    <FileVersion>2019.12.16.0</FileVersion>
-    <Version>2019.12.16</Version>
+    <AssemblyVersion>2019.12.18.0</AssemblyVersion>
+    <FileVersion>2019.12.18.0</FileVersion>
+    <Version>2019.12.18</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>EntitySpaces in .NET Standard Mode for SQLite (single assembly install)</Description>
     <PackageProjectUrl>https://mikegriffinreborn.github.io/EntitySpaces/</PackageProjectUrl>
     <PackageTags>EntitySpaces, ORM</PackageTags>
-    <PackageReleaseNotes>Added esDynamicQuery ToCollection&lt;T&gt; and ToEntity&lt;T&gt;(). Requires EntitySpaces Studio 2019.0.1214.0 or higher to generate classes that support streamlined API</PackageReleaseNotes>
+    <PackageReleaseNotes>SQLite Support</PackageReleaseNotes>
   </PropertyGroup>
 
 
