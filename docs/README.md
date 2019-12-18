@@ -1,9 +1,9 @@
 <img src="https://repository-images.githubusercontent.com/194275145/55b5b080-1ccf-11ea-8609-15b9de0d2351" alt="EntitySpaces" width="531" height="268">
 
-Available on Nuget @ [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer) See the [Setup Section](#setup) for more details ...
+Available on Nuget @ [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer) or @ [EntitySpaces.ORM.SQLite](https://www.nuget.org/packages/EntitySpaces.ORM.SQLite/ "NuGet"). See the [Setup Section](#setup) for more details ...
 
 # EntitySpaces - A Fluent SQL API
-EntitySpaces is a Fluent API for SQL server. If you are familiar with the SQL syntax then you are already an expert in EntitySpaces. EntitySpaces is also high performance, transactional, and very intuitive. EntitySpaces Studio is used to generate your C# classes from your database schema.
+EntitySpaces is a Fluent API for SQL server, SQLite and more on the way. If you are familiar with the SQL syntax then you are already an expert in EntitySpaces. EntitySpaces is also high performance, transactional, and very intuitive. EntitySpaces Studio is used to generate your C# classes from your database schema.
 
 ## Example Query
 In this example we are going to sum the total # of items for each order. Each order can have many order detail records so we group our query by OrderId and sum up the quantity as 'TotalQuantity'. Notice that we can access the derived 'TotalQuantity' column through the dynamic property.
@@ -1238,9 +1238,13 @@ Using the raw SQL injection techniques above will allow you to invoke SQL functi
 
 # Setup
 
-1. Install [EntitySpaces Studio](https://github.com/MikeGriffinReborn/EntitySpaces/blob/master/EntitySpaces.Studio/EntitySpacesStudio_2019.0.1214.0.zip?raw=true/ "Zip File")
+1. Install [EntitySpaces Studio](https://github.com/MikeGriffinReborn/EntitySpaces/raw/master/EntitySpaces.Studio/EntitySpacesStudio_20191.1218.0.zip?raw=true/ "Zip File")
 
-2. Install the [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") for the SQL Server NuGet package into your Visual Studio project.
+## NuGet Package(s)
+
+* SQL Server - [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") 
+
+* SQLite - [EntitySpaces.ORM.SQLite](https://www.nuget.org/packages/EntitySpaces.ORM.SQLite/ "NuGet") 
 
 **Generating your Classes via EntitySpaces Studio**
 It's very simple. You only need to execute two templates. The Custom classes are generated only once, that is where you can add custom code and overide EntitySpaces functionality if need be. The Generated classes are generated any time your database schema changes, you never edit these classes.
@@ -1249,7 +1253,7 @@ However, first you will need to go to the "Settings" tab and then the "Connectio
 
 <img src="https://raw.githubusercontent.com/MikeGriffinReborn/EntitySpaces/master/docs/Studio.PNG" alt="EntitySpaces Studio" width="632" height="406">
 
-**Setup SQL Connection in your C# .NET Project**
+**Setup SQL Server connection string in your C# .NET Project**
 
 ```c#
 // esDataProviderFactory is a one time setup 
@@ -1265,6 +1269,26 @@ conn.SqlAccessType = esSqlAccessType.DynamicSQL;
 conn.ConnectionString = 
    "User ID=mydmin;Password=abc123;Initial Catalog=Northwind;Data Source=localhost";
 conn.DatabaseVersion = "2017";
+esConfigSettings.ConnectionInfo.Connections.Add(conn);
+
+// Assign the Default Connection
+esConfigSettings.ConnectionInfo.Default = "RemoteDb";
+```
+
+**Setup SQLite connection string in your C# .NET Project**
+
+```c#
+esProviderFactory.Factory = new EntitySpaces.Loader.esDataProviderFactory();
+
+// Add a connection
+esConnectionElement conn = new esConnectionElement();
+conn.Name = "RemoteDb";
+conn.ProviderMetadataKey = "esDefault";
+conn.Provider = "EntitySpaces.SQLiteProvider";
+conn.ProviderClass = "DataProvider";
+conn.SqlAccessType = esSqlAccessType.DynamicSQL;
+conn.ConnectionString = @"Data Source=C:\MyFolder\Northwind.db3;Version=3;";
+conn.DatabaseVersion = "2012";
 esConfigSettings.ConnectionInfo.Connections.Add(conn);
 
 // Assign the Default Connection
