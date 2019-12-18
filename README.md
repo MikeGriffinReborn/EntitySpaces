@@ -1242,9 +1242,9 @@ Using the raw SQL injection techniques above will allow you to invoke SQL functi
 
 ## NuGet Package(s)
 
-SQL Server - [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") 
+* SQL Server - [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") 
 
-SQLite - [EntitySpaces.ORM.SQLite](https://www.nuget.org/packages/EntitySpaces.ORM.SQLite/ "NuGet") 
+* SQLite - [EntitySpaces.ORM.SQLite](https://www.nuget.org/packages/EntitySpaces.ORM.SQLite/ "NuGet") 
 
 **Generating your Classes via EntitySpaces Studio**
 It's very simple. You only need to execute two templates. The Custom classes are generated only once, that is where you can add custom code and overide EntitySpaces functionality if need be. The Generated classes are generated any time your database schema changes, you never edit these classes.
@@ -1253,7 +1253,7 @@ However, first you will need to go to the "Settings" tab and then the "Connectio
 
 <img src="https://raw.githubusercontent.com/MikeGriffinReborn/EntitySpaces/master/docs/Studio.PNG" alt="EntitySpaces Studio" width="632" height="406">
 
-**Setup SQL Connection in your C# .NET Project**
+**Setup SQL Server connection string in your C# .NET Project**
 
 ```c#
 // esDataProviderFactory is a one time setup 
@@ -1269,6 +1269,26 @@ conn.SqlAccessType = esSqlAccessType.DynamicSQL;
 conn.ConnectionString = 
    "User ID=mydmin;Password=abc123;Initial Catalog=Northwind;Data Source=localhost";
 conn.DatabaseVersion = "2017";
+esConfigSettings.ConnectionInfo.Connections.Add(conn);
+
+// Assign the Default Connection
+esConfigSettings.ConnectionInfo.Default = "RemoteDb";
+```
+
+**Setup SQLite connection string in your C# .NET Project**
+
+```c#
+esProviderFactory.Factory = new EntitySpaces.Loader.esDataProviderFactory();
+
+// Add a connection
+esConnectionElement conn = new esConnectionElement();
+conn.Name = "RemoteDb";
+conn.ProviderMetadataKey = "esDefault";
+conn.Provider = "EntitySpaces.SQLiteProvider";
+conn.ProviderClass = "DataProvider";
+conn.SqlAccessType = esSqlAccessType.DynamicSQL;
+conn.ConnectionString = @"Data Source=C:\MyFolder\Northwind.db3;Version=3;";
+conn.DatabaseVersion = "2012";
 esConfigSettings.ConnectionInfo.Connections.Add(conn);
 
 // Assign the Default Connection
