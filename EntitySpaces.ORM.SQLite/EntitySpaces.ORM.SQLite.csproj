@@ -2,14 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyVersion>2019.12.18.0</AssemblyVersion>
-    <FileVersion>2019.12.18.0</FileVersion>
-    <Version>2019.12.18</Version>
+    <AssemblyVersion>2019.12.19.1</AssemblyVersion>
+    <FileVersion>2019.12.19.1</FileVersion>
+    <Version>2019.12.19.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>EntitySpaces in .NET Standard Mode for SQLite (single assembly install)</Description>
     <PackageProjectUrl>https://mikegriffinreborn.github.io/EntitySpaces/</PackageProjectUrl>
-    <PackageTags>EntitySpaces, ORM</PackageTags>
+    <PackageTags>EntitySpaces, ORM, SQLite, SQL</PackageTags>
     <PackageReleaseNotes>SQLite Support</PackageReleaseNotes>
+    <RepositoryType>Github</RepositoryType>
+    <RepositoryUrl>https://github.com/MikeGriffinReborn/EntitySpaces</RepositoryUrl>
+    <PackageIcon>esIcon.png</PackageIcon>
+    <PackageIconUrl />
+    <Product>EntitySpaces</Product>
+    <Company />
   </PropertyGroup>
 
 
@@ -106,6 +112,10 @@
     </None>
     <None Update="readme.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\esIcon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
     </None>
   </ItemGroup>
 

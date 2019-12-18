@@ -9,7 +9,12 @@
     <Description>EntitySpaces in .NET Standard Mode for SQL Server (single assembly install)</Description>
     <PackageProjectUrl>https://mikegriffinreborn.github.io/EntitySpaces/</PackageProjectUrl>
     <PackageTags>EntitySpaces, ORM</PackageTags>
-    <PackageReleaseNotes>Added esDynamicQuery ToCollection&lt;T&gt; and ToEntity&lt;T&gt;(). Requires EntitySpaces Studio 2019.0.1214.0 or higher to generate classes that support streamlined API</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <Product>EntitySpaces</Product>
+    <PackageIcon>esIcon.png</PackageIcon>
+    <PackageIconUrl />
+    <RepositoryUrl>https://github.com/MikeGriffinReborn/EntitySpaces</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
   </PropertyGroup>
 
 
@@ -105,6 +110,10 @@
     </None>
     <None Update="readme.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\esIcon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
     </None>
   </ItemGroup>
 
