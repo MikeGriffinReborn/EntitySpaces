@@ -1,3 +1,5 @@
+Click here for the [Glossy Site ...](https://mikegriffinreborn.github.io/EntitySpaces/)
+
 <img src="https://repository-images.githubusercontent.com/194275145/55b5b080-1ccf-11ea-8609-15b9de0d2351" alt="EntitySpaces" width="531" height="268">
 
 Available on Nuget @ [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer) or @ [EntitySpaces.ORM.SQLite](https://www.nuget.org/packages/EntitySpaces.ORM.SQLite/ "NuGet"). See the [Setup Section](#setup) for more details ...
