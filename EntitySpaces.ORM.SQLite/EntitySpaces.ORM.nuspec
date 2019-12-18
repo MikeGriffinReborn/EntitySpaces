@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>EntitySpaces.ORM.SQLite</id>
+    <version>2019.9.20.0</version>
+    <authors>EntitySpaces.ORM.SQLite</authors>
+    <owners>EntitySpaces.ORM.SQLite</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">BSD-2-Clause-FreeBSD</license>
+    <projectUrl>https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard</projectUrl>
+    <description>EntitySpaces in .NET Standard Mode for SQLite (single assembly install)</description>
+    <tags>EntitySpaces, ORM</tags>
+    <readme>readme.md</readme>
+  </metadata>
+</package>
