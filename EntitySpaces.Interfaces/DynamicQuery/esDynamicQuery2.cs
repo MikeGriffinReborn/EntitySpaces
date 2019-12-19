@@ -1709,6 +1709,76 @@ namespace EntitySpaces.Interfaces
             }
         }
 
+        /// <summary>
+        /// This will limit the number of rows returned, after sorting.
+        /// Setting Top to 10 will return the top ten rows after sorting.
+        /// </summary>
+        public esDynamicQuery Top(int top)
+        {
+            this.top = top;
+            return this;
+        }
+
+        /// <summary>
+        /// Used in SubQueries. The Any qualifier works just like the In except it allows for >, >=, 
+        /// <, <= as well as the = (In) and != (Not In) operators
+        /// </summary>
+        public esDynamicQuery Any()
+        {
+            this.subquerySearchCondition = esSubquerySearchCondition.Any;
+            return this;
+        }
+
+        /// <summary>
+        /// Used in SubQueries. Used like 'Any' except for one key exception - any operator applied must be true for
+        /// ALL the values returned in our subquery.
+        /// </summary>
+        public esDynamicQuery All()
+        {
+            this.subquerySearchCondition = esSubquerySearchCondition.All;
+            return this;
+        }
+
+        /// <summary>
+        /// Used in SubQueries. The word SOME is an alias for ANY, and may be used anywhere that ANY is used. 
+        /// The SQL standard defines these two words with the same meaning to overcome a limitation in the English language, 
+        /// particularly for inequality comparisons.
+        /// </summary>
+        public esDynamicQuery Some()
+        {
+            this.subquerySearchCondition = esSubquerySearchCondition.Some;
+            return this;
+        }
+
+        /// <summary>
+        /// This will retrieve a specific row number from a select.
+        /// This is useful when paging large sets of data
+        /// </summary>
+        public esDynamicQuery PageNumber(int pageNumber)
+        {
+            this.pageNumber = pageNumber;
+            return this;
+        }
+
+        /// <summary>
+        /// This will retrieve a specific row number from a select.
+        /// This is useful when paging large sets of data
+        /// </summary>
+        public esDynamicQuery PageSize(int pageSize)
+        {
+            this.pageSize = pageSize;
+            return this;
+        }
+
+        /// <summary>
+        /// Setting Distinct = True will elimate duplicate rows from the data.
+        /// </summary>
+        public esDynamicQuery Distinct()
+        {
+            this.distinct = true;
+            return this;
+        }
+
         [NonSerialized]
         private DynamicQueryProps props;
 
@@ -1763,16 +1833,6 @@ namespace EntitySpaces.Interfaces
                 return this.dynamicQuery;
             }
 
-            /// <summary>
-            /// This will limit the number of rows returned, after sorting.
-            /// Setting Top to 10 will return the top ten rows after sorting.
-            /// </summary>
-            public esDynamicQuery Top(int top)
-            {
-                this.dynamicQuery.top = top;
-                return this.dynamicQuery;
-            }
-
 
             /// <summary>
             /// This will use the WITH (NOLOCK) syntax on all tables joined in the query. Currently
@@ -1784,36 +1844,7 @@ namespace EntitySpaces.Interfaces
                 return this.dynamicQuery;
             }
 
-            /// <summary>
-            /// Used in SubQueries. The Any qualifier works just like the In except it allows for >, >=, 
-            /// <, <= as well as the = (In) and != (Not In) operators
-            /// </summary>
-            public esDynamicQuery Any()
-            {
-                this.dynamicQuery.subquerySearchCondition = esSubquerySearchCondition.Any;
-                return this.dynamicQuery;
-            }
 
-            /// <summary>
-            /// Used in SubQueries. Used like 'Any' except for one key exception - any operator applied must be true for
-            /// ALL the values returned in our subquery.
-            /// </summary>
-            public esDynamicQuery All()
-            {
-                this.dynamicQuery.subquerySearchCondition = esSubquerySearchCondition.All;
-                return this.dynamicQuery;
-            }
-
-            /// <summary>
-            /// Used in SubQueries. The word SOME is an alias for ANY, and may be used anywhere that ANY is used. 
-            /// The SQL standard defines these two words with the same meaning to overcome a limitation in the English language, 
-            /// particularly for inequality comparisons.
-            /// </summary>
-            public esDynamicQuery Some()
-            {
-                this.dynamicQuery.subquerySearchCondition = esSubquerySearchCondition.Some;
-                return this.dynamicQuery;
-            }
 
             /// <summary>
             /// This will retrieve a specific row number from a select.

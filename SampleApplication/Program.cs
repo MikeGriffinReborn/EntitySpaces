@@ -24,7 +24,7 @@ namespace ConsoleApp
                 {
                     return new EmployeesQuery("e", out var q1)
                     .Select(q1.EmployeeID)
-                    .Where(q1.EmployeeID.IsNotNull()).es.Any();
+                    .Where(q1.EmployeeID.IsNotNull()).Any();
                 })
             );
 
@@ -63,6 +63,8 @@ namespace ConsoleApp
             Subquery();
             CaseWhenThenEnd();
             HavingClause();
+
+            int i = 9;
         }
 
         static private void AddLoadSaveDeleteSingleEntity()
@@ -313,7 +315,7 @@ namespace ConsoleApp
         static private void SelectDistinctTop()
         {
             EmployeesQuery q = new EmployeesQuery("e");
-            q.Select(q.EmployeeID).es.Top(5).es.Distinct();
+            q.Select(q.EmployeeID).Top(5).Distinct();
 
             EmployeesCollection coll = new EmployeesCollection();
             if (coll.Load(q))
