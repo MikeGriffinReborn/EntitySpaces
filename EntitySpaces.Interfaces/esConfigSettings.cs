@@ -224,7 +224,12 @@ namespace EntitySpaces.Interfaces
     {
         public esConnectionElement()
         {
+            Name = "RemoteDb";
+            ProviderMetadataKey = "esDefault";
+            ProviderClass = "DataProvider";
+            SqlAccessType = esSqlAccessType.DynamicSQL;
 
+            esConfigSettings.ConnectionInfo.Default = "RemoteDb";
         }
 
         /// <summary>

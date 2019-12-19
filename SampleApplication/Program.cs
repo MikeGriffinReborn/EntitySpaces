@@ -13,17 +13,26 @@ namespace ConsoleApp
 
             // Add a connection
             esConnectionElement conn = new esConnectionElement();
-            conn.Name = "RemoteDb";
-            conn.ProviderMetadataKey = "esDefault";
             conn.Provider = "EntitySpaces.SqlClientProvider";
-            conn.ProviderClass = "DataProvider";
-            conn.SqlAccessType = esSqlAccessType.DynamicSQL;
-            conn.ConnectionString = "User ID=sa;Password=blank;Initial Catalog=Northwind;Data Source=localhost";
             conn.DatabaseVersion = "2012";
+            conn.ConnectionString = "User ID=sa;Password=blank;Initial Catalog=Northwind;Data Source=localhost";
             esConfigSettings.ConnectionInfo.Connections.Add(conn);
 
-            // Assign the Default Connection
-            esConfigSettings.ConnectionInfo.Default = "RemoteDb";
+            // Quick test on new syntax
+            EmployeesQuery q = new EmployeesQuery("q");
+            q.Where(q.EmployeeID > (() =>
+                {
+                    return new EmployeesQuery("e", out var q1)
+                    .Select(q1.EmployeeID)
+                    .Where(q1.EmployeeID.IsNotNull()).es.Any();
+                })
+            );
+
+            EmployeesCollection coll = new EmployeesCollection();
+            if (coll.Load(q))
+            {
+
+            }
 
             AddLoadSaveDeleteSingleEntity();
             StreamlinedDynamicQueryAPI();

@@ -32,6 +32,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq.Expressions;
 using System.Runtime.Serialization;
 
 namespace EntitySpaces.DynamicQuery
@@ -95,6 +96,40 @@ namespace EntitySpaces.DynamicQuery
         }
 
         #region operators applied to other QueryItems (LiteralExpression)
+
+        #region  Any, All, and Sum Operators (=, <>, !=, >, >=, <, or <=)
+
+        public static esComparison operator >(esQueryItem item, Func<esDynamicQuery> func)
+        {
+            return GreaterThan(item, func(), esSystemType.Object, true);
+        }
+
+        public static esComparison operator <(esQueryItem item, Func<esDynamicQuery> func)
+        {
+            return LessThan(item, func(), esSystemType.Object, true);
+        }
+
+        public static esComparison operator >=(esQueryItem item, Func<esDynamicQuery> func)
+        {
+            return GreaterThanOrEqual(item, func(), esSystemType.Object, true);
+        }
+
+        public static esComparison operator <=(esQueryItem item, Func<esDynamicQuery> func)
+        {
+            return LessThanOrEqual(item, func(), esSystemType.Object, true);
+        }
+
+        public static esComparison operator !=(esQueryItem item, Func<esDynamicQuery> func)
+        {
+            return NotEqualOperator(item, func(), esSystemType.Object, true);
+        }
+
+        public static esComparison operator ==(esQueryItem item, Func<esDynamicQuery> func)
+        {
+            return EqualOperator(item, func(), esSystemType.Object, true);
+        }
+
+        #endregion
 
         #region > operator literal overloads
 
@@ -5684,6 +5719,7 @@ namespace EntitySpaces.DynamicQuery
             this.Column.Distinct = true;
             return this;
         }
+
 
         /// <summary>
         /// Required due to operator overloading. Use 'Equal' not 'Equals'
