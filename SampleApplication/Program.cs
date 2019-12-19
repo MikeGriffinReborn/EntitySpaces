@@ -283,7 +283,7 @@ namespace ConsoleApp
         {
             // PageSize and PageNumber
             EmployeesQuery q = new EmployeesQuery("e");
-            q.OrderBy(q.HireDate.Descending).es.PageSize(5).es.PageNumber(2);
+            q.OrderBy(q.HireDate.Descending).PageSize(5).PageNumber(2);
 
             EmployeesCollection coll1 = new EmployeesCollection();
             if (coll1.Load(q))
@@ -335,7 +335,7 @@ namespace ConsoleApp
                     EmployeesQuery subquery = new EmployeesQuery("s");
                     subquery.Select(subquery.EmployeeID)
                     .Where(subquery.ReportsTo.IsNotNull() && subquery.EmployeeID == eq.EmployeeID)
-                    .es.Distinct();
+                    .Distinct();
                     return subquery;
                 })
             );
@@ -416,7 +416,7 @@ namespace ConsoleApp
             oiq.Select(oiq.OrderID, (oiq.Quantity * oiq.UnitPrice).Sum().As("Total"))
             .Where(oiq.ProductID
                 .In(
-                    pq.Select(pq.ProductID).Where(oiq.ProductID == pq.ProductID).es.Distinct()
+                    pq.Select(pq.ProductID).Where(oiq.ProductID == pq.ProductID).Distinct()
                 )
             )
             .GroupBy(oiq.OrderID);
@@ -436,7 +436,7 @@ namespace ConsoleApp
                 {
                     ProductsQuery pq = new ProductsQuery("p");
                     pq.Select(pq.ProductID).Where(oiq.ProductID == pq.ProductID)
-                    .es.Distinct();
+                    .Distinct();
                     return pq;
                 })
             )

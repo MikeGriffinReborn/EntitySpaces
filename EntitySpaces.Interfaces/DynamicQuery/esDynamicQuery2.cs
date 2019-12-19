@@ -1844,37 +1844,6 @@ namespace EntitySpaces.Interfaces
                 return this.dynamicQuery;
             }
 
-
-
-            /// <summary>
-            /// This will retrieve a specific row number from a select.
-            /// This is useful when paging large sets of data
-            /// </summary>
-            public esDynamicQuery PageNumber(int pageNumber)
-            {
-                this.dynamicQuery.pageNumber = pageNumber;
-                return this.dynamicQuery;
-            }
-
-            /// <summary>
-            /// This will retrieve a specific row number from a select.
-            /// This is useful when paging large sets of data
-            /// </summary>
-            public esDynamicQuery PageSize(int pageSize)
-            {
-                this.dynamicQuery.pageSize = pageSize;
-                return this.dynamicQuery;
-            }
-
-            /// <summary>
-            /// Setting Distinct = True will elimate duplicate rows from the data.
-            /// </summary>
-            public esDynamicQuery Distinct()
-            {
-                this.dynamicQuery.distinct = true;
-                return this.dynamicQuery;
-            }
-
             /// <summary>
             /// Add a COUNT(*) Aggregate to the selected columns list.
             /// </summary>
