@@ -116,12 +116,12 @@ namespace ConsoleApp
 
         static private void GroupBy()
         {
-            OrderDetailsQuery od = new OrderDetailsQuery("od");
-            od.Select(od.OrderID, (od.UnitPrice * od.Quantity).Sum().As("OrderTotal"));
-            od.GroupBy(od.OrderID);
+            OrderDetailsCollection coll = new OrderDetailsQuery("od", out var od)
+            .Select(od.OrderID, (od.UnitPrice * od.Quantity).Sum().As("OrderTotal"))
+            .GroupBy(od.OrderID)
+            .ToCollection<OrderDetailsCollection>();
 
-            OrderDetailsCollection coll = new OrderDetailsCollection();
-            if (coll.Load(od))
+            if (coll.Count > 0)
             {
                
             }
@@ -129,11 +129,11 @@ namespace ConsoleApp
 
         static private void Concatenation()
         {
-            EmployeesQuery q = new EmployeesQuery("e");
-            q.Select(q.EmployeeID, (q.LastName + ", " + q.FirstName).As("FullName"));
+            EmployeesCollection coll = new EmployeesQuery("e", out var q)
+            .Select(q.EmployeeID, (q.LastName + ", " + q.FirstName).As("FullName"))
+            .ToCollection<EmployeesCollection>();
 
-            EmployeesCollection coll = new EmployeesCollection();
-            if (coll.Load(q))
+            if (coll.Count > 0)
             {
                 
             }
@@ -141,24 +141,18 @@ namespace ConsoleApp
 
         static private void Query_Join()
         {
-            OrdersQuery oq = new OrdersQuery("oq");
-            oq.InnerJoin<OrderDetailsQuery>("odq", out var odq).On(oq.OrderID == odq.OrderID)
+            OrdersCollection coll = new OrdersQuery("oq", out var oq)
+            .InnerJoin<OrderDetailsQuery>("odq", out var odq).On(oq.OrderID == odq.OrderID)
+            .Select(oq.OrderID, odq.Discount)
             .Where(odq.Discount > 0)
-            .Select(oq.OrderID, odq.Discount);
+            .ToCollection<OrdersCollection>();
 
-            OrdersCollection coll = new OrdersCollection();
-            if (coll.Load(oq))
+            if (coll.Count > 0)
             {
                 // Lazy loads ...
                 foreach (Orders order in coll)
                 {
-                    /*
-                    // LAZY LOADS
-                    foreach (OrderDetails orderItem in order.OrderDetailsCollection)
-                    {
 
-                    }
-                    */
                 }
             }
         }
@@ -268,45 +262,52 @@ namespace ConsoleApp
 
         static private void AndOr()
         {
-            EmployeesQuery q = new EmployeesQuery("e");
-            q.Where((q.EmployeeID > 4 && q.EmployeeID < 10) || q.EmployeeID == 100);
-            q.Select(q.EmployeeID, (q.LastName + ", " + q.FirstName).As("FullName"));
+            EmployeesCollection coll = new EmployeesQuery("e", out var q)
+            .Select(q.EmployeeID, (q.LastName + ", " + q.FirstName).As("FullName"))
+            .Where(q.EmployeeID > 4 && (q.EmployeeID < 10 || q.EmployeeID == 100))
+            .ToCollection<EmployeesCollection>();
 
-            EmployeesCollection coll = new EmployeesCollection();
-            if (coll.Load(q))
+            if (coll.Count > 0)
             {
-   
+
             }
         }
 
         static private void Paging()
         {
-            // PageSize and PageNumber
-            EmployeesQuery q = new EmployeesQuery("e");
-            q.OrderBy(q.HireDate.Descending).PageSize(5).PageNumber(2);
-
-            EmployeesCollection coll1 = new EmployeesCollection();
-            if (coll1.Load(q))
             {
+                // PageSize and PageNumber
+                EmployeesCollection coll = new EmployeesQuery("e", out var q)
+                .OrderBy(q.HireDate.Descending).PageSize(5).PageNumber(2)
+                .ToCollection<EmployeesCollection>();
+
+                if (coll.Count > 0)
+                {
+
+                }
             }
 
-            // Skip and Take
-            EmployeesQuery q1 = new EmployeesQuery("e");
-            q1.OrderBy(q.HireDate.Descending).Skip(5).Take(20);
-
-            EmployeesCollection coll2 = new EmployeesCollection();
-            if (coll2.Load(q1))
             {
+                // Skip and Take
+                // PageSize and PageNumber
+                EmployeesCollection coll = new EmployeesQuery("e", out var q)
+                .OrderBy(q.HireDate.Descending).Skip(5).Take(20)
+                .ToCollection<EmployeesCollection>();
+
+                if (coll.Count > 0)
+                {
+
+                }
             }
         }
 
         static private void SelectAllExcept()
         {
-            EmployeesQuery q = new EmployeesQuery("e");
-            q.SelectAllExcept(q.Photo);
+            EmployeesCollection coll = new EmployeesQuery("e", out var q)
+            .SelectAllExcept(q.Photo)
+            .ToCollection<EmployeesCollection>();
 
-            EmployeesCollection coll = new EmployeesCollection();
-            if (coll.Load(q))
+            if (coll.Count > 0)
             {
 
             }
@@ -314,11 +315,11 @@ namespace ConsoleApp
 
         static private void SelectDistinctTop()
         {
-            EmployeesQuery q = new EmployeesQuery("e");
-            q.Select(q.EmployeeID).Top(5).Distinct();
+            EmployeesCollection coll = new EmployeesQuery("e", out var q)
+            .Select(q.EmployeeID).Top(5).Distinct()
+            .ToCollection<EmployeesCollection>();
 
-            EmployeesCollection coll = new EmployeesCollection();
-            if (coll.Load(q))
+            if (coll.Count > 0)
             {
  
             }
@@ -328,20 +329,19 @@ namespace ConsoleApp
         {
             // Find all Employees who have no ReportsTo. We could do this via a simple
             // join as well but are demonstrating the Exists() functionality
-            EmployeesQuery eq = new EmployeesQuery("e");
-            eq.Select(eq.EmployeeID, eq.ReportsTo)
+            EmployeesCollection coll = new EmployeesQuery("e", out var eq)
+            .Select(eq.EmployeeID, eq.ReportsTo)
             .Where(eq.Exists(() =>
                 {
-                    EmployeesQuery subquery = new EmployeesQuery("s");
-                    subquery.Select(subquery.EmployeeID)
+                    return new EmployeesQuery("s", out var subquery)
+                    .Select(subquery.EmployeeID)
                     .Where(subquery.ReportsTo.IsNotNull() && subquery.EmployeeID == eq.EmployeeID)
                     .Distinct();
-                    return subquery;
                 })
-            );
+            )
+            .ToCollection<EmployeesCollection>();
 
-            EmployeesCollection coll = new EmployeesCollection();
-            if (coll.Load(eq))
+            if (coll.Count > 0)
             {
                 // Then we loaded at least one record
             }
@@ -349,11 +349,11 @@ namespace ConsoleApp
 
         static private void AliasColumn()
         {
-            EmployeesQuery q = new EmployeesQuery("e");
-            q.Select(q.FirstName.As("MyAlias"));
+            EmployeesCollection coll = new EmployeesQuery("e", out var q)
+            .Select(q.FirstName.As("MyAlias"))
+            .ToCollection<EmployeesCollection>();
 
-            EmployeesCollection coll = new EmployeesCollection();
-            if (coll.Load(q))
+            if (coll.Count > 0)
             {
 
             }
@@ -476,16 +476,15 @@ namespace ConsoleApp
 
         static private void HavingClause()
         {
-            OrderDetailsQuery q = new OrderDetailsQuery();
-            q.Select(q.OrderID, q.UnitPrice.Sum().As("TotalUnitPrice"))
-            .Where(q.Discount.IsNotNull())
-            .GroupBy(q.OrderID)
-            .Having(q.UnitPrice.Sum() > 100)
-            .OrderBy(q.OrderID.Descending)
-            .es.WithNoLock();
+            OrderDetailsCollection coll = new OrderDetailsQuery("q", out var q)
+                .Select(q.OrderID, q.UnitPrice.Sum().As("TotalUnitPrice"))
+                .Where(q.Discount.IsNotNull())
+                .GroupBy(q.OrderID)
+                .Having(q.UnitPrice.Sum() > 100)
+                .OrderBy(q.OrderID.Descending)
+                .ToCollection<OrderDetailsCollection>();
 
-            OrderDetailsCollection coll = new OrderDetailsCollection();
-            if (coll.Load(q))
+            if (coll.Count > 0)
             {
 
             }
