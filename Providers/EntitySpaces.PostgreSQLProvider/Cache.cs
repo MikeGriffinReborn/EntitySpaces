@@ -122,7 +122,7 @@ namespace EntitySpaces.Npgsql2Provider
                 case "time": return NpgsqlDbType.Time;
                 case "timetz": return NpgsqlDbType.Time;
                 case "timestamp": return NpgsqlDbType.Timestamp;
-                case "timestamptz": return NpgsqlDbType.TimestampTZ;
+                case "timestamptz": return NpgsqlDbType.TimestampTz;
                 case "varchar": return NpgsqlDbType.Varchar;
                 case "inet": return NpgsqlDbType.Inet;
                 case "bit": return NpgsqlDbType.Bit;

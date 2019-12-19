@@ -814,7 +814,7 @@ namespace EntitySpaces.Interfaces
         /// <summary>
         /// The Dynamic Query properties.
         /// </summary>
-        public new class DynamicQueryProps2
+        public class DynamicQueryProps2
         {
             /// <summary>
             /// The Dynamic Query properties.
