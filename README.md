@@ -13,8 +13,7 @@ In this example we are going to sum the total # of items for each order. Each or
 
 **Use of 'out var'**
 
-
-*Notice the judicial use of the "our var" syntax of C# in the example code below. The "out var" syntax allows you to delcare the variable that is often created for you such as the 'OrderDetailQuery' in the InnerJoin(). Then you are free to use the 'od' variable throughout the query as we do in the Select() statement. This is also true for constructors. For example, notice how we declare "out var o" on the creation of the OrdersQuery() and then are free to use it throughout as well.*
+*Notice the judicial use of the "our var" syntax of C# in the example code below. The "out var" syntax allows you to delcare the variable that is created for you such as the 'OrderDetailQuery' object 'od' in the InnerJoin() below. Then you are free to use the 'od' variable throughout the query as we do in the Select() statement. This is also true for constructors. For example, notice how we declare "out var o" on the creation of the OrdersQuery() and then are free to use it throughout as well.*
 
 ```c#
 OrdersCollection coll = new OrdersQuery("o", out var o)
