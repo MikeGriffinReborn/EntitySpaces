@@ -257,6 +257,40 @@ WHERE EXISTS (
 )
 ```
 
+## From() with Nested Query
+Notice how in the Select() statement we use the "escape hatch" mechanism and declare "<sub.OrderTotal>" as a string. What does this do? Anything you pass in within "<>" brackets is take "as-is". We need to do this here because the nested query in the From() clause is aliased as "sub" and we need to access the derived "OrderTotal" column. In an upcoming version the "out var" syntax will be supported on the Alias and you will no longer have to use the escape hatch. This isn't always true of the From clause it only has to do with this particular query.
+
+```c#
+OrdersCollection coll = new OrdersQuery("o", out var o)
+    .Select(o.CustomerID, o.OrderDate, "<sub.OrderTotal>")
+    .From<OrderDetailsQuery>(out var od, () =>
+    {
+        return new OrderDetailsQuery("od", out var subQuery)
+        .Select(subQuery.OrderID, (subQuery.UnitPrice * subQuery.Quantity).Sum().As("OrderTotal"))
+        .GroupBy(subQuery.OrderID);
+    }).As("sub")
+    .InnerJoin(o).On(o.OrderID == od.OrderID)
+    .ToCollection<OrdersCollection>();
+
+if (coll.Count > 0)
+{
+    // Then we loaded at least one record
+}
+```
+
+SQL Generated:
+
+```sql
+SELECT o.[CustomerID], o.[OrderDate], sub.OrderTotal
+FROM 
+(
+    SELECT od.[OrderID],SUM((od.[UnitPrice] * od.[Quantity])) AS 'OrderTotal'  
+	FROM [Order Details] od 
+	GROUP BY od.[OrderID]
+) AS sub 
+INNER JOIN [Orders] o ON o.[OrderID] = sub.[OrderID]
+```
+
 ## Select Top
 
 ```c#
