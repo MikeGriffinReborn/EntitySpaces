@@ -202,7 +202,7 @@ WHERE q.[EmployeeID] > ANY
 )
 ```
 
-## CrossApply, and OuterApply
+## CrossApply and OuterApply
 This example uses OuterApply to select each customer and their last 2 orders.
 
 ```c#
@@ -218,6 +218,16 @@ CustomersCollection coll = new CustomersQuery("c", out var c)
     })
     .Select(c.CustomerID, c.CompanyName, o.OrderID, o.OrderDate)
     .ToCollection<CustomersCollection>();
+
+// Notice the "dynamic" property accessor for accessing the columns brought 
+// back from the Orders table.
+foreach(Customers cust in coll)
+{
+    Console.WriteLine(cust.CustomerID);
+    Console.WriteLine(cust.CompanyName);
+    Console.WriteLine(cust.dynamic.OrderID);
+    Console.WriteLine(cust.dynamic.OrderDate);
+}    
 ```
 SQL Generated:
 
@@ -232,6 +242,9 @@ OUTER APPLY
 	ORDER BY o.[OrderDate] DESC,o.[OrderID] ASC
 ) AS o
 ```
+
+Each customer and their last 2 orders.
+
 
 |CustomerID | CompanyName | OrderID | OrderDate|
 |:-|:-|:-|:-|
