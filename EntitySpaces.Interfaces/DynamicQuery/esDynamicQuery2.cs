@@ -737,14 +737,15 @@ namespace EntitySpaces.Interfaces
         /// <returns></returns>
         public esDynamicQuery From(Func<esDynamicQuery> func)
         {
-            esDynamicQuery query = func();
-            return From(query);
+            this.fromQuery = func();
+            return From(this.fromQuery);
         }
 
         public esDynamicQuery From<T>(out T query, Func<esDynamicQuery> func) where T : esDynamicQuery, new()
         {
             esDynamicQuery theQuery = func();
             query = (T)theQuery;
+            this.fromQuery = theQuery;
             return From(theQuery);
         }
 
