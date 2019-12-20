@@ -475,7 +475,7 @@ FROM [Employees] q
 
 ## Paging
 
-**Using PageSize and PageNumber**
+**PageSize / PageNumber**
 
 This is the traditional way of paging and works on all versions of SQL Server. You always need an OrderBy when sorting.
 
@@ -507,7 +507,7 @@ WHERE ESRN BETWEEN 21 AND 40
 ORDER BY ESRN ASC
 ```
 
-**Skip and Take**
+**Skip / Take**
 
 Skip and Take Require Microsoft SQL 2012 at a minimum and is a much nicer syntax.
 
