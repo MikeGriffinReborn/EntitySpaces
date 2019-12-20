@@ -162,8 +162,6 @@ Each customer and their last 2 orders.
 ## Union, Intersect, and Except
 Here we use Union to find employees whose first name begins with F, C, or M. Of course, this isn't a great way to determine this data but it demonstrate syntax.
 
-## Union
-
 ```c#
 EmployeesCollection coll = new EmployeesQuery("q1", out var q1)
     .Select(q1.EmployeeID, q1.FirstName, q1.LastName)
