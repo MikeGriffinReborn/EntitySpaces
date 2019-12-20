@@ -481,7 +481,7 @@ This is the traditional way of paging and works on all versions of SQL Server. Y
 EmployeesCollection coll = new EmployeesQuery("q", out var q)
  .Select(q.EmployeeID, q.LastName)
  .OrderBy(q.LastName.Ascending)
- .es.PageNumber(2).es.PageSize(20)
+ .PageNumber(2).PageSize(20)
  .ToCollection<EmployeesCollection>();
 
 if (coll.Count > 0)
@@ -537,12 +537,12 @@ FETCH NEXT 20 ROWS ONLY
 SelectT DISTINCT clause to retrieve the only distinct values in a specified list of columns.
 
 ```c#
-EmployeesQuery e = new EmployeesQuery("e");
-
-// Employee's who have orders ...
-e.Select(e.EmployeeID)
-.InnerJoin<OrdersQuery>("o", out var o).On(e.EmployeeID == o.EmployeeID)
-.es.Distinct();
+// Distinct list of Employee's who have orders ...
+EmployeesCollection coll = new EmployeesQuery("e", out var e)
+  .Select(e.EmployeeID)
+  .InnerJoin<OrdersQuery>("o", out var o).On(e.EmployeeID == o.EmployeeID)
+  .Distinct()
+  .ToCollection<EmployeesCollection>();
 ```
 
 SQL Generated:
@@ -556,18 +556,12 @@ INNER JOIN [Orders] o ON e.[EmployeeID] = o.[EmployeeID]
 ## With NoLock
 
 ```c#
-EmployeesQuery e = new EmployeesQuery("e");
-
-e.Select(e.EmployeeID)
-.InnerJoin<OrdersQuery>("o", out var o).On(e.EmployeeID == o.EmployeeID)
-.Where(o.Freight > 20)
-.es.WithNoLock();
-
-EmployeesCollection coll = new EmployeesCollection();
-if(coll.Load(oq))
-{
-    // Then we loaded at least one record
-}
+EmployeesCollection coll = new EmployeesQuery("e", out var e)
+  .Select(e.EmployeeID)
+  .InnerJoin<OrdersQuery>("o", out var o).On(e.EmployeeID == o.EmployeeID)
+  .Where(o.Freight > 20)
+  .es.WithNoLock()
+  .ToCollection<EmployeesCollection>();
 ```
 
 Notice that even though many query objects are being used you only need to set WithNoLock to true for the parent or main query object. The SQL generated is as follows:
