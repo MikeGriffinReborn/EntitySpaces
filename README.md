@@ -130,7 +130,7 @@ EmployeesCollection coll = new EmployeesQuery("e", out var e)   // Employees
     .InnerJoin<EmployeesQuery>("r", out var reportsTo).On(e.ReportsTo == reportsTo.EmployeeID)
     .Select(e.EmployeeID, e.LastName, reportsTo.LastName.As("SupervisorName"))
     .Where(reportsTo.LastName.Like("%a%"))
-    .OrderBy(reportsTo.LastName.Descending).es.Distinct()
+    .OrderBy(reportsTo.LastName.Descending).Distinct()
     .ToCollection<EmployeesCollection>();
 
 if (coll.Count > 0)
@@ -184,7 +184,7 @@ EmployeesCollection coll = new EmployeesQuery("q", out var q)
     {
         return new EmployeesQuery("e", out var q1)
         .Select(q1.EmployeeID)
-        .Where(q1.EmployeeID.IsNotNull()).Any();
+        .Where(q1.EmployeeID.IsNotNull()).Any();  // <= Any indicated here !
     })
 )
 .ToCollection<EmployeesCollection>();
@@ -266,12 +266,11 @@ OrdersCollection coll = new OrdersQuery("o", out var oQuery)
 .InnerJoin<EmployeesQuery>("e", out var e).On(e.EmployeeID == oQuery.EmployeeID 
   && oQuery.EmployeeID.In(() =>
   {
-    EmployeesQuery ee = new EmployeesQuery("ee");
-    ee.InnerJoin<OrdersQuery>("eo", out var eo).On(ee.EmployeeID == eo.EmployeeID)
+     return new EmployeesQuery("ee", out var ee)
+      .InnerJoin<OrdersQuery>("eo", out var eo).On(ee.EmployeeID == eo.EmployeeID)
       .InnerJoin<OrderDetailsQuery>("eod", out var eod).On(eo.OrderID == eod.OrderID)
       .Select(eo.EmployeeID)
-      .es.Distinct();
-    return ee;
+      .Distinct();
   })
 )
 .ToCollection<OrdersCollection>();
