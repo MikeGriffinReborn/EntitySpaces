@@ -11,9 +11,10 @@ EntitySpaces is a Fluent API for SQL server, SQLite and more on the way. If you 
 ## Example Query
 In this example we are going to sum the total # of items for each order. Each order can have many order detail records so we group our query by OrderId and sum up the quantity as 'TotalQuantity'. Notice that we can access the derived 'TotalQuantity' column through the dynamic property.
 
-**OUT VAR ...**
+**Use of 'out var'**
 
-Notice the judicial use of the "our var" syntax of C# in the example code below. The "out var" syntax allows you to delcare the variable that is often created for you such as the 'OrderDetailQuery' in the InnerJoin(). Then you are free to use the 'od' variable throughout the query as we do in the Select() statement. This is also true for constructors. For example, notice how we declare "out var o" on the creation of the OrdersQuery() and then are free to use it throughout as well.
+
+*Notice the judicial use of the "our var" syntax of C# in the example code below. The "out var" syntax allows you to delcare the variable that is often created for you such as the 'OrderDetailQuery' in the InnerJoin(). Then you are free to use the 'od' variable throughout the query as we do in the Select() statement. This is also true for constructors. For example, notice how we declare "out var o" on the creation of the OrdersQuery() and then are free to use it throughout as well.*
 
 ```c#
 OrdersCollection coll = new OrdersQuery("o", out var o)
