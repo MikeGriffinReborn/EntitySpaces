@@ -125,7 +125,7 @@ EmployeesCollection coll = new EmployeesQuery("e", out var e)
 .Select
 (
     e.EmployeeID, e.LastName, e.FirstName,
-    (e.LastName + ", " + e.FirstName).As("fullName") // extra column 
+    (e.LastName + ", " + e.FirstName).As("fullName") // derived column 
 )
 .OrderBy(e.LastName.Descending)
 .ToCollection<EmployeesCollection>();
@@ -151,15 +151,11 @@ Notice the "fullName" column is present in the JSON, no need for intermediate cl
     "LastName": "Smith",
     "FirstName": "Frank",
     "fullName": "Smith, Frank"
-  },
-  {
-    "EmployeeID": 191,
-    "LastName": "Smith",
-    "FirstName": "Frank",
-    "fullName": "Smith, Frank"
   }
 ]
 ``` 
+
+# Fluent Query API
 
 ## InnerJoin, RightJoin, LeftJoin, CrossJoin, and FullJoin
 
@@ -191,95 +187,7 @@ WHERE r.[LastName] LIKE @LastName1
 ORDER BY r.[LastName] DESC
 ```
 
-## Old School Syntax
-If you prefer you can use the old school syntax which doesn't use the generic methods with the "out var" technique. See the example below:
-
-```c#
-EmployeesQuery eQuery = new EmployeesQuery("e");
-OrdersQuery o = new OrdersQuery("o");
-OrderDetailsQuery od = new OrderDetailsQuery("od");
-
- eQuery.Select(eQuery.EmployeeID)
-.InnerJoin(o).On(eQuery.EmployeeID == o.EmployeeID)
-.InnerJoin(od).On(o.OrderID == od.OrderID)
-.Where(o.Freight > 20);
-
-EmployeesCollection coll = new EmployeesCollection();
-if(coll.Load(eQuery))
-{
-    // The data was loaded
-}
-```
-## Supported Operators
-
-Use the native language syntax, it works as you expect it would.
-
-|Operator | Description |
-|:-|:-|
-| + |plus operator|
-| - |minus operator|
-| * |multiple operator|
-| / |divison operator|
-| % |mod operator|
-| > |greater-than operator|
-| < |less-than operator|
-| <= |less-than or equal-to operator|
-| >= |greater-than or equal to operator|
-| == |equal to operator|
-| != |not-equal to operator|
-| && |and operator|
-| \|\| |or operator|
-
-## Sub Operators
-
-|Sub Operator | Description |
-|:-|:-|
-| ToUpper() | Convert to lower case|
-| ToLower() | Left trim any leading spaces|
-| LTrim() | Left trim any trailing spaces|
-| RTrim() | Right trim any trailing spaces|
-| Trim() | Trim both leading and trailing spaces|
-| SubString() | Return a sub-string|
-| Coalesce() | Return the first non null evaluating expression|
-| Date() | Returns only the date of a datetime type|
-| DatePart() | Returns the value of part of a datetime value|
-| Length() | Return the length|
-| Round() | Rounds the numeric-expression to the desired places after the decimal point|
-| Avg() | Average|
-| Count() | Count operator|
-| Max() | Maximum Value|
-| Min() | Minimum Value|
-| StdDev() | Standard Deviation|
-| Var() | Variance|
-| Sum() | Summation|
-| Cast() | SQL Cast|
-
-# More Dynamic Query Samples
-
-## Select Top
-
-```c#
-Employees emp = new EmployeesQuery("q", out var q)
-.Where(q.ReportsTo.IsNotNull())
-.OrderBy(q.LastName.Descending).es.Top(1)
-.ToEntity<Employees>();
-
-if (emp != null)
-{
-    // Then we loaded at least one record
-}
-```
-
-SQL Generated:
-
-```sql
-SELECT  TOP 1 * 
-FROM [Employees] 
-WHERE [ReportsTo] IS NOT NULL 
-ORDER BY [LastName] DESC
-```
-
-## Select * from Joined Table
+## Select * from a Joined Table
 Here the Orders table is joined with the OrderDetails table. The Orders.OrderID column is brought back along with all columns from the OrderDetails table. Notice how the Select() statement uses 'od' without a column declared. This results in 'od.*' in the SQL.
 
 ```c#
@@ -303,6 +211,56 @@ FROM [Orders] oq
 INNER JOIN [Order Details] od ON oq.[OrderID] = od.[OrderID]
 WHERE od.[Discount] > @Discount1
 ```
+## Any, All, and Some 
+Any, All, and Some all follow the same rules. You them with operators (==, !=, >, >=, <, or <=) in the "nested" syntax as shown below.
+
+```c#
+EmployeesCollection coll = new EmployeesQuery("q", out var q)
+.Where(q.EmployeeID > (() =>
+    {
+        return new EmployeesQuery("e", out var q1)
+        .Select(q1.EmployeeID)
+        .Where(q1.EmployeeID.IsNotNull()).Any();
+    })
+)
+.ToCollection<EmployeesCollection>();
+```
+
+SQL Generated:
+
+```sql
+SELECT * FROM [Employees] q 
+WHERE q.[EmployeeID] > ANY 
+(
+    SELECT e.[EmployeeID] 
+    FROM [Employees] e 
+    WHERE e.[EmployeeID] IS NOT NULL
+)
+```
+
+## Select Top
+
+```c#
+Employees emp = new EmployeesQuery("q", out var q)
+.Where(q.ReportsTo.IsNotNull())
+.OrderBy(q.LastName.Descending).Top(1)
+.ToEntity<Employees>();
+
+if (emp != null)
+{
+    // Then we loaded at least one record
+}
+```
+
+SQL Generated:
+
+```sql
+SELECT TOP 1 * 
+FROM [Employees] 
+WHERE [ReportsTo] IS NOT NULL 
+ORDER BY [LastName] DESC
+```
+
 
 ## SelectAllExcept
 
@@ -1238,6 +1196,70 @@ q.Select(q.FirstName);
 ```
 
 Using the raw SQL injection techniques above will allow you to invoke SQL functions that we don’t support, including database vender specific SQL, and so on. Hopefully, you will almost never have to resort to writing a custom load method to invoke a stored procedure or an entirely hand written SQL statement. Of course, you can use our native API everywhere and just inject the raw SQL on the GroupBy for instance. You can mix and match to get the desired SQL.
+
+## Old School Syntax
+If you prefer you can use the old school syntax which doesn't use the generic methods with the "out var" technique. See the example below:
+
+```c#
+EmployeesQuery eQuery = new EmployeesQuery("e");
+OrdersQuery o = new OrdersQuery("o");
+OrderDetailsQuery od = new OrderDetailsQuery("od");
+
+ eQuery.Select(eQuery.EmployeeID)
+.InnerJoin(o).On(eQuery.EmployeeID == o.EmployeeID)
+.InnerJoin(od).On(o.OrderID == od.OrderID)
+.Where(o.Freight > 20);
+
+EmployeesCollection coll = new EmployeesCollection();
+if(coll.Load(eQuery))
+{
+    // The data was loaded
+}
+```
+
+## Supported Operators
+
+Use the native language syntax, it works as you expect it would.
+
+|Operator | Description |
+|:-|:-|
+| + |plus operator|
+| - |minus operator|
+| * |multiple operator|
+| / |divison operator|
+| % |mod operator|
+| > |greater-than operator|
+| < |less-than operator|
+| <= |less-than or equal-to operator|
+| >= |greater-than or equal to operator|
+| == |equal to operator|
+| != |not-equal to operator|
+| && |and operator|
+| \|\| |or operator|
+
+## Sub Operators
+
+|Sub Operator | Description |
+|:-|:-|
+| ToUpper() | Convert to lower case|
+| ToLower() | Left trim any leading spaces|
+| LTrim() | Left trim any trailing spaces|
+| RTrim() | Right trim any trailing spaces|
+| Trim() | Trim both leading and trailing spaces|
+| SubString() | Return a sub-string|
+| Coalesce() | Return the first non null evaluating expression|
+| Date() | Returns only the date of a datetime type|
+| DatePart() | Returns the value of part of a datetime value|
+| Length() | Return the length|
+| Round() | Rounds the numeric-expression to the desired places after the decimal point|
+| Avg() | Average|
+| Count() | Count operator|
+| Max() | Maximum Value|
+| Min() | Minimum Value|
+| StdDev() | Standard Deviation|
+| Var() | Variance|
+| Sum() | Summation|
+| Cast() | SQL Cast|
 
 # Setup
 
