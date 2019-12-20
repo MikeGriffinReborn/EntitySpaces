@@ -12,7 +12,8 @@ EntitySpaces is a Fluent API for SQL server, SQLite and more on the way. If you 
 In this example we are going to sum the total # of items for each order. Each order can have many order detail records so we group our query by OrderId and sum up the quantity as 'TotalQuantity'. Notice that we can access the derived 'TotalQuantity' column through the dynamic property.
 
 **OUT VAR ...**
-You will notice that judicial use of the "our var" technique of C#. This allows you to delcare the variable that is often created for you such as the 'OrderDetailQuery' in the InnerJoin() below. This way you can use the "od" variable throughout the query as we do in the Select() statement. This is even true on constructors, for example, notice how we declare "out var o" on the creation of the OrdersQuery() and then are free to use it throughout.
+
+Notice the judicial use of the "our var" syntax of C# in the example code below. The "out var" syntax allows you to delcare the variable that is often created for you such as the 'OrderDetailQuery' in the InnerJoin(). Then you are free to use the 'od' variable throughout the query as we do in the Select() statement. This is also true for constructors. For example, notice how we declare "out var o" on the creation of the OrdersQuery() and then are free to use it throughout as well.
 
 ```c#
 OrdersCollection coll = new OrdersQuery("o", out var o)
@@ -220,6 +221,39 @@ INNER JOIN [Employees] e ON (e.[EmployeeID] = o.[EmployeeID] AND o.[EmployeeID] 
     FROM [Employees] ee
     INNER JOIN [Orders] eo ON ee.[EmployeeID] = eo.[EmployeeID]
     INNER JOIN [Order Details] eod ON eo.[OrderID] = eod.[OrderID]
+)
+```
+
+## Exists() 
+
+Exists evaluates to true if the SubQuery returns a result set.
+
+```c#
+EmployeesCollection coll = new EmployeesQuery("e", out var eq)
+.Select(eq.EmployeeID, eq.ReportsTo)
+.Where(eq.Exists(() =>
+{
+    // SubQuery of Employees with a null Supervisor column.
+    return new EmployeesQuery("s", out var sq)
+    .Select(sq.EmployeeID).Where(sq.ReportsTo.IsNull()).Distinct();
+}))
+.ToCollection<EmployeesCollection>();
+
+if (coll.Count > 0)
+{
+    // Then we loaded at least one record
+}
+```
+
+SQL Generated:
+
+```sql
+SELECT e.[EmployeeID], e.[ReportsTo]
+FROM [Employees] e
+WHERE EXISTS (
+    SELECT DISTINCT s.[EmployeeID]
+    FROM [Employees] s
+    WHERE s.[ReportsTo] IS NULL
 )
 ```
 
