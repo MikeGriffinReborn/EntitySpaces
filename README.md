@@ -47,8 +47,6 @@ The output is as follows is ...
 |10249	 |49|
 |10250	 |60|
 
-# Fluent Query API Documentation
-
 ## InnerJoin, RightJoin, LeftJoin, CrossJoin, and FullJoin
 
 The sample below demonstrates a self join on the Employees table which is looking for all employees whose Supervisor has an 'a' in their last name. Kind of silly but it shows off the syntax. 
@@ -803,6 +801,8 @@ Notice the "fullName" column is present in the JSON, no need for intermediate cl
   }
 ]
 ``` 
+
+# Modifying Data
 
 ## Transaction Support
 EntitySpaces is both Hiearchical and Transactional. If you are saving a nested set of hierarchical objects then a transaction is implicitly created for you. However, if you need to save two disparate unrelated objects as shown in the sample below then you should use an esTransactionScope to ensure they both succeed or fail as a unit.
