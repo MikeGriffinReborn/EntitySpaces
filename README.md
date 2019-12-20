@@ -257,6 +257,45 @@ Each customer and their last 2 orders.
 |AROUT|Around the Horn|11016|04/10/1998 12:00:00 AM|
 |AROUT|Around the Horn|10953|03/16/1998 12:00:00 AM|
 
+## Using In() and NotIn() via Nested Queries
+
+```c#
+OrdersCollection coll = new OrdersQuery("o", out var oQuery)
+.Select(oQuery.OrderID, oQuery.EmployeeID)
+.InnerJoin<OrderDetailsQuery>("od", out var od).On(oQuery.OrderID == od.OrderID)
+.InnerJoin<EmployeesQuery>("e", out var e).On(e.EmployeeID == oQuery.EmployeeID 
+  && oQuery.EmployeeID.In(() =>
+  {
+    EmployeesQuery ee = new EmployeesQuery("ee");
+    ee.InnerJoin<OrdersQuery>("eo", out var eo).On(ee.EmployeeID == eo.EmployeeID)
+      .InnerJoin<OrderDetailsQuery>("eod", out var eod).On(eo.OrderID == eod.OrderID)
+      .Select(eo.EmployeeID)
+      .es.Distinct();
+    return ee;
+  })
+)
+.ToCollection<OrdersCollection>();
+
+if (coll.Count > 0)
+{
+    // We loaded some records
+}
+```
+
+SQL Generated:
+
+```sql
+SELECT o.[OrderID],  o.[EmployeeID]
+FROM [Orders] o
+INNER JOIN [Order Details] od ON o.[OrderID] = od.[OrderID]
+INNER JOIN [Employees] e ON (e.[EmployeeID] = o.[EmployeeID] AND o.[EmployeeID] IN (
+	SELECT DISTINCT eo.[EmployeeID]
+	FROM [Employees] ee
+	INNER JOIN [Orders] eo ON ee.[EmployeeID] = eo.[EmployeeID]
+	INNER JOIN [Order Details] eod ON eo.[OrderID] = eod.[OrderID])
+)
+```
+
 ## Select Top
 
 ```c#
@@ -463,44 +502,7 @@ WHERE c1.[PostalCode] > ALL
 )
 ```
 
-## The In() and NotIn() - Nesting clauses
 
-```c#
-OrdersQuery oQuery = new OrdersQuery("o");
-oQuery.Select(oQuery.OrderID, oQuery.EmployeeID)
-.InnerJoin<OrderDetailsQuery>("od", out var od).On(oQuery.OrderID == od.OrderID)
-.InnerJoin<EmployeesQuery>("e", out var e)
-  .On(e.EmployeeID == oQuery.EmployeeID && oQuery.EmployeeID.In(() =>
-  {
-    EmployeesQuery ee = new EmployeesQuery("ee");
-    ee.InnerJoin<OrdersQuery>("eo", out var eo).On(ee.EmployeeID == eo.EmployeeID)
-      .InnerJoin<OrderDetailsQuery>("eod", out var eod).On(eo.OrderID == eod.OrderID)
-      .Select(eo.EmployeeID)
-      .es.Distinct();
-    return ee;
-  })
-);
-
-OrdersCollection coll = new OrdersCollection();
-if (coll.Load(oQuery))
-{
-
-}
-```
-
-SQL Generated:
-
-```sql
-SELECT o.[OrderID],  o.[EmployeeID]
-FROM [Orders] o
-INNER JOIN [Order Details] od ON o.[OrderID] = od.[OrderID]
-INNER JOIN [Employees] e ON (e.[EmployeeID] = o.[EmployeeID] AND o.[EmployeeID] IN (
-	SELECT DISTINCT eo.[EmployeeID]
-	FROM [Employees] ee
-	INNER JOIN [Orders] eo ON ee.[EmployeeID] = eo.[EmployeeID]
-	INNER JOIN [Order Details] eod ON eo.[OrderID] = eod.[OrderID])
-)
-```
 
 ## The Exists() clause
 
