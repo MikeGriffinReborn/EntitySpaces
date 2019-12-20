@@ -206,11 +206,22 @@ WHERE q.[EmployeeID] > ANY
 This example uses OuterApply to select each customer and their last 2 orders.
 
 ```c#
+CustomersCollection coll = new CustomersQuery("c", out var c)
+    .OuterApply<OrdersQuery>(out var o, () =>
+    {
+        return new OrdersQuery("o", out var subQuery)
+        .Select(subQuery.OrderID, subQuery.OrderDate)
+        .Top(2)
+        .Where(subQuery.CustomerID == c.CustomerID)
+        .OrderBy(subQuery.OrderDate.Descending, subQuery.OrderID.Ascending);
 
+    })
+    .Select(c.CustomerID, c.CompanyName, o.OrderID, o.OrderDate)
+    .ToCollection<CustomersCollection>();
 ```
 
 |CustomerID | CompanyName | OrderID, OrderDate|
-|:-|:-|
+|:-|:-|:-|:-|
 ALFKI|Alfreds Futterkiste|11011|4/9/1998 12:00:00 AM|
 ALFKI|Alfreds Futterkiste|10952|3/16/1998 12:00:00 AM|
 ANATR|Ana Trujillo Emparedados y helados|10926|3/4/1998 12:00:00 AM|
