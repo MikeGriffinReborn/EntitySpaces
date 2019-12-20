@@ -222,14 +222,14 @@ CustomersCollection coll = new CustomersQuery("c", out var c)
 
 |CustomerID | CompanyName | OrderID, OrderDate|
 |:-|:-|:-|:-|
-ALFKI|Alfreds Futterkiste|11011|4/9/1998 12:00:00 AM|
-ALFKI|Alfreds Futterkiste|10952|3/16/1998 12:00:00 AM|
-ANATR|Ana Trujillo Emparedados y helados|10926|3/4/1998 12:00:00 AM|
-ANATR|Ana Trujillo Emparedados y helados|10759|11/28/1997 12:00:00 AM|
-ANTON|Antonio Moreno Taquería|10856|1/28/1998 12:00:00 AM|
-ANTON|Antonio Moreno Taquería|10682|9/25/1997 12:00:00 AM|
-AROUT|Around the Horn|11016|4/10/1998 12:00:00 AM|
-AROUT|Around the Horn|10953|3/16/1998 12:00:00 AM|
+|ALFKI|Alfreds Futterkiste|11011|4/9/1998 12:00:00 AM|
+|ALFKI|Alfreds Futterkiste|10952|3/16/1998 12:00:00 AM|
+|ANATR|Ana Trujillo Emparedados y helados|10926|3/4/1998 12:00:00 AM|
+|ANATR|Ana Trujillo Emparedados y helados|10759|11/28/1997 12:00:00 AM|
+|ANTON|Antonio Moreno Taquería|10856|1/28/1998 12:00:00 AM|
+|ANTON|Antonio Moreno Taquería|10682|9/25/1997 12:00:00 AM|
+|AROUT|Around the Horn|11016|4/10/1998 12:00:00 AM|
+|AROUT|Around the Horn|10953|3/16/1998 12:00:00 AM|
 
 ## Select Top
 
