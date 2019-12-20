@@ -186,42 +186,43 @@ Each customer and their last 2 orders.
 |AROUT|Around the Horn|10953|03/16/1998 12:00:00 AM|
 
 ## Union, Intersect, and Except
-These might be kind of silly but they demonstrate syntax.
+Here we use Union to find employees whose first name begins with F, C, or M. Of course, this isn't a great way to determine this data but it demonstrate syntax.
 
 ## Union
 
 ```c#
-EmployeeQuery eq1 = new EmployeeQuery("eq1");
-EmployeeQuery eq2 = new EmployeeQuery("eq2");
+EmployeesCollection coll = new EmployeesQuery("q1", out var q1)
+    .Select(q1.EmployeeID, q1.FirstName, q1.LastName)
+    .Where(q1.FirstName.Like("F%"))
+    .Union(() =>
+    {
+        return new EmployeesQuery("q2", out var q2)
+        .Select(q2.EmployeeID, q2.FirstName, q2.LastName)
+        .Where(q2.FirstName.Like("C%"));
+    })
+    .Union(() =>
+    {
+        return new EmployeesQuery("q3", out var q3)
+        .Select(q3.EmployeeID, q3.FirstName, q3.LastName)
+        .Where(q3.FirstName.Like("M%"));
+    })
+    .ToCollection<EmployeesCollection>();
 
-// This leaves out the record with Age 30
-eq1.Where(eq1.Age < 30);
-eq1.Union(eq2);
-eq2.Where(eq2.Age > 30);
+if (coll.Count > 0)
+{
+    // Then we loaded at least one record
+}
 ```
 
-## Intersect
+SQL Generated:
 
-```c#
-EmployeeQuery eq1 = new EmployeeQuery("eq1");
-EmployeeQuery eq2 = new EmployeeQuery("eq2");
-
-// This leaves out the record with Age 30
-eq1.Where(eq1.FirstName.Like("%n%"));
-eq1.Intersect(eq2);
-eq2.Where(eq2.FirstName.Like("%a%"));
-```
-
-## Except
-
-```c#
-EmployeeQuery eq1 = new EmployeeQuery("eq1");
-EmployeeQuery eq2 = new EmployeeQuery("eq2");
-
-// This leaves out the record with Age 30
-eq1.Where(eq1.FirstName.Like("%J%"));
-eq1.Except(eq2);
-eq2.Where(eq2.FirstName == "Jim");
+```sql
+SELECT q1.[EmployeeID],q1.[FirstName],q1.[LastName]  
+FROM [Employees] q1 WHERE q1.[FirstName] LIKE @FirstName1 
+  UNION SELECT q2.[EmployeeID],q2.[FirstName],q2.[LastName]  
+  FROM [Employees] q2 WHERE q2.[FirstName] LIKE @FirstName2 
+  UNION SELECT q3.[EmployeeID],q3.[FirstName],q3.[LastName]  
+  FROM [Employees] q3 WHERE q3.[FirstName] LIKE @FirstName3
 ```
 
 ## Using In() and NotIn() via Nested Queries
