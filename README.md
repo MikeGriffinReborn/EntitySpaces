@@ -77,30 +77,6 @@ WHERE r.[LastName] LIKE @LastName1
 ORDER BY r.[LastName] DESC
 ```
 
-## Select * from a Joined Table
-Here the Orders table is joined with the OrderDetails table. The Orders.OrderID column is brought back along with all columns from the OrderDetails table. Notice how the Select() statement uses 'od' without a column declared. This results in 'od.*' in the SQL.
-
-```c#
-OrdersCollection coll = new OrdersQuery("oq", out var o)
-.InnerJoin<OrderDetailsQuery>("od", out var od).On(o.OrderID == od.OrderID)
-.Select(o.OrderID, od) // Notice the 'od' results in 'od.*'
-.Where(od.Discount > 0)
-.ToCollection<OrdersCollection>();
-
-if (coll.Count > 0)
-{
-    // data was loaded
-}
-```
-
-SQL Generated:
-
-```sql
-SELECT oq.[OrderID], od.*
-FROM [Orders] oq 
-INNER JOIN [Order Details] od ON oq.[OrderID] = od.[OrderID]
-WHERE od.[Discount] > @Discount1
-```
 ## Any, All, and Some 
 Any, All, and Some all follow the same rules. You them with operators (==, !=, >, >=, <, or <=) in the "nested" syntax as shown below.
 
@@ -396,6 +372,31 @@ SELECT o.[OrderID],o.[OrderDate],
    WHERE o.[OrderID] = oi.[OrderID]
 ) AS MaxUnitPrice  
 FROM [Orders] o
+```
+
+## Select * from a Joined Table
+Here the Orders table is joined with the OrderDetails table. The Orders.OrderID column is brought back along with all columns from the OrderDetails table. Notice how the Select() statement uses 'od' without a column declared. This results in 'od.*' in the SQL.
+
+```c#
+OrdersCollection coll = new OrdersQuery("oq", out var o)
+.InnerJoin<OrderDetailsQuery>("od", out var od).On(o.OrderID == od.OrderID)
+.Select(o.OrderID, od) // Notice the 'od' results in 'od.*'
+.Where(od.Discount > 0)
+.ToCollection<OrdersCollection>();
+
+if (coll.Count > 0)
+{
+    // data was loaded
+}
+```
+
+SQL Generated:
+
+```sql
+SELECT oq.[OrderID], od.*
+FROM [Orders] oq 
+INNER JOIN [Order Details] od ON oq.[OrderID] = od.[OrderID]
+WHERE od.[Discount] > @Discount1
 ```
 
 ## Select Top
