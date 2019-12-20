@@ -11,6 +11,9 @@ EntitySpaces is a Fluent API for SQL server, SQLite and more on the way. If you 
 ## Example Query
 In this example we are going to sum the total # of items for each order. Each order can have many order detail records so we group our query by OrderId and sum up the quantity as 'TotalQuantity'. Notice that we can access the derived 'TotalQuantity' column through the dynamic property.
 
+**OUT VAR ...**
+You will notice that judicial use of the "our var" technique of C#. This allows you to delcare the variable that is often created for you such as the 'OrderDetailQuery' in the InnerJoin() below. This way you can use the "od" variable throughout the query as we do in the Select() statement. This is even true on constructors, for example, notice how we declare "out var o" on the creation of the OrdersQuery() and then are free to use it throughout.
+
 ```c#
 OrdersCollection coll = new OrdersQuery("o", out var o)
     .InnerJoin<OrderDetailsQuery>("od", out var od).On(o.OrderID == od.OrderID)
@@ -43,7 +46,7 @@ The output is as follows is ...
 |10249	 |49|
 |10250	 |60|
 
-# Fluent Query API
+# Fluent Query API Documentation
 
 ## InnerJoin, RightJoin, LeftJoin, CrossJoin, and FullJoin
 
