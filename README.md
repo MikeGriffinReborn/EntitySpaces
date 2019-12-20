@@ -219,8 +219,21 @@ CustomersCollection coll = new CustomersQuery("c", out var c)
     .Select(c.CustomerID, c.CompanyName, o.OrderID, o.OrderDate)
     .ToCollection<CustomersCollection>();
 ```
+SQL Generated:
 
-|CustomerID | CompanyName | OrderID, OrderDate|
+```sql
+SELECT c.[CustomerID],c.[CompanyName],o.[OrderID],o.[OrderDate]
+FROM [Customers] c 
+OUTER APPLY 
+(
+    SELECT TOP 2 o.[OrderID],o.[OrderDate]
+	FROM [Orders] o 
+	WHERE o.[CustomerID] = c.[CustomerID] 
+	ORDER BY o.[OrderDate] DESC,o.[OrderID] ASC
+) AS o
+```
+
+|CustomerID | CompanyName | OrderID | OrderDate|
 |:-|:-|:-|:-|
 |ALFKI|Alfreds Futterkiste|11011|4/9/1998 12:00:00 AM|
 |ALFKI|Alfreds Futterkiste|10952|3/16/1998 12:00:00 AM|
