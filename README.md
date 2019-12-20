@@ -374,6 +374,35 @@ SELECT o.[OrderID],o.[OrderDate],
 FROM [Orders] o
 ```
 
+## AND and OR and Concatentation
+And and Or work just as you would expect, use parenthesis to control the order of precedence. You can also concatentat and use all kinds of operators in your queries. See the tables at the end of this document.
+
+```c#
+EmployeesCollection coll = new EmployeesQuery("e", out var q)
+    .Select(q.EmployeeID, (q.LastName + ", " + q.FirstName).As("FullName"))
+    .Where(q.EmployeeID > 4 && (q.EmployeeID < 10 || q.EmployeeID == 100))
+    .ToCollection<EmployeesCollection>();
+
+if (coll.Count > 0)
+{
+
+}
+```
+
+SQL Generated:
+
+```sql
+SELECT 
+   e.[EmployeeID],
+  (e.[LastName] + ', ' + e.[FirstName]) AS 'FullName'  
+FROM [Employees] e 
+WHERE e.[EmployeeID] > @EmployeeID1 
+  AND 
+  (
+      e.[EmployeeID] < @EmployeeID2 OR e.[EmployeeID] = @EmployeeID3
+  )
+```
+
 ## Select * from a Joined Table
 Here the Orders table is joined with the OrderDetails table. The Orders.OrderID column is brought back along with all columns from the OrderDetails table. Notice how the Select() statement uses 'od' without a column declared. This results in 'od.*' in the SQL.
 
