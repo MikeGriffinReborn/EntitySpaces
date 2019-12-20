@@ -43,82 +43,6 @@ The output is as follows is ...
 |10249	 |49|
 |10250	 |60|
 
-## Transaction Support
-EntitySpaces is both Hiearchical and Transactional. If you are saving a nested set of hierarchical objects then a transaction is implicitly created for you. However, if you need to save two disparate unrelated objects as shown in the sample below then you should use an esTransactionScope to ensure they both succeed or fail as a unit.
-
-```c#
-using (esTransactionScope scope = new esTransactionScope())
-{
-    Employees employee = new Employees();
-    employee.FirstName = "Mike";
-    employee.LastName = "Griffin";
-    employee.Save();
-
-    Products product = new Products();
-    product.ProductName = "Some Gadget";
-    product.Save();
-
-    scope.Complete(); // last line of using statement
-}
-```
-
-In this example below we are using the EntitySpaces hierarchical model and there is no need to declare an esTransactionScope.
-
-```c#
-// Create an order
-Orders order = new Orders
-{
-    OrderDate = DateTime.Now
-};
-
-// Add an OrderDetails Record to the Order
-order.OrderDetailsCollection.Add(new OrderDetails
-{
-    UnitPrice = 55.00M,
-    Quantity = 4,
-    ProductID = 8
-});
-
-order.Save(); // Saves hierarchically
-```
-
-## CRUD Example
-```c#
-// Create a new Employee
-Employees newEmp = new Employees();
-newEmp.FirstName = "Joe";
-newEmp.LastName = "Smith";
-newEmp.Save();
-
-// Load that same Employee
-Employees employee = new Employees();
-if (employee.LoadByPrimaryKey(newEmp.EmployeeID.Value))
-{
-    // Modify that Employee
-    employee.FirstName = "Bob";
-    employee.Save();
-
-    // Delete that Employee
-    employee.MarkAsDeleted();
-    employee.Save();
-}
-```
-
-## Collections
-Collection are simple enumerable lists of single entities.
-```c#
-EmployeesCollection coll = new EmployeesCollection();
-if (coll.LoadAll())
-{
-    foreach (Employees emp in coll)
-    {
-        
-    }
-}
-```
-
-
-
 # Fluent Query API
 
 ## InnerJoin, RightJoin, LeftJoin, CrossJoin, and FullJoin
@@ -287,11 +211,12 @@ SQL Generated:
 SELECT o.[OrderID],  o.[EmployeeID]
 FROM [Orders] o
 INNER JOIN [Order Details] od ON o.[OrderID] = od.[OrderID]
-INNER JOIN [Employees] e ON (e.[EmployeeID] = o.[EmployeeID] AND o.[EmployeeID] IN (
-	SELECT DISTINCT eo.[EmployeeID]
-	FROM [Employees] ee
-	INNER JOIN [Orders] eo ON ee.[EmployeeID] = eo.[EmployeeID]
-	INNER JOIN [Order Details] eod ON eo.[OrderID] = eod.[OrderID])
+INNER JOIN [Employees] e ON (e.[EmployeeID] = o.[EmployeeID] AND o.[EmployeeID] IN 
+(
+    SELECT DISTINCT eo.[EmployeeID]
+    FROM [Employees] ee
+    INNER JOIN [Orders] eo ON ee.[EmployeeID] = eo.[EmployeeID]
+    INNER JOIN [Order Details] eod ON eo.[OrderID] = eod.[OrderID]
 )
 ```
 
@@ -1274,6 +1199,80 @@ Notice the "fullName" column is present in the JSON, no need for intermediate cl
   }
 ]
 ``` 
+
+## Transaction Support
+EntitySpaces is both Hiearchical and Transactional. If you are saving a nested set of hierarchical objects then a transaction is implicitly created for you. However, if you need to save two disparate unrelated objects as shown in the sample below then you should use an esTransactionScope to ensure they both succeed or fail as a unit.
+
+```c#
+using (esTransactionScope scope = new esTransactionScope())
+{
+    Employees employee = new Employees();
+    employee.FirstName = "Mike";
+    employee.LastName = "Griffin";
+    employee.Save();
+
+    Products product = new Products();
+    product.ProductName = "Some Gadget";
+    product.Save();
+
+    scope.Complete(); // last line of using statement
+}
+```
+
+In this example below we are using the EntitySpaces hierarchical model and there is no need to declare an esTransactionScope.
+
+```c#
+// Create an order
+Orders order = new Orders
+{
+    OrderDate = DateTime.Now
+};
+
+// Add an OrderDetails Record to the Order
+order.OrderDetailsCollection.Add(new OrderDetails
+{
+    UnitPrice = 55.00M,
+    Quantity = 4,
+    ProductID = 8
+});
+
+order.Save(); // Saves hierarchically
+```
+
+## CRUD Example
+```c#
+// Create a new Employee
+Employees newEmp = new Employees();
+newEmp.FirstName = "Joe";
+newEmp.LastName = "Smith";
+newEmp.Save();
+
+// Load that same Employee
+Employees employee = new Employees();
+if (employee.LoadByPrimaryKey(newEmp.EmployeeID.Value))
+{
+    // Modify that Employee
+    employee.FirstName = "Bob";
+    employee.Save();
+
+    // Delete that Employee
+    employee.MarkAsDeleted();
+    employee.Save();
+}
+```
+
+## Collections
+Collection are simple enumerable lists of single entities.
+```c#
+EmployeesCollection coll = new EmployeesCollection();
+if (coll.LoadAll())
+{
+    foreach (Employees emp in coll)
+    {
+        
+    }
+}
+```
 
 ## Supported Operators
 
