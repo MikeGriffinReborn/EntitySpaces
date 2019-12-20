@@ -971,7 +971,7 @@ esProviderFactory.Factory = new EntitySpaces.Loader.esDataProviderFactory();
 esConnectionElement conn = new esConnectionElement();
 conn.Provider = "EntitySpaces.SqlClientProvider";
 conn.DatabaseVersion = "2012";
-conn.ConnectionString = "User ID=meshadmin;Password=meshy0415!;Initial Catalog=Northwind;Data 
+conn.ConnectionString = "User ID=sa;Password=blank;Initial Catalog=Northwind;Data Source=localhost";
 esConfigSettings.ConnectionInfo.Connections.Add(conn);
 ```
 
