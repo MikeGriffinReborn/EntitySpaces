@@ -185,6 +185,45 @@ Each customer and their last 2 orders.
 |AROUT|Around the Horn|11016|04/10/1998 12:00:00 AM|
 |AROUT|Around the Horn|10953|03/16/1998 12:00:00 AM|
 
+## Union, Intersect, and Except
+These might be kind of silly but they demonstrate syntax.
+
+## Union
+
+```c#
+EmployeeQuery eq1 = new EmployeeQuery("eq1");
+EmployeeQuery eq2 = new EmployeeQuery("eq2");
+
+// This leaves out the record with Age 30
+eq1.Where(eq1.Age < 30);
+eq1.Union(eq2);
+eq2.Where(eq2.Age > 30);
+```
+
+## Intersect
+
+```c#
+EmployeeQuery eq1 = new EmployeeQuery("eq1");
+EmployeeQuery eq2 = new EmployeeQuery("eq2");
+
+// This leaves out the record with Age 30
+eq1.Where(eq1.FirstName.Like("%n%"));
+eq1.Intersect(eq2);
+eq2.Where(eq2.FirstName.Like("%a%"));
+```
+
+## Except
+
+```c#
+EmployeeQuery eq1 = new EmployeeQuery("eq1");
+EmployeeQuery eq2 = new EmployeeQuery("eq2");
+
+// This leaves out the record with Age 30
+eq1.Where(eq1.FirstName.Like("%J%"));
+eq1.Except(eq2);
+eq2.Where(eq2.FirstName == "Jim");
+```
+
 ## Using In() and NotIn() via Nested Queries
 
 ```c#
@@ -291,13 +330,47 @@ FROM
 INNER JOIN [Orders] o ON o.[OrderID] = sub.[OrderID]
 ```
 
+## Nested Query within Select Clause
+
+A Nested Query in a Select clause must return a single value.
+
+```c#
+OrdersCollection coll = new OrdersQuery("o", out var orders)
+.Select
+(
+    orders.OrderID, 
+    orders.OrderDate,
+    // Embed another query (see 'SQL Generated' below)
+    new OrderDetailsQuery("oi", out var details).Select(details.UnitPrice.Max())
+    .Where(orders.OrderID == details.OrderID).As("MaxUnitPrice")
+)
+.ToCollection<OrdersCollection>();
+
+if (coll.Count > 0)
+{
+    // Then we loaded at least one record
+}
+```
+
+SQL Generated:
+
+```sql
+SELECT o.[OrderID],o.[OrderDate], 
+(
+   SELECT MAX(oi.[UnitPrice]) AS 'UnitPrice'  
+   FROM [Order Details] oi 
+   WHERE o.[OrderID] = oi.[OrderID]
+) AS MaxUnitPrice  
+FROM [Orders] o
+```
+
 ## Select Top
 
 ```c#
 Employees emp = new EmployeesQuery("q", out var q)
-.Where(q.ReportsTo.IsNotNull())
-.OrderBy(q.LastName.Descending).Top(1)
-.ToEntity<Employees>();
+   .Where(q.ReportsTo.IsNotNull())
+   .OrderBy(q.LastName.Descending).Top(1)
+   .ToEntity<Employees>();
 
 if (emp != null)
 {
@@ -317,7 +390,7 @@ ORDER BY [LastName] DESC
 
 ## SelectAllExcept
 
-SelectAllExcept() is not really a SubQuery, just a convenient enhancement that allows you to select all except one or more listed columns.
+SelectAllExcept() is just a convenient way to select all columns except one or more listed columns.
 
 ```c#
 // We don't want to bring back the huge photo
@@ -337,25 +410,6 @@ SQL Generated:
 SELECT q.[EmployeeID],q.[LastName],q.[FirstName],q.[Title], -- all except q.Photo
 FROM [Employees] q
 ```
-
-## Getting the Count
-
-```c#
-EmployeesQuery q = new EmployeesQuery();
-q.Where(q.ReportsTo.IsNull()).es.CountAll();
-
-int count = q.ExecuteScalar<int>();
-```
-
-SQL Generated:
-
-```sql
-SELECT COUNT(*) AS 'Count' 
-FROM [Employees] 
-WHERE [ReportsTo] IS NULL
-```
-
-Let's get the count 
 
 ## Paging
 
@@ -418,6 +472,27 @@ OFFSET 40 ROWS
 FETCH NEXT 20 ROWS ONLY 
 ```
 
+## Distinct
+
+SelectT DISTINCT clause to retrieve the only distinct values in a specified list of columns.
+
+```c#
+EmployeesQuery e = new EmployeesQuery("e");
+
+// Employee's who have orders ...
+e.Select(e.EmployeeID)
+.InnerJoin<OrdersQuery>("o", out var o).On(e.EmployeeID == o.EmployeeID)
+.es.Distinct();
+```
+
+SQL Generated:
+
+```sql
+SELECT DISTINCT e.[EmployeeID]
+FROM [Employees] e 
+INNER JOIN [Orders] o ON e.[EmployeeID] = o.[EmployeeID]
+```
+
 ## With NoLock
 
 ```c#
@@ -446,129 +521,6 @@ INNER JOIN [Orders] o WITH (NOLOCK) ON e.[EmployeeID] = o.[EmployeeID]
 WHERE o.[Freight] > @Freight1
 ```
 
-## Distinct
-
-SelectT DISTINCT clause to retrieve the only distinct values in a specified list of columns.
-
-```c#
-EmployeesQuery e = new EmployeesQuery("e");
-
-// Employee's who have orders ...
-e.Select(e.EmployeeID)
-.InnerJoin<OrdersQuery>("o", out var o).On(e.EmployeeID == o.EmployeeID)
-.es.Distinct();
-```
-
-SQL Generated:
-
-```sql
-SELECT DISTINCT e.[EmployeeID]
-FROM [Employees] e 
-INNER JOIN [Orders] o ON e.[EmployeeID] = o.[EmployeeID]
-```
-
-## Any, All, and Some
-
-```c#
-CustomersQuery c2 = new CustomersQuery("c2");
-c2.Select(c2.PostalCode).Where(c2.Region == "OR").es.All();
-
-CustomersQuery c1 = new CustomersQuery("c1");
-c1.Select(c1.CustomerID, c1.CompanyName, c1.PostalCode);
-c1.Where(c1.PostalCode > c2); // NOTICE the > on the query C2
-
-CustomersCollection coll = new CustomersCollection();
-if(coll.Load(c1))
-{
-
-}
-```
-
-SQL Generated:
-
-```sql
-SELECT c1.[CustomerID], c1.[CompanyName], c1.[PostalCode]
-FROM [Customers] c1
-WHERE c1.[PostalCode] > ALL
-(
-    SELECT c2.[PostalCode]
-     FROM [Customers] c2
-     WHERE c2.[Region] = @Region1
-)
-```
-
-
-
-## The Exists() clause
-
-Exists evaluates to true, if the SubQuery returns a result set.
-
-```c#
-EmployeesQuery eq = new EmployeesQuery("e");
-eq.Select(eq.EmployeeID, eq.ReportsTo)
-.Where(eq.Exists(() =>
-{
-    // SubQuery of Employees with a null Supervisor column.
-    EmployeesQuery sq = new EmployeesQuery("s");
-    sq.Select(sq.EmployeeID).Where(sq.ReportsTo.IsNull()).es.Distinct();
-    return sq;
-}));
-
-EmployeesCollection coll = new EmployeesCollection();
-if (coll.Load(eq))
-{
-    // Then we loaded at least one record
-}
-```
-
-SQL Generated:
-
-```sql
-SELECT e.[EmployeeID], e.[ReportsTo]
-FROM [Employees] e
-WHERE EXISTS (
-    SELECT DISTINCT s.[EmployeeID]
-    FROM [Employees] s
-    WHERE s.[ReportsTo] IS NULL
-)
-```
-
-## The From() clause
-
-```c#
-OrderDetailsQuery od = null;
-
-OrdersQuery o = new OrdersQuery("o");
-o.Select(o.CustomerID, o.OrderDate, "<sub.OrderTotal>");
-o.From(() =>
-{
-    od = new OrderDetailsQuery("od");
-    od.Select(od.OrderID, (od.UnitPrice * od.Quantity).Sum().As("OrderTotal"))
-    .GroupBy(od.OrderID);
-    return od;
-}).As("sub");
-o.InnerJoin(o).On(o.OrderID == od.OrderID);
-
-OrdersCollection collection = new OrdersCollection();
-if(collection.Load(o))
-{
-    // Then we loaded at least one record
-}
-```
-
-SQL Generated:
-
-```sql
-SELECT o.[CustomerID], o.[OrderDate], sub.OrderTotal
-FROM  
-(
-   SELECT od.[OrderID], SUM((od.[UnitPrice] * od.[Quantity])) AS 'OrderTotal'
-   FROM [Order Details] od
-   GROUP BY od.[OrderID]
-) AS sub
-INNER JOIN [Orders] o ON o.[OrderID] = sub.[OrderID]
-```
-
 ## Full Expressions
 
 This query doesn’t really make sense, but we wanted to show you what will is possible.
@@ -595,38 +547,6 @@ GROUP BY SUBSTRING(LOWER([LastName]),2,4)
 ORDER BY SUBSTRING(LOWER([LastName]),2,4) DESC
 ```
 
-## Select SubQuery
-
-A SubQuery in a Select clause must return a single value.
-
-```c#
-OrdersCollection coll = new OrdersQuery("o", out var orders)
-.Select
-(
-    orders.OrderID, orders.OrderDate,
-    // Embed another query (see 'SQL Generated' below)
-    new OrderDetailsQuery("oi", out var details).Select(details.UnitPrice.Max())
-    .Where(orders.OrderID == details.OrderID).As("MaxUnitPrice")
-)
-.ToCollection<OrdersCollection>();
-
-if (coll.Count > 0)
-{
-    // Then we loaded at least one record
-}
-```
-
-SQL Generated:
-
-```sql
-SELECT o.[OrderID],o.[OrderDate], 
-(
-   SELECT MAX(oi.[UnitPrice]) AS 'UnitPrice'  
-   FROM [Order Details] oi 
-   WHERE o.[OrderID] = oi.[OrderID]
-) AS MaxUnitPrice  
-FROM [Orders] o
-```
 
 This is the same as the query above, but returns all columns in the Order table, instead of just OrderID and OrderDate. Notice that the Select clause contains orders, not orders.. The SQL produced will use the supplied alias o..
 
@@ -950,83 +870,6 @@ WHERE o.[OrderDate] IN
 )
 ```
 
-## Any, All, and Some
-
-ANY, ALL, and SOME are SubQuery qualifiers. They precede the SubQuery they apply to. For most databases, ANY and SOME are synonymous. Usually, if you use an operator (>, >=, =, <, <=) in a Where clause against a SubQuery, then the SubQuery must return a single value. By applying a qualifier to the SubQuery, you can use operators against SubQueries that return multiple results.
-
-Notice, below, that the ALL qualifier is set to true for the SubQuery with "cq.es.All = true;".
-
-```c#
-// DateAdded for Customers whose Manager  = 3
-CustomerQuery cq = new CustomerQuery("c");
-cq.Select(cq.DateAdded).Where(cq.Manager == 3).es.All();
-
-// OrderID and CustID where the OrderDate is 
-// less than all of the dates in the CustomerQuery above.
-OrderQuery oq = new OrderQuery("o");
-oq.Select(oq.OrderID, oq.CustID);
-oq.Where(oq.OrderDate < cq);
-
-OrderCollection coll = new OrderCollection();
-if(coll.Load(oq))
-{
-    // Then we loaded at least one record
-}
-```
-
-SQL Generated:
-
-```sql
-SELECT o.[OrderID],o.[CustID]  
-FROM [dbo].[Order] o 
-WHERE o.[OrderDate] < ALL 
-(
-    SELECT c.[DateAdded]  
-    FROM [ForeignKeyTest].[dbo].[Customer] c 
-    WHERE c.[Manager] = @Manager1
-)
-```
-Below, is a nested SubQuery. The ANY qualifier is set to true for the middle SubQuery with "cq.es.Any = true;".
-
-```c#
-// Employees whose LastName begins with 'S'.
-EmployeeQuery eq = new EmployeeQuery("e");
-eq.Select(eq.EmployeeID).Where(eq.LastName.Like("S%"));
-
-// DateAdded for Customers whose Managers are in the
-// EmployeeQuery above.
-CustomerQuery cq = new CustomerQuery("c");
-cq.Select(cq.DateAdded).Where(cq.Manager.In(eq)).es.Any();
-
-// OrderID and CustID where the OrderDate is 
-// less than any one of the dates in the CustomerQuery above.
-OrderQuery oq = new OrderQuery("o");
-oq.Select(oq.OrderID, oq.CustID).Where(oq.OrderDate < cq);
-
-OrderCollection coll = new OrderCollection();
-if(coll.Load(oq))
-{
-    // Then we loaded at least one record
-}
-```
-
-SQL Generated:
-
-```sql
-SELECT o.[OrderID],o.[CustID]  
-FROM [dbo].[Order] o 
-WHERE o.[OrderDate] < ANY 
-(
-    SELECT c.[DateAdded]  
-    FROM [dbo].[Customer] c 
-    WHERE c.[Manager] IN 
-    (
-        SELECT e.[EmployeeID]  
-        FROM [dbo].[Employee] e 
-        WHERE e.[LastName] LIKE @LastName1
-    )
-)
-```
 
 ## Case().When().Then().End() Syntax
 
@@ -1132,43 +975,21 @@ HAVING SUM([Age]) > @Age2
 ORDER BY [EmployeeID] DESC
 ```
 
-## Union, Intersect, and Except
-These might be kind of silly but they demonstrate syntax.
-
-## Union
+## Getting the Count
 
 ```c#
-EmployeeQuery eq1 = new EmployeeQuery("eq1");
-EmployeeQuery eq2 = new EmployeeQuery("eq2");
+EmployeesQuery q = new EmployeesQuery();
+q.Where(q.ReportsTo.IsNull()).es.CountAll();
 
-// This leaves out the record with Age 30
-eq1.Where(eq1.Age < 30);
-eq1.Union(eq2);
-eq2.Where(eq2.Age > 30);
+int count = q.ExecuteScalar<int>();
 ```
 
-## Intersect
+SQL Generated:
 
-```c#
-EmployeeQuery eq1 = new EmployeeQuery("eq1");
-EmployeeQuery eq2 = new EmployeeQuery("eq2");
-
-// This leaves out the record with Age 30
-eq1.Where(eq1.FirstName.Like("%n%"));
-eq1.Intersect(eq2);
-eq2.Where(eq2.FirstName.Like("%a%"));
-```
-
-## Except
-
-```c#
-EmployeeQuery eq1 = new EmployeeQuery("eq1");
-EmployeeQuery eq2 = new EmployeeQuery("eq2");
-
-// This leaves out the record with Age 30
-eq1.Where(eq1.FirstName.Like("%J%"));
-eq1.Except(eq2);
-eq2.Where(eq2.FirstName == "Jim");
+```sql
+SELECT COUNT(*) AS 'Count' 
+FROM [Employees] 
+WHERE [ReportsTo] IS NULL
 ```
 
 ## Raw SQL Injection Everywhere
