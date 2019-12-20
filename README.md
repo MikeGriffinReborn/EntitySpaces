@@ -297,6 +297,41 @@ WHERE EXISTS (
 )
 ```
 
+## Where() with Nested Query
+
+In and NotIn are two of the most common operators used in a Where SubQuery. The following produces a result set containing Territories that an Employee is not associated with.
+
+```c#
+// Territories that Employee 1 is not assigned to.
+TerritoriesCollection coll = new TerritoriesQuery("t", out var tq)
+  .Select(tq.TerritoryID, tq.TerritoryDescription);
+  .Where(tq.TerritoryID.NotIn(() =>
+  {
+      return new EmployeeTerritoriesQuery("et", out var etq)
+      .Select(etq.TerritoryID)
+      .Where(etq.EmployeeID == 1);
+  }))
+  .ToCollection<TerritoriesCollection>();
+
+if (coll.Count > 0)
+{
+    // Then we loaded at least one record
+}
+```
+
+SQL Generated:
+
+```sql
+SELECT t.[Description]  
+FROM [dbo].[Territory] t 
+WHERE t.[TerritoryID] NOT IN 
+(
+    SELECT et.[TerrID]  
+    FROM .[dbo].[EmployeeTerritory] et 
+    WHERE et.[EmpID] = @EmpID1
+) 
+```
+
 ## From() with Nested Query
 Notice how in the Select() statement we use the "escape hatch" mechanism and declare "<sub.OrderTotal>" as a string. What does this do? Anything you pass in within "<>" brackets is take "as-is". We need to do this here because the nested query in the From() clause is aliased as "sub" and we need to access the derived "OrderTotal" column. In an upcoming version the "out var" syntax will be supported on the Alias and you will no longer have to use the escape hatch. This isn't always true of the From clause it only has to do with this particular query.
 
@@ -548,330 +583,6 @@ GROUP BY SUBSTRING(LOWER([LastName]),2,4)
 ORDER BY SUBSTRING(LOWER([LastName]),2,4) DESC
 ```
 
-
-This is the same as the query above, but returns all columns in the Order table, instead of just OrderID and OrderDate. Notice that the Select clause contains orders, not orders.. The SQL produced will use the supplied alias o..
-
-```c#
-OrderQuery orders = new OrderQuery("o");
-OrderItemQuery details = new OrderItemQuery("oi");
-
-orders.Select
-(
-    orders, // this means orders.*
-    details.Select
-    (
-        details.UnitPrice.Max()
-    )
-    .Where(orders.OrderID == details.OrderID).As("MaxUnitPrice")
-);
-
-OrderCollection coll = new OrderCollection();
-if(coll.Load(orders))
-{
-    // Then we loaded at least one record
-}
-```
-
-SQL Generated:
-
-```sql
-SELECT o.* 
-(
-    SELECT MAX(oi.[UnitPrice]) AS 'UnitPrice'  
-    FROM [dbo].[OrderItem] oi 
-    WHERE o.[OrderID] = oi.[OrderID]
-) AS MaxUnitPrice  
-FROM [ForeignKeyTest].[dbo].[Order] o
-```
-
-## From SubQuery
-
-An aggregate requires a GROUP BY for each column in the SELECT that is not an aggregate. Sometimes you wish to include columns in your result set that you do not wish to group by. One way to accomplish this is by using a SubQuery in the From clause that contains the aggregate the way you want it grouped. The outer query contains the results of the aggregate, plus any additional columns.
-
-If you use a SubQuery in a From clause, you must give the From clause its own alias (shown below as "sub"). In the outer query, to refer to an aliased element in the From SubQuery, use the inline raw SQL technique to qualify the aggregate's alias with the From clause alias, i.e., "".
-
-```c#
-OrderQuery oq = new OrderQuery("o");
-OrderItemQuery oiq = new OrderItemQuery("oi");
-
-oq.Select(oq.CustID, oq.OrderDate, "<sub.OrderTotal>");
-oq.From
-(
-    oiq.Select(oiq.OrderID, (oiq.UnitPrice * oiq.Quantity).Sum().As("OrderTotal"))
-    .GroupBy(oiq.OrderID)
-).As("sub");
-oq.InnerJoin(oq).On(oq.OrderID == oiq.OrderID);
-
-OrderCollection coll = new OrderCollection();
-if(coll.Load(oq))
-{
-    // Then we loaded at least one record
-}
-```
-
-SQL Generated:
-
-```sql
-SELECT o.[CustID],o.[OrderDate],sub.OrderTotal  
-FROM 
-(
-    SELECT oi.[OrderID],
-    SUM((oi.[UnitPrice]*oi.[Quantity])) AS 'OrderTotal'  
-    FROM [dbo].[OrderItem] oi 
-    GROUP BY oi.[OrderID]
-) AS sub 
-INNER JOIN [dbo].[Order] o ON o.[OrderID] = sub.[OrderID]
-```
-
-## Where SubQuery
-
-In and NotIn are two of the most common operators used in a Where SubQuery. The following produces a result set containing Territories that an Employee is not associated with.
-
-```c#
-// Territories that Employee 1 is not assigned to.
-TerritoriesQuery tq = new TerritoriesQuery("t");
-tq.Select(tq.TerritoryID, tq.TerritoryDescription);
-tq.Where(tq.TerritoryID.NotIn(() =>
-{
-    EmployeeTerritoriesQuery etq = new EmployeeTerritoriesQuery("et");
-    etq.Select(etq.TerritoryID);
-    etq.Where(etq.EmployeeID == 1);
-    return etq;
-}));
-
-TerritoriesCollection coll = new TerritoriesCollection();
-if (coll.Load(tq))
-{
-    // Then we loaded at least one record
-}
-```
-
-SQL Generated:
-
-```sql
-SELECT t.[Description]  
-FROM [dbo].[Territory] t 
-WHERE t.[TerritoryID] NOT IN 
-(
-    SELECT et.[TerrID]  
-    FROM .[dbo].[EmployeeTerritory] et 
-    WHERE et.[EmpID] = @EmpID1
-) 
-```
-
-Exists evaluates to true, if the SubQuery returns a result set.
-
-
-```c#
-// If even one employee has a null supervisor,
-// i.e., the above query has a result set,
-// then run a list of all employees.
-EmployeesQuery eq = new EmployeesQuery("e");
-eq.Select(eq.EmployeeID, eq.ReportsTo)
-.Where(eq.Exists(() =>
-{
-    // SubQuery of Employees with a null Supervisor column.
-    EmployeesQuery sq = new EmployeesQuery("s");
-    sq.Select(sq.EmployeeID).Where(sq.ReportsTo.IsNull()).es.Distinct();
-    return sq;
-}));
-
-EmployeesCollection coll = new EmployeesCollection();
-if (coll.Load(eq))
-{
-    // Then we loaded at least one record
-}
-```
-
-SQL Generated:
-
-```sql
-SELECT e.[EmployeeID],e.[Supervisor]  
-FROM [dbo].[Employee] e 
-WHERE EXISTS 
-(
-    SELECT DISTINCT s.[EmployeeID]  
-    FROM [dbo].[Employee] s 
-    WHERE s.[Supervisor] IS NULL
-)
-```
-
-SubQueries cannot be used directly within a Join(SubQuery) clause, but they can be used within a Join(query).On(SubQuery) clause.
-
-```c#
-// Query for the Join
-OrderItemQuery oiq = new OrderItemQuery("oi");
-
-// SubQuery of OrderItems with a discount
-OrderItemQuery oisq = new OrderItemQuery("ois");
-oisq.Select(oisq.Discount).Where(oisq.Discount > 0).es.Distinct();
-
-// Orders with discounted items
-OrderQuery oq = new OrderQuery("o");
-oq.Select(oq.OrderID, oiq.Discount);
-oq.InnerJoin(oiq). On(oq.OrderID == oiq.OrderID && oiq.Discount.In(oisq));
-
-OrderCollection coll = new OrderCollection();
-if(coll.Load(oq))
-{
-    // Then we loaded at least one record
-}   
-```
-
-SQL Generated:
-
-```sql
-SELECT o.[OrderID],oi.[Discount]  
-FROM [dbo].[Order] o 
-INNER JOIN [dbo].[OrderItem] oi 
-ON (o.[OrderID] = oi.[OrderID] AND oi.[Discount] IN  
-(
-    SELECT  DISTINCT ois.[Discount]  
-    FROM [dbo].[OrderItem] ois 
-    WHERE ois.[Discount] > @Discount1)
-)
-```
-
-## Correlated SubQuery
-
-A correlated SubQuery is where the inner query relies on an element of the outer query. The inner select cannot run on its own. Below, the inner pq query uses the outer query's oiq.ProductID in the Where() clause.
-
-```c#
-OrderItemQuery oiq = new OrderItemQuery("oi");
-ProductQuery pq = new ProductQuery("p");
-
-oiq.Select(
-    oiq.OrderID,
-    (oiq.Quantity * oiq.UnitPrice).Sum().As("Total")
-);
-oiq.Where(oiq.ProductID
-    .In(
-        pq.Select(pq.ProductID)
-        .Where(oiq.ProductID == pq.ProductID)
-    )
-);
-oiq.GroupBy(oiq.OrderID);
-
-OrderItemCollection coll = new OrderItemCollection();
-if(coll.Load(oiq))
-{
-    // Then we loaded at least one record
-}   
-```
-
-SQL Generated:
-
-```sql
-SELECT oi.[OrderID],SUM((oi.[Quantity]*oi.[UnitPrice])) AS 'Total'  
-FROM [dbo].[OrderItem] oi 
-WHERE oi.[ProductID] IN 
-(
-    SELECT p.[ProductID]  
-    FROM [dbo].[Product] p 
-    WHERE oi.[ProductID] = p.[ProductID]
-)  
-GROUP BY oi.[OrderID]
-```
-
-## Nested SubQuery
-
-EntitySpaces supports nesting of SubQueries. Each database vendor has their own limits on just how deep the nesting can go. EntitySpaces supports two different syntax approaches to nested SubQueries.
-
-Traditional SQL-style syntax is most useful if you already have a query designed using standard SQL, and are just converting it to a DynamicQuery.
-
-```c#
-OrderQuery oq = new OrderQuery("o");
-CustomerQuery cq = new CustomerQuery("c");
-EmployeeQuery eq = new EmployeeQuery("e");
-
-// OrderID and CustID for customers who ordered on the same date
-// a customer was added, and have a manager whose 
-// last name starts with 'S'.
-oq.Select(
-    oq.OrderID,
-    oq.CustID
-);
-oq.Where(oq.OrderDate
-    .In(
-        cq.Select(cq.DateAdded)
-        .Where(cq.Manager.In(
-            eq.Select(eq.EmployeeID)
-            .Where(eq.LastName.Like("S%"))
-            )
-        )
-    )
-);
-
-OrderCollection coll = new OrderCollection();
-if(coll.Load(oq))
-{
-    // Then we loaded at least one record
-}   
-```
-
-SQL Generated:
-
-```sql
-SELECT o.[OrderID],o.[CustID]  
-FROM [dbo].[Order] o 
-WHERE o.[OrderDate] IN 
-(
-    SELECT c.[DateAdded]  
-    FROM [dbo].[Customer] c 
-    WHERE c.[Manager] IN 
-    (
-        SELECT e.[EmployeeID]  
-        FROM [dbo].[Employee] e 
-        WHERE e.[LastName] LIKE @LastName1
-    ) 
-)
-```
-Nesting by query instance name can be easier to understand and construct, if you are starting from scratch, and have no pre-existing SQL to go by. The trick is to start with the inner-most SubQuery and work your way out. The query below produces the same results as the traditional SQL-style query above. The instance names are color coded to emphasize how they are nested.
-
-```c#
-// Employees whose LastName begins with 'S'.
-EmployeeQuery eq = new EmployeeQuery("e");
-eq.Select(eq.EmployeeID);
-eq.Where(eq.LastName.Like("S%"));
-
-// DateAdded for Customers whose Managers are in the
-// EmployeeQuery above.
-CustomerQuery cq = new CustomerQuery("c");
-cq.Select(cq.DateAdded);
-cq.Where(cq.Manager.In(eq));
-
-// OrderID and CustID where the OrderDate is in the
-// CustomerQuery above.
-OrderQuery oq = new OrderQuery("o");
-oq.Select(oq.OrderID, oq.CustID);
-oq.Where(oq.OrderDate.In(cq));
-
-OrderCollection coll = new OrderCollection();
-if(coll.Load(oq))
-{
-    // Then we loaded at least one record
-}
-```
-
-SQL Generated:
-
-```sql
-SELECT o.[OrderID],o.[CustID]  
-FROM [dbo].[Order] o 
-WHERE o.[OrderDate] IN 
-(
-    SELECT c.[DateAdded]  
-    FROM [dbo].[Customer] c 
-    WHERE c.[Manager] IN 
-    (
-        SELECT e.[EmployeeID]  
-        FROM [dbo].[Employee] e 
-        WHERE e.[LastName] LIKE @LastName1
-    )
-)
-```
-
-
 ## Case().When().Then().End() Syntax
 
 ```c#
@@ -951,15 +662,15 @@ if(coll.Load(q))
 ## Having Clause
 
 ```c#
-EmployeeQuery q = new EmployeeQuery();
-q.Select(q.EmployeeID, q.Age.Sum().As("TotalAge"))
-.Where(q.EmployeeID.IsNotNull())
-.GroupBy(q.EmployeeID)
-.Having(q.Age.Sum() > 5)
-.OrderBy(q.EmployeeID.Descending);
+EmployeeCollection coll = new EmployeeQuery("e", out var q)
+  .Select(q.EmployeeID, q.Age.Sum().As("TotalAge"))
+  .Where(q.EmployeeID.IsNotNull())
+  .GroupBy(q.EmployeeID)
+  .Having(q.Age.Sum() > 5)
+  .OrderBy(q.EmployeeID.Descending)
+  .ToCollection<EmployeeCollection>();
 
-EmployeeCollection coll = new EmployeeCollection();
-if(coll.Load(q))
+if(coll.Count > 0)
 {
     // Then we loaded at least one record
 }
@@ -968,29 +679,28 @@ if(coll.Load(q))
 SQL Generated:
 
 ```sql
-SELECT [EmployeeID] AS 'EmployeeID',SUM([Age]) AS 'TotalAge' 
-FROM [dbo].[Employee] 
-WHERE[EmployeeID] IS NOT NULL 
-GROUP BY [EmployeeID] 
+SELECT e.[EmployeeID] AS 'EmployeeID', SUM([Age]) AS 'TotalAge' 
+FROM [dbo].[Employee] e 
+WHERE e.[EmployeeID] IS NOT NULL 
+GROUP BY e.[EmployeeID] 
 HAVING SUM([Age]) > @Age2 
-ORDER BY [EmployeeID] DESC
+ORDER BY e.[EmployeeID] DESC
 ```
 
 ## Getting the Count
-
+Here we are getting the count of Employees who have NULL as their ReportsTo ...
 ```c#
-EmployeesQuery q = new EmployeesQuery();
-q.Where(q.ReportsTo.IsNull()).es.CountAll();
-
-int count = q.ExecuteScalar<int>();
+int count = new EmployeesQuery("e", out var q)
+    .Where(q.ReportsTo.IsNull())
+    .es.CountAll().ExecuteScalar<int>();
 ```
 
 SQL Generated:
 
 ```sql
 SELECT COUNT(*) AS 'Count' 
-FROM [Employees] 
-WHERE [ReportsTo] IS NULL
+FROM [Employees] e 
+WHERE e.[ReportsTo] IS NULL
 ```
 
 ## Raw SQL Injection Everywhere
@@ -999,14 +709,14 @@ There may be times when you need to access some SQL feature that is not supporte
 Here is an example query. You would never write a query like this in reality. Tiraggo supports this simple query without having to use < > angle brackets. This is just to show all of the places that can accept the raw SQL injection technique:
 
 ```c#
-EmployeesQuery q = new EmployeesQuery();
-q.Select("<FirstName>", q.HireDate)
-.Where("<EmployeeID = 1>")
-.GroupBy("<FirstName>", q.HireDate)
-.OrderBy("<FirstName ASC>"); 
+EmployeesCollection coll = new EmployeesQuery("e", out var q)
+    .Select("<FirstName>", q.HireDate)
+    .Where("<EmployeeID = 1>")
+    .GroupBy("<FirstName>", q.HireDate)
+    .OrderBy("<FirstName ASC>")
+    .ToCollection<EmployeesCollection>();
 
-EmployeeCollection coll = new EmployeeCollection();
-if(coll.Load(q))
+if (coll.Count > 0)
 {
     // Then we loaded at least one record
 }
@@ -1017,8 +727,9 @@ The SQL Generated is as follows (and works)
 SQL Generated:
 
 ```sql
-SELECT FirstName,[HireDate] AS 'HireDate'  
-FROM [Employees] WHERE (EmployeeID = 1) 
+SELECT FirstName, e.[HireDate]
+FROM [Employees] e 
+WHERE (EmployeeID = 1) 
 GROUP BY FirstName,[HireDate] 
 ORDER BY FirstName ASC
 ```
@@ -1236,36 +947,22 @@ esProviderFactory.Factory = new EntitySpaces.Loader.esDataProviderFactory();
 
 // Add a connection
 esConnectionElement conn = new esConnectionElement();
-conn.Name = "RemoteDb";
-conn.ProviderMetadataKey = "esDefault";
 conn.Provider = "EntitySpaces.SqlClientProvider";
-conn.ProviderClass = "DataProvider";
-conn.SqlAccessType = esSqlAccessType.DynamicSQL;
-conn.ConnectionString = 
-   "User ID=mydmin;Password=abc123;Initial Catalog=Northwind;Data Source=localhost";
-conn.DatabaseVersion = "2017";
+conn.DatabaseVersion = "2012";
+conn.ConnectionString = "User ID=meshadmin;Password=meshy0415!;Initial Catalog=Northwind;Data 
 esConfigSettings.ConnectionInfo.Connections.Add(conn);
-
-// Assign the Default Connection
-esConfigSettings.ConnectionInfo.Default = "RemoteDb";
 ```
 
 **Setup SQLite connection string in your C# .NET Project**
 
 ```c#
+// esDataProviderFactory is a one time setup 
 esProviderFactory.Factory = new EntitySpaces.Loader.esDataProviderFactory();
 
 // Add a connection
 esConnectionElement conn = new esConnectionElement();
-conn.Name = "RemoteDb";
-conn.ProviderMetadataKey = "esDefault";
 conn.Provider = "EntitySpaces.SQLiteProvider";
-conn.ProviderClass = "DataProvider";
-conn.SqlAccessType = esSqlAccessType.DynamicSQL;
-conn.ConnectionString = @"Data Source=C:\MyFolder\Northwind.db3;Version=3;";
 conn.DatabaseVersion = "2012";
+conn.ConnectionString = @"Data Source=C:\MyFolder\Northwind.db3;Version=3;";
 esConfigSettings.ConnectionInfo.Connections.Add(conn);
-
-// Assign the Default Connection
-esConfigSettings.ConnectionInfo.Default = "RemoteDb";
 ```
