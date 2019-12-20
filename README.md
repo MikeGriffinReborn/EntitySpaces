@@ -117,43 +117,7 @@ if (coll.LoadAll())
 }
 ```
 
-## JSON Serialization of Derived Columns
-EntitySpaces will serialize any derived columns which are brought back by a query via a JOIN, aggregates, or by creating an extra column on the fly via concatenation such as is done with "fullName" column shown in the example below. Even though there is not a "fullName" property on the Employees object the "fullName" value will still serialize correctly. 
 
-```c#
-EmployeesCollection coll = new EmployeesQuery("e", out var e)
-.Select
-(
-    e.EmployeeID, e.LastName, e.FirstName,
-    (e.LastName + ", " + e.FirstName).As("fullName") // derived column 
-)
-.OrderBy(e.LastName.Descending)
-.ToCollection<EmployeesCollection>();
-
-if (coll.Count > 0)
-{
-    string json = JsonConvert.SerializeObject(coll);
-}
-```
-
-Notice the "fullName" column is present in the JSON, no need for intermediate classes or "newing" up anonymous objects.
-
-```json
-[
-  {
-    "EmployeeID": 6,
-    "LastName": "Suyama",
-    "FirstName": "Michael",
-    "fullName": "Suyama, Michael"
-  },
-  {
-    "EmployeeID": 193,
-    "LastName": "Smith",
-    "FirstName": "Frank",
-    "fullName": "Smith, Frank"
-  }
-]
-``` 
 
 # Fluent Query API
 
@@ -237,6 +201,24 @@ WHERE q.[EmployeeID] > ANY
     WHERE e.[EmployeeID] IS NOT NULL
 )
 ```
+
+## CrossApply, and OuterApply
+This example uses OuterApply to select each customer and their last 2 orders.
+
+```c#
+
+```
+
+|CustomerID | CompanyName | OrderID, OrderDate|
+|:-|:-|
+ALFKI|Alfreds Futterkiste|11011|4/9/1998 12:00:00 AM|
+ALFKI|Alfreds Futterkiste|10952|3/16/1998 12:00:00 AM|
+ANATR|Ana Trujillo Emparedados y helados|10926|3/4/1998 12:00:00 AM|
+ANATR|Ana Trujillo Emparedados y helados|10759|11/28/1997 12:00:00 AM|
+ANTON|Antonio Moreno Taquería|10856|1/28/1998 12:00:00 AM|
+ANTON|Antonio Moreno Taquería|10682|9/25/1997 12:00:00 AM|
+AROUT|Around the Horn|11016|4/10/1998 12:00:00 AM|
+AROUT|Around the Horn|10953|3/16/1998 12:00:00 AM|
 
 ## Select Top
 
@@ -1216,6 +1198,44 @@ if(coll.Load(eQuery))
     // The data was loaded
 }
 ```
+
+## JSON Serialization of Derived Columns
+EntitySpaces will serialize any derived columns which are brought back by a query via a JOIN, aggregates, or by creating an extra column on the fly via concatenation such as is done with "fullName" column shown in the example below. Even though there is not a "fullName" property on the Employees object the "fullName" value will still serialize correctly. 
+
+```c#
+EmployeesCollection coll = new EmployeesQuery("e", out var e)
+.Select
+(
+    e.EmployeeID, e.LastName, e.FirstName,
+    (e.LastName + ", " + e.FirstName).As("fullName") // derived column 
+)
+.OrderBy(e.LastName.Descending)
+.ToCollection<EmployeesCollection>();
+
+if (coll.Count > 0)
+{
+    string json = JsonConvert.SerializeObject(coll);
+}
+```
+
+Notice the "fullName" column is present in the JSON, no need for intermediate classes or "newing" up anonymous objects.
+
+```json
+[
+  {
+    "EmployeeID": 6,
+    "LastName": "Suyama",
+    "FirstName": "Michael",
+    "fullName": "Suyama, Michael"
+  },
+  {
+    "EmployeeID": 193,
+    "LastName": "Smith",
+    "FirstName": "Frank",
+    "fullName": "Smith, Frank"
+  }
+]
+``` 
 
 ## Supported Operators
 
