@@ -2,7 +2,11 @@ Click here for the [Glossy Site ...](https://mikegriffinreborn.github.io/EntityS
 
 <img src="https://repository-images.githubusercontent.com/194275145/55b5b080-1ccf-11ea-8609-15b9de0d2351" alt="EntitySpaces" width="531" height="268">
 
-Available on Nuget @ [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer) or @ [EntitySpaces.ORM.SQLite](https://www.nuget.org/packages/EntitySpaces.ORM.SQLite/ "NuGet"). 
+Available on Nuget @ 
+* [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer) 
+* [EntitySpaces.ORM.SQLite](https://www.nuget.org/packages/EntitySpaces.ORM.SQLite/ "NuGet")
+* [EntitySpaces.ORM.MySQL](https://www.nuget.org/packages/EntitySpaces.ORM.MySQL/ "NuGet")
+
 See the [Setup Section](#setup) for more details ...
 
 # EntitySpaces - A Fluent SQL API
@@ -986,5 +990,19 @@ esConnectionElement conn = new esConnectionElement();
 conn.Provider = "EntitySpaces.SQLiteProvider";
 conn.DatabaseVersion = "2012";
 conn.ConnectionString = @"Data Source=C:\MyFolder\Northwind.db3;Version=3;";
+esConfigSettings.ConnectionInfo.Connections.Add(conn);
+```
+
+**Setup MySQL connection string in your C# .NET Project**
+
+```c#
+// esDataProviderFactory is a one time setup 
+esProviderFactory.Factory = new EntitySpaces.Loader.esDataProviderFactory();
+
+// Add a connection
+esConnectionElement conn = new esConnectionElement();
+conn.Provider = "EntitySpaces.MySqlProvider";
+conn.DatabaseVersion = "2012";
+conn.ConnectionString = "Database=Northwind;Data Source=localhost;User Id=myuser;Password=mypassword;";
 esConfigSettings.ConnectionInfo.Connections.Add(conn);
 ```
