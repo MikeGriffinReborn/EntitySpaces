@@ -1,6 +1,6 @@
 <img src="https://repository-images.githubusercontent.com/194275145/55b5b080-1ccf-11ea-8609-15b9de0d2351" alt="EntitySpaces" width="531" height="268">
 
-Available on Nuget @ [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer) or [EntitySpaces.ORM.SQLite](https://www.nuget.org/packages/EntitySpaces.ORM.SQLite/ "NuGet") or [EntitySpaces.ORM.MySQL](https://www.nuget.org/packages/EntitySpaces.ORM.MySQL/ "NuGet")
+Available on Nuget for [SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer), [SQLite](https://www.nuget.org/packages/EntitySpaces.ORM.SQLite/ "NuGet"), [MySQL](https://www.nuget.org/packages/EntitySpaces.ORM.MySQL/ "NuGet") or [PostgreSQL](https://www.nuget.org/packages/EntitySpaces.ORM.PostgreSQL)
 
 See the [Setup Section](#setup) for more details ...
 
@@ -952,6 +952,7 @@ Use the native language syntax, it works as you expect it would.
 * SQL Server - [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") 
 * SQLite - [EntitySpaces.ORM.SQLite](https://www.nuget.org/packages/EntitySpaces.ORM.SQLite/ "NuGet") 
 * MySQL - [EntitySpaces.ORM.MySQL](https://www.nuget.org/packages/EntitySpaces.ORM.MySQL/ "NuGet")
+* PostgreSQL - [EntitySpaces.ORM.PostgreSQL](https://www.nuget.org/packages/EntitySpaces.ORM.PostgreSQL)
 
 **Generating your Classes via EntitySpaces Studio**
 It's very simple. You only need to execute two templates. The Custom classes are generated only once, that is where you can add custom code and overide EntitySpaces functionality if need be. The Generated classes are generated any time your database schema changes, you never edit these classes.
