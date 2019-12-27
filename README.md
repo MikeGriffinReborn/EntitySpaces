@@ -954,6 +954,7 @@ Use the native language syntax, it works as you expect it would.
 * SQL Server - [EntitySpaces.ORM.SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer/ "NuGet") 
 * SQLite - [EntitySpaces.ORM.SQLite](https://www.nuget.org/packages/EntitySpaces.ORM.SQLite/ "NuGet") 
 * MySQL - [EntitySpaces.ORM.MySQL](https://www.nuget.org/packages/EntitySpaces.ORM.MySQL/ "NuGet")
+* PostgreSQL - [EntitySpaces.ORM.PostgreSQL](https://www.nuget.org/packages/EntitySpaces.ORM.PostgreSQL)
 
 **Generating your Classes via EntitySpaces Studio**
 It's very simple. You only need to execute two templates. The Custom classes are generated only once, that is where you can add custom code and overide EntitySpaces functionality if need be. The Generated classes are generated any time your database schema changes, you never edit these classes.
