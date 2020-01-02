@@ -190,7 +190,9 @@ namespace EntitySpaces.Core
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            return currentValues.TryGetValue(binder.Name, out result);
+            bool found = currentValues.TryGetValue(binder.Name, out result);
+            if (result is System.DBNull) result = null;
+            return found;
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
