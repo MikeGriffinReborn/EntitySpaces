@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyVersion>2019.12.24.0</AssemblyVersion>
-    <FileVersion>2019.12.24.0</FileVersion>
-    <Version>2019.12.24</Version>
+    <AssemblyVersion>2020.1.3.0</AssemblyVersion>
+    <FileVersion>2020.1.3.0</FileVersion>
+    <Version>2020.1.3.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>EntitySpaces in .NET Standard Mode for MySQL (single assembly install)</Description>
     <PackageProjectUrl>https://mikegriffinreborn.github.io/EntitySpaces/</PackageProjectUrl>
     <PackageTags>EntitySpaces, ORM, MySQL, SQL</PackageTags>
-    <PackageReleaseNotes>Support for MySQL</PackageReleaseNotes>
+    <PackageReleaseNotes>esEntity.dynamic tweak</PackageReleaseNotes>
     <RepositoryType>Github</RepositoryType>
     <RepositoryUrl>https://github.com/MikeGriffinReborn/EntitySpaces</RepositoryUrl>
     <PackageIcon>esIcon.png</PackageIcon>
