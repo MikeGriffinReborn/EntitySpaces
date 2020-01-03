@@ -7,7 +7,7 @@ Available on Nuget for [SqlServer](https://www.nuget.org/packages/EntitySpaces.O
 See the [Setup Section](#setup) for more details ...
 
 # EntitySpaces - A Fluent SQL API
-EntitySpaces is a Fluent API for SQL server, SQLite and more on the way. If you are familiar with the SQL syntax then you are already an expert in EntitySpaces. EntitySpaces is also high performance, transactional, and very intuitive. EntitySpaces Studio is used to generate your C# classes from your database schema.
+EntitySpaces is a Fluent API for SQL Server, SQLite, MySQL, PostgreSQL, and more on the way. If you are familiar with the SQL syntax then you are already an expert in EntitySpaces. EntitySpaces is also high performance, transactional, and very intuitive. EntitySpaces Studio is used to generate your C# classes from your database schema.
 
 ## Example Query
 In this example we are going to sum the total # of items for each order. Each order can have many order detail records so we group our query by OrderId and sum up the quantity as 'TotalQuantity'. Notice that we can access the derived 'TotalQuantity' column through the dynamic property.
