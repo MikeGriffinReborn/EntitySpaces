@@ -21,6 +21,7 @@
   <ItemGroup>
     <Compile Include="..\EntitySpaces.Core\esCollectionWCFPacket.cs" Link="EntitySpaces.Core\esCollectionWCFPacket.cs" />
     <Compile Include="..\EntitySpaces.Core\esEntity.cs" Link="EntitySpaces.Core\esEntity.cs" />
+    <Compile Include="..\EntitySpaces.Core\esDynamic.cs" Link="EntitySpaces.Core\esDynamic.cs" />    
     <Compile Include="..\EntitySpaces.Core\esEntityCollection.Binding.cs" Link="EntitySpaces.Core\esEntityCollection.Binding.cs" />
     <Compile Include="..\EntitySpaces.Core\esEntityCollection.cs" Link="EntitySpaces.Core\esEntityCollection.cs" />
     <Compile Include="..\EntitySpaces.Core\esEntityCollectionBase.cs" Link="EntitySpaces.Core\esEntityCollectionBase.cs" />

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Xml.Serialization;
 using static EntitySpaces.Core.esSmartDtoMap;
 
 namespace EntitySpaces.Core
@@ -349,6 +350,7 @@ namespace EntitySpaces.Core
         private dynamic _isDirty;
 
         [IgnoreDataMember]
+        [XmlIgnore]
         public dynamic IsDirty
         {
             get
