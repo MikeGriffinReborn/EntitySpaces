@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyVersion>2020.1.10.0</AssemblyVersion>
-    <FileVersion>2020.1.10.0</FileVersion>
-    <Version>2020.1.10.0</Version>
+    <TargetFrameworks>netstandard2.0;netcoreapp2.0;netcoreapp3.0</TargetFrameworks>
+    <AssemblyVersion>2020.1.15.0</AssemblyVersion>
+    <FileVersion>2020.1.15.0</FileVersion>
+    <Version>2020.1.15.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>EntitySpaces in .NET Standard Mode for SQL Server (single assembly install)</Description>
     <PackageProjectUrl>https://mikegriffinreborn.github.io/EntitySpaces/</PackageProjectUrl>
-    <PackageTags>EntitySpaces, ORM</PackageTags>
-    <PackageReleaseNotes>Marked IsDirty() as non serializable</PackageReleaseNotes>
+    <PackageTags>EntitySpaces, ORM, SQL</PackageTags>
+    <PackageReleaseNotes>Now includes .NET Standard 2.0/Core 2.0/Core 3.0 Assemblies</PackageReleaseNotes>
     <Product>EntitySpaces</Product>
     <PackageIcon>esIcon.png</PackageIcon>
     <PackageIconUrl />
