@@ -2,7 +2,7 @@ Click here for the [Glossy Site ...](https://mikegriffinreborn.github.io/EntityS
 
 <img src="https://repository-images.githubusercontent.com/194275145/55b5b080-1ccf-11ea-8609-15b9de0d2351" alt="EntitySpaces" width="531" height="268">
 
-Supports .NET STandard 2.x, .NET Core 2.x, and .NET Core 3.x 
+Supports .NET STandard 2.x, Core 2.x & 3.x Framework 4.5.1, 4.6, 4.6.1
 
 Available on Nuget for [SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer), [SQLite](https://www.nuget.org/packages/EntitySpaces.ORM.SQLite/ "NuGet"), [MySQL](https://www.nuget.org/packages/EntitySpaces.ORM.MySQL/ "NuGet") or [PostgreSQL](https://www.nuget.org/packages/EntitySpaces.ORM.PostgreSQL)
 
