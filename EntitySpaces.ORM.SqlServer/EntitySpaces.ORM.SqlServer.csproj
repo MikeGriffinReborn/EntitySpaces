@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp2.0;netcoreapp3.0</TargetFrameworks>
-    <AssemblyVersion>2020.1.15.0</AssemblyVersion>
-    <FileVersion>2020.1.15.0</FileVersion>
-    <Version>2020.1.15.0</Version>
+    <TargetFrameworks>net451;net46;net461;netstandard2.0;netcoreapp2.0;netcoreapp3.0</TargetFrameworks>
+    <AssemblyVersion>2020.1.15.1</AssemblyVersion>
+    <FileVersion>2020.1.15.1</FileVersion>
+    <Version>2020.1.15.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>EntitySpaces in .NET Standard Mode for SQL Server (single assembly install)</Description>
     <PackageProjectUrl>https://mikegriffinreborn.github.io/EntitySpaces/</PackageProjectUrl>
     <PackageTags>EntitySpaces, ORM, SQL</PackageTags>
-    <PackageReleaseNotes>Now includes .NET Standard 2.0/Core 2.0/Core 3.0 Assemblies</PackageReleaseNotes>
+    <PackageReleaseNotes>Now supports .NET Standard 2.x, .NET Core 2.x &amp; 3.x .NET Framework 4.5.1, 4.6, 4.6.1</PackageReleaseNotes>
     <Product>EntitySpaces</Product>
     <PackageIcon>esIcon.png</PackageIcon>
     <PackageIconUrl />
@@ -21,7 +21,7 @@
   <ItemGroup>
     <Compile Include="..\EntitySpaces.Core\esCollectionWCFPacket.cs" Link="EntitySpaces.Core\esCollectionWCFPacket.cs" />
     <Compile Include="..\EntitySpaces.Core\esEntity.cs" Link="EntitySpaces.Core\esEntity.cs" />
-    <Compile Include="..\EntitySpaces.Core\esDynamic.cs" Link="EntitySpaces.Core\esDynamic.cs" />    
+    <Compile Include="..\EntitySpaces.Core\esDynamic.cs" Link="EntitySpaces.Core\esDynamic.cs" />
     <Compile Include="..\EntitySpaces.Core\esEntityCollection.Binding.cs" Link="EntitySpaces.Core\esEntityCollection.Binding.cs" />
     <Compile Include="..\EntitySpaces.Core\esEntityCollection.cs" Link="EntitySpaces.Core\esEntityCollection.cs" />
     <Compile Include="..\EntitySpaces.Core\esEntityCollectionBase.cs" Link="EntitySpaces.Core\esEntityCollectionBase.cs" />
@@ -100,9 +100,40 @@
     <Folder Include="EntitySpaces.SqlClientProvider\" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net451'">
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
