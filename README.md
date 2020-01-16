@@ -627,7 +627,6 @@ FROM
    [Order Details] o
 ```
 
-
 ## Case().When().Then().End() Syntax
 
 ```c#
