@@ -606,6 +606,28 @@ GROUP BY SUBSTRING(LOWER([LastName]),2,4)
 ORDER BY SUBSTRING(LOWER([LastName]),2,4) DESC
 ```
 
+## Casting
+You can cast your types to other SQL types using Cast()
+
+```c#
+OrderDetailsCollection coll = new OrderDetailsQuery("o", out var o)
+.Select
+(
+    (o.Quantity * o.UnitPrice).Cast(esCastType.Decimal, 34, 4).As("Cost")
+)
+.ToCollection<OrderDetailsCollection>();
+```
+
+SQL Generated:
+
+```sql
+SELECT
+   CAST((o.[Quantity] * o.[UnitPrice]) AS decimal(34, 4)) AS 'Cost' 
+FROM
+   [Order Details] o
+```
+
+
 ## Case().When().Then().End() Syntax
 
 ```c#
