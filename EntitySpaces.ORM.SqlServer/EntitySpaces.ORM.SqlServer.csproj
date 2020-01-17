@@ -51,8 +51,15 @@
     <Compile Include="..\EntitySpaces.DynamicQuery\esExpression.cs" Link="EntitySpaces.DynamicQuery\esExpression.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esExpressionOrComparison.cs" Link="EntitySpaces.DynamicQuery\esExpressionOrComparison.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esPartition.cs" Link="EntitySpaces.DynamicQuery\esPartition.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\OverClause\esBaseOverClause.cs" Link="EntitySpaces.DynamicQuery\OverClause\esBaseOverClause.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\OverClause\esDenseRankOver.cs" Link="EntitySpaces.DynamicQuery\OverClause\esDenseRankOver.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\OverClause\esNtileOver.cs" Link="EntitySpaces.DynamicQuery\OverClause\esNtileOver.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\OverClause\esRankOver.cs" Link="EntitySpaces.DynamicQuery\OverClause\esRankOver.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\OverClause\esRowNumberOver.cs" Link="EntitySpaces.DynamicQuery\OverClause\esRowNumberOver.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\OverClause\esSumOver.cs" Link="EntitySpaces.DynamicQuery\OverClause\esSumOver.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery.cs" Link="EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery2.cs" Link="EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery2.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\DynamicQuery\esDynamicQueryOver.cs" Link="EntitySpaces.Interfaces\DynamicQuery\esDynamicQueryOver.cs" />    
     <Compile Include="..\EntitySpaces.Interfaces\DynamicQuery\IDynamicQueryInternal.cs" Link="EntitySpaces.Interfaces\DynamicQuery\IDynamicQueryInternal.cs" />
     <Compile Include="..\Providers\EntitySpaces.SqlClientProvider\Cache.cs" Link="EntitySpaces.SqlClientProvider\Cache.cs" />
     <Compile Include="..\Providers\EntitySpaces.SqlClientProvider\DataProvider.cs" Link="EntitySpaces.SqlClientProvider\DataProvider.cs" />

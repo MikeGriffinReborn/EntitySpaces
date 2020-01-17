@@ -1,5 +1,6 @@
 ﻿using BusinessObjects;
 using EntitySpaces.Interfaces;
+using EntitySpaces.DynamicQuery;
 using System;
 using System.Linq;
 
@@ -18,21 +19,57 @@ namespace ConsoleApp
             conn.ConnectionString = "User ID=sa;Password=blank;Initial Catalog=Northwind;Data Source=localhost";
             esConfigSettings.ConnectionInfo.Connections.Add(conn);
 
-            // Quick test on new syntax
-            EmployeesQuery q = new EmployeesQuery("q");
-            q.Where(q.EmployeeID > (() =>
-                {
-                    return new EmployeesQuery("e", out var q1)
-                    .Select(q1.EmployeeID)
-                    .Where(q1.EmployeeID.IsNotNull()).Any();
-                })
-            );
+            /*
 
-            EmployeesCollection coll = new EmployeesCollection();
+            SELECT
+                ROW_NUMBER() OVER(ORDER BY q.[EmployeeID] DESC) AS RNUM1,
+                ROW_NUMBER() OVER(PARTITION BY (SUM(q.[Freight]) * 10) ORDER BY q.[EmployeeID] DESC) AS RNUM2,
+                RANK() OVER(ORDER BY q.[EmployeeID] DESC) AS RNUM3,
+                DENSE_RANK() OVER(ORDER BY q.[EmployeeID] DESC) AS RNUM4,
+                NTILE(4) OVER(ORDER BY q.[EmployeeID] DESC) AS RNUM5,
+                SUM (q.[Freight]) OVER(PARTITION BY q.[EmployeeID] ORDER BY q.[EmployeeID] DESC) AS RNUM6 
+            FROM [Orders] q 
+            GROUP BY q.[EmployeeID], q.[Freight]   
+            
+                       */
+
+            OrdersQuery q = new OrdersQuery("q");
+            q.Select
+            (
+                q.Over.RowNumber().OrderBy(q.EmployeeID.Descending).As("RNUM1"),
+                q.Over.RowNumber().PartitionBy(q.Freight.Sum() * 10).OrderBy(q.EmployeeID.Descending).As("RNUM2"),
+                q.Over.Rank().OrderBy(q.EmployeeID.Descending).As("RNUM3"),
+                q.Over.DenseRank().OrderBy(q.EmployeeID.Descending).As("RNUM4"),
+                q.Over.Ntile(4).OrderBy(q.EmployeeID.Descending).As("RNUM5"),
+                q.Over.Sum(q.Freight).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("RNUM6")
+            );
+            q.GroupBy(q.EmployeeID, q.Freight);
+
+            OrdersCollection coll = new OrdersCollection();
             if (coll.Load(q))
             {
 
+
             }
+
+            int iii = 9;
+
+
+            // Quick test on new syntax
+            //EmployeesQuery q = new EmployeesQuery("q");
+            //q.Where(q.EmployeeID > (() =>
+            //    {
+            //        return new EmployeesQuery("e", out var q1)
+            //        .Select(q1.EmployeeID)
+            //        .Where(q1.EmployeeID.IsNotNull()).Any();
+            //    })
+            //);
+
+            //EmployeesCollection coll = new EmployeesCollection();
+            //if (coll.Load(q))
+            //{
+
+            //}
 
             AddLoadSaveDeleteSingleEntity();
             StreamlinedDynamicQueryAPI();

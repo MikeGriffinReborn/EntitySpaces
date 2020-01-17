@@ -316,23 +316,33 @@ namespace EntitySpaces.Interfaces
                     queryItem = obj as esQueryItem;
                 }
 
-                // This if conditional is this way intentionally
-                if (queryItem is object)
+                IOverClause iOverClause = obj as IOverClause;
+                if (iOverClause != null)
                 {
-                    sItem = queryItem;
+                    sItem = new esExpression();
+                    sItem.OverClause = iOverClause;
                 }
                 else
                 {
-                    sItem = new esExpression();
-                    esDynamicQuery query = obj as esDynamicQuery;
-                    if (query != null)
+
+                    // This if conditional is this way intentionally
+                    if (queryItem is object)
                     {
-                        AddQueryToList(query);
-                        sItem.Query = query;
+                        sItem = queryItem;
                     }
                     else
                     {
-                        sItem.Column.Name = obj as string;
+                        sItem = new esExpression();
+                        esDynamicQuery query = obj as esDynamicQuery;
+                        if (query != null)
+                        {
+                            AddQueryToList(query);
+                            sItem.Query = query;
+                        }
+                        else
+                        {
+                            sItem.Column.Name = obj as string;
+                        }
                     }
                 }
             }
@@ -379,23 +389,32 @@ namespace EntitySpaces.Interfaces
                     queryItem = obj as esQueryItem;
                 }
 
-                // This if conditional is this way intentionally
-                if (queryItem is object)
+                IOverClause iOverClause = obj as IOverClause;
+                if (iOverClause != null)
                 {
-                    sItem = queryItem;
+                    sItem = new esExpression();
+                    sItem.OverClause = iOverClause;
                 }
                 else
                 {
-                    sItem = new esExpression();
-                    esDynamicQuery query = obj as esDynamicQuery;
-                    if (query != null)
+                    // This if conditional is this way intentionally
+                    if (queryItem is object)
                     {
-                        AddQueryToList(query);
-                        sItem.Query = query;
+                        sItem = queryItem;
                     }
                     else
                     {
-                        sItem.Column.Name = obj as string;
+                        sItem = new esExpression();
+                        esDynamicQuery query = obj as esDynamicQuery;
+                        if (query != null)
+                        {
+                            AddQueryToList(query);
+                            sItem.Query = query;
+                        }
+                        else
+                        {
+                            sItem.Column.Name = obj as string;
+                        }
                     }
                 }
 
@@ -1618,6 +1637,7 @@ namespace EntitySpaces.Interfaces
             }
         }
         #endregion Helper Routine
+
 
         #region Partion Code
 

@@ -75,6 +75,13 @@ namespace EntitySpaces.DynamicQuery
         public esMathmaticalExpression MathmaticalExpression;
 
         /// <summary>
+        /// The data behind the expression. This ends up looking like a tree in the end as 
+        /// more arithmetic expressions are applied
+        /// </summary>
+        [DataMember(Name = "OverClause", EmitDefaultValue = false)]
+        public IOverClause OverClause;
+
+        /// <summary>
         /// 
         /// </summary>
         [DataMember(Name = "LiteralValue", EmitDefaultValue = false)]

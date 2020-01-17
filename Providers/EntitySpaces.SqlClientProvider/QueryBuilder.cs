@@ -710,39 +710,7 @@ namespace EntitySpaces.SqlClientProvider
             if (iQuery.InternalOrderByItems != null)
             {
                 sql += " ORDER BY ";
-
-                foreach (esOrderByItem orderByItem in iQuery.InternalOrderByItems)
-                {
-                    bool literal = false;
-
-                    sql += comma;
-
-                    string columnName = orderByItem.Expression.Column.Name;
-
-                    if (columnName != null && columnName[0] == '<')
-                    {
-                        sql += columnName.Substring(1, columnName.Length - 2);
-
-                        if (orderByItem.Direction == esOrderByDirection.Unassigned)
-                        {
-                            literal = true; // They must provide the DESC/ASC in the literal string
-                        }
-                    }
-                    else
-                    {
-                        sql += GetExpressionColumn(std, query, orderByItem.Expression, false, false);
-                    }
-
-                    if (!literal)
-                    {
-                        if (orderByItem.Direction == esOrderByDirection.Ascending)
-                            sql += " ASC";
-                        else
-                            sql += " DESC";
-                    }
-
-                    comma = ",";
-                }
+                sql += GetOrderByColumns(std, query, iQuery.InternalOrderByItems);
             }
 
             return sql;
@@ -810,6 +778,11 @@ namespace EntitySpaces.SqlClientProvider
         protected static string GetExpressionColumn(StandardProviderParameters std, esDynamicQuery query, esExpression expression, bool inExpression, bool useAlias)
         {
             string sql = String.Empty;
+
+            if (expression.OverClause != null)
+            {
+                return GetOverClause(std, query, expression.OverClause);
+            }
 
             if (expression.CaseWhen != null)
             {
@@ -996,6 +969,89 @@ namespace EntitySpaces.SqlClientProvider
                 default:
                     return Convert.ToString(mathmaticalExpression.Literal);
              }
+        }
+
+        protected static string GetOrderByColumns(StandardProviderParameters std, esDynamicQuery query, List<esOrderByItem> orderByItems)
+        {
+            string sql = String.Empty;
+            string comma = String.Empty;
+
+            if(orderByItems.Count > 0)
+            { 
+                foreach (esOrderByItem orderByItem in orderByItems)
+                {
+                    bool literal = false;
+
+                    sql += comma;
+
+                    string columnName = orderByItem.Expression.Column.Name;
+
+                    if (columnName != null && columnName[0] == '<')
+                    {
+                        sql += columnName.Substring(1, columnName.Length - 2);
+
+                        if (orderByItem.Direction == esOrderByDirection.Unassigned)
+                        {
+                            literal = true; // They must provide the DESC/ASC in the literal string
+                        }
+                    }
+                    else
+                    {
+                        sql += GetExpressionColumn(std, query, orderByItem.Expression, false, false);
+                    }
+
+                    if (!literal)
+                    {
+                        if (orderByItem.Direction == esOrderByDirection.Ascending)
+                            sql += " ASC";
+                        else
+                            sql += " DESC";
+                    }
+
+                    comma = ",";
+                }
+            }
+
+            return sql;
+        }
+
+        protected static string GetOverClause(StandardProviderParameters std, esDynamicQuery query, IOverClause clause)
+        {
+            string columnExpression = null;
+            string partitionBy = null;
+            string orderby = null;
+            string alias = null;
+
+            if(clause.ColumnExpression is object)
+            {
+                columnExpression = GetExpressionColumn(std, query, clause.ColumnExpression, false, false);
+            }
+
+            if (clause.PartionByColumns != null)
+            {
+                partitionBy = "";
+
+                string comma = "";
+                foreach (esQueryItem partionColumn in clause.PartionByColumns)
+                {
+                    partitionBy += comma + GetExpressionColumn(std, query, partionColumn, false, false);
+                    comma = ", ";
+                }
+            }
+
+            if (clause.OrderByColumns != null)
+            {
+                orderby = GetOrderByColumns(std, query, clause.OrderByColumns);
+            }
+
+            if(!String.IsNullOrWhiteSpace(clause.Alias))
+            {
+                alias = clause.Alias;
+            }
+
+            string sql = clause.CreateOverStatement(columnExpression, partitionBy, orderby, alias);
+
+            return sql;
         }
 
         protected static string ApplyWhereSubOperations(StandardProviderParameters std, esDynamicQuery query, esComparison.esComparisonData comparisonData)
@@ -1228,6 +1284,8 @@ namespace EntitySpaces.SqlClientProvider
 
         protected static string GetColumnName(esColumnItem column)
         {
+            if (String.IsNullOrWhiteSpace(column.Name)) return String.Empty;
+
             if (column.Query == null || column.Query.joinAlias == " ")
             {
                 return Delimiters.ColumnOpen + column.Name + Delimiters.ColumnClose;
