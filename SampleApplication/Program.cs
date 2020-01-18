@@ -16,7 +16,8 @@ namespace ConsoleApp
             esConnectionElement conn = new esConnectionElement();
             conn.Provider = "EntitySpaces.SqlClientProvider";
             conn.DatabaseVersion = "2012";
-            conn.ConnectionString = "User ID=sa;Password=blank;Initial Catalog=Northwind;Data Source=localhost";
+            //conn.ConnectionString = "User ID=sa;Password=blank;Initial Catalog=Northwind;Data Source=localhost";
+            conn.ConnectionString = "User ID=meshadmin;Password=meshy0415!;Initial Catalog=Northwind;Data Source=dvmsharcsqluse.database.windows.net";
             esConfigSettings.ConnectionInfo.Connections.Add(conn);
 
             /*
@@ -33,8 +34,8 @@ namespace ConsoleApp
             
                        */
 
-            OrdersQuery q = new OrdersQuery("q");
-            q.Select
+            OrdersCollection coll = new OrdersQuery("q", out var q)
+            .Select
             (
                 q.Over.RowNumber().OrderBy(q.EmployeeID.Descending).As("RNUM1"),
                 q.Over.RowNumber().PartitionBy(q.Freight.Sum() * 10).OrderBy(q.EmployeeID.Descending).As("RNUM2"),
@@ -42,15 +43,9 @@ namespace ConsoleApp
                 q.Over.DenseRank().OrderBy(q.EmployeeID.Descending).As("RNUM4"),
                 q.Over.Ntile(4).OrderBy(q.EmployeeID.Descending).As("RNUM5"),
                 q.Over.Sum(q.Freight).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("RNUM6")
-            );
-            q.GroupBy(q.EmployeeID, q.Freight);
-
-            OrdersCollection coll = new OrdersCollection();
-            if (coll.Load(q))
-            {
-
-
-            }
+            )
+            .GroupBy(q.EmployeeID, q.Freight)
+            .ToCollection<OrdersCollection>();
 
             int iii = 9;
 

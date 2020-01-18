@@ -81,6 +81,16 @@ namespace EntitySpaces.Interfaces
         }
 
         /// <summary>
+        /// Calculates the relative rank of a row within a group of rows. 
+        /// Use PERCENT_RANK to evaluate the relative standing of a value within a query result set or partition. 
+        /// PERCENT_RANK is similar to the CUME_DIST function.
+        /// </summary>
+        public esPercentRankOver PercentRank()
+        {
+            return new esPercentRankOver();
+        }
+
+        /// <summary>
         /// Returns the rank of each row within the partition of a result set. 
         /// The rank of a row is one plus the number of ranks that come before the row in question.
         /// </summary>
@@ -111,9 +121,99 @@ namespace EntitySpaces.Interfaces
             return new esNtileOver(nTile);
         }
 
+        /// <summary>
+        /// This function returns the average of the values in a group. It ignores null values.
+        /// </summary>
+        /// <param name="columnExpression">Column or Expression</param>
+        public esAvgOver Avg(esQueryItem columnExpression)
+        {
+            return new esAvgOver(columnExpression);
+        }
+
+        /// <summary>
+        /// This function returns the number of items found in a group. COUNT operates like the COUNT_BIG function. 
+        /// These functions differ only in the data types of their return values. 
+        /// COUNT always returns an int data type value. COUNT_BIG always returns a bigint data type value.
+        /// </summary>
+        /// <param name="columnExpression">Column or Expression</param>
+        public esCountOver Count(esQueryItem columnExpression)
+        {
+            return new esCountOver(columnExpression);
+        }
+
+        /// <summary>
+        /// This function returns the number of items found in a group. COUNT operates like the COUNT_BIG function. 
+        /// These functions differ only in the data types of their return values. 
+        /// COUNT always returns an int data type value. COUNT_BIG always returns a bigint data type value.
+        /// </summary>
+        /// <param name="columnExpression">Column or Expression</param>
+        public esCountBigOver CountBig(esQueryItem columnExpression)
+        {
+            return new esCountBigOver(columnExpression);
+        }
+
+        /// <summary>
+        /// Returns the minimum value in the column or expression. 
+        /// </summary>
+        /// <param name="columnExpression">Column or Expression</param>
+        public esMaxOver Max(esQueryItem columnExpression)
+        {
+            return new esMaxOver(columnExpression);
+        }
+
+        /// <summary>
+        /// Returns the minimum value in the column or expression. 
+        /// </summary>
+        /// <param name="columnExpression">Column or Expression</param>
+        public esMinOver Min(esQueryItem columnExpression)
+        {
+            return new esMinOver(columnExpression);
+        }
+
+        /// <summary>
+        /// Returns the statistical standard deviation of all values in the specified column or expression.
+        /// </summary>
+        /// <param name="columnExpression">Column or Expression</param>
+        public esStdDevOver StdDev(esQueryItem columnExpression)
+        {
+            return new esStdDevOver(columnExpression);
+        }
+
+        /// <summary>
+        /// Returns the statistical standard deviation for the population for all values in the specified column or expression.
+        /// </summary>
+        /// <param name="columnExpression">Column or Expression</param>
+        public esStdDevpOver StdDevP(esQueryItem columnExpression)
+        {
+            return new esStdDevpOver(columnExpression);
+        }
+
+        /// <summary>
+        /// Returns the sum of all the values in the expression or column. 
+        /// SUM can be used with numeric columns only. Null values are ignored.
+        /// </summary>
+        /// <param name="columnExpression">Column or Expression</param>
         public esSumOver Sum(esQueryItem columnExpression)
         {
             return new esSumOver(columnExpression);
+        }
+
+        /// <summary>
+        /// Returns the statistical variance of all values in the specified expression or column. 
+        /// </summary>
+        /// <param name="columnExpression">Column or Expression</param>
+        public esVarOver Var(esQueryItem columnExpression)
+        {
+            return new esVarOver(columnExpression);
+        }
+
+        /// <summary>
+        /// Returns the statistical variance for the population for all values in the specified expression or column.
+        /// </summary>
+        /// <param name="columnExpression">Column or Expression</param>
+        public esVarpOver VarP(esQueryItem columnExpression)
+        {
+            return new esVarpOver(columnExpression);
         }
     }
 }

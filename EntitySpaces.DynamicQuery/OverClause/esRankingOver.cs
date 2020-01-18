@@ -32,6 +32,58 @@ using System.Collections.Generic;
 
 namespace EntitySpaces.DynamicQuery
 {
+    public class esRowNumberOver : esBaseOverClause
+    {
+        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        {
+            if (partionby != null && orderBy != null && alias != null)
+                return $"ROW_NUMBER() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (orderBy != null && alias != null)
+                return $"ROW_NUMBER() OVER(ORDER BY {orderBy}) AS {alias}";
+            else
+                return "ROW_NUMBER() WAS INVALID";
+        }
+    }
+
+    public class esPercentRankOver : esBaseOverClause
+    {
+        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        {
+            if (partionby != null && orderBy != null && alias != null)
+                return $"PERCENT_RANK() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (orderBy != null && alias != null)
+                return $"PERCENT_RANK() OVER(ORDER BY {orderBy}) AS {alias}";
+            else
+                return "PERCENT_RANK() WAS INVALID";
+        }
+    }
+
+    public class esRankOver : esBaseOverClause
+    {
+        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        {
+            if (partionby != null && orderBy != null && alias != null)
+                return $"RANK() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (orderBy != null && alias != null)
+                return $"RANK() OVER(ORDER BY {orderBy}) AS {alias}";
+            else
+                return "RANK() WAS INVALID";
+        }
+    }
+
+    public class esDenseRankOver : esBaseOverClause
+    {
+        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        {
+            if (partionby != null && orderBy != null && alias != null)
+                return $"DENSE_RANK() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (orderBy != null && alias != null)
+                return $"DENSE_RANK() OVER(ORDER BY {orderBy}) AS {alias}";
+            else
+                return "DENSE_RANK() WAS INVALID";
+        }
+    }
+
     public class esNtileOver : esBaseOverClause
     {
         private long nTile;
@@ -57,6 +109,5 @@ namespace EntitySpaces.DynamicQuery
             else
                 return "NTILE() WAS INVALID";
         }
-
     }
 }
