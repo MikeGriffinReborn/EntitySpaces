@@ -78,7 +78,7 @@ namespace EntitySpaces.DynamicQuery
         }
     }
 
-    public class esCumeDistRankOver : esBaseOverClause
+    public class esCumeDistOver : esBaseOverClause
     {
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
         {
