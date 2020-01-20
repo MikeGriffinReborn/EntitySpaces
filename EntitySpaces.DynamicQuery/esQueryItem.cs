@@ -5361,7 +5361,7 @@ namespace EntitySpaces.DynamicQuery
         #endregion
 
         /// <summary>
-        /// Privides the Ability to Alias a column name
+        /// Provides the Ability to Alias a column name
         /// </summary>
         /// <param name="alias">The Alias Name</param>
         /// <returns>esQueryItem</returns>
@@ -5371,12 +5371,30 @@ namespace EntitySpaces.DynamicQuery
             return this;
         }
 
+        /// <summary>
+        /// Provides the Ability to Alias a column name
+        /// </summary>
+        /// <param name="alias">The Alias Name</param>
+        /// <param name="aliasedItem">Returns an esQueryItem that you can use in other parts of the query</param>
+        /// <returns></returns>
+        public esQueryItem As(string alias, out esQueryItem aliasedItem)
+        {
+            aliasedItem = new esQueryItem(this.Expression.SelectItem1.Column.Query, alias, this.Column.Datatype);
+            aliasedItem.Column = new esColumnItem();
+            aliasedItem.Column.Query = this.Expression.SelectItem1.Column.Query;
+            aliasedItem.Column.Alias = alias;
+            aliasedItem.Column.Name = alias;
+
+            this.Column.Alias = alias;
+            return this;
+        }
+
         #region Sub Operators
 
         /// <summary>
         /// Returns the column in UPPER CASE
         /// </summary>
-         public esQueryItem ToUpper()
+        public esQueryItem ToUpper()
         {
             esQuerySubOperator subOp = new esQuerySubOperator();
             subOp.SubOperator = esQuerySubOperatorType.ToUpper;

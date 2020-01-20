@@ -16,55 +16,36 @@ namespace ConsoleApp
             esConnectionElement conn = new esConnectionElement();
             conn.Provider = "EntitySpaces.SqlClientProvider";
             conn.DatabaseVersion = "2012";
-            //conn.ConnectionString = "User ID=sa;Password=blank;Initial Catalog=Northwind;Data Source=localhost";
-            conn.ConnectionString = "User ID=meshadmin;Password=meshy0415!;Initial Catalog=Northwind;Data Source=dvmsharcsqluse.database.windows.net";
+            conn.ConnectionString = "User ID=sa;Password=blank;Initial Catalog=Northwind;Data Source=localhost";
             esConfigSettings.ConnectionInfo.Connections.Add(conn);
 
-            /*
+            // New Experimental code ...
+            esQueryItem orderTotal = null;
+            esQueryItem rowNumber = null;
 
-            SELECT
-                ROW_NUMBER() OVER(ORDER BY q.[EmployeeID] DESC) AS RNUM1,
-                ROW_NUMBER() OVER(PARTITION BY (SUM(q.[Freight]) * 10) ORDER BY q.[EmployeeID] DESC) AS RNUM2,
-                RANK() OVER(ORDER BY q.[EmployeeID] DESC) AS RNUM3,
-                DENSE_RANK() OVER(ORDER BY q.[EmployeeID] DESC) AS RNUM4,
-                NTILE(4) OVER(ORDER BY q.[EmployeeID] DESC) AS RNUM5,
-                SUM (q.[Freight]) OVER(PARTITION BY q.[EmployeeID] ORDER BY q.[EmployeeID] DESC) AS RNUM6 
-            FROM [Orders] q 
-            GROUP BY q.[EmployeeID], q.[Freight]   
-            
-                       */
+            OrdersCollection coll = new OrdersQuery("o", out var o)
+                .From<OrderDetailsQuery>(out var od, () =>
+                {
+                    // Nested Query
+                    return new OrderDetailsQuery("od", out var subQuery)
+                    .Select
+                    (
+                        subQuery.OrderID,
+                        (subQuery.UnitPrice * subQuery.Quantity).Sum().As("OrderTotal", out orderTotal),
+                        subQuery.Over.RowNumber().OrderBy(subQuery.OrderID.Descending).As("RowNumber", out rowNumber)
+                    )
+                    .GroupBy(subQuery.OrderID);
+                }).As("sub")
+                .InnerJoin(o).On(o.OrderID == od.OrderID)
+                .Select(o.CustomerID, o.OrderDate, orderTotal, rowNumber)
+                .Where(orderTotal > 42 && rowNumber > 500)
+                .ToCollection<OrdersCollection>();
 
-            OrdersCollection coll = new OrdersQuery("q", out var q)
-            .Select
-            (
-                q.Over.RowNumber().OrderBy(q.EmployeeID.Descending).As("RNUM1"),
-                q.Over.RowNumber().PartitionBy(q.Freight.Sum() * 10).OrderBy(q.EmployeeID.Descending).As("RNUM2"),
-                q.Over.Rank().OrderBy(q.EmployeeID.Descending).As("RNUM3"),
-                q.Over.DenseRank().OrderBy(q.EmployeeID.Descending).As("RNUM4"),
-                q.Over.Ntile(4).OrderBy(q.EmployeeID.Descending).As("RNUM5"),
-                q.Over.Sum(q.Freight).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("RNUM6")
-            )
-            .GroupBy(q.EmployeeID, q.Freight)
-            .ToCollection<OrdersCollection>();
+            if (coll.Count > 0)
+            {
+                // Then we loaded at least one record
+            }
 
-            int iii = 9;
-
-
-            // Quick test on new syntax
-            //EmployeesQuery q = new EmployeesQuery("q");
-            //q.Where(q.EmployeeID > (() =>
-            //    {
-            //        return new EmployeesQuery("e", out var q1)
-            //        .Select(q1.EmployeeID)
-            //        .Where(q1.EmployeeID.IsNotNull()).Any();
-            //    })
-            //);
-
-            //EmployeesCollection coll = new EmployeesCollection();
-            //if (coll.Load(q))
-            //{
-
-            //}
 
             AddLoadSaveDeleteSingleEntity();
             StreamlinedDynamicQueryAPI();

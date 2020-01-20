@@ -460,7 +460,17 @@ namespace EntitySpaces.SqlClientProvider
                             {
                                 IDynamicQueryInternal iColQuery = comparisonData.Column.Query as IDynamicQueryInternal;
                                 esColumnMetadataCollection columns = (esColumnMetadataCollection)iColQuery.Columns;
-                                compareTo = Delimiters.Param + columns[comparisonData.Column.Name].PropertyName + (++std.pindex).ToString();
+
+                                esColumnMetadata metaData = columns.FindByColumnName(comparisonData.Column.Name);
+
+                                if (metaData != null)
+                                {
+                                    compareTo = Delimiters.Param + columns[comparisonData.Column.Name].PropertyName + (++std.pindex).ToString();
+                                }
+                                else
+                                {
+                                    compareTo = Delimiters.Param + "Expr" + (++std.pindex).ToString();
+                                }
                             }
                             else
                             {
@@ -672,11 +682,18 @@ namespace EntitySpaces.SqlClientProvider
 
                         if (comparisonData.Column.Name != null)
                         {
-                            p = types[comparisonData.Column.Name];
+                            if (types.ContainsKey(comparisonData.Column.Name))
+                            {
+                                p = types[comparisonData.Column.Name];
 
-                            p = Cache.CloneParameter(p);
-                            p.ParameterName = compareTo;
-                            p.Value = comparisonData.Value;
+                                p = Cache.CloneParameter(p);
+                                p.ParameterName = compareTo;
+                                p.Value = comparisonData.Value;
+                            }
+                            else
+                            {
+                                p = new SqlParameter(compareTo, comparisonData.Value);
+                            }
 
                             if (needsStringParameter)
                             {
@@ -1284,7 +1301,16 @@ namespace EntitySpaces.SqlClientProvider
 
         protected static string GetColumnName(esColumnItem column)
         {
-            if (String.IsNullOrWhiteSpace(column.Name)) return String.Empty;
+            if (String.IsNullOrWhiteSpace(column.Name))
+            {
+                if (!String.IsNullOrWhiteSpace(column.Alias))
+                {
+                    return Delimiters.StringOpen + column.Alias + Delimiters.StringClose;
+                }
+
+                return String.Empty;
+
+            }
 
             if (column.Query == null || column.Query.joinAlias == " ")
             {

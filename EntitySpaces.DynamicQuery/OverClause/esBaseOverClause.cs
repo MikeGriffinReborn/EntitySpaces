@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
+using EntitySpaces.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -44,6 +45,7 @@ namespace EntitySpaces.DynamicQuery
 
     public abstract class esBaseOverClause : IOverClause
     {
+        protected internal esDynamicQuery query;
         protected internal esQueryItem _columnExpression;
         protected internal esQueryItem[] _partitionByColumns;
         protected internal List<esOrderByItem> _orderByItems;
@@ -116,6 +118,18 @@ namespace EntitySpaces.DynamicQuery
 
         public esBaseOverClause As(string alias)
         {
+            _parent._alias = alias;
+            return _parent;
+        }
+
+        public esBaseOverClause As(string alias, out esQueryItem aliasedItem)
+        {
+            aliasedItem = new esQueryItem(this._parent.query, alias, esSystemType.Unassigned);
+            aliasedItem.Column = new esColumnItem();
+            aliasedItem.Column.Query = this._parent.query;
+            aliasedItem.Column.Alias = alias;
+            aliasedItem.Column.Name = alias;
+
             _parent._alias = alias;
             return _parent;
         }

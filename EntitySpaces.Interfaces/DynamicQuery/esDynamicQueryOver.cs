@@ -54,6 +54,39 @@ namespace EntitySpaces.Interfaces
                 return new esOverClause(this);
             }
         }
+
+        public esQueryItem Alias(string alias)
+        {
+            esQueryItem item = null;
+
+            foreach (esExpression exp in this.selectColumns)
+            {
+                if (exp.Column.Alias == alias)
+                {
+                    item = new esQueryItem(this, alias, exp.Column.Datatype);
+                    item.Column = new esColumnItem();
+                    item.Column.Query = this;
+                    item.Column.Alias = alias;
+                    item.Column.Name = alias;
+                }
+
+                if (exp.OverClause != null)
+                {
+                    if (exp.OverClause.Alias == alias)
+                    {
+                        item = new esQueryItem(this, alias, esSystemType.Int32);
+                        item.Column = new esColumnItem();
+                        item.Column.Datatype = exp.Column.Datatype;
+                        item.Column.Query = this;
+                        item.Column.Alias = alias;
+                        item.Column.Name = alias;
+                    }
+                }
+
+            }
+
+            return item;
+        }
     }
 
     public class esOverClause
@@ -68,7 +101,9 @@ namespace EntitySpaces.Interfaces
         /// </summary>
         public esDenseRankOver DenseRank()
         {
-            return new esDenseRankOver();
+            var obj = new esDenseRankOver();
+            obj.query = _query;
+            return obj;
         }
 
         /// <summary>
@@ -77,7 +112,9 @@ namespace EntitySpaces.Interfaces
         /// </summary>
         public esRowNumberOver RowNumber()
         {
-            return new esRowNumberOver();
+            var obj = new esRowNumberOver();
+            obj.query = _query;
+            return obj;
         }
 
         /// <summary>
@@ -87,7 +124,9 @@ namespace EntitySpaces.Interfaces
         /// </summary>
         public esPercentRankOver PercentRank()
         {
-            return new esPercentRankOver();
+            var obj = new esPercentRankOver();
+            obj.query = _query;
+            return obj;
         }
 
         /// <summary>
@@ -96,7 +135,9 @@ namespace EntitySpaces.Interfaces
         /// </summary>
         public esRankOver Rank()
         {
-            return new esRankOver();
+            var obj = new esRankOver();
+            obj.query = _query;
+            return obj;
         }
 
         /// <summary>
@@ -107,7 +148,9 @@ namespace EntitySpaces.Interfaces
         /// nTile can be of type int, or long.</param>
         public esNtileOver Ntile(int nTile)
         {
-            return new esNtileOver(nTile);
+            var obj = new esNtileOver(nTile);
+            obj.query = _query;
+            return obj;
         }
 
         /// <summary>
@@ -118,7 +161,9 @@ namespace EntitySpaces.Interfaces
         /// nTile can be of type int, or long.</param>
         public esNtileOver Ntile(long nTile)
         {
-            return new esNtileOver(nTile);
+            var obj = new esNtileOver(nTile);
+            obj.query = _query;
+            return obj;
         }
 
         /// <summary>
@@ -127,7 +172,9 @@ namespace EntitySpaces.Interfaces
         /// <param name="columnExpression">Column or Expression</param>
         public esAvgOver Avg(esQueryItem columnExpression)
         {
-            return new esAvgOver(columnExpression);
+            var obj = new esAvgOver(columnExpression);
+            obj.query = _query;
+            return obj;
         }
 
         /// <summary>
@@ -138,7 +185,9 @@ namespace EntitySpaces.Interfaces
         /// <param name="columnExpression">Column or Expression</param>
         public esCountOver Count(esQueryItem columnExpression)
         {
-            return new esCountOver(columnExpression);
+            var obj = new esCountOver(columnExpression);
+            obj.query = _query;
+            return obj;
         }
 
         /// <summary>
@@ -149,7 +198,9 @@ namespace EntitySpaces.Interfaces
         /// <param name="columnExpression">Column or Expression</param>
         public esCountBigOver CountBig(esQueryItem columnExpression)
         {
-            return new esCountBigOver(columnExpression);
+            var obj = new esCountBigOver(columnExpression);
+            obj.query = _query;
+            return obj;
         }
 
         /// <summary>
@@ -158,7 +209,9 @@ namespace EntitySpaces.Interfaces
         /// <param name="columnExpression">Column or Expression</param>
         public esMaxOver Max(esQueryItem columnExpression)
         {
-            return new esMaxOver(columnExpression);
+            var obj = new esMaxOver(columnExpression);
+            obj.query = _query;
+            return obj;
         }
 
         /// <summary>
@@ -167,7 +220,9 @@ namespace EntitySpaces.Interfaces
         /// <param name="columnExpression">Column or Expression</param>
         public esMinOver Min(esQueryItem columnExpression)
         {
-            return new esMinOver(columnExpression);
+            var obj = new esMinOver(columnExpression);
+            obj.query = _query;
+            return obj;
         }
 
         /// <summary>
@@ -176,7 +231,9 @@ namespace EntitySpaces.Interfaces
         /// <param name="columnExpression">Column or Expression</param>
         public esStdDevOver StdDev(esQueryItem columnExpression)
         {
-            return new esStdDevOver(columnExpression);
+            var obj = new esStdDevOver(columnExpression);
+            obj.query = _query;
+            return obj;
         }
 
         /// <summary>
@@ -185,7 +242,9 @@ namespace EntitySpaces.Interfaces
         /// <param name="columnExpression">Column or Expression</param>
         public esStdDevpOver StdDevP(esQueryItem columnExpression)
         {
-            return new esStdDevpOver(columnExpression);
+            var obj = new esStdDevpOver(columnExpression);
+            obj.query = _query;
+            return obj;
         }
 
         /// <summary>
@@ -195,7 +254,9 @@ namespace EntitySpaces.Interfaces
         /// <param name="columnExpression">Column or Expression</param>
         public esSumOver Sum(esQueryItem columnExpression)
         {
-            return new esSumOver(columnExpression);
+            var obj = new esSumOver(columnExpression);
+            obj.query = _query;
+            return obj;
         }
 
         /// <summary>
@@ -204,7 +265,9 @@ namespace EntitySpaces.Interfaces
         /// <param name="columnExpression">Column or Expression</param>
         public esVarOver Var(esQueryItem columnExpression)
         {
-            return new esVarOver(columnExpression);
+            var obj = new esVarOver(columnExpression);
+            obj.query = _query;
+            return obj;
         }
 
         /// <summary>
@@ -213,7 +276,9 @@ namespace EntitySpaces.Interfaces
         /// <param name="columnExpression">Column or Expression</param>
         public esVarpOver VarP(esQueryItem columnExpression)
         {
-            return new esVarpOver(columnExpression);
+            var obj = new esVarpOver(columnExpression);
+            obj.query = _query;
+            return obj;
         }
     }
 }
