@@ -17,7 +17,32 @@ namespace ConsoleApp
             conn.Provider = "EntitySpaces.SqlClientProvider";
             conn.DatabaseVersion = "2012";
             conn.ConnectionString = "User ID=sa;Password=blank;Initial Catalog=Northwind;Data Source=localhost";
+
             esConfigSettings.ConnectionInfo.Connections.Add(conn);
+
+            /*
+
+            SELECT o.[OrderID], o.[EmployeeID], o.[ShipCountry], o.[Freight], 
+              Sum(o.[Freight]) OVER(PARTITION BY o.[EmployeeID])  AS FreightByEmployee,
+              Sum(o.[Freight]) OVER(PARTITION BY o.[EmployeeID], o.[ShipCountry]) AS FreightByEmployeeAndCountry
+            FROM[Orders] o
+            WHERE o.[EmployeeID] < @EmployeeID1
+
+            */
+
+            OrdersCollection coll = new OrdersQuery("o", out var o)
+                .Select(o.OrderID, o.EmployeeID, o.ShipCountry, o.Freight,
+                      o.Over.Sum(o.Freight).PartitionBy(o.EmployeeID).As("FreightByEmployee"),
+                    o.Over.Sum(o.Freight).PartitionBy(o.EmployeeID, o.ShipCountry).As("FreightByEmployeeAndCountry"))
+                .Where(o.EmployeeID < 11)
+                .ToCollection<OrdersCollection>();
+
+            if (coll.Count > 0)
+            {
+                // Then we loaded at least one record
+            }
+
+            /*
 
             // New Experimental code ...
             esQueryItem orderTotal = null;
@@ -45,6 +70,8 @@ namespace ConsoleApp
             {
                 // Then we loaded at least one record
             }
+
+    */
 
 
             AddLoadSaveDeleteSingleEntity();

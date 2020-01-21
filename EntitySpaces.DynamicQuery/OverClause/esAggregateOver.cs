@@ -45,6 +45,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"COUNT({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"COUNT({columnExpression}) OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"COUNT({columnExpression}) OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -65,6 +67,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"COUNT_BIG({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"COUNT_BIG({columnExpression}) OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"COUNT_BIG({columnExpression}) OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -85,6 +89,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"SUM({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"SUM({columnExpression}) OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"SUM({columnExpression}) OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -105,6 +111,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"AVG({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"AVG({columnExpression}) OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"AVG({columnExpression}) OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -125,6 +133,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"MIN({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"MIN({columnExpression}) OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"MIN({columnExpression}) OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -145,6 +155,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"MAX({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"MAX({columnExpression}) OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"MAX({columnExpression}) OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -165,6 +177,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"STDEV({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"STDEV({columnExpression}) OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"STDEV({columnExpression}) OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -185,6 +199,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"STDEVP({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"STDEVP({columnExpression}) OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"STDEVP({columnExpression}) OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -205,6 +221,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"VAR({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"VAR({columnExpression}) OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"VAR({columnExpression}) OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -225,6 +243,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"VARP({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"VARP({columnExpression}) OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"VARP({columnExpression}) OVER(ORDER BY {orderBy}) AS {alias}";
             else

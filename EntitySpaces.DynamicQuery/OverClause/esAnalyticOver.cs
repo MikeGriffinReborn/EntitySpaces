@@ -48,6 +48,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"LAG({columnExpression},{offset},0) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"LAG({columnExpression},{offset},0) OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"LAG({columnExpression},{offset},0) OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -71,6 +73,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"LEAD({columnExpression},{offset},0) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"LEAD({columnExpression},{offset},0) OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"LEAD({columnExpression},{offset},0) OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -84,6 +88,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"CUME_DIST() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"CUME_DIST() OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"CUME_DIST() OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -104,6 +110,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"FIRST_VALUE({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"FIRST_VALUE({columnExpression}) OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"FIRST_VALUE({columnExpression}) OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -124,6 +132,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"LAST_VALUE({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"LAST_VALUE({columnExpression}) OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"LAST_VALUE({columnExpression}) OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -175,6 +185,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"PERCENTILE_CONT({literal}) WITHIN GROUP(ORDER BY {orderBy}) OVER(PARTITION BY {partionby}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"PERCENTILE_CONT({literal}) WITHIN GROUP(ORDER BY {orderBy}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"PERCENTILE_CONT({literal}) WITHIN GROUP(ORDER BY {orderBy}) OVER() AS {alias}";
             else
@@ -226,6 +238,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"PERCENTILE_DISC({literal}) WITHIN GROUP(ORDER BY {orderBy}) OVER(PARTITION BY {partionby}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"PERCENTILE_DISC({literal}) WITHIN GROUP(ORDER BY {orderBy}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"PERCENTILE_DISC({literal}) WITHIN GROUP(ORDER BY {orderBy}) OVER() AS {alias}";
             else

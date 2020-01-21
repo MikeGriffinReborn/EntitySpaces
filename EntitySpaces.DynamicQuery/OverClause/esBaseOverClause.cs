@@ -108,6 +108,24 @@ namespace EntitySpaces.DynamicQuery
             _parent.SetOrderByItems(orderByItems);
             return _parent.orderBy = new esBaseOverClauseOrderBy(_parent);
         }
+
+        public esBaseOverClause As(string alias)
+        {
+            _parent._alias = alias;
+            return _parent;
+        }
+
+        public esBaseOverClause As(string alias, out esQueryItem aliasedItem)
+        {
+            aliasedItem = new esQueryItem(this._parent.query, alias, esSystemType.Unassigned);
+            aliasedItem.Column = new esColumnItem();
+            aliasedItem.Column.Query = this._parent.query;
+            aliasedItem.Column.Alias = alias;
+            aliasedItem.Column.Name = alias;
+
+            _parent._alias = alias;
+            return _parent;
+        }
     }
 
     public class esBaseOverClauseOrderBy

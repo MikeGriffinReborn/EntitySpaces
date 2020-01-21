@@ -38,6 +38,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"ROW_NUMBER() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"ROW_NUMBER() OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"ROW_NUMBER() OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -51,6 +53,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"PERCENT_RANK() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"PERCENT_RANK() OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"PERCENT_RANK() OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -64,6 +68,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"RANK() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"RANK() OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"RANK() OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -77,6 +83,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"DENSE_RANK() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"DENSE_RANK() OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"DENSE_RANK() OVER(ORDER BY {orderBy}) AS {alias}";
             else
@@ -104,6 +112,8 @@ namespace EntitySpaces.DynamicQuery
         {
             if (partionby != null && orderBy != null && alias != null)
                 return $"NTILE({nTile}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+            else if (partionby != null && orderBy == null && alias != null)
+                return $"NTILE({nTile}) OVER(PARTITION BY {partionby}) AS {alias}";
             else if (orderBy != null && alias != null)
                 return $"NTILE({nTile}) OVER(ORDER BY {orderBy}) AS {alias}";
             else
