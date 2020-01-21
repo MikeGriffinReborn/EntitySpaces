@@ -678,27 +678,6 @@ WHERE (SUM([Quantity]) >= @Quantity8 AND AVG([Quantity]) < @Quantity9)
 ORDER BY [OrderID] DESC,[Quantity] DESC
 ```
 
-## Another Case/When Query
-
-```c#
-EmployeeQuery q = new EmployeeQuery();
-q.Select
-(
-    q.LastName
-        .Case()
-            .When(q.LastName.Like("%a%"))
-            .Then("Last Name Contains an A")
-            .Else("Last Name Doesnt Contain an A")
-        .End().As("SpecialLastName")
-);
-
-EmployeeCollection coll = new EmployeeCollection();
-if(coll.Load(q))
-{
-    // Then we loaded at least one record
-}
-```
-
 ## Having Clause
 
 ```c#
