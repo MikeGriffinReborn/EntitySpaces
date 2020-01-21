@@ -1023,3 +1023,5 @@ conn.DatabaseVersion = "2012";
 conn.ConnectionString = "Database=Northwind;Data Source=localhost;User Id=myuser;Password=mypassword;";
 esConfigSettings.ConnectionInfo.Connections.Add(conn);
 ```
+
+[Link to another doc](TestLink.md)
