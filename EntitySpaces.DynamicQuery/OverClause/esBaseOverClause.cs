@@ -40,7 +40,7 @@ namespace EntitySpaces.DynamicQuery
         List<esOrderByItem> OrderByColumns { get; }
         string Alias { get; }
 
-        string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias);
+        string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose);
     }
 
     public abstract class esBaseOverClause : IOverClause
@@ -77,7 +77,7 @@ namespace EntitySpaces.DynamicQuery
             }
         }
 
-        protected abstract string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias);
+        protected abstract string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose);
 
         #region IOverClause
 
@@ -89,9 +89,9 @@ namespace EntitySpaces.DynamicQuery
 
         string IOverClause.Alias => _alias;
 
-        string IOverClause.CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        string IOverClause.CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
-            return CreateOverStatement(columnExpression, partionby, orderBy, alias);
+            return CreateOverStatement(columnExpression, partionby, orderBy, alias, aliasOpen, aliasClose);
         }
 
         #endregion

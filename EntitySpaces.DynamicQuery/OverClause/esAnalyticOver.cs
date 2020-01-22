@@ -44,14 +44,14 @@ namespace EntitySpaces.DynamicQuery
             this.offset = offset;
         }
 
-        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"LAG({columnExpression},{offset},0) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+                return $"LAG({columnExpression},{offset},0) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
-                return $"LAG({columnExpression},{offset},0) OVER(PARTITION BY {partionby}) AS {alias}";
+                return $"LAG({columnExpression},{offset},0) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"LAG({columnExpression},{offset},0) OVER(ORDER BY {orderBy}) AS {alias}";
+                return $"LAG({columnExpression},{offset},0) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "LAG() WAS INVALID";
         }
@@ -69,14 +69,14 @@ namespace EntitySpaces.DynamicQuery
             this.offset = offset;
         }
 
-        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"LEAD({columnExpression},{offset},0) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+                return $"LEAD({columnExpression},{offset},0) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
-                return $"LEAD({columnExpression},{offset},0) OVER(PARTITION BY {partionby}) AS {alias}";
+                return $"LEAD({columnExpression},{offset},0) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"LEAD({columnExpression},{offset},0) OVER(ORDER BY {orderBy}) AS {alias}";
+                return $"LEAD({columnExpression},{offset},0) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "LEAD() WAS INVALID";
         }
@@ -84,14 +84,14 @@ namespace EntitySpaces.DynamicQuery
 
     public class esCumeDistOver : esBaseOverClause
     {
-        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"CUME_DIST() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+                return $"CUME_DIST() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
-                return $"CUME_DIST() OVER(PARTITION BY {partionby}) AS {alias}";
+                return $"CUME_DIST() OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"CUME_DIST() OVER(ORDER BY {orderBy}) AS {alias}";
+                return $"CUME_DIST() OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "CUME_DIST() WAS INVALID";
         }
@@ -106,14 +106,14 @@ namespace EntitySpaces.DynamicQuery
             base._columnExpression = expression;
         }
 
-        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"FIRST_VALUE({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+                return $"FIRST_VALUE({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
-                return $"FIRST_VALUE({columnExpression}) OVER(PARTITION BY {partionby}) AS {alias}";
+                return $"FIRST_VALUE({columnExpression}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"FIRST_VALUE({columnExpression}) OVER(ORDER BY {orderBy}) AS {alias}";
+                return $"FIRST_VALUE({columnExpression}) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "FIRST_VALUE() WAS INVALID";
         }
@@ -128,14 +128,14 @@ namespace EntitySpaces.DynamicQuery
             base._columnExpression = expression;
         }
 
-        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"LAST_VALUE({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+                return $"LAST_VALUE({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
-                return $"LAST_VALUE({columnExpression}) OVER(PARTITION BY {partionby}) AS {alias}";
+                return $"LAST_VALUE({columnExpression}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"LAST_VALUE({columnExpression}) OVER(ORDER BY {orderBy}) AS {alias}";
+                return $"LAST_VALUE({columnExpression}) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "LAST_VALUE() WAS INVALID";
         }
@@ -181,14 +181,14 @@ namespace EntitySpaces.DynamicQuery
 
         #endregion
 
-        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"PERCENTILE_CONT({literal}) WITHIN GROUP(ORDER BY {orderBy}) OVER(PARTITION BY {partionby}) AS {alias}";
+                return $"PERCENTILE_CONT({literal}) WITHIN GROUP(ORDER BY {orderBy}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
-                return $"PERCENTILE_CONT({literal}) WITHIN GROUP(ORDER BY {orderBy}) AS {alias}";
+                return $"PERCENTILE_CONT({literal}) WITHIN GROUP(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"PERCENTILE_CONT({literal}) WITHIN GROUP(ORDER BY {orderBy}) OVER() AS {alias}";
+                return $"PERCENTILE_CONT({literal}) WITHIN GROUP(ORDER BY {orderBy}) OVER() AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "PERCENTILE_CONT() WAS INVALID";
         }
@@ -234,14 +234,14 @@ namespace EntitySpaces.DynamicQuery
 
         #endregion
 
-        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"PERCENTILE_DISC({literal}) WITHIN GROUP(ORDER BY {orderBy}) OVER(PARTITION BY {partionby}) AS {alias}";
+                return $"PERCENTILE_DISC({literal}) WITHIN GROUP(ORDER BY {orderBy}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
-                return $"PERCENTILE_DISC({literal}) WITHIN GROUP(ORDER BY {orderBy}) AS {alias}";
+                return $"PERCENTILE_DISC({literal}) WITHIN GROUP(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"PERCENTILE_DISC({literal}) WITHIN GROUP(ORDER BY {orderBy}) OVER() AS {alias}";
+                return $"PERCENTILE_DISC({literal}) WITHIN GROUP(ORDER BY {orderBy}) OVER() AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "PERCENTILE_DISC() WAS INVALID";
         }

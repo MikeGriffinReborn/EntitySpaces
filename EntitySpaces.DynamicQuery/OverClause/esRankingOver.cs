@@ -34,14 +34,14 @@ namespace EntitySpaces.DynamicQuery
 {
     public class esRowNumberOver : esBaseOverClause
     {
-        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"ROW_NUMBER() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+                return $"ROW_NUMBER() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
-                return $"ROW_NUMBER() OVER(PARTITION BY {partionby}) AS {alias}";
+                return $"ROW_NUMBER() OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"ROW_NUMBER() OVER(ORDER BY {orderBy}) AS {alias}";
+                return $"ROW_NUMBER() OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "ROW_NUMBER() WAS INVALID";
         }
@@ -49,14 +49,14 @@ namespace EntitySpaces.DynamicQuery
 
     public class esPercentRankOver : esBaseOverClause
     {
-        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"PERCENT_RANK() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+                return $"PERCENT_RANK() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
-                return $"PERCENT_RANK() OVER(PARTITION BY {partionby}) AS {alias}";
+                return $"PERCENT_RANK() OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"PERCENT_RANK() OVER(ORDER BY {orderBy}) AS {alias}";
+                return $"PERCENT_RANK() OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "PERCENT_RANK() WAS INVALID";
         }
@@ -64,14 +64,14 @@ namespace EntitySpaces.DynamicQuery
 
     public class esRankOver : esBaseOverClause
     {
-        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"RANK() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+                return $"RANK() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
-                return $"RANK() OVER(PARTITION BY {partionby}) AS {alias}";
+                return $"RANK() OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"RANK() OVER(ORDER BY {orderBy}) AS {alias}";
+                return $"RANK() OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "RANK() WAS INVALID";
         }
@@ -79,14 +79,14 @@ namespace EntitySpaces.DynamicQuery
 
     public class esDenseRankOver : esBaseOverClause
     {
-        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"DENSE_RANK() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+                return $"DENSE_RANK() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
-                return $"DENSE_RANK() OVER(PARTITION BY {partionby}) AS {alias}";
+                return $"DENSE_RANK() OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"DENSE_RANK() OVER(ORDER BY {orderBy}) AS {alias}";
+                return $"DENSE_RANK() OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "DENSE_RANK() WAS INVALID";
         }
@@ -108,14 +108,14 @@ namespace EntitySpaces.DynamicQuery
             this.nTile = nTile;
         }
 
-        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias)
+        protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"NTILE({nTile}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {alias}";
+                return $"NTILE({nTile}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
-                return $"NTILE({nTile}) OVER(PARTITION BY {partionby}) AS {alias}";
+                return $"NTILE({nTile}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"NTILE({nTile}) OVER(ORDER BY {orderBy}) AS {alias}";
+                return $"NTILE({nTile}) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "NTILE() WAS INVALID";
         }

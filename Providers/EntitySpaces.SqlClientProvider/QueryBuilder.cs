@@ -1066,7 +1066,7 @@ namespace EntitySpaces.SqlClientProvider
                 alias = clause.Alias;
             }
 
-            string sql = clause.CreateOverStatement(columnExpression, partitionBy, orderby, alias);
+            string sql = clause.CreateOverStatement(columnExpression, partitionBy, orderby, alias, Delimiters.StringOpen, Delimiters.StringClose);
 
             return sql;
         }
