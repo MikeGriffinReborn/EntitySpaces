@@ -4,6 +4,8 @@ Supports .NET Standard 2.x, .NET Core 2.x & 3.x .NET Framework 4.5.1, 4.6, 4.6.1
 
 Available on Nuget for [SqlServer](https://www.nuget.org/packages/EntitySpaces.ORM.SqlServer), [SQLite](https://www.nuget.org/packages/EntitySpaces.ORM.SQLite/ "NuGet"), [MySQL](https://www.nuget.org/packages/EntitySpaces.ORM.MySQL/ "NuGet") or [PostgreSQL](https://www.nuget.org/packages/EntitySpaces.ORM.PostgreSQL)
 
+See [Mike's Blog](https://saltycode.blogspot.com/2020/01/entityspaces-query-entityspaces-is.html) for EntitySpaces news ...
+
 # EntitySpaces - A Fluent SQL API
 EntitySpaces is a Fluent API for SQL Server, SQLite, MySQL, PostgreSQL and more on the way. If you are familiar with the SQL syntax then you are already an expert in EntitySpaces. EntitySpaces is also high performance, transactional, and very intuitive. EntitySpaces Studio is used to generate your C# classes from your database schema.
 
