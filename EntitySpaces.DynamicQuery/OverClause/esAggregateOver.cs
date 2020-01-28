@@ -32,6 +32,7 @@ using System.Collections.Generic;
 
 namespace EntitySpaces.DynamicQuery
 {
+
     public class esCountOver : esBaseOverClause
     {
         private esCountOver() { }
@@ -39,6 +40,7 @@ namespace EntitySpaces.DynamicQuery
         public esCountOver(esQueryItem columnExpression)
         {
             base._columnExpression = columnExpression;
+            ((IOverClause)this).IsWindowFrameSupported = true;
         }
 
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
@@ -61,6 +63,7 @@ namespace EntitySpaces.DynamicQuery
         public esCountBigOver(esQueryItem columnExpression)
         {
             base._columnExpression = columnExpression;
+            ((IOverClause)this).IsWindowFrameSupported = true;
         }
 
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
@@ -83,16 +86,17 @@ namespace EntitySpaces.DynamicQuery
         public esSumOver(esQueryItem columnExpression)
         {
             base._columnExpression = columnExpression;
+            ((IOverClause)this).IsWindowFrameSupported = true;
         }
 
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"SUM({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"SUM({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy} {base.windowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
-                return $"SUM({columnExpression}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"SUM({columnExpression}) OVER(PARTITION BY {partionby} {base.windowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"SUM({columnExpression}) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"SUM({columnExpression}) OVER(ORDER BY {orderBy} {base.windowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "SUM() WAS INVALID";
         }
@@ -105,6 +109,7 @@ namespace EntitySpaces.DynamicQuery
         public esAvgOver(esQueryItem columnExpression)
         {
             base._columnExpression = columnExpression;
+            ((IOverClause)this).IsWindowFrameSupported = true;
         }
 
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
@@ -127,6 +132,7 @@ namespace EntitySpaces.DynamicQuery
         public esMinOver(esQueryItem columnExpression)
         {
             base._columnExpression = columnExpression;
+            ((IOverClause)this).IsWindowFrameSupported = true;
         }
 
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
@@ -149,6 +155,7 @@ namespace EntitySpaces.DynamicQuery
         public esMaxOver(esQueryItem columnExpression)
         {
             base._columnExpression = columnExpression;
+            ((IOverClause)this).IsWindowFrameSupported = true;
         }
 
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
@@ -171,6 +178,7 @@ namespace EntitySpaces.DynamicQuery
         public esStdDevOver(esQueryItem columnExpression)
         {
             base._columnExpression = columnExpression;
+            ((IOverClause)this).IsWindowFrameSupported = true;
         }
 
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
@@ -193,6 +201,7 @@ namespace EntitySpaces.DynamicQuery
         public esStdDevpOver(esQueryItem columnExpression)
         {
             base._columnExpression = columnExpression;
+            ((IOverClause)this).IsWindowFrameSupported = true;
         }
 
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
@@ -215,6 +224,7 @@ namespace EntitySpaces.DynamicQuery
         public esVarOver(esQueryItem columnExpression)
         {
             base._columnExpression = columnExpression;
+            ((IOverClause)this).IsWindowFrameSupported = true;
         }
 
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
@@ -237,6 +247,7 @@ namespace EntitySpaces.DynamicQuery
         public esVarpOver(esQueryItem columnExpression)
         {
             base._columnExpression = columnExpression;
+            ((IOverClause)this).IsWindowFrameSupported = true;
         }
 
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)

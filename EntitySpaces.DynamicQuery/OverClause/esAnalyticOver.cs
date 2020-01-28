@@ -29,6 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace EntitySpaces.DynamicQuery
 {
@@ -104,6 +105,7 @@ namespace EntitySpaces.DynamicQuery
         public esFirstValueOver(esQueryItem expression)
         {
             base._columnExpression = expression;
+            ((IOverClause)this).IsWindowFrameSupported = true;
         }
 
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
@@ -126,6 +128,7 @@ namespace EntitySpaces.DynamicQuery
         public esLastValueOver(esQueryItem expression)
         {
             base._columnExpression = expression;
+            ((IOverClause)this).IsWindowFrameSupported = true;
         }
 
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)

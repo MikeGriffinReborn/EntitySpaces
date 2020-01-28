@@ -29,9 +29,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace EntitySpaces.DynamicQuery
 {
+
     public class esRowNumberOver : esBaseOverClause
     {
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)

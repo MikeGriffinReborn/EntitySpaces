@@ -30,9 +30,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using EntitySpaces.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace EntitySpaces.DynamicQuery
 {
+    public static partial class esOverExtensions
+    {
+        public static esWfRows Rows(this esBaseOverClauseOrderBy obj, int count)
+        {
+            return obj.RowsX(count);
+        }
+    }
+
     public interface IOverClause
     {
         esQueryItem ColumnExpression { get; }
@@ -40,11 +49,14 @@ namespace EntitySpaces.DynamicQuery
         List<esOrderByItem> OrderByColumns { get; }
         string Alias { get; }
 
+        bool IsWindowFrameSupported { get; set; }
+
         string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose);
     }
 
     public abstract class esBaseOverClause : IOverClause
     {
+        protected internal string windowFrame = "";
         protected internal esDynamicQuery query;
         protected internal esQueryItem _columnExpression;
         protected internal esQueryItem[] _partitionByColumns;
@@ -77,6 +89,19 @@ namespace EntitySpaces.DynamicQuery
             }
         }
 
+        internal esQueryItem CreateAliasOutVar(string alias)
+        {
+            esQueryItem aliasedItem = new esQueryItem(this.query, alias, esSystemType.Unassigned);
+            aliasedItem.Column = new esColumnItem();
+            aliasedItem.Column.Query = this.query;
+            aliasedItem.Column.Alias = alias;
+            aliasedItem.Column.Name = alias;
+
+            _alias = alias;
+
+            return aliasedItem;
+        }
+
         protected abstract string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose);
 
         #region IOverClause
@@ -88,6 +113,8 @@ namespace EntitySpaces.DynamicQuery
         List<esOrderByItem> IOverClause.OrderByColumns => _orderByItems;
 
         string IOverClause.Alias => _alias;
+
+        bool IOverClause.IsWindowFrameSupported { get; set; } = false;
 
         string IOverClause.CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
@@ -117,13 +144,7 @@ namespace EntitySpaces.DynamicQuery
 
         public esBaseOverClause As(string alias, out esQueryItem aliasedItem)
         {
-            aliasedItem = new esQueryItem(this._parent.query, alias, esSystemType.Unassigned);
-            aliasedItem.Column = new esColumnItem();
-            aliasedItem.Column.Query = this._parent.query;
-            aliasedItem.Column.Alias = alias;
-            aliasedItem.Column.Name = alias;
-
-            _parent._alias = alias;
+            aliasedItem = _parent.CreateAliasOutVar(alias);
             return _parent;
         }
     }
@@ -142,14 +163,36 @@ namespace EntitySpaces.DynamicQuery
 
         public esBaseOverClause As(string alias, out esQueryItem aliasedItem)
         {
-            aliasedItem = new esQueryItem(this._parent.query, alias, esSystemType.Unassigned);
-            aliasedItem.Column = new esColumnItem();
-            aliasedItem.Column.Query = this._parent.query;
-            aliasedItem.Column.Alias = alias;
-            aliasedItem.Column.Name = alias;
-
-            _parent._alias = alias;
+            aliasedItem = _parent.CreateAliasOutVar(alias);
             return _parent;
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public esWfRows Rows
+        {
+            get
+            {
+                return new esWfRows(this._parent);
+            }
+        }
+
+        internal esWfRows RowsX(int count)
+        {
+            return new esWfRows(this._parent);
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public esWfRange Range
+        {
+            get
+            {
+                return new esWfRange(this._parent);
+            }
+        }
+
+        internal esWfRange RangeX(int count)
+        {
+            return new esWfRange(this._parent);
         }
     }
 }

@@ -29,12 +29,25 @@ WHERE o.[EmployeeID] < @EmployeeID1
 
             */
 
-OrdersCollection coll = new OrdersQuery("o", out var o)
-    .Select(o.OrderID, o.EmployeeID, o.ShipCountry, o.Freight,
-        o.Over.Sum(o.Freight).PartitionBy(o.EmployeeID).As("FreightByEmployee"),
-        o.Over.Sum(o.Freight).PartitionBy(o.EmployeeID, o.ShipCountry).As("FreightByEmployeeAndCountry"))
-    .Where(o.EmployeeID < 11)
-    .ToCollection<OrdersCollection>();
+            OrdersCollection coll = new OrdersQuery("o", out var o)
+                .Select(//o.OrderID, o.EmployeeID, o.ShipCountry, o.Freight,
+                 //   o.Over.Sum(o.Freight).PartitionBy(o.EmployeeID).As("FreightByEmployee"),
+                //    o.Over.Count(o.Freight).Rows(4).UnBoundedPreceding.As("Foo")
+                //   o.Over.Count(o.Freight).Rows.UnBoundedPreceding.As("Rows")
+                    o.Over.Sum(o.Freight).OrderBy(o.EmployeeID.Descending).Rows.Between(4).Preceding.And(6).Following.As("ALIAS"),
+                    o.Over.Sum(o.Freight).OrderBy(o.EmployeeID.Descending).Range.Between(4).Preceding.And(6).Following.As("ALIAS3"),
+                    o.Over.Sum(o.Freight).OrderBy(o.EmployeeID.Descending).As("ALIAS1")
+                //    o.Over.Count(o.Freight).Rows.Between.CurrentRow.And(4).Following.As("XX"))
+                ).Where(o.EmployeeID < 11)
+                .ToCollection<OrdersCollection>();
+
+            //var xx = o.Over.Count(o.Freight).Rows.UnBoundedPreceding;
+            //var yy = o.Over.Count(o.Freight).Rows(5).Proceding;
+            //var ss = o.Over.Sum(o.Freight).OrderBy(o.OrderID.Descending).Rows.UnBoundedPreceding.As("Rows")
+            ////SUM(Col2) OVER(ORDER BY Col1 ROWS UNBOUNDED PRECEDING) "Rows"
+
+            //// ROWS BETWEEN 2  PRECEDING AND 2  FOLLOWING
+            //o.Over.Count(o.Freight).PartitionBy(o.EmployeeID).Rows.UnBoundedPreceding.As("Rows")
 
 if (coll.Count > 0)
 {
