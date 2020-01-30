@@ -40,6 +40,11 @@ namespace EntitySpaces.DynamicQuery
         {
             return obj.RowsX(count);
         }
+
+        public static esWfRange Range(this esBaseOverClauseOrderBy obj, int count)
+        {
+            return obj.RangeX(count);
+        }
     }
 
     public interface IOverClause
@@ -54,9 +59,14 @@ namespace EntitySpaces.DynamicQuery
         string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose);
     }
 
+    public interface IOverClauseComponent
+    {
+        IOverClause GetOverClause();
+    }
+
     public abstract class esBaseOverClause : IOverClause
     {
-        protected internal string windowFrame = "";
+        protected internal string WindowFrame = "";
         protected internal esDynamicQuery query;
         protected internal esQueryItem _columnExpression;
         protected internal esQueryItem[] _partitionByColumns;
@@ -73,6 +83,7 @@ namespace EntitySpaces.DynamicQuery
             _partitionByColumns = partitionByColumns;
             return partitionBy = new esBaseOverClausePartitionBy(this);
         }
+
         public virtual esBaseOverClauseOrderBy OrderBy(params esOrderByItem[] orderByItems)
         {
             SetOrderByItems(orderByItems);
@@ -93,6 +104,7 @@ namespace EntitySpaces.DynamicQuery
         {
             esQueryItem aliasedItem = new esQueryItem(this.query, alias, esSystemType.Unassigned);
             aliasedItem.Column = new esColumnItem();
+            aliasedItem.Column.IsOutVar = true;
             aliasedItem.Column.Query = this.query;
             aliasedItem.Column.Alias = alias;
             aliasedItem.Column.Name = alias;
@@ -124,7 +136,7 @@ namespace EntitySpaces.DynamicQuery
         #endregion
     }
 
-    public class esBaseOverClausePartitionBy
+    public class esBaseOverClausePartitionBy : IOverClauseComponent
     {
         private esBaseOverClause _parent;
 
@@ -147,9 +159,14 @@ namespace EntitySpaces.DynamicQuery
             aliasedItem = _parent.CreateAliasOutVar(alias);
             return _parent;
         }
+
+        IOverClause IOverClauseComponent.GetOverClause()
+        {
+            return _parent;
+        }
     }
 
-    public class esBaseOverClauseOrderBy
+    public class esBaseOverClauseOrderBy : IOverClauseComponent
     {
         private esBaseOverClause _parent;
 
@@ -193,6 +210,11 @@ namespace EntitySpaces.DynamicQuery
         internal esWfRange RangeX(int count)
         {
             return new esWfRange(this._parent);
+        }
+
+        IOverClause IOverClauseComponent.GetOverClause()
+        {
+            return _parent;
         }
     }
 }

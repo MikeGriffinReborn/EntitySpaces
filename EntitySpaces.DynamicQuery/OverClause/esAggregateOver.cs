@@ -46,11 +46,11 @@ namespace EntitySpaces.DynamicQuery
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"COUNT({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"COUNT({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
                 return $"COUNT({columnExpression}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"COUNT({columnExpression}) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"COUNT({columnExpression}) OVER(ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "COUNT() WAS INVALID";
         }
@@ -69,11 +69,11 @@ namespace EntitySpaces.DynamicQuery
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"COUNT_BIG({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"COUNT_BIG({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
                 return $"COUNT_BIG({columnExpression}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"COUNT_BIG({columnExpression}) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"COUNT_BIG({columnExpression}) OVER(ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "COUNT_BIG() WAS INVALID";
         }
@@ -92,11 +92,15 @@ namespace EntitySpaces.DynamicQuery
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"SUM({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy} {base.windowFrame}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"SUM({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
-                return $"SUM({columnExpression}) OVER(PARTITION BY {partionby} {base.windowFrame}) AS {aliasOpen}{alias}{aliasClose}";
-            else if (orderBy != null && alias != null)
-                return $"SUM({columnExpression}) OVER(ORDER BY {orderBy} {base.windowFrame}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"SUM({columnExpression}) OVER(PARTITION BY {partionby} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
+            else if (partionby == null && orderBy != null && alias != null)
+                return $"SUM({columnExpression}) OVER(ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
+            else if (partionby != null && orderBy == null && alias == null)
+                return $"SUM({columnExpression}) OVER(PARTITION BY {partionby} {this.WindowFrame})";
+            else if (partionby == null && orderBy != null && alias == null)
+                return $"SUM({columnExpression}) OVER(ORDER BY {orderBy} {this.WindowFrame})";
             else
                 return "SUM() WAS INVALID";
         }
@@ -115,11 +119,11 @@ namespace EntitySpaces.DynamicQuery
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"AVG({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"AVG({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
                 return $"AVG({columnExpression}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"AVG({columnExpression}) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"AVG({columnExpression}) OVER(ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "AVG() WAS INVALID";
         }
@@ -138,11 +142,11 @@ namespace EntitySpaces.DynamicQuery
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"MIN({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"MIN({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
                 return $"MIN({columnExpression}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"MIN({columnExpression}) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"MIN({columnExpression}) OVER(ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "MIN() WAS INVALID";
         }
@@ -161,11 +165,11 @@ namespace EntitySpaces.DynamicQuery
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"MAX({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"MAX({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
                 return $"MAX({columnExpression}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"MAX({columnExpression}) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"MAX({columnExpression}) OVER(ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "MAX() WAS INVALID";
         }
@@ -184,11 +188,11 @@ namespace EntitySpaces.DynamicQuery
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"STDEV({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"STDEV({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
                 return $"STDEV({columnExpression}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"STDEV({columnExpression}) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"STDEV({columnExpression}) OVER(ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "STDEV() WAS INVALID";
         }
@@ -207,11 +211,11 @@ namespace EntitySpaces.DynamicQuery
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"STDEVP({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"STDEVP({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
                 return $"STDEVP({columnExpression}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"STDEVP({columnExpression}) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"STDEVP({columnExpression}) OVER(ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "STDEVP() WAS INVALID";
         }
@@ -230,11 +234,11 @@ namespace EntitySpaces.DynamicQuery
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"VAR({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"VAR({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
                 return $"VAR({columnExpression}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"VAR({columnExpression}) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"VAR({columnExpression}) OVER(ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "VAR() WAS INVALID";
         }
@@ -253,11 +257,11 @@ namespace EntitySpaces.DynamicQuery
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"VARP({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"VARP({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
                 return $"VARP({columnExpression}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"VARP({columnExpression}) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"VARP({columnExpression}) OVER(ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "VARP() WAS INVALID";
         }

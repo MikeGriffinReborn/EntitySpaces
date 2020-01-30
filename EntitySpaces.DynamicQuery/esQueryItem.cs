@@ -90,7 +90,10 @@ namespace EntitySpaces.DynamicQuery
             this.query = query;
             this.Column.Query = query;
             this.Column.Name = columnName;
-            this.Column.Query.es.JoinAlias = query.joinAlias;
+            if (query != null)
+            {
+                this.Column.Query.es.JoinAlias = query.joinAlias;
+            }
             this.Column.Datatype = datatype;
         }
 
@@ -5379,9 +5382,10 @@ namespace EntitySpaces.DynamicQuery
         /// <returns></returns>
         public esQueryItem As(string alias, out esQueryItem aliasedItem)
         {
-            aliasedItem = new esQueryItem(this.Expression.SelectItem1.Column.Query, alias, this.Column.Datatype);
+            aliasedItem = new esQueryItem(null, alias, this.Column.Datatype);
+
             aliasedItem.Column = new esColumnItem();
-            aliasedItem.Column.Query = this.Expression.SelectItem1.Column.Query;
+            aliasedItem.Column.IsOutVar = true;
             aliasedItem.Column.Alias = alias;
             aliasedItem.Column.Name = alias;
 

@@ -53,13 +53,13 @@ namespace EntitySpaces.DynamicQuery
         internal esWfRows(esBaseOverClause parent)
         {
             this.overClause = parent;
-            this.overClause.windowFrame = "ROWS";
+            this.overClause.WindowFrame = "ROWS";
         }
 
         internal esWfRows(esBaseOverClause parent, int count)
         {
             this.overClause = parent;
-            this.overClause.windowFrame = $"ROWS {count}";
+            this.overClause.WindowFrame = $"ROWS {count}";
         }
 
         public esWfUnBoundedPrecedingAs UnBoundedPreceding => new esWfUnBoundedPrecedingAs(this.overClause);
@@ -82,13 +82,13 @@ namespace EntitySpaces.DynamicQuery
         internal esWfRange(esBaseOverClause parent)
         {
             this.overClause = parent;
-            this.overClause.windowFrame = "RANGE";
+            this.overClause.WindowFrame = "RANGE";
         }
 
         internal esWfRange(esBaseOverClause parent, int count)
         {
             this.overClause = parent;
-            this.overClause.windowFrame = $"RANGE {count}";
+            this.overClause.WindowFrame = $"RANGE {count}";
         }
 
         public esWfUnBoundedPrecedingAs UnBoundedPreceding => new esWfUnBoundedPrecedingAs(this.overClause);
@@ -144,13 +144,13 @@ namespace EntitySpaces.DynamicQuery
         internal esWfBetween(esBaseOverClause parent)
         {
             this.overClause = parent;
-            this.overClause.windowFrame += " BETWEEN";
+            this.overClause.WindowFrame += " BETWEEN";
         }
 
         internal esWfBetween(esBaseOverClause parent, int count)
         {
             this.overClause = parent;
-            this.overClause.windowFrame += $" BETWEEN {count}";
+            this.overClause.WindowFrame += $" BETWEEN {count}";
         }
 
         public esWfUnBoundedPrecedingAnd UnBoundedPreceding => new esWfUnBoundedPrecedingAnd(this.overClause);
@@ -167,13 +167,13 @@ namespace EntitySpaces.DynamicQuery
         internal esWfBetweenX(esBaseOverClause parent)
         {
             this.overClause = parent;
-            this.overClause.windowFrame += " BETWEEN";
+            this.overClause.WindowFrame += " BETWEEN";
         }
 
         internal esWfBetweenX(esBaseOverClause parent, int count)
         {
             this.overClause = parent;
-            this.overClause.windowFrame += $" BETWEEN {count}";
+            this.overClause.WindowFrame += $" BETWEEN {count}";
         }
 
         public esWfPrecedingAnd Preceding => new esWfPrecedingAnd(this.overClause);
@@ -190,13 +190,13 @@ namespace EntitySpaces.DynamicQuery
         internal esWfAnd(esBaseOverClause parent)
         {
             this.overClause = parent;
-            this.overClause.windowFrame += " AND";
+            this.overClause.WindowFrame += " AND";
         }
 
         internal esWfAnd(esBaseOverClause parent, int count)
         {
             this.overClause = parent;
-            this.overClause.windowFrame += $" AND {count}";
+            this.overClause.WindowFrame += $" AND {count}";
         }
 
         public esWfUnBoundedPrecedingAs UnBoundedPreceding => new esWfUnBoundedPrecedingAs(this.overClause);
@@ -213,13 +213,13 @@ namespace EntitySpaces.DynamicQuery
         internal esWfAndX(esBaseOverClause parent)
         {
             this.overClause = parent;
-            this.overClause.windowFrame += " AND";
+            this.overClause.WindowFrame += " AND";
         }
 
         internal esWfAndX(esBaseOverClause parent, int count)
         {
             this.overClause = parent;
-            this.overClause.windowFrame += $" AND {count}";
+            this.overClause.WindowFrame += $" AND {count}";
         }
 
         public esWfPrecedingAs Preceding => new esWfPrecedingAs(this.overClause);
@@ -227,7 +227,7 @@ namespace EntitySpaces.DynamicQuery
         public esWfFollowingAs Following => new esWfFollowingAs(this.overClause);
     }
 
-    public class esWfUnBoundedPrecedingAs
+    public class esWfUnBoundedPrecedingAs : IOverClauseComponent
     {
         internal esBaseOverClause overClause;
 
@@ -236,13 +236,24 @@ namespace EntitySpaces.DynamicQuery
         internal esWfUnBoundedPrecedingAs(esBaseOverClause parent)
         {
             this.overClause = parent;
-            this.overClause.windowFrame += " UNBOUNDED PRECEDING";
+            this.overClause.WindowFrame += " UNBOUNDED PRECEDING";
+        }
+
+        public IOverClause As(string alias)
+        {
+            this.overClause._alias = alias;
+            return this.overClause;
         }
 
         public IOverClause As(string alias, out esQueryItem aliasedItem)
         {
             aliasedItem = this.overClause.CreateAliasOutVar(alias);
             return this.overClause;
+        }
+
+        IOverClause IOverClauseComponent.GetOverClause()
+        {
+            return overClause;
         }
     }
 
@@ -255,7 +266,7 @@ namespace EntitySpaces.DynamicQuery
         internal esWfUnBoundedPrecedingAnd(esBaseOverClause parent)
         {
             this.overClause = parent;
-            this.overClause.windowFrame += " UNBOUNDED PRECEDING";
+            this.overClause.WindowFrame += " UNBOUNDED PRECEDING";
         }
 
         public esWfAnd And => new esWfAnd(this.overClause);
@@ -263,7 +274,7 @@ namespace EntitySpaces.DynamicQuery
         internal esWfAndX AndX(int count) => new esWfAndX(this.overClause, count);
     }
 
-    public class esWfPrecedingAs
+    public class esWfPrecedingAs : IOverClauseComponent
     {
         internal esBaseOverClause overClause;
 
@@ -272,13 +283,24 @@ namespace EntitySpaces.DynamicQuery
         internal esWfPrecedingAs(esBaseOverClause parent)
         {
             this.overClause = parent;
-            this.overClause.windowFrame += " PRECEDING";
+            this.overClause.WindowFrame += " PRECEDING";
+        }
+
+        public IOverClause As(string alias)
+        {
+            this.overClause._alias = alias;
+            return this.overClause;
         }
 
         public IOverClause As(string alias, out esQueryItem aliasedItem)
         {
             aliasedItem = this.overClause.CreateAliasOutVar(alias);
             return this.overClause;
+        }
+
+        IOverClause IOverClauseComponent.GetOverClause()
+        {
+            return overClause;
         }
     }
 
@@ -291,7 +313,7 @@ namespace EntitySpaces.DynamicQuery
         internal esWfPrecedingAnd(esBaseOverClause parent)
         {
             this.overClause = parent;
-            this.overClause.windowFrame += " PRECEDING";
+            this.overClause.WindowFrame += " PRECEDING";
         }
 
         public esWfAnd And => new esWfAnd(this.overClause);
@@ -299,7 +321,7 @@ namespace EntitySpaces.DynamicQuery
         internal esWfAndX AndX(int count) => new esWfAndX(this.overClause, count);
     }
 
-    public class esWfFollowingAs
+    public class esWfFollowingAs : IOverClauseComponent
     {
         internal esBaseOverClause overClause;
 
@@ -308,7 +330,7 @@ namespace EntitySpaces.DynamicQuery
         internal esWfFollowingAs(esBaseOverClause parent)
         {
             this.overClause = parent;
-            this.overClause.windowFrame += " FOLLOWING";
+            this.overClause.WindowFrame += " FOLLOWING";
         }
 
         public IOverClause As(string alias)
@@ -321,6 +343,11 @@ namespace EntitySpaces.DynamicQuery
         {
             aliasedItem = this.overClause.CreateAliasOutVar(alias);
             return this.overClause;
+        }
+
+        IOverClause IOverClauseComponent.GetOverClause()
+        {
+            return overClause;
         }
     }
 
@@ -333,7 +360,7 @@ namespace EntitySpaces.DynamicQuery
         internal esWfFollowingAnd(esBaseOverClause parent)
         {
             this.overClause = parent;
-            this.overClause.windowFrame += " FOLLOWING";
+            this.overClause.WindowFrame += " FOLLOWING";
         }
 
         public esWfAnd And => new esWfAnd(this.overClause);
@@ -341,7 +368,7 @@ namespace EntitySpaces.DynamicQuery
         internal esWfAndX AndX(int count) => new esWfAndX(this.overClause, count);
     }
 
-    public class esWfCurrentRowAs
+    public class esWfCurrentRowAs : IOverClauseComponent
     {
         internal esBaseOverClause overClause;
 
@@ -350,7 +377,7 @@ namespace EntitySpaces.DynamicQuery
         internal esWfCurrentRowAs(esBaseOverClause parent)
         {
             this.overClause = parent;
-            this.overClause.windowFrame += " CURRENT ROW";
+            this.overClause.WindowFrame += " CURRENT ROW";
         }
 
         public IOverClause As(string alias)
@@ -364,6 +391,11 @@ namespace EntitySpaces.DynamicQuery
             aliasedItem = this.overClause.CreateAliasOutVar(alias);
             return this.overClause;
         }
+
+        IOverClause IOverClauseComponent.GetOverClause()
+        {
+            return overClause;
+        }
     }
 
     public class esWfCurrentRowAnd
@@ -375,7 +407,7 @@ namespace EntitySpaces.DynamicQuery
         internal esWfCurrentRowAnd(esBaseOverClause parent)
         {
             this.overClause = parent;
-            this.overClause.windowFrame += " CURRENT ROW";
+            this.overClause.WindowFrame += " CURRENT ROW";
         }
 
         public esWfAnd And => new esWfAnd(this.overClause);

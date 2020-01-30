@@ -19,84 +19,132 @@ namespace ConsoleApp
             conn.ConnectionString = "User ID=sa;Password=blank;Initial Catalog=Northwind;Data Source=localhost";
             esConfigSettings.ConnectionInfo.Connections.Add(conn);
 
-            /*
+            esQueryItem alias1 = null;
 
-SELECT o.[OrderID], o.[EmployeeID], o.[ShipCountry], o.[Freight], 
-    Sum(o.[Freight]) OVER(PARTITION BY o.[EmployeeID])  AS FreightByEmployee,
-    Sum(o.[Freight]) OVER(PARTITION BY o.[EmployeeID], o.[ShipCountry]) AS FreightByEmployeeAndCountry
-FROM[Orders] o
-WHERE o.[EmployeeID] < @EmployeeID1
+            //OrdersCollection coll = new OrdersQuery("o", out var o)
+            //.From<OrdersQuery>(out var od, () =>
+            //{
+            //    return new OrdersQuery("s", out var s)
+            //    .Select(
+            //        s.Over.Sum(s.Freight).OrderBy(s.EmployeeID.Descending).As("Alias1", out alias1),
+            //        s.Over.Sum(s.Freight).OrderBy(s.EmployeeID.Descending).Range.UnBoundedPreceding.As("Alias2"),
+            //        s.Over.Sum(s.Freight).OrderBy(s.EmployeeID.Descending).Rows.Between(4).Preceding.And(6).Following.As("Alias3"),
+            //        s.Over.Sum(s.Freight).PartitionBy(s.EmployeeID).OrderBy(s.EmployeeID.Descending).Rows.Between(4).Preceding.And(6).Following.As("Alias4")
+            //    ).Where(s.EmployeeID < 11);
+            //}).As("sub")
+            //.Select(alias1)
+            //.Where(alias1 > 50)
+            //.ToCollection<OrdersCollection>();
+
+            //if (coll.Count > 0)
+            //{
+            //    // Then we loaded at least one record
+            //}
+
+            /*
+             
+	        select 
+		        c.CompanyName, 
+		        Year(orderDate) as [Period],	
+		        cast(sum(round((1.00 - od.Discount) * od.UnitPrice * od.Quantity,2)) as money) as Amount
+	        from [Orders] O
+	        join Customers c on c.CustomerID=o.CustomerID
+	        join [Order Details] od on od.OrderID=o.OrderID
+	        group by CompanyName, Year(orderDate)
+
+            cast(sum(round((1.00 - od.Discount) * od.UnitPrice * od.Quantity,2)) as money) as Amount
+            CAST(SUM(ROUND((((1.00 - od.[Discount]) * od.[UnitPrice]) * od.[Quantity]), 2)) AS decimal(19, 4)) AS 'Amount'
+
+            select	CompanyName, 
+		            [Period], 
+		            Amount,
+		            SUM(Amount) OVER (PARTITION BY CompanyName  ORDER BY Period ASC ROWS UNBOUNDED PRECEDING) as CumulativeAmount,
+		            SUM(Amount) OVER (PARTITION BY CompanyName) as TotalAmount
+            from cte
+            order by CompanyName asc, Period asc
 
             */
 
-            OrdersCollection coll = new OrdersQuery("o", out var o)
-                .Select(//o.OrderID, o.EmployeeID, o.ShipCountry, o.Freight,
-                 //   o.Over.Sum(o.Freight).PartitionBy(o.EmployeeID).As("FreightByEmployee"),
-                //    o.Over.Count(o.Freight).Rows(4).UnBoundedPreceding.As("Foo")
-                //   o.Over.Count(o.Freight).Rows.UnBoundedPreceding.As("Rows")
-                    o.Over.Sum(o.Freight).OrderBy(o.EmployeeID.Descending).Rows.Between(4).Preceding.And(6).Following.As("ALIAS"),
-                    o.Over.Sum(o.Freight).OrderBy(o.EmployeeID.Descending).Range.Between(4).Preceding.And(6).Following.As("ALIAS3"),
-                    o.Over.Sum(o.Freight).OrderBy(o.EmployeeID.Descending).As("ALIAS1")
-                //    o.Over.Count(o.Freight).Rows.Between.CurrentRow.And(4).Following.As("XX"))
-                ).Where(o.EmployeeID < 11)
-                .ToCollection<OrdersCollection>();
+            
+            esQueryItem colCompanyName = null, colPeriod = null, colAmount = null;
 
-            //var xx = o.Over.Count(o.Freight).Rows.UnBoundedPreceding;
-            //var yy = o.Over.Count(o.Freight).Rows(5).Proceding;
-            //var ss = o.Over.Sum(o.Freight).OrderBy(o.OrderID.Descending).Rows.UnBoundedPreceding.As("Rows")
-            ////SUM(Col2) OVER(ORDER BY Col1 ROWS UNBOUNDED PRECEDING) "Rows"
+            OrdersCollection coll = new OrdersQuery("q", out var q)
+            .From<OrdersQuery>(out var sub, () => // mimic a CTE
+            {
+                // Nested Query
+                return new OrdersQuery("o", out var o)
+                .InnerJoin<CustomersQuery>("c", out var c).On(c.CustomerID == o.CustomerID)
+                .InnerJoin<OrderDetailsQuery>("od", out var od).On(od.OrderID == o.OrderID)
+                .Select(
+                    c.CompanyName.As("CompanyName", out colCompanyName),
+                    o.OrderDate.DatePart("year").As("Period", out colPeriod),
+                    ((1.00M - od.Discount) * od.UnitPrice * od.Quantity).Cast(esCastType.Decimal, 19, 2).Sum().Round(2).As("Amount", out colAmount)
+                    )
+                .GroupBy(c.CompanyName, o.OrderDate.DatePart("year"));
 
-            //// ROWS BETWEEN 2  PRECEDING AND 2  FOLLOWING
-            //o.Over.Count(o.Freight).PartitionBy(o.EmployeeID).Rows.UnBoundedPreceding.As("Rows")
+            }).As("sub")
+            // Now act on "sub" query columns
+            .Select(
+                colCompanyName,
+                colPeriod,
+                colAmount,
+                q.Over.Sum(colAmount).PartitionBy(colCompanyName).OrderBy(colPeriod.Ascending).Rows.UnBoundedPreceding.As("CumulativeAmount"),
+                q.Over.Sum(colAmount).PartitionBy(colCompanyName)//.As("TotalAmount")
+            )
+            .OrderBy(colCompanyName.Ascending, colPeriod.Ascending)
+            .ToCollection<OrdersCollection>();
 
-if (coll.Count > 0)
-{
-    // Then we loaded at least one record
-}
+            int kk = 9;
+
+            
 
             /*
 
-// New Experimental code ...
-esQueryItem orderTotal = null;
-esQueryItem rowNumber = null;
+            
+            // New Experimental code ...
+            esQueryItem orderTotal = null, rowNumber = null;
 
-OrdersCollection coll = new OrdersQuery("o", out var o)
-    .From<OrderDetailsQuery>(out var od, () =>
-    {
-        // Nested Query
-        return new OrderDetailsQuery("od", out var subQuery)
-        .Select
-        (
-            subQuery.OrderID,
-            (subQuery.UnitPrice * subQuery.Quantity).Sum().As("OrderTotal", out orderTotal),
-            subQuery.Over.RowNumber().OrderBy(subQuery.OrderID.Descending).As("RowNumber", out rowNumber)
-        )
-        .GroupBy(subQuery.OrderID);
-    }).As("sub")
-    .InnerJoin(o).On(o.OrderID == od.OrderID)
-    .Select(o.CustomerID, o.OrderDate, orderTotal, rowNumber)
-    .Where(orderTotal > 42 && rowNumber > 500)
-    .ToCollection<OrdersCollection>();
+            OrdersCollection coll = new OrdersQuery("o", out var o)
+                .From<OrderDetailsQuery>(out var od, () =>
+                {
+                    // Nested Query
+                    return new OrderDetailsQuery("od", out var subQuery)
+                    .Select
+                    (
+                        subQuery.OrderID,
+                        (subQuery.UnitPrice * subQuery.Quantity).Sum().As("OrderTotal", out orderTotal),
+                        subQuery.Over.RowNumber().OrderBy(subQuery.OrderID.Descending).As("RowNumber", out rowNumber)
+                    )
+                    .GroupBy(subQuery.OrderID);
+                }).As("sub")
+                .InnerJoin(o).On(o.OrderID == od.OrderID)
+                .Select(o.CustomerID, o.OrderDate, orderTotal, rowNumber)
+                .Where(orderTotal > 42 && rowNumber > 500)
+                .ToCollection<OrdersCollection>();
 
-if (coll.Count > 0)
-{
-    // Then we loaded at least one record
-}
+            if (coll.Count > 0)
+            {
+                // Then we loaded at least one record
+            }
+
+
+            int iiii = 9;
 
     */
+   
 
 
             AddLoadSaveDeleteSingleEntity();
             StreamlinedDynamicQueryAPI();
             CollectionLoadAll();
 
-            SaveEntity();
-            UpdateEntity();
-            DeleteEntity();
+            //SaveEntity();
+            //UpdateEntity();
+            //DeleteEntity();
 
-            CollectionSave();
-            CollectionSave_BulkInsert();
-            CollectionSaveHierarchical();
+            //CollectionSave();
+            //CollectionSave_BulkInsert();
+            //CollectionSaveHierarchical();
 
             GetTheCount();
             GroupBy();

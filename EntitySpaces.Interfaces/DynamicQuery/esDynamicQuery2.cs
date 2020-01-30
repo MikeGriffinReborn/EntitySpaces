@@ -301,49 +301,60 @@ namespace EntitySpaces.Interfaces
                 this.selectColumns = new List<esExpression>();
             }
 
-            esExpression sItem = obj as esExpression;
-            if (sItem == null)
+            esQueryItem queryItem = null;
+            esExpression sItem = null;
+
+            esCast cast = obj as esCast;
+            if (cast != null)
             {
-                esQueryItem queryItem = null;
+                queryItem = cast.item;
+            }
+            else
+            {
+                queryItem = obj as esQueryItem;
+            }
 
-                esCast cast = obj as esCast;
-                if (cast != null)
-                {
-                    queryItem = cast.item;
-                }
-                else
-                {
-                    queryItem = obj as esQueryItem;
-                }
+            // This if conditional is this way intentionally
+            if (queryItem is object)
+            {
+                sItem = queryItem;
 
+                if (sItem.Column.IsOutVar)
+                {
+                    queryItem.Column.Query = this.fromQuery ?? this;
+                    sItem.Column.Query = this.fromQuery ?? this;
+                }
+            }
+            else if (obj is IOverClause)
+            {
                 IOverClause iOverClause = obj as IOverClause;
                 if (iOverClause != null)
                 {
                     sItem = new esExpression();
                     sItem.OverClause = iOverClause;
+
+                    if (sItem.OverClause.OrderByColumns != null)
+                    {
+                        foreach (esOrderByItem oi in sItem.OverClause.OrderByColumns)
+                        {
+                            oi.Expression.Query = this.fromQuery ?? this;
+                            oi.Expression.Column.Query = this.fromQuery ?? this;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                sItem = new esExpression();
+                esDynamicQuery query = obj as esDynamicQuery;
+                if (query != null)
+                {
+                    AddQueryToList(query);
+                    sItem.Query = query;
                 }
                 else
                 {
-
-                    // This if conditional is this way intentionally
-                    if (queryItem is object)
-                    {
-                        sItem = queryItem;
-                    }
-                    else
-                    {
-                        sItem = new esExpression();
-                        esDynamicQuery query = obj as esDynamicQuery;
-                        if (query != null)
-                        {
-                            AddQueryToList(query);
-                            sItem.Query = query;
-                        }
-                        else
-                        {
-                            sItem.Column.Name = obj as string;
-                        }
-                    }
+                    sItem.Column.Name = obj as string;
                 }
             }
 
@@ -377,7 +388,7 @@ namespace EntitySpaces.Interfaces
             foreach (object obj in columns)
             {
                 esQueryItem queryItem = null;
-                esExpression sItem;
+                esExpression sItem = null;
 
                 esCast cast = obj as esCast;
                 if (cast != null)
@@ -389,32 +400,52 @@ namespace EntitySpaces.Interfaces
                     queryItem = obj as esQueryItem;
                 }
 
-                IOverClause iOverClause = obj as IOverClause;
-                if (iOverClause != null)
+                // This if conditional is this way intentionally
+                if (queryItem is object)
                 {
-                    sItem = new esExpression();
-                    sItem.OverClause = iOverClause;
+                    sItem = queryItem;
+
+                    if(sItem.Column.IsOutVar)
+                    {
+                        queryItem.Column.Query = this.fromQuery ?? this;
+                        sItem.Column.Query = this.fromQuery ?? this;
+                    }
+                }
+                else if (obj is IOverClause || obj is IOverClauseComponent)
+                {
+                    IOverClause iOverClause = obj as IOverClause;
+                    if (iOverClause == null)
+                    {
+                        iOverClause = ((IOverClauseComponent)obj).GetOverClause();
+                    }
+
+                    if (iOverClause != null)
+                    {
+                        sItem = new esExpression();
+                        sItem.OverClause = iOverClause;
+
+                        if (sItem.OverClause.OrderByColumns != null)
+                        {
+                            foreach (esOrderByItem oi in sItem.OverClause.OrderByColumns)
+                            {
+                                oi.Expression.Query = this.fromQuery ?? this;
+                                oi.Expression.Column.Query = this.fromQuery ?? this;
+                            }
+                        }
+                    }
                 }
                 else
                 {
-                    // This if conditional is this way intentionally
-                    if (queryItem is object)
+                    sItem = new esExpression();
+                    esDynamicQuery query = obj as esDynamicQuery;
+                    if (query != null)
                     {
-                        sItem = queryItem;
+                        AddQueryToList(query);
+                        sItem.Query = query;
                     }
                     else
                     {
-                        sItem = new esExpression();
-                        esDynamicQuery query = obj as esDynamicQuery;
-                        if (query != null)
-                        {
-                            AddQueryToList(query);
-                            sItem.Query = query;
-                        }
-                        else
-                        {
-                            sItem.Column.Name = obj as string;
-                        }
+                        sItem.Column.Name = obj as string;
                     }
                 }
 
@@ -1392,6 +1423,10 @@ namespace EntitySpaces.Interfaces
 
             foreach (esOrderByItem orderByItem in orderByItems)
             {
+                if (orderByItem.Expression.Column.IsOutVar)
+                {
+                    orderByItem.Expression.Column.Query = this.fromQuery ?? this;
+                }
                 this.orderByItems.Add(orderByItem);
             }
             return this;

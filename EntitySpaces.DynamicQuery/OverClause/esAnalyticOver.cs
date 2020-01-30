@@ -111,11 +111,11 @@ namespace EntitySpaces.DynamicQuery
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"FIRST_VALUE({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"FIRST_VALUE({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
-                return $"FIRST_VALUE({columnExpression}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"FIRST_VALUE({columnExpression}) OVER(PARTITION BY {partionby} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"FIRST_VALUE({columnExpression}) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"FIRST_VALUE({columnExpression}) OVER(ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "FIRST_VALUE() WAS INVALID";
         }
@@ -134,11 +134,11 @@ namespace EntitySpaces.DynamicQuery
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
             if (partionby != null && orderBy != null && alias != null)
-                return $"LAST_VALUE({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"LAST_VALUE({columnExpression}) OVER(PARTITION BY {partionby} ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else if (partionby != null && orderBy == null && alias != null)
-                return $"LAST_VALUE({columnExpression}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"LAST_VALUE({columnExpression}) OVER(PARTITION BY {partionby} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else if (orderBy != null && alias != null)
-                return $"LAST_VALUE({columnExpression}) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+                return $"LAST_VALUE({columnExpression}) OVER(ORDER BY {orderBy} {this.WindowFrame}) AS {aliasOpen}{alias}{aliasClose}";
             else
                 return "LAST_VALUE() WAS INVALID";
         }

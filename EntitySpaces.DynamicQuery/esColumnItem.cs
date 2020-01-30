@@ -103,6 +103,8 @@ namespace EntitySpaces.DynamicQuery
         [DataMember(Name = "Datatype", EmitDefaultValue = false)]
         public esSystemType Datatype;
 
+        internal bool IsOutVar;
+
         private string alias;
         private bool distinct;
     }
