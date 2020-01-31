@@ -100,18 +100,17 @@ namespace EntitySpaces.DynamicQuery
             }
         }
 
-        internal esQueryItem CreateAliasOutVar(string alias)
+        internal esQueryItem As(string alias, out esAlias aliasFunc)
         {
-            esQueryItem aliasedItem = new esQueryItem(this.query, alias, esSystemType.Unassigned);
-            aliasedItem.Column = new esColumnItem();
-            aliasedItem.Column.IsOutVar = true;
-            aliasedItem.Column.Query = this.query;
-            aliasedItem.Column.Alias = alias;
-            aliasedItem.Column.Name = alias;
+            aliasFunc = () =>
+            {
+                esQueryItem aliasedItem = new esQueryItem(this.query, alias, esSystemType.Unassigned);
+                aliasedItem.Column.IsOutVar = true;
+                return aliasedItem;
+            };
 
             _alias = alias;
-
-            return aliasedItem;
+            return aliasFunc();
         }
 
         protected abstract string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose);
@@ -154,9 +153,9 @@ namespace EntitySpaces.DynamicQuery
             return _parent;
         }
 
-        public esBaseOverClause As(string alias, out esQueryItem aliasedItem)
+        public esBaseOverClause As(string alias, out esAlias aliasedItem)
         {
-            aliasedItem = _parent.CreateAliasOutVar(alias);
+            _parent.As(alias, out aliasedItem);
             return _parent;
         }
 
@@ -178,9 +177,9 @@ namespace EntitySpaces.DynamicQuery
             return _parent;
         }
 
-        public esBaseOverClause As(string alias, out esQueryItem aliasedItem)
+        public esBaseOverClause As(string alias, out esAlias aliasedItem)
         {
-            aliasedItem = _parent.CreateAliasOutVar(alias);
+            _parent.As(alias, out aliasedItem);
             return _parent;
         }
 

@@ -8,6 +8,7 @@ namespace ConsoleApp
 {
     class Program
     {
+
         static void Main(string[] args)
         {
             esProviderFactory.Factory = new EntitySpaces.Loader.esDataProviderFactory();
@@ -19,7 +20,6 @@ namespace ConsoleApp
             conn.ConnectionString = "User ID=sa;Password=blank;Initial Catalog=Northwind;Data Source=localhost";
             esConfigSettings.ConnectionInfo.Connections.Add(conn);
 
-            esQueryItem alias1 = null;
 
             //OrdersCollection coll = new OrdersQuery("o", out var o)
             //.From<OrdersQuery>(out var od, () =>
@@ -65,8 +65,31 @@ namespace ConsoleApp
 
             */
 
-            
-            esQueryItem colCompanyName = null, colPeriod = null, colAmount = null;
+            //esAlias myColumn;
+
+
+            //Func<esQueryItem> esAias;
+
+            //esAias myAlias;
+
+            //void GetAlias(string alias, out esAlias aliasCreator)
+            //{
+            //    aliasCreator = () =>
+            //    {
+            //        return new esQueryItem(null, alias, esSystemType.Boolean);
+            //    };
+            //}
+
+            //GetAlias("Foo", out myColumn);
+
+            //esQueryItem item = myColumn();
+
+            //int count = new EmployeesQuery("e", out var q)
+            //    .Select(q.Count().As("TheCount"))
+            //    .Where(q.ReportsTo.IsNull())
+            //    .ExecuteScalar<int>();
+
+            esAlias aliasCompany = null, aliasPeriod = null, aliasAmount = null, aliasItemCount = null;
 
             OrdersCollection coll = new OrdersQuery("q", out var q)
             .From<OrdersQuery>(out var sub, () => // mimic a CTE
@@ -75,23 +98,27 @@ namespace ConsoleApp
                 return new OrdersQuery("o", out var o)
                 .InnerJoin<CustomersQuery>("c", out var c).On(c.CustomerID == o.CustomerID)
                 .InnerJoin<OrderDetailsQuery>("od", out var od).On(od.OrderID == o.OrderID)
-                .Select(
-                    c.CompanyName.As("CompanyName", out colCompanyName),
-                    o.OrderDate.DatePart("year").As("Period", out colPeriod),
-                    ((1.00M - od.Discount) * od.UnitPrice * od.Quantity).Cast(esCastType.Decimal, 19, 2).Sum().Round(2).As("Amount", out colAmount)
-                    )
+                .Select
+                (
+                    // We're going to grab the aliased columns here for re-use in the outer query later
+                    o.Count().As("TotalItems", out aliasItemCount),
+                    c.CompanyName.As("CompanyName", out aliasCompany),
+                    o.OrderDate.DatePart("year").As("Period", out aliasPeriod),
+                    ((1.00M - od.Discount) * od.UnitPrice * od.Quantity).Cast(esCastType.Decimal, 19, 2).Sum().Round(2).As("Amount", out aliasAmount)
+                )
                 .GroupBy(c.CompanyName, o.OrderDate.DatePart("year"));
 
             }).As("sub")
             // Now act on "sub" query columns
             .Select(
-                colCompanyName,
-                colPeriod,
-                colAmount,
-                q.Over.Sum(colAmount).PartitionBy(colCompanyName).OrderBy(colPeriod.Ascending).Rows.UnBoundedPreceding.As("CumulativeAmount"),
-                q.Over.Sum(colAmount).PartitionBy(colCompanyName)//.As("TotalAmount")
+                aliasCompany(),
+                aliasPeriod(),
+                aliasAmount(),
+                aliasItemCount(),
+                q.Over.Sum(aliasAmount()).PartitionBy(aliasCompany()).OrderBy(aliasPeriod().Ascending).Rows.UnBoundedPreceding.As("CumulativeAmount"),
+                q.Over.Sum(aliasAmount()).PartitionBy(aliasCompany()).As("TotalAmount")
             )
-            .OrderBy(colCompanyName.Ascending, colPeriod.Ascending)
+            .OrderBy(aliasCompany().Ascending, aliasPeriod().Ascending)
             .ToCollection<OrdersCollection>();
 
             int kk = 9;
@@ -354,9 +381,9 @@ namespace ConsoleApp
         static private void GetTheCount()
         {
             EmployeesQuery q = new EmployeesQuery();
+            q.Select(q.Count());
             q.Where(q.LastName.Like("%a"));
-            q.es.CountAll();
-
+  
             int count = q.ExecuteScalar<int>();
         }
 

@@ -363,6 +363,7 @@ namespace EntitySpaces.Interfaces
             return this;
         }
 
+
         /// <summary>
         /// A query SELECT clause for columns or aggregates.
         /// </summary>
@@ -453,6 +454,14 @@ namespace EntitySpaces.Interfaces
             }
 
             return this;
+        }
+
+        public esQueryItem Count()
+        {
+            esQueryItem count = new esQueryItem(this, "<COUNT(*)>", esSystemType.Int32);
+            //count.Column = new esColumnItem();
+            //count.Column.Name = "<COUNT(*)>";
+            return count;
         }
 
         /// <summary>
@@ -1900,28 +1909,6 @@ namespace EntitySpaces.Interfaces
                 return this.dynamicQuery;
             }
 
-            /// <summary>
-            /// Add a COUNT(*) Aggregate to the selected columns list.
-            /// </summary>
-            public esDynamicQuery CountAll()
-            {
-                this.dynamicQuery.countAll = true;
-                if (String.IsNullOrEmpty(this.dynamicQuery.countAllAlias))
-                {
-                    this.dynamicQuery.countAllAlias = "Count";
-                }
-
-                return this.dynamicQuery;
-            }
-
-            /// <summary>
-            /// If CountAll is set to true, use this to add a user-friendly column name.
-            /// </summary>
-            public esDynamicQuery CountAllAlias(string alias)
-            {
-                this.dynamicQuery.countAllAlias = alias;
-                return this.dynamicQuery;
-            }
 
             /// <summary>
             /// If true, add WITH ROLLUP to the GROUP BY clause.

@@ -258,7 +258,14 @@ namespace EntitySpaces.SqlClientProvider
                         string columnName = expressionItem.Column.Name;
 
                         if (columnName != null && columnName[0] == '<')
+                        {
                             sql += columnName.Substring(1, columnName.Length - 2);
+
+                            if (expressionItem.Column.Alias != null)
+                            {
+                                sql += " AS " + Delimiters.StringOpen + expressionItem.Column.Alias + Delimiters.StringClose;
+                            }
+                        }
                         else
                             sql += GetExpressionColumn(std, query, expressionItem, false, true);
 

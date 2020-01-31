@@ -245,9 +245,9 @@ namespace EntitySpaces.DynamicQuery
             return this.overClause;
         }
 
-        public IOverClause As(string alias, out esQueryItem aliasedItem)
+        public IOverClause As(string alias, out esAlias aliasedItem)
         {
-            aliasedItem = this.overClause.CreateAliasOutVar(alias);
+            this.overClause.As(alias, out aliasedItem);
             return this.overClause;
         }
 
@@ -292,9 +292,9 @@ namespace EntitySpaces.DynamicQuery
             return this.overClause;
         }
 
-        public IOverClause As(string alias, out esQueryItem aliasedItem)
+        public IOverClause As(string alias, out esAlias aliasedItem)
         {
-            aliasedItem = this.overClause.CreateAliasOutVar(alias);
+            this.overClause.As(alias, out aliasedItem);
             return this.overClause;
         }
 
@@ -339,9 +339,9 @@ namespace EntitySpaces.DynamicQuery
             return this.overClause;
         }
 
-        public IOverClause As(string alias, out esQueryItem aliasedItem)
+        public IOverClause As(string alias, out esAlias aliasedItem)
         {
-            aliasedItem = this.overClause.CreateAliasOutVar(alias);
+            this.overClause.As(alias, out aliasedItem);
             return this.overClause;
         }
 
@@ -386,9 +386,9 @@ namespace EntitySpaces.DynamicQuery
             return this.overClause;
         }
 
-        public IOverClause As(string alias, out esQueryItem aliasedItem)
+        public IOverClause As(string alias, out esAlias aliasedItem)
         {
-            aliasedItem = this.overClause.CreateAliasOutVar(alias);
+            this.overClause.As(alias, out aliasedItem);
             return this.overClause;
         }
 

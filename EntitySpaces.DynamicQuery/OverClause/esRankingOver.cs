@@ -38,14 +38,18 @@ namespace EntitySpaces.DynamicQuery
     {
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
-            if (partionby != null && orderBy != null && alias != null)
-                return $"ROW_NUMBER() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
-            else if (partionby != null && orderBy == null && alias != null)
-                return $"ROW_NUMBER() OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
-            else if (orderBy != null && alias != null)
-                return $"ROW_NUMBER() OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+            string over = $"ROW_NUMBER() OVER(";
+
+            if (partionby != null) over += $" PARTITION BY {partionby}";
+            if (orderBy != null) over += $" ORDER BY {orderBy}";
+            if (this.WindowFrame.Length > 0) over += $" {this.WindowFrame}";
+
+            if (alias != null)
+                over += $" ) AS {aliasOpen}{alias}{aliasClose}";
             else
-                return "ROW_NUMBER() WAS INVALID";
+                over += " )";
+
+            return over;
         }
     }
 
@@ -53,14 +57,18 @@ namespace EntitySpaces.DynamicQuery
     {
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
-            if (partionby != null && orderBy != null && alias != null)
-                return $"PERCENT_RANK() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
-            else if (partionby != null && orderBy == null && alias != null)
-                return $"PERCENT_RANK() OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
-            else if (orderBy != null && alias != null)
-                return $"PERCENT_RANK() OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+            string over = $"PERCENT_RANK() OVER(";
+
+            if (partionby != null) over += $" PARTITION BY {partionby}";
+            if (orderBy != null) over += $" ORDER BY {orderBy}";
+            if (this.WindowFrame.Length > 0) over += $" {this.WindowFrame}";
+
+            if (alias != null)
+                over += $" ) AS {aliasOpen}{alias}{aliasClose}";
             else
-                return "PERCENT_RANK() WAS INVALID";
+                over += " )";
+
+            return over;
         }
     }
 
@@ -68,14 +76,18 @@ namespace EntitySpaces.DynamicQuery
     {
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
-            if (partionby != null && orderBy != null && alias != null)
-                return $"RANK() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
-            else if (partionby != null && orderBy == null && alias != null)
-                return $"RANK() OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
-            else if (orderBy != null && alias != null)
-                return $"RANK() OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+            string over = $"RANK() OVER(";
+
+            if (partionby != null) over += $" PARTITION BY {partionby}";
+            if (orderBy != null) over += $" ORDER BY {orderBy}";
+            if (this.WindowFrame.Length > 0) over += $" {this.WindowFrame}";
+
+            if (alias != null)
+                over += $" ) AS {aliasOpen}{alias}{aliasClose}";
             else
-                return "RANK() WAS INVALID";
+                over += " )";
+
+            return over;
         }
     }
 
@@ -83,14 +95,18 @@ namespace EntitySpaces.DynamicQuery
     {
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
-            if (partionby != null && orderBy != null && alias != null)
-                return $"DENSE_RANK() OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
-            else if (partionby != null && orderBy == null && alias != null)
-                return $"DENSE_RANK() OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
-            else if (orderBy != null && alias != null)
-                return $"DENSE_RANK() OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+            string over = $"DENSE_RANK() OVER(";
+
+            if (partionby != null) over += $" PARTITION BY {partionby}";
+            if (orderBy != null) over += $" ORDER BY {orderBy}";
+            if (this.WindowFrame.Length > 0) over += $" {this.WindowFrame}";
+
+            if (alias != null)
+                over += $" ) AS {aliasOpen}{alias}{aliasClose}";
             else
-                return "DENSE_RANK() WAS INVALID";
+                over += " )";
+
+            return over;
         }
     }
 
@@ -112,14 +128,18 @@ namespace EntitySpaces.DynamicQuery
 
         protected override string CreateOverStatement(string columnExpression, string partionby, string orderBy, string alias, string aliasOpen, string aliasClose)
         {
-            if (partionby != null && orderBy != null && alias != null)
-                return $"NTILE({nTile}) OVER(PARTITION BY {partionby} ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
-            else if (partionby != null && orderBy == null && alias != null)
-                return $"NTILE({nTile}) OVER(PARTITION BY {partionby}) AS {aliasOpen}{alias}{aliasClose}";
-            else if (orderBy != null && alias != null)
-                return $"NTILE({nTile}) OVER(ORDER BY {orderBy}) AS {aliasOpen}{alias}{aliasClose}";
+            string over = $"NTILE({nTile}) OVER(";
+
+            if (partionby != null) over += $" PARTITION BY {partionby}";
+            if (orderBy != null) over += $" ORDER BY {orderBy}";
+            if (this.WindowFrame.Length > 0) over += $" {this.WindowFrame}";
+
+            if (alias != null)
+                over += $" ) AS {aliasOpen}{alias}{aliasClose}";
             else
-                return "NTILE() WAS INVALID";
+                over += " )";
+
+            return over;
         }
     }
 }

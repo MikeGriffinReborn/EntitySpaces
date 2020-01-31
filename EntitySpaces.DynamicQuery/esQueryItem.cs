@@ -37,6 +37,12 @@ using System.Runtime.Serialization;
 namespace EntitySpaces.DynamicQuery
 {
     /// <summary>
+    /// Used as type for "out" parameter to As() methods when aliasing
+    /// </summary>
+    /// <returns></returns>
+    public delegate esQueryItem esAlias();
+
+    /// <summary>
     /// The esQueryItem class is dynamically created by your BusinessEntity's
     /// DynamicQuery mechanism.
     /// This class is mostly used by the EntitySpaces architecture, not the programmer.
@@ -5380,14 +5386,14 @@ namespace EntitySpaces.DynamicQuery
         /// <param name="alias">The Alias Name</param>
         /// <param name="aliasedItem">Returns an esQueryItem that you can use in other parts of the query</param>
         /// <returns></returns>
-        public esQueryItem As(string alias, out esQueryItem aliasedItem)
+        public esQueryItem As(string alias, out esAlias aliasFunc)
         {
-            aliasedItem = new esQueryItem(null, alias, this.Column.Datatype);
-
-            aliasedItem.Column = new esColumnItem();
-            aliasedItem.Column.IsOutVar = true;
-            aliasedItem.Column.Alias = alias;
-            aliasedItem.Column.Name = alias;
+            aliasFunc = () =>
+            {
+                esQueryItem aliasedItem = new esQueryItem(null, alias, this.Column.Datatype);
+                aliasedItem.Column.IsOutVar = true;
+                return aliasedItem;
+            };
 
             this.Column.Alias = alias;
             return this;
