@@ -948,7 +948,7 @@ Use the native language syntax, it works as you expect it would.
 | Sum() | Summation|
 | Cast() | SQL Cast|
 
-## Over Syntax Operators
+## "Over" Clause Operators
 
 ### Ranking
 
