@@ -953,7 +953,7 @@ Use the native language syntax, it works as you expect it would.
 ### Ranking
 
 |Sub Operator | SQL Function | Description |
-|:-|:-||:-|
+|:-|:-|:-|
 | Over.RowNumber() |ROW_NUMBER()|Numbers the output of a result set|
 
 
