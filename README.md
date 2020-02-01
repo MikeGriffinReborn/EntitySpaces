@@ -404,8 +404,10 @@ ORDER BY o.[EmployeeID] ASC,o.[ShipCountry] ASC
 ```
 
 ## OVER Clauses with esAlias and Rows Syntax
+This might look like a complicated query but it's really quite simple. As you look at the code below think of it this way. With the From() statement is a nested every day ol' EntitySpaces Query, and we give it an alias of "sub". Then, the outer query simply Selects columns from and Orders by the columns in the the nested query. Notice how simple the SQL generated from this query actually is, and it looks just like the C# code.
 
 ```c#
+// We grab these aliases in the nested query via "out" parameters
 esAlias aliasCompany = null, aliasPeriod = null, aliasAmount = null, aliasItemCount = null;
 
 OrdersCollection coll = new OrdersQuery("q", out var q)
