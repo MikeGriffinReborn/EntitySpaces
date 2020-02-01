@@ -456,11 +456,13 @@ namespace EntitySpaces.Interfaces
             return this;
         }
 
+        /// <summary>
+        /// Equilavent to COUNT(*)
+        /// </summary>
+        /// <returns></returns>
         public esQueryItem Count()
         {
             esQueryItem count = new esQueryItem(this, "<COUNT(*)>", esSystemType.Int32);
-            //count.Column = new esColumnItem();
-            //count.Column.Name = "<COUNT(*)>";
             return count;
         }
 

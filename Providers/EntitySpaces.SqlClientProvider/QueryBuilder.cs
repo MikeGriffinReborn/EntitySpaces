@@ -261,7 +261,7 @@ namespace EntitySpaces.SqlClientProvider
                         {
                             sql += columnName.Substring(1, columnName.Length - 2);
 
-                            if (expressionItem.Column.Alias != null)
+                            if (expressionItem.Column.HasAlias)
                             {
                                 sql += " AS " + Delimiters.StringOpen + expressionItem.Column.Alias + Delimiters.StringClose;
                             }
