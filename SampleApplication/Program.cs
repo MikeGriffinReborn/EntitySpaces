@@ -20,158 +20,17 @@ namespace ConsoleApp
             conn.ConnectionString = "User ID=sa;Password=blank;Initial Catalog=Northwind;Data Source=localhost";
             esConfigSettings.ConnectionInfo.Connections.Add(conn);
 
-
-            //OrdersCollection coll = new OrdersQuery("o", out var o)
-            //.From<OrdersQuery>(out var od, () =>
-            //{
-            //    return new OrdersQuery("s", out var s)
-            //    .Select(
-            //        s.Over.Sum(s.Freight).OrderBy(s.EmployeeID.Descending).As("Alias1", out alias1),
-            //        s.Over.Sum(s.Freight).OrderBy(s.EmployeeID.Descending).Range.UnBoundedPreceding.As("Alias2"),
-            //        s.Over.Sum(s.Freight).OrderBy(s.EmployeeID.Descending).Rows.Between(4).Preceding.And(6).Following.As("Alias3"),
-            //        s.Over.Sum(s.Freight).PartitionBy(s.EmployeeID).OrderBy(s.EmployeeID.Descending).Rows.Between(4).Preceding.And(6).Following.As("Alias4")
-            //    ).Where(s.EmployeeID < 11);
-            //}).As("sub")
-            //.Select(alias1)
-            //.Where(alias1 > 50)
-            //.ToCollection<OrdersCollection>();
-
-            //if (coll.Count > 0)
-            //{
-            //    // Then we loaded at least one record
-            //}
-
-            /*
-             
-	        select 
-		        c.CompanyName, 
-		        Year(orderDate) as [Period],	
-		        cast(sum(round((1.00 - od.Discount) * od.UnitPrice * od.Quantity,2)) as money) as Amount
-	        from [Orders] O
-	        join Customers c on c.CustomerID=o.CustomerID
-	        join [Order Details] od on od.OrderID=o.OrderID
-	        group by CompanyName, Year(orderDate)
-
-            cast(sum(round((1.00 - od.Discount) * od.UnitPrice * od.Quantity,2)) as money) as Amount
-            CAST(SUM(ROUND((((1.00 - od.[Discount]) * od.[UnitPrice]) * od.[Quantity]), 2)) AS decimal(19, 4)) AS 'Amount'
-
-            select	CompanyName, 
-		            [Period], 
-		            Amount,
-		            SUM(Amount) OVER (PARTITION BY CompanyName  ORDER BY Period ASC ROWS UNBOUNDED PRECEDING) as CumulativeAmount,
-		            SUM(Amount) OVER (PARTITION BY CompanyName) as TotalAmount
-            from cte
-            order by CompanyName asc, Period asc
-
-            */
-
-            //esAlias myColumn;
-
-
-            //Func<esQueryItem> esAias;
-
-            //esAias myAlias;
-
-            //void GetAlias(string alias, out esAlias aliasCreator)
-            //{
-            //    aliasCreator = () =>
-            //    {
-            //        return new esQueryItem(null, alias, esSystemType.Boolean);
-            //    };
-            //}
-
-            //GetAlias("Foo", out myColumn);
-
-            //esQueryItem item = myColumn();
-
-            //int count = new EmployeesQuery("e", out var q)
-            //    .Select(q.Count().As("TheCount"))
-            //    .Where(q.ReportsTo.IsNull())
-            //    .ExecuteScalar<int>();
-
-            esAlias aliasCompany = null, aliasPeriod = null, aliasAmount = null, aliasItemCount = null;
-
-            OrdersCollection coll = new OrdersQuery("q", out var q)
-            .From<OrdersQuery>(out var sub, () => // mimic a CTE
-            {
-                // Nested Query
-                return new OrdersQuery("o", out var o)
-                .InnerJoin<CustomersQuery>("c", out var c).On(c.CustomerID == o.CustomerID)
-                .InnerJoin<OrderDetailsQuery>("od", out var od).On(od.OrderID == o.OrderID)
-                .Select
-                (
-                    // We're going to grab the aliased columns here for re-use in the outer query later
-                    o.Count().As("TotalItems", out aliasItemCount),
-                    c.CompanyName.As("CompanyName", out aliasCompany),
-                    o.OrderDate.DatePart("year").As("Period", out aliasPeriod),
-                    ((1.00M - od.Discount) * od.UnitPrice * od.Quantity).Cast(esCastType.Decimal, 19, 2).Sum().Round(2).As("Amount", out aliasAmount)
-                )
-                .GroupBy(c.CompanyName, o.OrderDate.DatePart("year"));
-
-            }).As("sub")
-            // Now act on "sub" query columns
-            .Select(
-                aliasCompany(),
-                aliasPeriod(),
-                aliasAmount(),
-                aliasItemCount(),
-                q.Over.Sum(aliasAmount()).PartitionBy(aliasCompany()).OrderBy(aliasPeriod().Ascending).Rows.UnBoundedPreceding.As("CumulativeAmount"),
-                q.Over.Sum(aliasAmount()).PartitionBy(aliasCompany()).As("TotalAmount")
-            )
-            .OrderBy(aliasCompany().Ascending, aliasPeriod().Ascending)
-            .ToCollection<OrdersCollection>();
-
-            int kk = 9;
-
-            
-
-            /*
-
-            
-            // New Experimental code ...
-            esQueryItem orderTotal = null, rowNumber = null;
-
-            OrdersCollection coll = new OrdersQuery("o", out var o)
-                .From<OrderDetailsQuery>(out var od, () =>
-                {
-                    // Nested Query
-                    return new OrderDetailsQuery("od", out var subQuery)
-                    .Select
-                    (
-                        subQuery.OrderID,
-                        (subQuery.UnitPrice * subQuery.Quantity).Sum().As("OrderTotal", out orderTotal),
-                        subQuery.Over.RowNumber().OrderBy(subQuery.OrderID.Descending).As("RowNumber", out rowNumber)
-                    )
-                    .GroupBy(subQuery.OrderID);
-                }).As("sub")
-                .InnerJoin(o).On(o.OrderID == od.OrderID)
-                .Select(o.CustomerID, o.OrderDate, orderTotal, rowNumber)
-                .Where(orderTotal > 42 && rowNumber > 500)
-                .ToCollection<OrdersCollection>();
-
-            if (coll.Count > 0)
-            {
-                // Then we loaded at least one record
-            }
-
-
-            int iiii = 9;
-
-    */
-   
-
-
             AddLoadSaveDeleteSingleEntity();
             StreamlinedDynamicQueryAPI();
             CollectionLoadAll();
 
-            //SaveEntity();
-            //UpdateEntity();
-            //DeleteEntity();
+            SaveEntity();
+            UpdateEntity();
+            DeleteEntity();
 
-            //CollectionSave();
-            //CollectionSave_BulkInsert();
-            //CollectionSaveHierarchical();
+            CollectionSave();
+            CollectionSave_BulkInsert();
+            CollectionSaveHierarchical();
 
             GetTheCount();
             GroupBy();
@@ -191,7 +50,9 @@ namespace ConsoleApp
             CaseWhenThenEnd();
             HavingClause();
 
-            int i = 9;
+            SumOver();
+            OverAndAliasQuerySimple();
+            OverAndAliasQuery();
         }
 
         static private void AddLoadSaveDeleteSingleEntity()
@@ -614,6 +475,95 @@ namespace ConsoleApp
             if (coll.Count > 0)
             {
 
+            }
+        }
+
+        static private void SumOver()
+        {
+            /*
+
+            SELECT 
+                SUM(o.[Freight]) OVER( PARTITION BY o.[EmployeeID] ) AS 'FreightByEmployee',
+                SUM(o.[Freight]) OVER( PARTITION BY o.[EmployeeID], o.[ShipCountry] ) AS 'FreightByEmployeeAndCountry'  
+            FROM [Orders] o 
+            ORDER BY o.[EmployeeID] ASC,o.[ShipCountry] ASC
+
+            */
+
+            OrdersCollection coll = new OrdersQuery("o", out var o)
+            .Select
+            (
+                o.Over.Sum(o.Freight).PartitionBy(o.EmployeeID).As("FreightByEmployee"),
+                o.Over.Sum(o.Freight).PartitionBy(o.EmployeeID, o.ShipCountry).As("FreightByEmployeeAndCountry")
+            )
+            .OrderBy(o.EmployeeID.Ascending, o.ShipCountry.Ascending)
+            .ToCollection<OrdersCollection>();
+
+            if (coll.Count > 0)
+            {
+                // Then we loaded at least one record
+            }
+
+        }
+
+        static private void OverAndAliasQuerySimple()
+        {
+            esAlias rowNumber = null;
+
+            OrdersCollection coll = new OrdersQuery("o", out var o)
+            .From<OrderDetailsQuery>(out var od, () =>
+            {
+                // Nested Query
+                return new OrderDetailsQuery("od", out var subQuery)
+                .Select
+                (
+                    subQuery.Over.RowNumber().OrderBy(subQuery.OrderID.Descending).As("RowNumber", out rowNumber)
+                )
+                .GroupBy(subQuery.OrderID);
+            }).As("sub")
+            .Select(rowNumber())
+            .Where(rowNumber() > 5)
+            .ToCollection<OrdersCollection>();
+
+            if (coll.Count > 0)
+            {
+                // Then we loaded at least one record
+            }
+        }
+
+        static private void OverAndAliasQuery()
+        {
+            esAlias aliasCompany = null, aliasPeriod = null, aliasAmount = null, aliasItemCount = null;
+
+            OrdersCollection coll = new OrdersQuery("q", out var q)
+            .From<OrdersQuery>(out var sub, () => // mimic a CTE
+            {
+                // Nested Query
+                return new OrdersQuery("o", out var o)
+                .InnerJoin<CustomersQuery>("c", out var c).On(c.CustomerID == o.CustomerID)
+                .InnerJoin<OrderDetailsQuery>("od", out var od).On(od.OrderID == o.OrderID)
+                .Select
+                (
+                    // We're going to grab the aliased columns here for re-use in the outer query later
+                    o.Count().As("TotalItems", out aliasItemCount),
+                    c.CompanyName.As("CompanyName", out aliasCompany),
+                    o.OrderDate.DatePart("year").As("Period", out aliasPeriod),
+                    ((1.00M - od.Discount) * od.UnitPrice * od.Quantity).Cast(esCastType.Decimal, 19, 2).Sum().Round(2).As("Amount", out aliasAmount)
+                )
+                .GroupBy(c.CompanyName, o.OrderDate.DatePart("year"));
+            }).As("sub")
+            // Now act on "sub" query columns
+            .Select(
+                aliasCompany(), aliasPeriod(), aliasAmount(), aliasItemCount(),
+                q.Over.Sum(aliasAmount()).PartitionBy(aliasCompany()).OrderBy(aliasPeriod().Ascending).Rows.UnBoundedPreceding.As("CumulativeAmount"),
+                q.Over.Sum(aliasAmount()).PartitionBy(aliasCompany()).As("TotalAmount")
+            )
+            .OrderBy(aliasCompany().Ascending, aliasPeriod().Ascending)
+            .ToCollection<OrdersCollection>();
+
+            if(coll.Count > 0)
+            {
+                // we loaded data
             }
         }
     }
