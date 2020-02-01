@@ -967,15 +967,15 @@ Typical syntax is **OVER**( **PARTITION BY** 'clause' **ORDER BY** 'clause' **RO
 
 |Sub Operator | SQL Function | 
 |:-|:-|
-|Over.Avg()| here |
-|Over.Count()| here |
-|Over.CountBig()| here |
-|Over.Max()| here |
-|Over.Min()| here |
-|Over.StdDev()| here |
-|Over.StdDevP()| here |
-|Over.Var()| here |
-|Over.VarP()| here |
+|Over.Avg()| AVG() OVER() |
+|Over.Count()| COUNT() OVER() |
+|Over.CountBig()| COUNT_BIG() OVER() |
+|Over.Max()| MAX() OVER() |
+|Over.Min()| MIN OVER() |
+|Over.StdDev()| STDDEV() OVER |
+|Over.StdDevP()| STDDEV() OVER() |
+|Over.Var()| VAR() OVER()|
+|Over.VarP()| VARP() OVER() |
 
 
 
