@@ -450,7 +450,8 @@ SELECT
    sub.[Period],
    sub.[Amount],
    sub.[TotalItems],
-   SUM([Amount]) OVER( PARTITION BY [CompanyName] ORDER BY sub.[Period] ASC ROWS UNBOUNDED PRECEDING ) AS 'CumulativeAmount',
+   SUM([Amount]) OVER( PARTITION BY [CompanyName] ORDER BY sub.[Period] ASC 
+      ROWS UNBOUNDED PRECEDING ) AS 'CumulativeAmount',
    SUM([Amount]) OVER( PARTITION BY [CompanyName] ) AS 'TotalAmount' 
 FROM
    (
@@ -458,7 +459,8 @@ FROM
          COUNT(*) AS 'TotalItems',
          c.[CompanyName] AS 'CompanyName',
          DATEPART(year, o.[OrderDate]) AS 'Period',
-         CAST(SUM(ROUND((((1.00 - od.[Discount]) * od.[UnitPrice]) * od.[Quantity]), 2)) AS decimal(19, 2)) AS 'Amount' 
+         CAST(SUM(ROUND((((1.00 - od.[Discount]) * od.[UnitPrice]) * od.[Quantity]), 2)) 
+	    AS decimal(19, 2)) AS 'Amount' 
       FROM [Orders] o 
          INNER JOIN [Customers] c ON c.[CustomerID] = o.[CustomerID] 
          INNER JOIN [Order Details] od ON od.[OrderID] = o.[OrderID] 
