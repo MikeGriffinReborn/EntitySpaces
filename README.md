@@ -948,6 +948,14 @@ Use the native language syntax, it works as you expect it would.
 | Sum() | Summation|
 | Cast() | SQL Cast|
 
+## Over Syntax Operators
+
+#Ranking
+
+|:-|:-|
+| Over.RowNumber() |Numbers the output of a result set.|
+
+
 # Setup
 
 1. Install [EntitySpaces Studio](https://github.com/MikeGriffinReborn/EntitySpaces/raw/master/EntitySpaces.Studio/EntitySpacesStudio_20191.1218.0.zip?raw=true/ "Zip File")
