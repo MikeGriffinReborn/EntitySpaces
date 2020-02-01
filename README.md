@@ -949,6 +949,7 @@ Use the native language syntax, it works as you expect it would.
 | Cast() | SQL Cast|
 
 ## "Over" Clause Operators
+For information on the following operators see (https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql?view=sql-server-ver15)[SELECT - OVER Clause (Transact-SQL)]
 
 ### Ranking Functions
 
