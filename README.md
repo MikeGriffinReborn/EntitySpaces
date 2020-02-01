@@ -963,6 +963,20 @@ Typical syntax is **OVER**( **PARTITION BY** 'clause' **ORDER BY** 'clause' **RO
 | Over.PercentRank()|PERCENT_RANK()|
 | Over.Ntile()|NTILE()|
 
+### Aggregate Functions
+
+|Sub Operator | SQL Function | 
+|:-|:-|
+|Over.Avg()| here |
+|Over.Count()| here |
+|Over.CountBig()| here |
+|Over.Max()| here |
+|Over.Min()| here |
+|Over.StdDev()| here |
+|Over.StdDevP()| here |
+|Over.Var()| here |
+|Over.VarP()| here |
+
 
 
 # Setup
