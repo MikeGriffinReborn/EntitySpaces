@@ -955,11 +955,11 @@ For information on the following operators see [SELECT - OVER Clause (Transact-S
 
 |Sub Operator | SQL Function | 
 |:-|:-|
-| Over.RowNumber() |ROW_NUMBER()
-| Over.Rank()|RANK()|
-| Over.DenseRank()|DENSE_RANK()|
-| Over.PercentRank()|PERCENT_RANK()|
-| Over.Ntile()|NTILE()|
+| Over.RowNumber() |ROW_NUMBER() OVER(...)|
+| Over.Rank()|RANK() OVER(...)|
+| Over.DenseRank()|DENSE_RANK() OVER(...)|
+| Over.PercentRank()|PERCENT_RANK( OVER(...))|
+| Over.Ntile()|NTILE() OVER(...)|
 
 
 
