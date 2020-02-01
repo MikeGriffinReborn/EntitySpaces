@@ -357,7 +357,16 @@ namespace EntitySpaces.SqlClientProvider
                     p.Direction = ParameterDirection.InputOutput;
                     cmd.Parameters.Add(p);
 
-                    if (request.DatabaseVersion == "2005" || request.DatabaseVersion == "2008")
+                    int version = 2012;
+                    if(!String.IsNullOrWhiteSpace(request.DatabaseVersion))
+                    {
+                        if(!int.TryParse(request.DatabaseVersion, out version))
+                        {
+                            version = 2012;
+                        }
+                    }
+
+                    if (version >= 2008 || col.IsEntitySpacesConcurrency)
                         conncur += Delimiters.ColumnOpen + col.Name + Delimiters.ColumnClose + " = " + p.ParameterName;
                     else
                         conncur += "TSEQUAL(" + Delimiters.ColumnOpen + col.Name + Delimiters.ColumnClose + "," + p.ParameterName + ")";
@@ -484,7 +493,16 @@ namespace EntitySpaces.SqlClientProvider
                     p.Value = packet.OriginalValues[col.Name];
                     cmd.Parameters.Add(p);
 
-                    if (request.DatabaseVersion == "2005" || request.DatabaseVersion == "2008" || col.IsEntitySpacesConcurrency)
+                    int version = 2012;
+                    if (!String.IsNullOrWhiteSpace(request.DatabaseVersion))
+                    {
+                        if (!int.TryParse(request.DatabaseVersion, out version))
+                        {
+                            version = 2012;
+                        }
+                    }
+
+                    if (version >= 2008 || col.IsEntitySpacesConcurrency)
                         concur += Delimiters.ColumnOpen + col.Name + Delimiters.ColumnClose + " = " + p.ParameterName;
                     else
                         concur += "TSEQUAL(" + Delimiters.ColumnOpen + col.Name + Delimiters.ColumnClose + "," + p.ParameterName + ")";
