@@ -973,10 +973,21 @@ Typical syntax is **OVER**( **PARTITION BY** 'clause' **ORDER BY** 'clause' **RO
 |Over.Max()| MAX() OVER() |
 |Over.Min()| MIN OVER() |
 |Over.StdDev()| STDDEV() OVER |
-|Over.StdDevP()| STDDEV() OVER() |
+|Over.StdDevP()| STDDEVP() OVER() |
 |Over.Var()| VAR() OVER()|
 |Over.VarP()| VARP() OVER() |
 
+### Analytical Functions
+
+|Sub Operator | SQL Function | 
+|:-|:-|
+|Over.CumeDist()|CUME_DIST()|
+|Over.FirstValue()|FIRST_VALUE()|
+|Over.LastValue()|LAST_VALUE()|
+|Over.Lag()|LAG()|
+|Over.Lead()|LEAD()|
+|Over.PercentileCont()|PERCENTILE_CONT()|
+|Over.PercentileDisc()|PERCENTILE_DISC()|
 
 
 # Setup
