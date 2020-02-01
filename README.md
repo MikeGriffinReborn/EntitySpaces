@@ -403,7 +403,7 @@ FROM [Orders] o
 ORDER BY o.[EmployeeID] ASC,o.[ShipCountry] ASC
 ```
 
-## esAlias / Over/ Rows Clause ...
+## OVER Clauses with esAlias and Rows Syntax
 
 ```c#
 esAlias aliasCompany = null, aliasPeriod = null, aliasAmount = null, aliasItemCount = null;
@@ -421,14 +421,16 @@ OrdersCollection coll = new OrdersQuery("q", out var q)
         o.Count().As("TotalItems", out aliasItemCount),
         c.CompanyName.As("CompanyName", out aliasCompany),
         o.OrderDate.DatePart("year").As("Period", out aliasPeriod),
-        ((1.00M - od.Discount) * od.UnitPrice * od.Quantity).Cast(esCastType.Decimal, 19, 2).Sum().Round(2).As("Amount", out aliasAmount)
+        ((1.00M - od.Discount) * od.UnitPrice * od.Quantity).Cast(esCastType.Decimal, 19, 2)
+		.Sum().Round(2).As("Amount", out aliasAmount)
     )
     .GroupBy(c.CompanyName, o.OrderDate.DatePart("year"));
 }).As("sub")
 // Now act on "sub" query columns
 .Select(
    aliasCompany(), aliasPeriod(), aliasAmount(), aliasItemCount(),  
-   q.Over.Sum(aliasAmount()).PartitionBy(aliasCompany()).OrderBy(aliasPeriod().Ascending).Rows.UnBoundedPreceding      .As("CumulativeAmount"),
+   q.Over.Sum(aliasAmount()).PartitionBy(aliasCompany()).OrderBy(aliasPeriod().Ascending).Rows
+	.UnBoundedPreceding.As("CumulativeAmount"),
    q.Over.Sum(aliasAmount()).PartitionBy(aliasCompany()).As("TotalAmount")
 )
 .OrderBy(aliasCompany().Ascending, aliasPeriod().Ascending)
