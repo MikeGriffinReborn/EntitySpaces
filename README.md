@@ -393,6 +393,15 @@ if (coll.Count > 0)
     // Then we loaded at least one record
 }
 ```
+SQL Generated:
+
+```sql
+SELECT 
+    SUM(o.[Freight]) OVER( PARTITION BY o.[EmployeeID] ) AS 'FreightByEmployee',
+    SUM(o.[Freight]) OVER( PARTITION BY o.[EmployeeID], o.[ShipCountry] ) AS 'FreightByEmployeeAndCountry'  
+FROM [Orders] o 
+ORDER BY o.[EmployeeID] ASC,o.[ShipCountry] ASC
+```
 
 ## AND and OR and Concatentation
 And and Or work just as you would expect, use parenthesis to control the order of precedence. You can also concatentat and use all kinds of operators in your queries. See the tables at the end of this document.
