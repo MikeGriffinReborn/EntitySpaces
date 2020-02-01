@@ -35,20 +35,26 @@ namespace EntitySpaces.DynamicQuery
 {
     public class esLagOver : esBaseOverClause
     {
-        private decimal offset;
+        private string offset;
 
         private esLagOver() { }
 
         public esLagOver(esQueryItem expression, int offset = 1, esQueryItem theDefault = null)
         {
             base._columnExpression = expression;
-            this.offset = offset;
+            this.offset = $"{offset}";
         }
 
         public esLagOver(esQueryItem expression, decimal offset = 1.0M, esQueryItem theDefault = null)
         {
             base._columnExpression = expression;
-            this.offset = offset;
+            this.offset = $"{offset}";
+        }
+
+        public esLagOver(esQueryItem expression, float offset = 1.0F, esQueryItem theDefault = null)
+        {
+            base._columnExpression = expression;
+            this.offset = $"{offset}";
         }
 
         // MEG - DEFAULT
@@ -71,20 +77,26 @@ namespace EntitySpaces.DynamicQuery
 
     public class esLeadOver : esBaseOverClause
     {
-        private decimal offset;
+        private string offset;
 
         private esLeadOver() { }
 
         public esLeadOver(esQueryItem expression, int offset = 1, esQueryItem theDefault = null)
         {
             base._columnExpression = expression;
-            this.offset = offset;
+            this.offset = $"{offset}";
         }
 
         public esLeadOver(esQueryItem expression, decimal offset = 1.0M, esQueryItem theDefault = null)
         {
             base._columnExpression = expression;
-            this.offset = offset;
+            this.offset = $"{offset}";
+        }
+
+        public esLeadOver(esQueryItem expression, float offset = 1.0F, esQueryItem theDefault = null)
+        {
+            base._columnExpression = expression;
+            this.offset = $"{offset}";
         }
 
         // MEG - DEFAULT
@@ -186,22 +198,7 @@ namespace EntitySpaces.DynamicQuery
 
         #region Constructors
 
-        public esPercentileContOver(string literal)
-        {
-            this.literal = literal;
-        }
-
-        public esPercentileContOver(long literal)
-        {
-            this.literal = $"{literal}";
-        }
-
         public esPercentileContOver(int literal)
-        {
-            this.literal = $"{literal}";
-        }
-
-        public esPercentileContOver(short literal)
         {
             this.literal = $"{literal}";
         }
@@ -239,22 +236,8 @@ namespace EntitySpaces.DynamicQuery
 
         #region Constructors
 
-        public esPercentileDiscOver(string literal)
-        {
-            this.literal = literal;
-        }
-
-        public esPercentileDiscOver(long literal)
-        {
-            this.literal = $"{literal}";
-        }
 
         public esPercentileDiscOver(int literal)
-        {
-            this.literal = $"{literal}";
-        }
-
-        public esPercentileDiscOver(short literal)
         {
             this.literal = $"{literal}";
         }

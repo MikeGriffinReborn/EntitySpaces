@@ -601,8 +601,8 @@ namespace ConsoleApp
                 q.Over.LastValue(q.EmployeeID).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("LastValue"),
                 q.Over.Lag(q.EmployeeID, 0.05M).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("Lag"),
                 q.Over.Lead(q.EmployeeID, 0.05M).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("Lead"),
-                q.Over.PercentileCont(".05").PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("PercentileCont"),
-                q.Over.PercentileDisc(".05").PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("PercentileDisc")
+                q.Over.PercentileCont(0.05M).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("PercentileCont"),
+                q.Over.PercentileDisc(0.02M).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("PercentileDisc")
             )
             .GroupBy(q.EmployeeID, q.Freight)
             .ToCollection<OrdersCollection>();
