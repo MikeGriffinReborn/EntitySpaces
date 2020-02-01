@@ -35,11 +35,17 @@ namespace EntitySpaces.DynamicQuery
 {
     public class esLagOver : esBaseOverClause
     {
-        private long offset;
+        private decimal offset;
 
         private esLagOver() { }
 
         public esLagOver(esQueryItem expression, int offset = 1, esQueryItem theDefault = null)
+        {
+            base._columnExpression = expression;
+            this.offset = offset;
+        }
+
+        public esLagOver(esQueryItem expression, decimal offset = 1.0M, esQueryItem theDefault = null)
         {
             base._columnExpression = expression;
             this.offset = offset;
@@ -65,11 +71,17 @@ namespace EntitySpaces.DynamicQuery
 
     public class esLeadOver : esBaseOverClause
     {
-        private long offset;
+        private decimal offset;
 
         private esLeadOver() { }
 
         public esLeadOver(esQueryItem expression, int offset = 1, esQueryItem theDefault = null)
+        {
+            base._columnExpression = expression;
+            this.offset = offset;
+        }
+
+        public esLeadOver(esQueryItem expression, decimal offset = 1.0M, esQueryItem theDefault = null)
         {
             base._columnExpression = expression;
             this.offset = offset;

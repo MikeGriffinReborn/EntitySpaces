@@ -302,6 +302,26 @@ namespace EntitySpaces.Interfaces
         }
 
         /// <summary>
+        /// Accesses data from a previous row in the same result set without the use of a self-join. 
+        /// LAG provides access to a row at a given physical offset that comes before the current row. 
+        /// Use this analytic function in a SELECT statement to compare values in the current row with values in a previous row.
+        /// </summary>
+        /// <param name="expression">>Column or Expression</param>
+        /// <param name="offset">The number of rows back from the current row from which to obtain a value. 
+        /// If not specified, the default is 1. 
+        /// offset can be a column, subquery, or other expression that evaluates to a positive integer or can be implicitly converted to bigint. 
+        /// offset cannot be a negative value or an analytic function.</param>
+        /// <param name="theDefault">The value to return when offset is beyond the scope of the partition. 
+        /// If a default value is not specified, NULL is returned. default can be a column, subquery, or other expression, but it cannot be an analytic function. 
+        /// default must be type-compatible with scalar_expression.</param>
+        public esLagOver Lag(esQueryItem expression, decimal offset = 1.0M, esQueryItem theDefault = null)
+        {
+            var obj = new esLagOver(expression, offset, theDefault);
+            obj.query = _query;
+            return obj;
+        }
+
+        /// <summary>
         /// Accesses data from a subsequent row in the same result set without the use of a self-join. 
         /// LEAD provides access to a row at a given physical offset that follows the current row. 
         /// Use this analytic function in a SELECT statement to compare values in the current row with values in a following row.
@@ -315,6 +335,27 @@ namespace EntitySpaces.Interfaces
         /// offset cannot be a negative value or an analytic function.</param>
         /// <param name="theDefault"></param>
         public esLeadOver Lead(esQueryItem expression, int offset = 1, esQueryItem theDefault = null)
+        {
+            var obj = new esLeadOver(expression, offset, theDefault);
+            obj.query = _query;
+            return obj;
+
+        }
+
+        /// <summary>
+        /// Accesses data from a subsequent row in the same result set without the use of a self-join. 
+        /// LEAD provides access to a row at a given physical offset that follows the current row. 
+        /// Use this analytic function in a SELECT statement to compare values in the current row with values in a following row.
+        /// </summary>
+        /// <param name="expression">The value to be returned based on the specified offset. 
+        /// It is an expression of any type that returns a single (scalar) value. 
+        /// The expression cannot be an analytic function.</param>
+        /// <param name="offset">he number of rows forward from the current row from which to obtain a value. 
+        /// If not specified, the default is 1. 
+        /// offset can be a column, subquery, or other expression that evaluates to a positive integer or can be implicitly converted to bigint. 
+        /// offset cannot be a negative value or an analytic function.</param>
+        /// <param name="theDefault"></param>
+        public esLeadOver Lead(esQueryItem expression, decimal offset = 1.0M, esQueryItem theDefault = null)
         {
             var obj = new esLeadOver(expression, offset, theDefault);
             obj.query = _query;

@@ -20,6 +20,8 @@ namespace ConsoleApp
             conn.ConnectionString = "User ID=sa;Password=blank;Initial Catalog=Northwind;Data Source=localhost";
             esConfigSettings.ConnectionInfo.Connections.Add(conn);
 
+            OverMashup();
+
             AddLoadSaveDeleteSingleEntity();
             StreamlinedDynamicQueryAPI();
             CollectionLoadAll();
@@ -564,6 +566,50 @@ namespace ConsoleApp
             if(coll.Count > 0)
             {
                 // we loaded data
+            }
+        }
+
+        static private void OverMashup()
+        {
+            // This query is nonsense, it's here just to test the syntax ...
+
+            OrdersCollection coll = new OrdersQuery("q", out var q)
+            .Select
+            (
+                // Ranking Methods ...
+                q.Over.RowNumber().OrderBy(q.EmployeeID.Descending).As("RowNumber1"),
+                q.Over.RowNumber().PartitionBy(q.Freight.Sum() * 10).OrderBy(q.EmployeeID.Descending).As("RowNumber2"),
+                q.Over.Rank().OrderBy(q.EmployeeID.Descending).As("Rank"),
+                q.Over.DenseRank().OrderBy(q.EmployeeID.Descending).As("DensRank"),
+                q.Over.PercentRank().OrderBy(q.EmployeeID.Descending).As("PercentRank"),
+                q.Over.Ntile(4).OrderBy(q.EmployeeID.Descending).As("NTile"),
+
+                // Aggregate Methods
+                q.Over.Avg(q.Freight).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("Avg"),
+                q.Over.Count(q.Freight).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("Count"),
+                q.Over.CountBig(q.Freight).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("CountBig"),
+                q.Over.Max(q.Freight).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("Max"),
+                q.Over.Min(q.Freight).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("Min"),
+                q.Over.StdDev(q.Freight).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("StdDev"),
+                q.Over.StdDevP(q.Freight).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("StdDevP"),
+                q.Over.Var(q.Freight).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("Var"),
+                q.Over.VarP(q.Freight).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("VarP"),
+
+                // Analytical Methods
+                q.Over.CumeDist().PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("CumeDist"),
+                q.Over.FirstValue(q.EmployeeID).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("FirstValue"),
+                q.Over.LastValue(q.EmployeeID).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("LastValue"),
+                q.Over.Lag(q.EmployeeID, 0.05M).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("Lag"),
+                q.Over.Lead(q.EmployeeID, 0.05M).PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("Lead"),
+                q.Over.PercentileCont(".05").PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("PercentileCont"),
+                q.Over.PercentileDisc(".05").PartitionBy(q.EmployeeID).OrderBy(q.EmployeeID.Descending).As("PercentileDisc")
+            )
+            .GroupBy(q.EmployeeID, q.Freight)
+            .ToCollection<OrdersCollection>();
+
+            if (coll.Count > 0)
+            {
+                // Then we loaded at least one record
             }
         }
     }
