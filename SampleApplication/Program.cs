@@ -20,8 +20,6 @@ namespace ConsoleApp
             conn.ConnectionString = "User ID=sa;Password=blank;Initial Catalog=Northwind;Data Source=localhost";
             esConfigSettings.ConnectionInfo.Connections.Add(conn);
 
-            OverMashup();
-
             AddLoadSaveDeleteSingleEntity();
             StreamlinedDynamicQueryAPI();
             CollectionLoadAll();
@@ -55,6 +53,7 @@ namespace ConsoleApp
             SumOver();
             OverAndAliasQuerySimple();
             OverAndAliasQuery();
+            OverMashup();
         }
 
         static private void AddLoadSaveDeleteSingleEntity()
@@ -279,7 +278,6 @@ namespace ConsoleApp
 
             {
                 // Skip and Take
-                // PageSize and PageNumber
                 EmployeesCollection coll = new EmployeesQuery("e", out var q)
                 .OrderBy(q.HireDate.Descending).Skip(5).Take(20)
                 .ToCollection<EmployeesCollection>();
@@ -293,6 +291,7 @@ namespace ConsoleApp
 
         static private void SelectAllExcept()
         {
+            // We don't want to bring back the huge image every time
             EmployeesCollection coll = new EmployeesQuery("e", out var q)
             .SelectAllExcept(q.Photo)
             .ToCollection<EmployeesCollection>();
