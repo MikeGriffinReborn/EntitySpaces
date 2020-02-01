@@ -950,11 +950,12 @@ Use the native language syntax, it works as you expect it would.
 
 ## Over Syntax Operators
 
-#Ranking
+### Ranking
 
-|Sub Operator | Description |
-|:-|:-|
-| Over.RowNumber() |Numbers the output of a result set|
+|Sub Operator | SQL Function | Description |
+|:-|:-||:-|
+| Over.RowNumber() |ROW_NUMBER()|Numbers the output of a result set|
+
 
 
 # Setup
