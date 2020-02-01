@@ -429,8 +429,8 @@ OrdersCollection coll = new OrdersQuery("q", out var q)
 // Now act on "sub" query columns
 .Select(
    aliasCompany(), aliasPeriod(), aliasAmount(), aliasItemCount(),  
-   q.Over.Sum(aliasAmount()).PartitionBy(aliasCompany()).OrderBy(aliasPeriod().Ascending).Rows
-	.UnBoundedPreceding.As("CumulativeAmount"),
+   q.Over.Sum(aliasAmount()).PartitionBy(aliasCompany()).OrderBy(aliasPeriod().Ascending)
+      .Rows.UnBoundedPreceding.As("CumulativeAmount"),
    q.Over.Sum(aliasAmount()).PartitionBy(aliasCompany()).As("TotalAmount")
 )
 .OrderBy(aliasCompany().Ascending, aliasPeriod().Ascending)
