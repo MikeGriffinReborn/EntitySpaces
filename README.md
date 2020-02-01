@@ -952,8 +952,9 @@ Use the native language syntax, it works as you expect it would.
 
 #Ranking
 
+|Sub Operator | Description |
 |:-|:-|
-| Over.RowNumber() |Numbers the output of a result set.|
+| Over.RowNumber() |Numbers the output of a result set|
 
 
 # Setup
