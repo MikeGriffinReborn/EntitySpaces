@@ -375,6 +375,25 @@ SELECT o.[OrderID],o.[OrderDate],
 FROM [Orders] o
 ```
 
+## OVER Clause Examples
+Determines the partitioning and ordering of a rowset before the associated window function is applied. That is, the OVER clause defines a window or user-specified set of rows within a query result set. A window function then computes a value for each row in the window. You can use the OVER clause with functions to compute aggregated values such as moving averages, cumulative aggregates, running totals, or a top N per group results.
+
+```c#
+OrdersCollection coll = new OrdersQuery("o", out var o)
+.Select
+(
+    o.Over.Sum(o.Freight).PartitionBy(o.EmployeeID).As("FreightByEmployee"),
+    o.Over.Sum(o.Freight).PartitionBy(o.EmployeeID, o.ShipCountry).As("FreightByEmployeeAndCountry")
+)
+.OrderBy(o.EmployeeID.Ascending, o.ShipCountry.Ascending)
+.ToCollection<OrdersCollection>();
+
+if (coll.Count > 0)
+{
+    // Then we loaded at least one record
+}
+```
+
 ## AND and OR and Concatentation
 And and Or work just as you would expect, use parenthesis to control the order of precedence. You can also concatentat and use all kinds of operators in your queries. See the tables at the end of this document.
 
