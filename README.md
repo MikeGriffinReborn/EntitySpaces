@@ -949,17 +949,17 @@ Use the native language syntax, it works as you expect it would.
 | Cast() | SQL Cast|
 
 ## "Over" Clause Operators
-For information on the following operators see (https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql?view=sql-server-ver15)[SELECT - OVER Clause (Transact-SQL)]
+For information on the following operators see (SELECT - OVER Clause (Transact-SQL)](https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql?view=sql-server-ver15).
 
 ### Ranking Functions
 
-|Sub Operator | SQL Function | Description |
-|:-|:-|:-|
-| Over.RowNumber() |ROW_NUMBER()|Numbers the output of a result set|
-| Over.Rank()|RANK()|Returns the rank of each row within the partition of a result set|
-| Over.DenseRank()|DENSE_RANK()|returns the rank of each row within a result set partition, with no gaps in the ranking values|
-| Over.PercentRank()|PERCENT_RANK()|Calculates the relative rank of a row within a group of rows in|
-| Over.Ntile()|NTILE()|Distributes the rows in an ordered partition into a specified number of groups |
+|Sub Operator | SQL Function | 
+|:-|:-|
+| Over.RowNumber() |ROW_NUMBER()
+| Over.Rank()|RANK()|
+| Over.DenseRank()|DENSE_RANK()|
+| Over.PercentRank()|PERCENT_RANK()|
+| Over.Ntile()|NTILE()|
 
 
 
