@@ -442,6 +442,31 @@ if(coll.Count > 0)
 }
 ```
 
+SQL Generated:
+
+```sql
+SELECT
+   sub.[CompanyName],
+   sub.[Period],
+   sub.[Amount],
+   sub.[TotalItems],
+   SUM([Amount]) OVER( PARTITION BY [CompanyName] ORDER BY sub.[Period] ASC ROWS UNBOUNDED PRECEDING ) AS 'CumulativeAmount',
+   SUM([Amount]) OVER( PARTITION BY [CompanyName] ) AS 'TotalAmount' 
+FROM
+   (
+      SELECT
+         COUNT(*) AS 'TotalItems',
+         c.[CompanyName] AS 'CompanyName',
+         DATEPART(year, o.[OrderDate]) AS 'Period',
+         CAST(SUM(ROUND((((1.00 - od.[Discount]) * od.[UnitPrice]) * od.[Quantity]), 2)) AS decimal(19, 2)) AS 'Amount' 
+      FROM [Orders] o 
+         INNER JOIN [Customers] c ON c.[CustomerID] = o.[CustomerID] 
+         INNER JOIN [Order Details] od ON od.[OrderID] = o.[OrderID] 
+      GROUP BY c.[CompanyName], DATEPART(year, o.[OrderDate])
+   )
+   AS sub 
+ORDER BY sub.[CompanyName] ASC, sub.[Period] ASC
+```
 
 ## AND and OR and Concatentation
 And and Or work just as you would expect, use parenthesis to control the order of precedence. You can also concatentat and use all kinds of operators in your queries. See the tables at the end of this document.
