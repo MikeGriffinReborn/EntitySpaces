@@ -373,6 +373,122 @@ SELECT o.[OrderID],o.[OrderDate],
 FROM [Orders] o
 ```
 
+## OVER Clause Examples
+Determines the partitioning and ordering of a rowset before the associated window function is applied. That is, the OVER clause defines a window or user-specified set of rows within a query result set. A window function then computes a value for each row in the window. You can use the OVER clause with functions to compute aggregated values such as moving averages, cumulative aggregates, running totals, or a top N per group results.
+
+```c#
+OrdersCollection coll = new OrdersQuery("o", out var o)
+.Select
+(
+    o.Over.Sum(o.Freight).PartitionBy(o.EmployeeID).As("FreightByEmployee"),
+    o.Over.Sum(o.Freight).PartitionBy(o.EmployeeID, o.ShipCountry).As("FreightByEmployeeAndCountry")
+)
+.OrderBy(o.EmployeeID.Ascending, o.ShipCountry.Ascending)
+.ToCollection<OrdersCollection>();
+
+if (coll.Count > 0)
+{
+    // Then we loaded at least one record
+}
+```
+SQL Generated:
+
+```sql
+SELECT 
+    SUM(o.[Freight]) OVER( PARTITION BY o.[EmployeeID] ) AS 'FreightByEmployee',
+    SUM(o.[Freight]) OVER( PARTITION BY o.[EmployeeID], o.[ShipCountry] ) AS 'FreightByEmployeeAndCountry'  
+FROM [Orders] o 
+ORDER BY o.[EmployeeID] ASC,o.[ShipCountry] ASC
+```
+
+## OVER Clauses with esAlias and Rows Syntax
+This might look like a complicated query but it's really quite simple. As you look at the code below think of it this way. With the From() statement is a nested every day ol' EntitySpaces Query, and we give it an alias of "sub". Then, the outer query simply Selects columns from and Orders by the columns in the the nested query. Notice how simple the SQL generated from this query actually is, and it looks just like the C# code.
+
+```c#
+// We grab these aliases in the nested query via "out" parameters
+esAlias aliasCompany = null, aliasPeriod = null, aliasAmount = null, aliasItemCount = null;
+
+OrdersCollection coll = new OrdersQuery("q", out var q)
+.From<OrdersQuery>(out var sub, () => // mimic a CTE
+{
+    // Nested Query
+    return new OrdersQuery("o", out var o)
+    .InnerJoin<CustomersQuery>("c", out var c).On(c.CustomerID == o.CustomerID)
+    .InnerJoin<OrderDetailsQuery>("od", out var od).On(od.OrderID == o.OrderID)
+    .Select
+    (
+        // We're going to grab the aliased columns here for re-use in the outer query later
+        o.Count().As("TotalItems", out aliasItemCount),
+        c.CompanyName.As("CompanyName", out aliasCompany),
+        o.OrderDate.DatePart("year").As("Period", out aliasPeriod),
+        ((1.00M - od.Discount) * od.UnitPrice * od.Quantity).Cast(esCastType.Decimal, 19, 2)
+		.Sum().Round(2).As("Amount", out aliasAmount)
+    )
+    .GroupBy(c.CompanyName, o.OrderDate.DatePart("year"));
+}).As("sub")
+// Now act on "sub" query columns
+.Select(
+   aliasCompany(), aliasPeriod(), aliasAmount(), aliasItemCount(),  
+   q.Over.Sum(aliasAmount()).PartitionBy(aliasCompany()).OrderBy(aliasPeriod().Ascending)
+      .Rows.UnBoundedPreceding.As("CumulativeAmount"),
+   q.Over.Sum(aliasAmount()).PartitionBy(aliasCompany()).As("TotalAmount")
+)
+.OrderBy(aliasCompany().Ascending, aliasPeriod().Ascending)
+.ToCollection<OrdersCollection>();
+
+if(coll.Count > 0)
+{
+    // we loaded data
+}
+```
+
+SQL Generated:
+
+```sql
+SELECT
+   sub.[CompanyName],
+   sub.[Period],
+   sub.[Amount],
+   sub.[TotalItems],
+   SUM([Amount]) OVER( PARTITION BY [CompanyName] ORDER BY sub.[Period] ASC 
+      ROWS UNBOUNDED PRECEDING ) AS 'CumulativeAmount',
+   SUM([Amount]) OVER( PARTITION BY [CompanyName] ) AS 'TotalAmount' 
+FROM
+   (
+      SELECT
+         COUNT(*) AS 'TotalItems',
+         c.[CompanyName] AS 'CompanyName',
+         DATEPART(year, o.[OrderDate]) AS 'Period',
+         CAST(SUM(ROUND((((1.00 - od.[Discount]) * od.[UnitPrice]) * od.[Quantity]), 2)) 
+	    AS decimal(19, 2)) AS 'Amount' 
+      FROM [Orders] o 
+         INNER JOIN [Customers] c ON c.[CustomerID] = o.[CustomerID] 
+         INNER JOIN [Order Details] od ON od.[OrderID] = o.[OrderID] 
+      GROUP BY c.[CompanyName], DATEPART(year, o.[OrderDate])
+   )
+   AS sub 
+ORDER BY sub.[CompanyName] ASC, sub.[Period] ASC
+```
+
+The output is as follows is ...
+
+| CompanyName | Period | Amount | TotalItems  | CumulativeAmount  | TotalAmount  |
+|:-|:-|:-|:-|:-|:-|
+|Alfreds Futterkiste|1997|2022.50|6|2022.50|4273.00|
+|Alfreds Futterkiste|1998|2250.50|6|4273.00|4273.00|
+|Ana Trujillo Emparedados y helados|1996|88.80|2|88.80|1402.95|
+|Ana Trujillo Emparedados y helados|1997|799.75|4|888.55|1402.95|
+|Ana Trujillo Emparedados y helados|1998|514.40|4|1402.95|1402.95|
+|Antonio Moreno Taquería|1996|403.20|1|403.20|7023.97|
+|Antonio Moreno Taquería|1997|5960.77|14|6363.97|7023.97|
+|Antonio Moreno Taquería|1998|660.00|2|7023.97|7023.97|
+|Around the Horn|1996|1379.00|5|1379.00|13390.65|
+|Around the Horn|1997|6406.90|18|7785.90|13390.65|
+|Around the Horn|1998|5604.75|7|13390.65|13390.65|
+|Berglunds snabbköp|1996|4324.40|9|4324.40|24927.58|
+|Berglunds snabbköp|1997|13849.02|27|18173.42|24927.58|
+|Berglunds snabbköp|1998|6754.16|16|24927.58|24927.58|
+
 ## AND and OR and Concatentation
 And and Or work just as you would expect, use parenthesis to control the order of precedence. You can also concatentat and use all kinds of operators in your queries. See the tables at the end of this document.
 
@@ -712,14 +828,15 @@ ORDER BY e.[EmployeeID] DESC
 Here we are getting the count of Employees who have NULL as their ReportsTo ...
 ```c#
 int count = new EmployeesQuery("e", out var q)
-    .Where(q.ReportsTo.IsNull())
-    .es.CountAll().ExecuteScalar<int>();
+  .Select(q.Count())
+  .Where(q.ReportsTo.IsNull())
+  .ExecuteScalar<int>();
 ```
 
 SQL Generated:
 
 ```sql
-SELECT COUNT(*) AS 'Count' 
+SELECT COUNT(*)
 FROM [Employees] e 
 WHERE e.[ReportsTo] IS NULL
 ```
@@ -945,6 +1062,48 @@ Use the native language syntax, it works as you expect it would.
 | Sum() | Summation|
 | Cast() | SQL Cast|
 
+## "Over" Clause Operators
+For information on the following operators see [SELECT - OVER Clause (Transact-SQL)](https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql?view=sql-server-ver15).
+
+Typical syntax is **OVER**( **PARTITION BY** 'clause' **ORDER BY** 'clause' **ROWS** or **RANGE** 'clause')
+
+### Ranking Functions
+
+|Sub Operator | SQL Function | 
+|:-|:-|
+| Over.RowNumber() |ROW_NUMBER()|
+| Over.Rank()|RANK()|
+| Over.DenseRank()|DENSE_RANK()|
+| Over.PercentRank()|PERCENT_RANK()|
+| Over.Ntile()|NTILE()|
+
+### Aggregate Functions
+
+|Sub Operator | SQL Function | 
+|:-|:-|
+|Over.Avg()| AVG() OVER() |
+|Over.Count()| COUNT() OVER() |
+|Over.CountBig()| COUNT_BIG() OVER() |
+|Over.Max()| MAX() OVER() |
+|Over.Min()| MIN OVER() |
+|Over.StdDev()| STDDEV() OVER |
+|Over.StdDevP()| STDDEVP() OVER() |
+|Over.Var()| VAR() OVER()|
+|Over.VarP()| VARP() OVER() |
+
+### Analytical Functions
+
+|Sub Operator | SQL Function | 
+|:-|:-|
+|Over.CumeDist()|CUME_DIST()|
+|Over.FirstValue()|FIRST_VALUE()|
+|Over.LastValue()|LAST_VALUE()|
+|Over.Lag()|LAG()|
+|Over.Lead()|LEAD()|
+|Over.PercentileCont()|PERCENTILE_CONT()|
+|Over.PercentileDisc()|PERCENTILE_DISC()|
+
+
 # Setup
 
 1. Install [EntitySpaces Studio](https://github.com/MikeGriffinReborn/EntitySpaces/raw/master/EntitySpaces.Studio/EntitySpacesStudio_20191.1218.0.zip?raw=true/ "Zip File")
@@ -1004,5 +1163,3 @@ conn.DatabaseVersion = "2012";
 conn.ConnectionString = "Database=Northwind;Data Source=localhost;User Id=myuser;Password=mypassword;";
 esConfigSettings.ConnectionInfo.Connections.Add(conn);
 ```
-
-[Link to another doc](TestLink.md)
