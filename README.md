@@ -951,15 +951,17 @@ Use the native language syntax, it works as you expect it would.
 ## "Over" Clause Operators
 For information on the following operators see [SELECT - OVER Clause (Transact-SQL)](https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql?view=sql-server-ver15).
 
+Typical syntax is OVER( PARTITION BY 'clause'ORDER BY 'clause' ROWS or RANGE 'clause')
+
 ### Ranking Functions
 
 |Sub Operator | SQL Function | 
 |:-|:-|
-| Over.RowNumber() |ROW_NUMBER() OVER(...)|
-| Over.Rank()|RANK() OVER(...)|
-| Over.DenseRank()|DENSE_RANK() OVER(...)|
-| Over.PercentRank()|PERCENT_RANK( OVER(...))|
-| Over.Ntile()|NTILE() OVER(...)|
+| Over.RowNumber() |ROW_NUMBER()|
+| Over.Rank()|RANK()|
+| Over.DenseRank()|DENSE_RANK()|
+| Over.PercentRank()|PERCENT_RANK()|
+| Over.Ntile()|NTILE()|
 
 
 
