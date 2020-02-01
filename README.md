@@ -472,6 +472,20 @@ FROM
 ORDER BY sub.[CompanyName] ASC, sub.[Period] ASC
 ```
 
+The output is as follows is ...
+
+|Alfreds Futterkiste|1997|2022.50|6|2022.50|2022.50|
+|Alfreds Futterkiste|1998|2250.50|6|4273.00|2250.50|
+|Ana Trujillo Emparedados y helados|1996|88.80|2|88.80|88.80|
+|Ana Trujillo Emparedados y helados|1997|799.75|4|888.55|799.75|
+|Ana Trujillo Emparedados y helados|1998|514.40|4|1402.95|514.40|
+|Antonio Moreno Taquería|1996|403.20|1|403.20|403.20|
+|Antonio Moreno Taquería|1997|5960.77|14|6363.97|5960.77|
+|Antonio Moreno Taquería|1998|660.00|2|7023.97|660.00|
+|Around the Horn|1996|1379.00|5|1379.00|1379.00|
+|Around the Horn|1997|6406.90|18|7785.90|6406.90|
+|Around the Horn|1998|5604.75|7|13390.65|5604.75|
+
 ## AND and OR and Concatentation
 And and Or work just as you would expect, use parenthesis to control the order of precedence. You can also concatentat and use all kinds of operators in your queries. See the tables at the end of this document.
 
