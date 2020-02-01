@@ -404,7 +404,7 @@ ORDER BY o.[EmployeeID] ASC,o.[ShipCountry] ASC
 ```
 
 ## OVER Clauses with esAlias and Rows Syntax
-This might look like a complicated query but it's really quite simple. As you look at the code below think of it this way. With the From() statement is a nested every day ol' EntitySpaces Query, and we give it an alias of "sub". Then, the outer query simply Selects columns from and Orders by the columns in the the nested query. Notice how simple the SQL generated from this query actually is, and it looks just like the C# code.
+This might look like a complicated query but it's really quite simple. As you look at the code below think of it this way. Within the From() statement is a nested query. Also, notice how we grab aliased columns via the "out" parameter. We also our nested query an alias of "sub". Finally, the outer query selects and orders columns from the nested query using our aliased columns as well as applies the OVER syntax over the aliased columns, even using the sophisticated ROWS syntax. Notice how simple the SQL generated from this query actually is, and it looks just like the C# code.
 
 ```c#
 // We grab these aliases in the nested query via "out" parameters
