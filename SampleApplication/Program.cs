@@ -80,11 +80,13 @@ namespace ConsoleApp
 
         static private void StreamlinedDynamicQueryAPI()
         {
+            // Load a single entity
             Employees emp = new EmployeesQuery("e", out var q)
                 .Select(q.EmployeeID, q.FirstName, q.LastName)
                 .Where(q.EmployeeID == 5)
                 .ToEntity<Employees>();
 
+            // Load a collection
             EmployeesCollection coll = new EmployeesQuery("e", out var c)
                 .Select(c.EmployeeID, c.FirstName, c.LastName)
                 .ToCollection<EmployeesCollection>();
