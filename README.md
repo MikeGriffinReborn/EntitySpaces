@@ -475,7 +475,7 @@ ORDER BY sub.[CompanyName] ASC, sub.[Period] ASC
 The output is as follows is ...
 
 | CompanyName | Period | Amount | TotalItems  | CumulativeAmount  | TotalAmount  |
-|:-|:-|:-|:-|
+|:-|:-|:-|:-|:-|:-|
 |Alfreds Futterkiste|1997|2022.50|6|2022.50|4273.00|
 |Alfreds Futterkiste|1998|2250.50|6|4273.00|4273.00|
 |Ana Trujillo Emparedados y helados|1996|88.80|2|88.80|1402.95|
