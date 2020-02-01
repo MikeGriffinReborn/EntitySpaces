@@ -714,14 +714,15 @@ ORDER BY e.[EmployeeID] DESC
 Here we are getting the count of Employees who have NULL as their ReportsTo ...
 ```c#
 int count = new EmployeesQuery("e", out var q)
-    .Where(q.ReportsTo.IsNull())
-    .es.CountAll().ExecuteScalar<int>();
+  .Select(q.Count())
+  .Where(q.ReportsTo.IsNull())
+  .ExecuteScalar<int>();
 ```
 
 SQL Generated:
 
 ```sql
-SELECT COUNT(*) AS 'Count' 
+SELECT COUNT(*)
 FROM [Employees] e 
 WHERE e.[ReportsTo] IS NULL
 ```
