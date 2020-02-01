@@ -951,7 +951,7 @@ Use the native language syntax, it works as you expect it would.
 ## "Over" Clause Operators
 For information on the following operators see [SELECT - OVER Clause (Transact-SQL)](https://docs.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql?view=sql-server-ver15).
 
-Typical syntax is OVER( PARTITION BY 'clause'ORDER BY 'clause' ROWS or RANGE 'clause')
+Typical syntax is **OVER**( **PARTITION BY** 'clause' **ORDER BY** 'clause' **ROWS** or **RANGE** 'clause')
 
 ### Ranking Functions
 
