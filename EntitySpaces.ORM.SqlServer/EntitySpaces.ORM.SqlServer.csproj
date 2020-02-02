@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>net451;net46;net461;netstandard2.0;netcoreapp2.0;netcoreapp3.0</TargetFrameworks>
-    <AssemblyVersion>2020.1.15.1</AssemblyVersion>
-    <FileVersion>2020.1.15.1</FileVersion>
-    <Version>2020.1.15.1</Version>
+    <AssemblyVersion>2020.2.1.0</AssemblyVersion>
+    <FileVersion>2020.2.1.0</FileVersion>
+    <Version>2020.2.1.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>EntitySpaces in .NET Standard Mode for SQL Server (single assembly install)</Description>
+    <Description>EntitySpaces in .NET for SQL Server (single assembly install)</Description>
     <PackageProjectUrl>https://mikegriffinreborn.github.io/EntitySpaces/</PackageProjectUrl>
     <PackageTags>EntitySpaces, ORM, SQL</PackageTags>
-    <PackageReleaseNotes>Now supports .NET Standard 2.x, .NET Core 2.x &amp; 3.x .NET Framework 4.5.1, 4.6, 4.6.1</PackageReleaseNotes>
+    <PackageReleaseNotes>OVER() syntax enhancements. Also, a breaking change, query.es.CountAll() is now query.Select(query.Count()), see the Count example on github, a quick no brainer code change and yer' off and running.</PackageReleaseNotes>
     <Product>EntitySpaces</Product>
     <PackageIcon>esIcon.png</PackageIcon>
     <PackageIconUrl />
