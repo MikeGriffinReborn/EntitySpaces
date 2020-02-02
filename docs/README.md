@@ -402,7 +402,7 @@ ORDER BY o.[EmployeeID] ASC,o.[ShipCountry] ASC
 ```
 
 ## OVER Clauses with esAlias and Rows Syntax
-This might look like a complicated query but it's really quite simple. As you look at the code below think of it this way. Within the From() statement is a nested query. Also, notice how we grab aliased columns via the "out" parameter. We also give our nested query an alias of "sub". Finally, the outer query selects and orders columns from the nested query using the aliased columns as well as applies the OVER syntax over the aliased columns. The outer query even using the sophisticated ROWS syntax. Notice how simple the SQL generated from this query actually is, and it looks just like the C# code.
+This might look like a complicated query but it's really quite simple. As you look at the code below think of it this way. Within the From() statement is a nested query. Also, notice how we grab aliased columns via the "out" parameter. We also give our nested query an alias of "sub". Finally, the outer query selects and orders columns from the nested query using the aliased columns as well as applies the OVER syntax over the aliased columns. The outer query also uses the sophisticated ROWS syntax. Notice how simple the SQL generated from this query actually is, and it looks just like the C# code.
 
 ```c#
 // We grab these aliases in the nested query via "out" parameters
