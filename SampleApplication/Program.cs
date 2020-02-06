@@ -3,6 +3,8 @@ using EntitySpaces.Interfaces;
 using EntitySpaces.DynamicQuery;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace ConsoleApp
 {
@@ -54,6 +56,8 @@ namespace ConsoleApp
             OverAndAliasQuerySimple();
             OverAndAliasQuery();
             OverMashup();
+
+            GetEmployees(1, 2);
         }
 
         static private void AddLoadSaveDeleteSingleEntity()
@@ -612,6 +616,37 @@ namespace ConsoleApp
             {
                 // Then we loaded at least one record
             }
+        }
+
+        static private dynamic GetEmployees(int skip, int take)
+        {
+            EmployeesCollection coll = null;
+            int count = 0;
+
+            Parallel.Invoke(
+                () =>
+                {
+                    // Get the total count
+                    count = new EmployeesQuery("e", out var q)
+                    .Select(q.Count())
+                    .ExecuteScalar<int>();
+                },
+                () =>
+                {
+                    // Get "paged" list, must order by when paging 
+                    coll = new EmployeesQuery("e", out var q)
+                    .Select(q.EmployeeID, q.LastName).Skip(skip).Take(take)
+                    .OrderBy(q.LastName.Ascending)
+                    .ToCollection<EmployeesCollection>();
+                });
+
+            return new
+            {
+                hasMore = count > (skip + take),
+                totalCount = count,
+                totalReturned = coll.Count,
+                data = coll
+            };
         }
     }
 }
