@@ -886,10 +886,12 @@ q.Select(q.FirstName);
 
 Using the raw SQL injection techniques above will allow you to invoke SQL functions that we don’t support, including database vender specific SQL, and so on. Hopefully, you will almost never have to resort to writing a custom load method to invoke a stored procedure or an entirely hand written SQL statement. Of course, you can use our native API everywhere and just inject the raw SQL on the GroupBy for instance. You can mix and match to get the desired SQL.
 
-## Filter and Sorting After Loading
-EntitySpaces collection have a 'Filter' property that allows you to use a Linq query to filter and sort a collection after it has been loaded. Basically, any Linq query is valid, you can use Where() and OrderBy() and so on. Setting the 'Filter' property doesn't remove any records, it just temporarily hides them. If you use foreach() you will only see those records that meet the Filter criteria. To remove the filter just set the 'Filter' property to null, all of the original records then become visible again.
+## the 'Filter' Property
+EntitySpaces collections have a 'Filter' property that allows you to use a Linq query to filter and sort a collection after it has been loaded. Basically, any Linq query is valid, you can use Where() and OrderBy() and so on. Setting the 'Filter' property doesn't remove any records, it just temporarily hides them. If you use foreach() you will only see those records that meet the Filter criteria. To remove the filter just set the 'Filter' property to null, all of the original records then become visible again.
 
 ```c#
+using System.Linq;
+
 EmployeesCollection coll = new EmployeesCollection();
 if (coll.LoadAll())
 {
