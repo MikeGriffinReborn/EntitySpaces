@@ -900,7 +900,7 @@ if (coll.LoadAll())
 
     foreach (Employees employee in coll)
     {
-        // Each employee's FirstName has an 'a' in
+        // Each employee's FirstName contains an 'a' 
     }
 
     // Clear the filter
