@@ -77,10 +77,16 @@ namespace <%=Namespace%>
 	[DataContract(Name = "<%=source.Query%>", Namespace = "http://www.entityspaces.net")]<%}%>	
 	public partial class <%=source.Query%> : <%=source.esQuery%>
 	{
-		public <%=source.Query%>(string joinAlias)
+		public <%=source.Query%>(string joinAlias = "<%=source.Query%>")
 		{
 			this.es.JoinAlias = joinAlias;
 		}	
+
+		public <%=source.Query%>(string joinAlias, out <%=source.Query%> query)
+		{
+			query = this;
+			this.es.JoinAlias = joinAlias;
+		}
 
 		override protected string GetQueryName()
 		{

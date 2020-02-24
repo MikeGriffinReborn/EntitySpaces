@@ -685,7 +685,7 @@ if(RiaServicesSupport) {%>
                     this._<%=objName%>.es.Connection.Name = this.es.Connection.Name;
                     this.SetPreSave("<%=objName%>", this._<%=objName%>);
 
-					if(this._<%=objName%> == null<% 
+					if(this._<%=objName%>.es.HasData<% 
 					for(int i = 0; i < tr.ColumnCount; i++)
 					{%><%=" && " + esMeta.esPlugIn.PropertyName(tr.PrimaryColumns[i]) + " != null"%><%
 					}%>)
