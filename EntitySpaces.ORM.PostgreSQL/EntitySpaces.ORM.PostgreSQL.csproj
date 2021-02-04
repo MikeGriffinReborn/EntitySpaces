@@ -57,6 +57,11 @@
     <Compile Include="..\EntitySpaces.DynamicQuery\esExpression.cs" Link="EntitySpaces.DynamicQuery\esExpression.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esExpressionOrComparison.cs" Link="EntitySpaces.DynamicQuery\esExpressionOrComparison.cs" />
     <Compile Include="..\EntitySpaces.DynamicQuery\esPartition.cs" Link="EntitySpaces.DynamicQuery\esPartition.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\OverClause\esBaseOverClause.cs" Link="EntitySpaces.DynamicQuery\OverClause\esBaseOverClause.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\OverClause\esAggregateOver.cs" Link="EntitySpaces.DynamicQuery\OverClause\esAggregateOver.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\OverClause\esAnalyticOver.cs" Link="EntitySpaces.DynamicQuery\OverClause\esAnalyticOver.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\OverClause\esRankingOver.cs" Link="EntitySpaces.DynamicQuery\OverClause\esRankingOver.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\OverClause\esWindowFrame.cs" Link="EntitySpaces.DynamicQuery\OverClause\esWindowFrame.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery.cs" Link="EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery2.cs" Link="EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery2.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\DynamicQuery\IDynamicQueryInternal.cs" Link="EntitySpaces.Interfaces\DynamicQuery\IDynamicQueryInternal.cs" />
