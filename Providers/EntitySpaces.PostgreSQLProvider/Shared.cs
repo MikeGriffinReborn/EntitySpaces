@@ -81,11 +81,7 @@ namespace EntitySpaces.Npgsql2Provider
 
                     if (sequence != null && sequence.Length > 0)
                     {
-                        // Our identity column ...
-                        p = cmd.Parameters.Add(CloneParameter(types[col.Name]));
-                        p.Direction = ParameterDirection.Output;
-
-                        autoInc += " SELECT * FROM " + sequence + " as \"" + col.Name + "\"";
+                        autoInc += " RETURNING \"" + col.Name + "\";";
                     }
                     
                     p = CloneParameter(types[col.Name]);
@@ -237,7 +233,7 @@ namespace EntitySpaces.Npgsql2Provider
 
             if (into.Length != 0)
             {
-                sql += " (" + into + ") VALUES (" + values + ");";
+                sql += " (" + into + ") VALUES (" + values + ")";
             }
             else
             {
