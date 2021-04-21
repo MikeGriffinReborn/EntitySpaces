@@ -114,7 +114,7 @@ namespace EntitySpaces.Interfaces
             {
                 string cnString = String.Empty;
 
-                if (this.connectionString == null)
+                if (this.connectionString == null)                    
                     cnString = esConfigSettings.DefaultConnection.ConnectionString;
                 else
                 {
