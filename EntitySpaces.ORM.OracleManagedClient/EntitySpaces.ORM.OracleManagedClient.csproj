@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFrameworks>net46;net461;netstandard2.1;netcoreapp3.1;net5.0</TargetFrameworks>
-    <AssemblyVersion>2021.4.21.2</AssemblyVersion>
-    <FileVersion>2021.4.21.2</FileVersion>
-    <Version>2021.4.21.2</Version>
+    <AssemblyVersion>2021.5.5.1</AssemblyVersion>
+    <FileVersion>2021.5.5.1</FileVersion>
+    <Version>2021.5.5.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>EntitySpaces in .NET for Oracle Server (Managed Client, single assembly install)</Description>
     <PackageProjectUrl>https://mikegriffinreborn.github.io/EntitySpaces/</PackageProjectUrl>

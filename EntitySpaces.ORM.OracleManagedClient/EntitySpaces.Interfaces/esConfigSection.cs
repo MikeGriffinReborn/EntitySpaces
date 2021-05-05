@@ -185,6 +185,12 @@ namespace EntitySpaces.Interfaces
     /// </summary>
     public sealed class esConfigSection : ConfigurationSection
     {
+        static esConfigSection()
+        {
+            // Load at startup
+            InitializeFromConfigSection();
+        }
+
         [ConfigurationProperty("connectionInfo", IsDefaultCollection = true)]
         public esConfigConnectionInfoElement connectionInfo
         {

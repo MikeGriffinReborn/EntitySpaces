@@ -114,8 +114,17 @@ namespace EntitySpaces.Interfaces
             {
                 string cnString = String.Empty;
 
-                if (this.connectionString == null)                    
+                if (this.connectionString == null)
+                {
+#if DOTNET5 || DOTNET4
+                    if (esConfigSettings.DefaultConnection == null || String.IsNullOrEmpty(esConfigSettings.DefaultConnection.ConnectionString))
+                    {
+                        // Read settings from app.config / web.config
+                        esConfigSection.InitializeFromConfigSection();
+                    }
+#endif
                     cnString = esConfigSettings.DefaultConnection.ConnectionString;
+                }
                 else
                 {
                     cnString = this.connectionString;
@@ -130,7 +139,7 @@ namespace EntitySpaces.Interfaces
                             int index = cnString.IndexOf(':');
                             string name = cnString.Substring(index + 1);
                             this.connectionString = cnString = "";
-                                //System.Configuration.ConfigurationManager.ConnectionStrings[name].ConnectionString;
+                            //System.Configuration.ConfigurationManager.ConnectionStrings[name].ConnectionString;
 
                             esConfigSettings.DefaultConnection.ConnectionString = cnString;
 
