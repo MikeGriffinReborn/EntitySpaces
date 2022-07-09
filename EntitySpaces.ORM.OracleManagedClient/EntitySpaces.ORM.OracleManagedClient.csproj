@@ -1,0 +1,190 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net46;net461;netstandard2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+    <AssemblyVersion>2021.5.5.1</AssemblyVersion>
+    <FileVersion>2021.5.5.1</FileVersion>
+    <Version>2021.5.5.1</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>EntitySpaces in .NET for Oracle Server (Managed Client, single assembly install)</Description>
+    <PackageProjectUrl>https://mikegriffinreborn.github.io/EntitySpaces/</PackageProjectUrl>
+    <PackageTags>EntitySpaces, ORM, Oracle</PackageTags>
+    <PackageReleaseNotes>Added configuration via app.config / web.config</PackageReleaseNotes>
+    <Product>EntitySpaces</Product>
+    <PackageIcon>esIcon.png</PackageIcon>
+    <PackageIconUrl />
+    <RepositoryUrl>https://github.com/MikeGriffinReborn/EntitySpaces</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <AutoGenerateBindingRedirects></AutoGenerateBindingRedirects>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'=='net46'">
+    <DefineConstants>DOTNET4</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='net461'">
+    <DefineConstants>DOTNET4</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
+    <DefineConstants>DOTNETCORE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
+    <DefineConstants>DOTNETCORE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='net5.0'">
+    <DefineConstants>DOTNET5</DefineConstants>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <Compile Include="..\EntitySpaces.Core\esCollectionWCFPacket.cs" Link="EntitySpaces.Core\esCollectionWCFPacket.cs" />
+    <Compile Include="..\EntitySpaces.Core\esEntity.cs" Link="EntitySpaces.Core\esEntity.cs" />
+    <Compile Include="..\EntitySpaces.Core\esDynamic.cs" Link="EntitySpaces.Core\esDynamic.cs" />
+    <Compile Include="..\EntitySpaces.Core\esEntityCollection.Binding.cs" Link="EntitySpaces.Core\esEntityCollection.Binding.cs" />
+    <Compile Include="..\EntitySpaces.Core\esEntityCollection.cs" Link="EntitySpaces.Core\esEntityCollection.cs" />
+    <Compile Include="..\EntitySpaces.Core\esEntityCollectionBase.cs" Link="EntitySpaces.Core\esEntityCollectionBase.cs" />
+    <Compile Include="..\EntitySpaces.Core\esEntityCollectionEnumeratorGeneric.cs" Link="EntitySpaces.Core\esEntityCollectionEnumeratorGeneric.cs" />
+    <Compile Include="..\EntitySpaces.Core\esEntityCollectionView.cs" Link="EntitySpaces.Core\esEntityCollectionView.cs" />
+    <Compile Include="..\EntitySpaces.Core\esEntityComparer.cs" Link="EntitySpaces.Core\esEntityComparer.cs" />
+    <Compile Include="..\EntitySpaces.Core\esEntityDebuggerView.cs" Link="EntitySpaces.Core\esEntityDebuggerView.cs" />
+    <Compile Include="..\EntitySpaces.Core\esExtendedPropertyAttribute.cs" Link="EntitySpaces.Core\esExtendedPropertyAttribute.cs" />
+    <Compile Include="..\EntitySpaces.Core\esHierarchicalPropertyAttribute.cs" Link="EntitySpaces.Core\esHierarchicalPropertyAttribute.cs" />
+    <Compile Include="..\EntitySpaces.Core\esMetadata.cs" Link="EntitySpaces.Core\esMetadata.cs" />
+    <Compile Include="..\EntitySpaces.Core\esPropertyDescriptor.cs" Link="EntitySpaces.Core\esPropertyDescriptor.cs" />
+    <Compile Include="..\EntitySpaces.Core\esSmartDto.cs" Link="EntitySpaces.Core\esSmartDto.cs" />
+    <Compile Include="..\EntitySpaces.Core\esSmartDtoMap.cs" Link="EntitySpaces.Core\esSmartDtoMap.cs" />
+    <Compile Include="..\EntitySpaces.Core\esUpdateViewEventHandler.cs" Link="EntitySpaces.Core\esUpdateViewEventHandler.cs" />
+    <Compile Include="..\EntitySpaces.Core\esUtility.cs" Link="EntitySpaces.Core\esUtility.cs" />
+    <Compile Include="..\EntitySpaces.Core\esUtilityEntity.cs" Link="EntitySpaces.Core\esUtilityEntity.cs" />
+    <Compile Include="..\EntitySpaces.Core\esVisitor.cs" Link="EntitySpaces.Core\esVisitor.cs" />
+    <Compile Include="..\EntitySpaces.Core\IEntity.cs" Link="EntitySpaces.Core\IEntity.cs" />
+    <Compile Include="..\EntitySpaces.Core\IEntityCollection.cs" Link="EntitySpaces.Core\IEntityCollection.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\enums.cs" Link="EntitySpaces.DynamicQuery\enums.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esApplyItem.cs" Link="EntitySpaces.DynamicQuery\esApplyItem.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esCase.cs" Link="EntitySpaces.DynamicQuery\esCase.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esCasts.cs" Link="EntitySpaces.DynamicQuery\esCasts.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esColumnItem.cs" Link="EntitySpaces.DynamicQuery\esColumnItem.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esComparison.cs" Link="EntitySpaces.DynamicQuery\esComparison.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esDataContractSerializer.cs" Link="EntitySpaces.DynamicQuery\esDataContractSerializer.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esExpression.cs" Link="EntitySpaces.DynamicQuery\esExpression.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esExpressionOrComparison.cs" Link="EntitySpaces.DynamicQuery\esExpressionOrComparison.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esPartition.cs" Link="EntitySpaces.DynamicQuery\esPartition.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\OverClause\esBaseOverClause.cs" Link="EntitySpaces.DynamicQuery\OverClause\esBaseOverClause.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\OverClause\esAggregateOver.cs" Link="EntitySpaces.DynamicQuery\OverClause\esAggregateOver.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\OverClause\esAnalyticOver.cs" Link="EntitySpaces.DynamicQuery\OverClause\esAnalyticOver.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\OverClause\esRankingOver.cs" Link="EntitySpaces.DynamicQuery\OverClause\esRankingOver.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\OverClause\esWindowFrame.cs" Link="EntitySpaces.DynamicQuery\OverClause\esWindowFrame.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery.cs" Link="EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery2.cs" Link="EntitySpaces.Interfaces\DynamicQuery\esDynamicQuery2.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\DynamicQuery\esDynamicQueryOver.cs" Link="EntitySpaces.Interfaces\DynamicQuery\esDynamicQueryOver.cs" />    
+    <Compile Include="..\EntitySpaces.Interfaces\DynamicQuery\IDynamicQueryInternal.cs" Link="EntitySpaces.Interfaces\DynamicQuery\IDynamicQueryInternal.cs" />
+    <Compile Include="..\Providers\EntitySpaces.OracleManagedClientProvider\Cache.cs" Link="EntitySpaces.OracleManagedClientProvider\Cache.cs" />
+    <Compile Include="..\Providers\EntitySpaces.OracleManagedClientProvider\DataProvider.cs" Link="EntitySpaces.OracleManagedClientProvider\DataProvider.cs" />
+    <Compile Include="..\Providers\EntitySpaces.OracleManagedClientProvider\Delimiters.cs" Link="EntitySpaces.OracleManagedClientProvider\Delimiters.cs" />
+    <Compile Include="..\Providers\EntitySpaces.OracleManagedClientProvider\QueryBuilder.cs" Link="EntitySpaces.OracleManagedClientProvider\QueryBuilder.cs" />
+    <Compile Include="..\Providers\EntitySpaces.OracleManagedClientProvider\Shared.cs" Link="EntitySpaces.OracleManagedClientProvider\Shared.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esGroupByItem.cs" Link="EntitySpaces.DynamicQuery\esGroupByItem.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esJoinItem.cs" Link="EntitySpaces.DynamicQuery\esJoinItem.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esMathmaticalExpression.cs" Link="EntitySpaces.DynamicQuery\esMathmaticalExpression.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esOrderByItem.cs" Link="EntitySpaces.DynamicQuery\esOrderByItem.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esQueryItem.cs" Link="EntitySpaces.DynamicQuery\esQueryItem.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esQuerySubOperator.cs" Link="EntitySpaces.DynamicQuery\esQuerySubOperator.cs" />
+    <Compile Include="..\EntitySpaces.DynamicQuery\esSetOperation.cs" Link="EntitySpaces.DynamicQuery\esSetOperation.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\enums.cs" Link="EntitySpaces.Interfaces\enums.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esColumnMetadata.cs" Link="EntitySpaces.Interfaces\esColumnMetadata.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esColumnMetadataCollection.cs" Link="EntitySpaces.Interfaces\esColumnMetadataCollection.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esConfigSettings.cs" Link="EntitySpaces.Interfaces\esConfigSettings.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esConnection.cs" Link="EntitySpaces.Interfaces\esConnection.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esDataProvider.cs" Link="EntitySpaces.Interfaces\esDataProvider.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esDataRequest.cs" Link="EntitySpaces.Interfaces\esDataRequest.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esDataResponse.cs" Link="EntitySpaces.Interfaces\esDataResponse.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esEntitySavePacket.cs" Link="EntitySpaces.Interfaces\esEntitySavePacket.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esParameters.cs" Link="EntitySpaces.Interfaces\esParameters.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esProviderFactory.cs" Link="EntitySpaces.Interfaces\esProviderFactory.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esProviderSignature.cs" Link="EntitySpaces.Interfaces\esProviderSignature.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esProviderSpecificMetadata.cs" Link="EntitySpaces.Interfaces\esProviderSpecificMetadata.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esSmartDictionary.cs" Link="EntitySpaces.Interfaces\esSmartDictionary.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esTracePacket.cs" Link="EntitySpaces.Interfaces\esTracePacket.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esTransactionScope.cs" Link="EntitySpaces.Interfaces\esTransactionScope.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esTypeMap.cs" Link="EntitySpaces.Interfaces\esTypeMap.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\Exceptions\esConcurrencyException.cs" Link="EntitySpaces.Interfaces\Exceptions\esConcurrencyException.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\Exceptions\esException.cs" Link="EntitySpaces.Interfaces\Exceptions\esException.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\ICommittable.cs" Link="EntitySpaces.Interfaces\ICommittable.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\IConnectionNameService.cs" Link="EntitySpaces.Interfaces\IConnectionNameService.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\IDataProvider.cs" Link="EntitySpaces.Interfaces\IDataProvider.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\IDataProviderFactory.cs" Link="EntitySpaces.Interfaces\IDataProviderFactory.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\IMetadata.cs" Link="EntitySpaces.Interfaces\IMetadata.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\IProviderSpecificMetadata.cs" Link="EntitySpaces.Interfaces\IProviderSpecificMetadata.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\ITraceArguments.cs" Link="EntitySpaces.Interfaces\ITraceArguments.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\StandardProviderParameters.cs" Link="EntitySpaces.Interfaces\StandardProviderParameters.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="EntitySpaces.Interfaces\Exceptions\" />
+    <Folder Include="EntitySpaces.OracleManagedClientProvider\" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager">
+      <Version>5.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager">
+      <Version>5.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager">
+      <Version>5.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
+    <Reference Include="System.Configuration" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Oracle.ManagedDataAccess" Version="19.10.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <Reference Include="System.Configuration" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Oracle.ManagedDataAccess" Version="19.10.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <Reference Include="System.Configuration" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Oracle.ManagedDataAccess" Version="19.10.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="EntitySpaces.ORM.nuspec">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="readme.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\esIcon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

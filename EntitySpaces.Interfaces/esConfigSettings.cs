@@ -30,7 +30,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+#if DOTNET4||DOTNET5
 using System.Configuration;
+#endif
 
 namespace EntitySpaces.Interfaces
 {
@@ -45,6 +47,12 @@ namespace EntitySpaces.Interfaces
         {
             get
             {
+#if DOTNET4 || DOTNET5
+                if (esConfigSettings.connectionInfo == null || esConfigSettings.connectionInfo.Connections == null)
+                {
+                    esConfigSection.InitializeFromConfigSection();
+                }
+#endif
                 return connectionInfo;
             }
         }
@@ -64,6 +72,13 @@ namespace EntitySpaces.Interfaces
                 if (esConfigSettings.defaultConnection == null)
                 {
                     esConfigSettings ConnectionInfoSettings = esConfigSettings.ConnectionInfo;
+#if DOTNET4 || DOTNET5
+                    if (ConnectionInfoSettings == null || ConnectionInfoSettings.Connections == null)
+                    {
+                        esConfigSection.InitializeFromConfigSection();
+                    }
+#endif
+
                     foreach (esConnectionElement connection in ConnectionInfoSettings.Connections)
                     {
                         if (connection.Name == ConnectionInfoSettings.Default)
