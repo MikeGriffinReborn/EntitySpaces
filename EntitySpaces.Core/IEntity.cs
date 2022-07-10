@@ -189,6 +189,11 @@ namespace EntitySpaces.Core
         bool IsLazyLoadDisabled { get; set; }
 
         /// <summary>
+        /// For SQL Server Only: sets the table hints on update/insert commands
+        /// </summary>
+        string TableHints { get; set; }
+
+        /// <summary>
         /// Called by the DynamicQuery Prefetch logic
         /// </summary>
         /// <param name="collection">The name of the collection, example "OrdersCollectionByEmployeeID"</param>

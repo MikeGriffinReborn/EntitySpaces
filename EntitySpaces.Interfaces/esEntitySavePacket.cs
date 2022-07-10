@@ -40,5 +40,6 @@ namespace EntitySpaces.Interfaces
         public List<string> ModifiedColumns;
         public esDataRowState RowState;
         public object Entity;
+        public string TableHints;
     }
 }

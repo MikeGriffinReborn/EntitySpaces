@@ -255,7 +255,7 @@ namespace EntitySpaces.SqlClientProvider
                 sql += seqDeclare;
             }
 
-            sql += " INSERT INTO " + fullName;
+            sql += " INSERT INTO " + fullName + GetTableHints(packet) + " ";
 
             if (into.Length != 0 && seqCount > 0)
             {
@@ -305,7 +305,7 @@ namespace EntitySpaces.SqlClientProvider
 
             string set = string.Empty;
             string sql = "SET NOCOUNT OFF ";
-            sql += "UPDATE " + CreateFullName(request) + " SET ";
+            sql += "UPDATE " + CreateFullName(request) + GetTableHints(packet) + " SET ";
 
             string where = String.Empty;
             string conncur = String.Empty;
@@ -735,6 +735,15 @@ namespace EntitySpaces.SqlClientProvider
             name += Delimiters.TableClose;
 
             return name;
+        }
+
+        static public string GetTableHints(esEntitySavePacket packet)
+        {
+            if (string.IsNullOrWhiteSpace(packet.TableHints))
+            {
+                return string.Empty;
+            }
+            return " with (" + packet.TableHints.Trim() + ")";
         }
 
         static public string CreateFullName(esDataRequest request)
