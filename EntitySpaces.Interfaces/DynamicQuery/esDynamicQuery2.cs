@@ -2245,12 +2245,12 @@ namespace EntitySpaces.Interfaces
         /// Used by derived classes
         /// </summary>
         [DataMember(Name = "CountAll", EmitDefaultValue = false)]
-        internal bool countAll;
+        internal bool countAll = false;
         /// <summary>
         /// Used by derived classes
         /// </summary>
         [DataMember(Name = "CountAllAlias", EmitDefaultValue = false)]
-        internal string countAllAlias;
+        internal string countAllAlias = null;
         /// <summary>
         /// Used by derived classes
         /// </summary>
