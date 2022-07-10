@@ -898,17 +898,17 @@ namespace EntitySpaces.SqlClientProvider
 
                 string prefix = String.Empty;
 
-                if (request.Catalog != null || request.ProviderMetadata.Catalog != null)
+                if (!string.IsNullOrWhiteSpace(request.Catalog) || !string.IsNullOrWhiteSpace(request.ProviderMetadata.Catalog))
                 {
                     prefix += Delimiters.TableOpen;
-                    prefix += request.Catalog != null ? request.Catalog : request.ProviderMetadata.Catalog;
+                    prefix += !string.IsNullOrWhiteSpace(request.Catalog) ? request.Catalog : request.ProviderMetadata.Catalog;
                     prefix += Delimiters.TableClose + ".";
                 }
 
-                if (request.Schema != null || request.ProviderMetadata.Schema != null)
+                if (!string.IsNullOrWhiteSpace(request.Schema) || !string.IsNullOrWhiteSpace(request.ProviderMetadata.Schema))
                 {
                     prefix += Delimiters.TableOpen;
-                    prefix += request.Schema != null ? request.Schema : request.ProviderMetadata.Schema;
+                    prefix += !string.IsNullOrWhiteSpace(request.Schema) ? request.Schema : request.ProviderMetadata.Schema;
                     prefix += Delimiters.TableClose + ".";
                 }
 
