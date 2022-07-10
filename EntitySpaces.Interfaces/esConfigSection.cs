@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #if DOTNET4||DOTNET5
+using System;
 using System.Configuration;
 
 namespace EntitySpaces.Interfaces
@@ -185,12 +186,6 @@ namespace EntitySpaces.Interfaces
     /// </summary>
     public sealed class esConfigSection : ConfigurationSection
     {
-        static esConfigSection()
-        {
-            // Load at startup
-            InitializeFromConfigSection();
-        }
-
         [ConfigurationProperty("connectionInfo", IsDefaultCollection = true)]
         public esConfigConnectionInfoElement connectionInfo
         {
@@ -198,35 +193,68 @@ namespace EntitySpaces.Interfaces
             set { this["connectionInfo"] = value; }
         }
 
+        private static object lockInitialisation = new object();
         private static bool initalisationCompleted = false;
-        public static void InitializeFromConfigSection()
+        public static void InitializeFromConfigSection(esConfigSettings settings)
         {
             // Initialize only once
             if (initalisationCompleted)
                 return;
-            esConfigSection configSection = (esConfigSection)System.Configuration.ConfigurationManager.GetSection("EntitySpaces");
-            esConfigConnectionInfoElement connInfo = configSection.connectionInfo;
-            if (connInfo == null)
+            lock (lockInitialisation)
             {
-                return;
-            }
+                esConfigSection configSection = System.Configuration.ConfigurationManager.GetSection("EntitySpaces") as esConfigSection;
+                if (configSection == null)
+                {
+                    initalisationCompleted = true;
+                    return;
+                }
+                esConfigConnectionInfoElement connInfo = configSection.connectionInfo;
+                if (connInfo == null || connInfo.Connections == null)
+                {
+                    initalisationCompleted = true;
+                    return;
+                }
 
-            foreach (esConfigConnectionElement connElement in connInfo.Connections)
+                foreach (esConfigConnectionElement connElement in connInfo.Connections)
+                {
+                    esConnectionElement esCon = new esConnectionElement(connElement.Provider, connElement.ConnectionString);
+                    esCon.Name = connElement.Name;
+                    esCon.ProviderMetadataKey = connElement.ProviderMetadataKey;
+                    esCon.SqlAccessType = esSqlAccessType.DynamicSQL;
+                    esCon.Provider = connElement.Provider;
+                    esCon.ProviderClass = connElement.ProviderClass;
+                    esCon.Schema = connElement.Schema;
+                    LoadConnectionStringFromAppSettings(esCon);
+                    settings.Connections.Add(esCon);
+                }
+                settings.Default = connInfo.DefaultConnection;
+                initalisationCompleted = true;
+            }
+        }
+
+        public static void LoadConnectionStringsFromAppSettings()
+        {
+            foreach (EntitySpaces.Interfaces.esConnectionElement esCon in EntitySpaces.Interfaces.esConfigSettings.ConnectionInfo.Connections)
             {
-
-                esConnectionElement esCon = new esConnectionElement();
-                esCon.Name = connElement.Name;
-                esCon.Provider = connElement.Provider;
-                esCon.ProviderMetadataKey = connElement.ProviderMetadataKey;
-                esCon.SqlAccessType = esSqlAccessType.DynamicSQL;
-                esCon.Provider = connElement.Provider;
-                esCon.ProviderClass = connElement.ProviderClass;
-                esCon.Schema = connElement.Schema;
-                esCon.ConnectionString = connElement.ConnectionString;
-                esConfigSettings.ConnectionInfo.Connections.Add(esCon);
+                LoadConnectionStringFromAppSettings(esCon);
             }
-            esConfigSettings.ConnectionInfo.Default = connInfo.DefaultConnection;
-            initalisationCompleted = true;
+        }
+
+        public static void LoadConnectionStringFromAppSettings(esConnectionElement esCon)
+        {
+            // Check for 'AppSettings:' as the leading string in the ConnectionString in the config
+            // section, if present the the characters following "AppSettings:" are the 'name' of an
+            // entry in the <connectionStrings> section (the standard .NET area to store connection string)
+            if (esCon != null && esCon.ConnectionString != null && esCon.ConnectionString.Trim().StartsWith("AppSettings:"))
+            {
+                int index = esCon.ConnectionString.IndexOf(':');
+                string name = esCon.ConnectionString.Substring(index + 1).Trim();
+                System.Configuration.ConnectionStringSettings connectionStringSetting = System.Configuration.ConfigurationManager.ConnectionStrings[name];
+                if (connectionStringSetting != null)
+                {
+                    esCon.ConnectionString = connectionStringSetting.ConnectionString;
+                }
+            }
         }
     }
 

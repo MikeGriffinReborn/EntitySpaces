@@ -116,13 +116,6 @@ namespace EntitySpaces.Interfaces
 
                 if (this.connectionString == null)
                 {
-#if DOTNET5 || DOTNET4
-                    if (esConfigSettings.DefaultConnection == null || String.IsNullOrEmpty(esConfigSettings.DefaultConnection.ConnectionString))
-                    {
-                        // Read settings from app.config / web.config
-                        esConfigSection.InitializeFromConfigSection();
-                    }
-#endif
                     cnString = esConfigSettings.DefaultConnection.ConnectionString;
                 }
                 else

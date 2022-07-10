@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net451;net46;net461;netstandard2.0;netcoreapp2.0;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net46;net461;netstandard2.1;netcoreapp3.1;net5.0</TargetFrameworks>
     <AssemblyVersion>2020.2.1.0</AssemblyVersion>
     <FileVersion>2020.2.1.0</FileVersion>
     <Version>2020.2.1.0</Version>
@@ -17,6 +17,21 @@
     <RepositoryType>GitHub</RepositoryType>
   </PropertyGroup>
 
+	<PropertyGroup Condition="'$(TargetFramework)'=='net46'">
+		<DefineConstants>DOTNET4</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='net461'">
+		<DefineConstants>DOTNET4</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
+		<DefineConstants>DOTNETCORE</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
+		<DefineConstants>DOTNETCORE</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='net5.0'">
+		<DefineConstants>DOTNET5</DefineConstants>
+	</PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\EntitySpaces.Core\esCollectionWCFPacket.cs" Link="EntitySpaces.Core\esCollectionWCFPacket.cs" />
@@ -75,6 +90,7 @@
     <Compile Include="..\EntitySpaces.Interfaces\enums.cs" Link="EntitySpaces.Interfaces\enums.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\esColumnMetadata.cs" Link="EntitySpaces.Interfaces\esColumnMetadata.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\esColumnMetadataCollection.cs" Link="EntitySpaces.Interfaces\esColumnMetadataCollection.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esConfigSection.cs" Link="EntitySpaces.Interfaces\esConfigSection.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\esConfigSettings.cs" Link="EntitySpaces.Interfaces\esConfigSettings.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\esConnection.cs" Link="EntitySpaces.Interfaces\esConnection.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\esDataProvider.cs" Link="EntitySpaces.Interfaces\esDataProvider.cs" />
@@ -106,29 +122,32 @@
     <Folder Include="EntitySpaces.SqlClientProvider\" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
+    <PackageReference Include="System.Configuration.ConfigurationManager">
+      <Version>5.0.0</Version>
+    </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
+    <PackageReference Include="System.Configuration.ConfigurationManager">
+      <Version>5.0.0</Version>
+    </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net451'">
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager">
+      <Version>5.0.0</Version>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
+    <Reference Include="System.Configuration" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
@@ -136,6 +155,18 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <Reference Include="System.Configuration" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <Reference Include="System.Configuration" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />

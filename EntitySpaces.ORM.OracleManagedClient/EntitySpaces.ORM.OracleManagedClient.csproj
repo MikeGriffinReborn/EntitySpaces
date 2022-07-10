@@ -92,6 +92,7 @@
     <Compile Include="..\EntitySpaces.Interfaces\enums.cs" Link="EntitySpaces.Interfaces\enums.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\esColumnMetadata.cs" Link="EntitySpaces.Interfaces\esColumnMetadata.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\esColumnMetadataCollection.cs" Link="EntitySpaces.Interfaces\esColumnMetadataCollection.cs" />
+    <Compile Include="..\EntitySpaces.Interfaces\esConfigSection.cs" Link="EntitySpaces.Interfaces\esConfigSection.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\esConfigSettings.cs" Link="EntitySpaces.Interfaces\esConfigSettings.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\esConnection.cs" Link="EntitySpaces.Interfaces\esConnection.cs" />
     <Compile Include="..\EntitySpaces.Interfaces\esDataProvider.cs" Link="EntitySpaces.Interfaces\esDataProvider.cs" />
