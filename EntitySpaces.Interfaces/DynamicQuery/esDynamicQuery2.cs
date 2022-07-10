@@ -2453,5 +2453,41 @@ namespace EntitySpaces.Interfaces
             get { return this.Meta; }
         }
         #endregion
+        
+        public int? InternalPageNumber
+        {
+            get
+            {
+                return this.pageNumber;
+            }
+            set
+            {
+                this.pageNumber = value;
+            }
+        }
+        public int? InternalPageSize
+        {
+            get
+            {
+                return this.pageSize;
+            }
+            set
+            {
+                this.pageSize = value;
+            }
+        }
+
+        public bool? InternalWithNoLock
+        {
+
+            get
+            {
+                return this.es.dynamicQuery.withNoLock;
+            }
+            set
+            {
+                this.es.dynamicQuery.withNoLock = value;
+            }
+        }
     }
 }
