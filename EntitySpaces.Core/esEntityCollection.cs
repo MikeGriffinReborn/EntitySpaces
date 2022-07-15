@@ -1075,6 +1075,7 @@ namespace EntitySpaces.Core
                                 packet.RowState = entity.rowState;
                                 packet.ModifiedColumns = entity.es.ModifiedColumns;
                                 packet.Entity = entity;
+                                packet.TableHints = entity.es.TableHints;
 
                                 request.CollectionSavePacket.Add(packet);
                             }
@@ -1209,6 +1210,7 @@ namespace EntitySpaces.Core
                                 packet.RowState = entity.rowState;
                                 packet.ModifiedColumns = entity.es.ModifiedColumns;
                                 packet.Entity = entity;
+                                packet.TableHints = entity.es.TableHints;
 
                                 request.CollectionSavePacket.Add(packet);
                             }
@@ -1266,6 +1268,7 @@ namespace EntitySpaces.Core
                             packet.RowState = entity.rowState;
                             packet.ModifiedColumns = entity.es.ModifiedColumns;
                             packet.Entity = entity;
+                            packet.TableHints = entity.es.TableHints;
 
                             request.CollectionSavePacket.Add(packet);
                         }

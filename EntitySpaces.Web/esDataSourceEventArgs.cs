@@ -1,4 +1,4 @@
-﻿/*  New BSD License
+/*  New BSD License
 -------------------------------------------------------------------------------
 Copyright (c) 2006-2012, EntitySpaces, LLC
 All rights reserved.
@@ -28,18 +28,57 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 using System;
+using System.Configuration;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
+using System.Security.Permissions;
 
-namespace EntitySpaces.Interfaces
+using System.Web;
+using System.Web.UI;
+
+using EntitySpaces.Core;
+
+namespace EntitySpaces.Web
 {
-    public struct esEntitySavePacket
+    [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal), AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
+    public class esDataSourceEventArgs : EventArgs
     {
-        public esSmartDictionary CurrentValues;
-        public esSmartDictionary OriginalValues;
-        public List<string> ModifiedColumns;
-        public esDataRowState RowState;
-        public object Entity;
-        public string TableHints;
+        // Fields
+        private bool _exceptionHandled;
+        private Exception _exception;
+
+        // Methods
+        public esDataSourceEventArgs(Exception exception)
+        {
+            this._exception = exception;
+        }
+
+        // Properties
+        public esEntityCollectionBase Collection;
+        public DataSourceSelectArguments Arguments;
+        public IDictionary Keys;
+        public IDictionary Values;
+
+        public bool ExceptionHandled
+        {
+            get
+            {
+                return this._exceptionHandled;
+            }
+            set
+            {
+                this._exceptionHandled = value;
+            }
+        }
+
+        public Exception Exception
+        {
+            get
+            {
+                return this._exception;
+            }
+        }
     }
 }

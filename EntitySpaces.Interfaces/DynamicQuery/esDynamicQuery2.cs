@@ -2245,12 +2245,12 @@ namespace EntitySpaces.Interfaces
         /// Used by derived classes
         /// </summary>
         [DataMember(Name = "CountAll", EmitDefaultValue = false)]
-        internal bool countAll;
+        internal bool countAll = false;
         /// <summary>
         /// Used by derived classes
         /// </summary>
         [DataMember(Name = "CountAllAlias", EmitDefaultValue = false)]
-        internal string countAllAlias;
+        internal string countAllAlias = null;
         /// <summary>
         /// Used by derived classes
         /// </summary>
@@ -2453,5 +2453,41 @@ namespace EntitySpaces.Interfaces
             get { return this.Meta; }
         }
         #endregion
+        
+        public int? InternalPageNumber
+        {
+            get
+            {
+                return this.pageNumber;
+            }
+            set
+            {
+                this.pageNumber = value;
+            }
+        }
+        public int? InternalPageSize
+        {
+            get
+            {
+                return this.pageSize;
+            }
+            set
+            {
+                this.pageSize = value;
+            }
+        }
+
+        public bool? InternalWithNoLock
+        {
+
+            get
+            {
+                return this.es.dynamicQuery.withNoLock;
+            }
+            set
+            {
+                this.es.dynamicQuery.withNoLock = value;
+            }
+        }
     }
 }

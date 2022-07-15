@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net46;net461;net48</TargetFrameworks>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EntitySpaces.ORM.SqlServer\EntitySpaces.ORM.SqlServer.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+	<Reference Include="System.Web" />
+  </ItemGroup>
+</Project>

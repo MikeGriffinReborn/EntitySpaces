@@ -1,4 +1,4 @@
-﻿/*  New BSD License
+/*  New BSD License
 -------------------------------------------------------------------------------
 Copyright (c) 2006-2012, EntitySpaces, LLC
 All rights reserved.
@@ -29,17 +29,33 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
 
-namespace EntitySpaces.Interfaces
+using EntitySpaces.Interfaces;
+
+namespace EntitySpaces.Loader
 {
-    public struct esEntitySavePacket
+    /// <summary>
+    /// Used to load the EntitySpaces data providers in a loosely coupled fashion.
+    /// </summary>
+    public class esDataProviderFactory : IDataProviderFactory
     {
-        public esSmartDictionary CurrentValues;
-        public esSmartDictionary OriginalValues;
-        public List<string> ModifiedColumns;
-        public esDataRowState RowState;
-        public object Entity;
-        public string TableHints;
+        static private IDataProvider _provider = new EntitySpaces.OracleManagedClientProvider.DataProvider();
+        /// <summary>
+        /// Loads and Caches the EntitySpaces DataProvider.
+        /// </summary>
+        /// <remarks>
+        /// The providerClass parameter determines whether or not distributed transactions are used or
+        /// if ADO.NET connection based transactions are used. When "DataProvider" is used the <see cref="esTransactionScope"/>
+        /// class is used to enforce transactions. When "DataProviderEnterprise" is used then <see cref="TransactionScope"/>
+        /// is used
+        /// </remarks>
+        /// <param name="providerName">The name of the EntitySpaces DataProvider, for example, "EntitySpaces.SqlClientProvider"</param>
+        /// <param name="providerClass">The class to use, either "DataProvider" or "DataProviderEnterprise"</param>
+        /// <returns>The approprate data provider such as "EntitySpaces.SqlClientProvider"</returns>
+        public IDataProvider GetDataProvider(string providerName, string providerClass)
+        {
+            return _provider;
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿/*  New BSD License
+/*  New BSD License
 -------------------------------------------------------------------------------
 Copyright (c) 2006-2012, EntitySpaces, LLC
 All rights reserved.
@@ -27,19 +27,25 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using EntitySpaces.DynamicQuery;
 
-namespace EntitySpaces.Interfaces
+namespace EntitySpaces.Web
 {
-    public struct esEntitySavePacket
+    /// <summary>
+    /// The esDataSourceSelectEventArgs contains a collection of these which can then be passed
+    /// to the esDynamicQuery.OrderBy() method.
+    /// </summary>
+    /// <seealso cref="esDataSourceSelectEventArgs"/>
+    public class esDataSourceSortItem
     {
-        public esSmartDictionary CurrentValues;
-        public esSmartDictionary OriginalValues;
-        public List<string> ModifiedColumns;
-        public esDataRowState RowState;
-        public object Entity;
-        public string TableHints;
+        /// <summary>
+        /// The Property name from the esEntityCollection.
+        /// </summary>
+        public string Property;
+
+        /// <summary>
+        /// The requested sort direction.
+        /// </summary>
+        public esOrderByDirection Direction;
     }
 }

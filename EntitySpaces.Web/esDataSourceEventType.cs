@@ -1,4 +1,4 @@
-﻿/*  New BSD License
+/*  New BSD License
 -------------------------------------------------------------------------------
 Copyright (c) 2006-2012, EntitySpaces, LLC
 All rights reserved.
@@ -27,19 +27,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EntitySpaces.Interfaces
+namespace EntitySpaces.Web
 {
-    public struct esEntitySavePacket
+    /// <summary>
+    /// Used during the esException event to indicate where the exception was thrown.
+    /// </summary>
+    public enum esDataSourceEventType
     {
-        public esSmartDictionary CurrentValues;
-        public esSmartDictionary OriginalValues;
-        public List<string> ModifiedColumns;
-        public esDataRowState RowState;
-        public object Entity;
-        public string TableHints;
+        /// <summary>
+        /// Unassigned
+        /// </summary>
+        Unassigned = 0,
+
+        /// <summary>
+        /// Thrown during esSelect, see esDataSourceExceptionEventArgs.SelectArgs
+        /// </summary>
+        Select,
+
+        /// <summary>
+        /// Thrown during esSelect, see esDataSourceExceptionEventArgs.InsertArgs
+        /// </summary>
+        Insert, 
+
+        /// <summary>
+        /// Thrown during esSelect, see esDataSourceExceptionEventArgs.UpdateArgs
+        /// </summary>
+        Update,
+
+        /// <summary>
+        /// Thrown during esSelect, see esDataSourceExceptionEventArgs.DeleteeArgs
+        /// </summary>
+        Delete,
     }
 }

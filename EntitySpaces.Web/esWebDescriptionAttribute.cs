@@ -1,4 +1,4 @@
-﻿/*  New BSD License
+/*  New BSD License
 -------------------------------------------------------------------------------
 Copyright (c) 2006-2012, EntitySpaces, LLC
 All rights reserved.
@@ -28,18 +28,45 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel;
 
-namespace EntitySpaces.Interfaces
+namespace EntitySpaces.Web
 {
-    public struct esEntitySavePacket
+    /// <summary>
+    /// Internal Attribute used by EntitySpaces
+    /// </summary>
+    [AttributeUsage(AttributeTargets.All)]
+    internal class esWebDescriptionAttribute : DescriptionAttribute
     {
-        public esSmartDictionary CurrentValues;
-        public esSmartDictionary OriginalValues;
-        public List<string> ModifiedColumns;
-        public esDataRowState RowState;
-        public object Entity;
-        public string TableHints;
+        // Fields
+        private bool replaced;
+
+        // Methods
+        internal esWebDescriptionAttribute(string description)
+            : base(description)
+        {
+        }
+
+        // Properties
+        public override string Description
+        {
+            get
+            {
+                if (!this.replaced)
+                {
+                    this.replaced = true;
+                    base.DescriptionValue = base.Description;
+                }
+                return base.Description;
+            }
+        }
+
+        public override object TypeId
+        {
+            get
+            {
+                return typeof(DescriptionAttribute);
+            }
+        }
     }
 }

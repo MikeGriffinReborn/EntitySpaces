@@ -1,48 +1,14 @@
-/*  New BSD License
--------------------------------------------------------------------------------
-Copyright (c) 2006-2012, EntitySpaces, LLC
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of the EntitySpaces, LLC nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL EntitySpaces, LLC BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
--------------------------------------------------------------------------------
-*/
-
 using System;
 using System.Data;
-using System.Data.SqlClient;
+using Oracle.ManagedDataAccess.Client;
+
 using EntitySpaces.DynamicQuery;
-
-#if (LINQ)
-using System.Linq;
-using System.Data.Linq;
-#endif
-
 using EntitySpaces.Interfaces;
 using System.Threading;
 using System.Diagnostics;
 using System.Collections.Generic;
 
-namespace EntitySpaces.SqlClientProvider
+namespace EntitySpaces.OracleManagedClientProvider
 {
     public class DataProvider : IDataProvider
     {
@@ -78,7 +44,7 @@ namespace EntitySpaces.SqlClientProvider
                 this.command = cmd;
 
                 TraceChannel = DataProvider.sTraceChannel;
-                Syntax = "MSSQL";
+                Syntax = "ORACLE";
                 Request = request;
                 ThreadId = Thread.CurrentThread.ManagedThreadId;
                 Action = action;
@@ -94,14 +60,14 @@ namespace EntitySpaces.SqlClientProvider
 
                     for (int i = 0; i < parameters.Count; i++)
                     {
-                        SqlParameter param = parameters[i] as SqlParameter;
+                        OracleParameter param = parameters[i] as OracleParameter;
 
-                        esTraceParameter p = new esTraceParameter() 
-                        { 
-                            Name = param.ParameterName, 
-                            Direction = param.Direction.ToString(), 
-                            ParamType = param.SqlDbType.ToString().ToUpper(), 
-                            BeforeValue = param.Value != null ? Convert.ToString(param.Value) : "null" 
+                        esTraceParameter p = new esTraceParameter()
+                        {
+                            Name = param.ParameterName,
+                            Direction = param.Direction.ToString(),
+                            ParamType = param.OracleDbType.ToString().ToUpper(),
+                            BeforeValue = param.Value != null ? Convert.ToString(param.Value) : "null"
                         };
 
                         this.Parameters.Add(p);
@@ -185,7 +151,7 @@ namespace EntitySpaces.SqlClientProvider
         /// <summary>
         /// Used to set the Channel this provider is to use during Profiling
         /// </summary>
-        string IDataProvider.TraceChannel 
+        string IDataProvider.TraceChannel
         {
             get { return DataProvider.sTraceChannel; }
             set { DataProvider.sTraceChannel = value; }
@@ -200,10 +166,10 @@ namespace EntitySpaces.SqlClientProvider
         /// <returns></returns>
         static private IDbConnection CreateIDbConnectionDelegate()
         {
-            return new SqlConnection();
+            return new OracleConnection();
         }
 
-        static private void CleanupCommand(SqlCommand cmd)
+        static private void CleanupCommand(OracleCommand cmd)
         {
             if (cmd != null && cmd.Connection != null)
             {
@@ -237,24 +203,19 @@ namespace EntitySpaces.SqlClientProvider
                     case esQueryType.DynamicQuery:
 
                         response = new esDataResponse();
-                        SqlCommand cmd = QueryBuilder.PrepareCommand(request);
+                        OracleCommand cmd = QueryBuilder.PrepareCommand(request);
+                        cmd.BindByName = true;
                         LoadDataTableFromDynamicQuery(request, response, cmd);
                         break;
 
                     case esQueryType.DynamicQueryParseOnly:
 
                         response = new esDataResponse();
-                        SqlCommand cmd1 = QueryBuilder.PrepareCommand(request);
+                        OracleCommand cmd1 = QueryBuilder.PrepareCommand(request);
+                        cmd1.BindByName = true;
                         response.LastQuery = cmd1.CommandText;
                         break;
 
-#if (LINQ)
-                    case esQueryType.IQueryable:
-
-                        response = new esDataResponse();
-                        LoadDataTableForLinqToSql(request, response);
-                        break;
-#endif
 
                     case esQueryType.ManyToMany:
 
@@ -279,29 +240,22 @@ namespace EntitySpaces.SqlClientProvider
 
             try
             {
-                if (request.BulkSave)
+                if (request.SqlAccessType == esSqlAccessType.StoredProcedure)
                 {
-                    SaveBulkInsert(request);
+                    if (request.CollectionSavePacket != null)
+                        SaveStoredProcCollection(request);
+                    else
+                        SaveStoredProcEntity(request);
                 }
                 else
                 {
-                    if (request.SqlAccessType == esSqlAccessType.StoredProcedure)
-                    {
-                        if (request.CollectionSavePacket != null)
-                            SaveStoredProcCollection(request);
-                        else
-                            SaveStoredProcEntity(request);
-                    }
+                    if (request.EntitySavePacket.CurrentValues == null)
+                        SaveDynamicCollection(request);
                     else
-                    {
-                        if (request.EntitySavePacket.CurrentValues == null)
-                            SaveDynamicCollection(request);
-                        else
-                            SaveDynamicEntity(request);
-                    }
+                        SaveDynamicEntity(request);
                 }
             }
-            catch (SqlException ex)
+            catch (OracleException ex)
             {
                 esException es = Shared.CheckForConcurrencyException(ex);
                 if (es != null)
@@ -311,7 +265,7 @@ namespace EntitySpaces.SqlClientProvider
             }
             catch (DBConcurrencyException dbex)
             {
-                response.Exception = new esConcurrencyException("Error in SqlClientProvider.esSaveDataTable", dbex);
+                response.Exception = new esConcurrencyException("Error in OracleClientProvider.esSaveDataTable", dbex);
             }
 
             response.Table = request.Table;
@@ -321,14 +275,15 @@ namespace EntitySpaces.SqlClientProvider
         esDataResponse IDataProvider.ExecuteNonQuery(esDataRequest request)
         {
             esDataResponse response = new esDataResponse();
-            SqlCommand cmd = null;
+            OracleCommand cmd = null;
 
             try
             {
-                cmd = new SqlCommand();
-                if(request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
-                if(request.Parameters != null) Shared.AddParameters(cmd, request);
-                
+                cmd = new OracleCommand();
+                cmd.BindByName = true;
+                if (request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
+                if (request.Parameters != null) Shared.AddParameters(cmd, request);
+
                 switch (request.QueryType)
                 {
                     case esQueryType.TableDirect:
@@ -395,13 +350,14 @@ namespace EntitySpaces.SqlClientProvider
         esDataResponse IDataProvider.ExecuteReader(esDataRequest request)
         {
             esDataResponse response = new esDataResponse();
-            SqlCommand cmd = null;
+            OracleCommand cmd = null;
 
             try
             {
-                cmd = new SqlCommand();
-                if(request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
-                if(request.Parameters != null) Shared.AddParameters(cmd, request);
+                cmd = new OracleCommand();
+                cmd.BindByName = true;
+                if (request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
+                if (request.Parameters != null) Shared.AddParameters(cmd, request);
 
                 switch (request.QueryType)
                 {
@@ -413,6 +369,10 @@ namespace EntitySpaces.SqlClientProvider
                     case esQueryType.StoredProcedure:
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.CommandText = Shared.CreateFullName(request);
+
+                        OracleParameter p = new OracleParameter("outCursor", OracleDbType.RefCursor);
+                        p.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(p);
                         break;
 
                     case esQueryType.Text:
@@ -425,7 +385,7 @@ namespace EntitySpaces.SqlClientProvider
                         break;
                 }
 
-                cmd.Connection = new SqlConnection(request.ConnectionString);
+                cmd.Connection = new OracleConnection(request.ConnectionString);
                 cmd.Connection.Open();
 
                 #region Profiling
@@ -462,13 +422,14 @@ namespace EntitySpaces.SqlClientProvider
         esDataResponse IDataProvider.ExecuteScalar(esDataRequest request)
         {
             esDataResponse response = new esDataResponse();
-            SqlCommand cmd = null;
+            OracleCommand cmd = null;
 
             try
             {
-                cmd = new SqlCommand();
-                if(request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
-                if(request.Parameters != null) Shared.AddParameters(cmd, request);
+                cmd = new OracleCommand();
+                cmd.BindByName = true;
+                if (request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
+                if (request.Parameters != null) Shared.AddParameters(cmd, request);
 
                 switch (request.QueryType)
                 {
@@ -602,20 +563,25 @@ namespace EntitySpaces.SqlClientProvider
         static private esDataResponse LoadDataSetFromStoredProcedure(esDataRequest request)
         {
             esDataResponse response = new esDataResponse();
-            SqlCommand cmd = null;
+            OracleCommand cmd = null;
 
             try
             {
                 DataSet dataSet = new DataSet();
 
-                cmd = new SqlCommand();
+                cmd = new OracleCommand();
+                cmd.BindByName = true;
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = Shared.CreateFullName(request);
 
-                if(request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
-                if(request.Parameters != null) Shared.AddParameters(cmd, request);
+                if (request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
+                if (request.Parameters != null) Shared.AddParameters(cmd, request);
 
-                SqlDataAdapter da = new SqlDataAdapter();
+                OracleParameter p = new OracleParameter("outCursor", OracleDbType.RefCursor);
+                p.Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(p);
+
+                OracleDataAdapter da = new OracleDataAdapter();
                 da.SelectCommand = cmd;
 
                 try
@@ -656,7 +622,7 @@ namespace EntitySpaces.SqlClientProvider
                     Shared.GatherReturnParameters(cmd, request, response);
                 }
             }
-            catch 
+            catch (Exception)
             {
                 CleanupCommand(cmd);
                 throw;
@@ -672,18 +638,19 @@ namespace EntitySpaces.SqlClientProvider
         static private esDataResponse LoadDataSetFromText(esDataRequest request)
         {
             esDataResponse response = new esDataResponse();
-            SqlCommand cmd = null;
+            OracleCommand cmd = null;
 
             try
             {
                 DataSet dataSet = new DataSet();
 
-                cmd = new SqlCommand();
+                cmd = new OracleCommand();
+                cmd.BindByName = true;
                 cmd.CommandType = CommandType.Text;
-                if(request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
-                if(request.Parameters != null) Shared.AddParameters(cmd, request);
+                if (request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
+                if (request.Parameters != null) Shared.AddParameters(cmd, request);
 
-                SqlDataAdapter da = new SqlDataAdapter();
+                OracleDataAdapter da = new OracleDataAdapter();
                 cmd.CommandText = request.QueryText;
                 da.SelectCommand = cmd;
 
@@ -724,9 +691,8 @@ namespace EntitySpaces.SqlClientProvider
                 {
                     Shared.GatherReturnParameters(cmd, request, response);
                 }
-                
             }
-            catch
+            catch (Exception)
             {
                 CleanupCommand(cmd);
                 throw;
@@ -742,19 +708,24 @@ namespace EntitySpaces.SqlClientProvider
         static private esDataResponse LoadDataTableFromStoredProcedure(esDataRequest request)
         {
             esDataResponse response = new esDataResponse();
-            SqlCommand cmd = null;
+            OracleCommand cmd = null;
 
             try
             {
                 DataTable dataTable = new DataTable(request.ProviderMetadata.Destination);
 
-                cmd = new SqlCommand();
+                cmd = new OracleCommand();
+                cmd.BindByName = true;
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = Shared.CreateFullName(request);
-                if(request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
-                if(request.Parameters != null) Shared.AddParameters(cmd, request);
+                if (request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
+                if (request.Parameters != null) Shared.AddParameters(cmd, request);
 
-                SqlDataAdapter da = new SqlDataAdapter();
+                OracleParameter p = new OracleParameter("outCursor", OracleDbType.RefCursor);
+                p.Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(p);
+
+                OracleDataAdapter da = new OracleDataAdapter();
                 da.SelectCommand = cmd;
 
                 try
@@ -795,7 +766,7 @@ namespace EntitySpaces.SqlClientProvider
                     Shared.GatherReturnParameters(cmd, request, response);
                 }
             }
-            catch
+            catch (Exception)
             {
                 CleanupCommand(cmd);
                 throw;
@@ -811,18 +782,19 @@ namespace EntitySpaces.SqlClientProvider
         static private esDataResponse LoadDataTableFromText(esDataRequest request)
         {
             esDataResponse response = new esDataResponse();
-            SqlCommand cmd = null;
+            OracleCommand cmd = null;
 
             try
             {
                 DataTable dataTable = new DataTable(request.ProviderMetadata.Destination);
 
-                cmd = new SqlCommand();
+                cmd = new OracleCommand();
+                cmd.BindByName = true;
                 cmd.CommandType = CommandType.Text;
-                if(request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
-                if(request.Parameters != null) Shared.AddParameters(cmd, request);
+                if (request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
+                if (request.Parameters != null) Shared.AddParameters(cmd, request);
 
-                SqlDataAdapter da = new SqlDataAdapter();
+                OracleDataAdapter da = new OracleDataAdapter();
                 cmd.CommandText = request.QueryText;
                 da.SelectCommand = cmd;
 
@@ -880,43 +852,26 @@ namespace EntitySpaces.SqlClientProvider
         static private esDataResponse LoadManyToMany(esDataRequest request)
         {
             esDataResponse response = new esDataResponse();
-            SqlCommand cmd = null;
+            OracleCommand cmd = null;
 
             try
             {
                 DataTable dataTable = new DataTable(request.ProviderMetadata.Destination);
 
-                cmd = new SqlCommand();
+                cmd = new OracleCommand();
+                cmd.BindByName = true;
                 cmd.CommandType = CommandType.Text;
-                if(request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
+                if (request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
 
                 string mmQuery = request.QueryText;
 
                 string[] sections = mmQuery.Split('|');
-                string[] tables  = sections[0].Split(',');
+                string[] tables = sections[0].Split(',');
                 string[] columns = sections[1].Split(',');
 
-                string prefix = String.Empty;
-
-                if (!string.IsNullOrWhiteSpace(request.Catalog) || !string.IsNullOrWhiteSpace(request.ProviderMetadata.Catalog))
-                {
-                    prefix += Delimiters.TableOpen;
-                    prefix += !string.IsNullOrWhiteSpace(request.Catalog) ? request.Catalog : request.ProviderMetadata.Catalog;
-                    prefix += Delimiters.TableClose + ".";
-                }
-
-                if (!string.IsNullOrWhiteSpace(request.Schema) || !string.IsNullOrWhiteSpace(request.ProviderMetadata.Schema))
-                {
-                    prefix += Delimiters.TableOpen;
-                    prefix += !string.IsNullOrWhiteSpace(request.Schema) ? request.Schema : request.ProviderMetadata.Schema;
-                    prefix += Delimiters.TableClose + ".";
-                }
-
-                string table0 = prefix + Delimiters.TableOpen + tables[0] + Delimiters.TableClose;
-                string table1 = prefix + Delimiters.TableOpen + tables[1] + Delimiters.TableClose;
-
-                string sql = "SELECT * FROM " + table0 + " JOIN " + table1 + " ON " + table0 + ".[" + columns[0] + "] = ";
-                sql += table1 + ".[" + columns[1] + "] WHERE " + table1 + ".[" + sections[2] + "] = @";
+                // We build the query, we don't use Delimiters to avoid tons of extra concatentation
+                string sql = "SELECT * FROM \"" + tables[0] + "\" JOIN \"" + tables[1] + "\" ON \"" + tables[0] + "\".\"" + columns[0] + "\" = \"";
+                sql += tables[1] + "\".\"" + columns[1] + "\" WHERE \"" + tables[1] + "\".\"" + sections[2] + "\" = :";
 
                 if (request.Parameters != null)
                 {
@@ -928,7 +883,7 @@ namespace EntitySpaces.SqlClientProvider
                     Shared.AddParameters(cmd, request);
                 }
 
-                SqlDataAdapter da = new SqlDataAdapter();
+                OracleDataAdapter da = new OracleDataAdapter();
                 cmd.CommandText = sql;
 
                 da.SelectCommand = cmd;
@@ -966,7 +921,7 @@ namespace EntitySpaces.SqlClientProvider
 
                 response.Table = dataTable;
             }
-            catch
+            catch (Exception)
             {
                 CleanupCommand(cmd);
                 throw;
@@ -980,17 +935,17 @@ namespace EntitySpaces.SqlClientProvider
         }
 
         // This is used only to execute the Dynamic Query API
-        static private void LoadDataTableFromDynamicQuery(esDataRequest request, esDataResponse response, SqlCommand cmd)
+        static private void LoadDataTableFromDynamicQuery(esDataRequest request, esDataResponse response, OracleCommand cmd)
         {
             try
             {
                 response.LastQuery = cmd.CommandText;
 
-                if(request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
+                if (request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
 
                 DataTable dataTable = new DataTable(request.ProviderMetadata.Destination);
 
-                SqlDataAdapter da = new SqlDataAdapter();
+                OracleDataAdapter da = new OracleDataAdapter();
                 da.SelectCommand = cmd;
 
                 try
@@ -1025,21 +980,8 @@ namespace EntitySpaces.SqlClientProvider
                 }
 
                 response.Table = dataTable;
-
-                // Special code to remove the ESRN column if paging is going on
-                esDynamicQuery.DynamicQueryProps es = request.DynamicQuery.es;
-                if ((request.DynamicQuery.pageNumber.HasValue && request.DynamicQuery.pageSize.HasValue) 
-                    || (request.DynamicQuery.PartitionByTop != null && request.DynamicQuery.PartitionByTop.Value > 0))
-                {
-                    DataColumnCollection cols = response.Table.Columns;
-
-                    if(cols.Contains("ESRN")) 
-                    {
-                        cols.Remove("ESRN");
-                    }
-                }
             }
-            catch (Exception) 
+            catch (Exception)
             {
                 CleanupCommand(cmd);
                 throw;
@@ -1049,93 +991,20 @@ namespace EntitySpaces.SqlClientProvider
 
             }
         }
-
-        #region LINQ 
-
-#if (LINQ)
-        // This is used only to execute the Dynamic Query API
-        static private void LoadDataTableForLinqToSql(esDataRequest request, esDataResponse response)
-        {
-            SqlCommand cmd = null;
-
-            try
-            {
-                DataTable dataTable = new DataTable(request.ProviderMetadata.Destination);
-
-                cmd = request.LinqContext.GetCommand(request.LinqQuery) as SqlCommand;
-
-                response.LastQuery = cmd.CommandText;
-
-                if (request.CommandTimeout != null) cmd.CommandTimeout = request.CommandTimeout.Value;
-
-                SqlDataAdapter da = new SqlDataAdapter();
-                da.SelectCommand = cmd;
-
-                try
-                {
-                    esTransactionScope.Enlist(da.SelectCommand, request.ConnectionString, CreateIDbConnectionDelegate);
-
-                    #region Profiling
-                    if (sTraceHandler != null)
-                    {
-                        using (esTraceArguments esTrace = new esTraceArguments(request, cmd, "LoadForLinqToSql", System.Environment.StackTrace))
-                        {
-                            try
-                            {
-                                da.Fill(dataTable);
-                            }
-                            catch (Exception ex)
-                            {
-                                esTrace.Exception = ex.Message;
-                                throw;
-                            }
-                        }
-                    }
-                    else
-                    #endregion
-                    {
-                        da.Fill(dataTable);
-                    }
-                }
-                finally
-                {
-                    esTransactionScope.DeEnlist(da.SelectCommand);
-                }
-
-                response.Table = dataTable;
-
-                if (request.Parameters != null)
-                {
-                    Shared.GatherReturnParameters(cmd, request, response);
-                }
-            }
-            catch
-            {
-                CleanupCommand(cmd);
-                throw;
-            }
-            finally
-            {
-
-            }
-        }
-#endif
-
-        #endregion
 
         static private DataTable SaveStoredProcCollection(esDataRequest request)
         {
             if (request.CollectionSavePacket == null) return null;
 
-            SqlCommand cmdInsert = null;
-            SqlCommand cmdUpdate = null;
-            SqlCommand cmdDelete = null;
+            OracleCommand cmdInsert = null;
+            OracleCommand cmdUpdate = null;
+            OracleCommand cmdDelete = null;
 
             try
             {
                 using (esTransactionScope scope = new esTransactionScope())
                 {
-                    SqlCommand cmd = null;
+                    OracleCommand cmd = null;
                     bool exception = false;
 
                     foreach (esEntitySavePacket packet in request.CollectionSavePacket)
@@ -1179,7 +1048,7 @@ namespace EntitySpaces.SqlClientProvider
                         #region Preprocess Parameters
                         if (cmd.Parameters != null)
                         {
-                            foreach (SqlParameter param in cmd.Parameters)
+                            foreach (OracleParameter param in cmd.Parameters)
                             {
                                 if (param.Direction == ParameterDirection.Output)
                                 {
@@ -1203,7 +1072,7 @@ namespace EntitySpaces.SqlClientProvider
                         #region Execute Command
                         try
                         {
-                            int count;
+                            int count = 0;
 
                             #region Profiling
                             if (sTraceHandler != null)
@@ -1229,7 +1098,7 @@ namespace EntitySpaces.SqlClientProvider
 
                             if (count < 1)
                             {
-                                throw new esConcurrencyException("Update failed to update any records @ " + cmd.CommandText);
+                                throw new esConcurrencyException("Update failed to update any records");
                             }
                         }
                         catch (Exception ex)
@@ -1243,10 +1112,10 @@ namespace EntitySpaces.SqlClientProvider
                         }
                         #endregion
 
-                        #region Postprocess Parameters
+                        #region Postprocess Commands
                         if (!exception && packet.RowState != esDataRowState.Deleted && cmd.Parameters != null)
                         {
-                            foreach (SqlParameter param in cmd.Parameters)
+                            foreach (OracleParameter param in cmd.Parameters)
                             {
                                 switch (param.Direction)
                                 {
@@ -1276,7 +1145,7 @@ namespace EntitySpaces.SqlClientProvider
 
         static private DataTable SaveStoredProcEntity(esDataRequest request)
         {
-            SqlCommand cmd = null;
+            OracleCommand cmd = null;
 
             switch (request.EntitySavePacket.RowState)
             {
@@ -1308,7 +1177,7 @@ namespace EntitySpaces.SqlClientProvider
                     {
                         try
                         {
-                            count = cmd.ExecuteNonQuery();
+                            count = cmd.ExecuteNonQuery(); ;
                         }
                         catch (Exception ex)
                         {
@@ -1322,10 +1191,39 @@ namespace EntitySpaces.SqlClientProvider
                 {
                     count = cmd.ExecuteNonQuery();
                 }
-
+                // hd, 19.03.2014: eingefügt, da immer -1 von ODP.Net zurückgegeben wird
+                if (count < 0)
+                {
+                    count = count * -1;
+                }
                 if (count < 1)
                 {
-                    throw new esConcurrencyException("Update failed to update any records @ " + cmd.CommandText);
+                    throw new esConcurrencyException("Update failed to update any records");
+                }
+
+
+
+                if (request.EntitySavePacket.RowState != esDataRowState.Deleted && cmd.Parameters != null)
+                {
+                    foreach (OracleParameter param in cmd.Parameters)
+                    {
+                        switch (param.Direction)
+                        {
+                            case ParameterDirection.Output:
+                            case ParameterDirection.InputOutput:
+                                if (param.OracleDbType == OracleDbType.Decimal)
+                                {
+                                    // 20.01.2016 791sd: Sonderbehandlung Decimal, da OracleDbType.Decimal nicht IConvertible implementiert
+                                    request.EntitySavePacket.CurrentValues[param.SourceColumn] = Convert.ToDecimal(param.Value.ToString());
+                                }
+                                else
+                                {
+                                    request.EntitySavePacket.CurrentValues[param.SourceColumn] = param.Value;
+                                }
+                                break;
+
+                        }
+                    }
                 }
             }
             finally
@@ -1333,22 +1231,6 @@ namespace EntitySpaces.SqlClientProvider
                 esTransactionScope.DeEnlist(cmd);
                 cmd.Dispose();
             }
-
-            if (request.EntitySavePacket.RowState != esDataRowState.Deleted && cmd.Parameters != null)
-            {
-                foreach (SqlParameter param in cmd.Parameters)
-                {
-                    switch (param.Direction)
-                    {
-                        case ParameterDirection.Output:
-                        case ParameterDirection.InputOutput:
-
-                            request.EntitySavePacket.CurrentValues[param.SourceColumn] = param.Value;
-                            break;
-                    }
-                }
-            }
-
             return null;
         }
 
@@ -1358,7 +1240,7 @@ namespace EntitySpaces.SqlClientProvider
 
             using (esTransactionScope scope = new esTransactionScope())
             {
-                SqlCommand cmd = null;
+                OracleCommand cmd = null;
                 bool exception = false;
 
                 foreach (esEntitySavePacket packet in request.CollectionSavePacket)
@@ -1411,9 +1293,14 @@ namespace EntitySpaces.SqlClientProvider
                             count = cmd.ExecuteNonQuery();
                         }
 
+                        // hd, 19.03.2014: eingefügt, da immer -1 von ODP.Net zurückgegeben wird
+                        if (count < 0)
+                        {
+                            count = count * -1;
+                        }
                         if (count < 1)
                         {
-                            throw new esConcurrencyException("Update failed to update any records for Table " + Shared.CreateFullName(request));
+                            throw new esConcurrencyException("Update failed to update any records");
                         }
                     }
                     catch (Exception ex)
@@ -1426,6 +1313,22 @@ namespace EntitySpaces.SqlClientProvider
                         {
                             throw;
                         }
+
+                        if (!exception && packet.RowState != esDataRowState.Deleted && cmd.Parameters != null)
+                        {
+                            foreach (OracleParameter param in cmd.Parameters)
+                            {
+                                switch (param.Direction)
+                                {
+                                    case ParameterDirection.Output:
+                                    case ParameterDirection.InputOutput:
+
+                                        packet.CurrentValues[param.SourceColumn] = param.Value;
+                                        break;
+                                }
+                            }
+                        }
+
                     }
                     finally
                     {
@@ -1433,20 +1336,7 @@ namespace EntitySpaces.SqlClientProvider
                         cmd.Dispose();
                     }
 
-                    if (!exception && packet.RowState != esDataRowState.Deleted && cmd.Parameters != null)
-                    {
-                        foreach (SqlParameter param in cmd.Parameters)
-                        {
-                            switch (param.Direction)
-                            {
-                                case ParameterDirection.Output:
-                                case ParameterDirection.InputOutput:
 
-                                    packet.CurrentValues[param.SourceColumn] = param.Value;
-                                    break;
-                            }
-                        }
-                    }
                 }
 
                 scope.Complete();
@@ -1457,9 +1347,7 @@ namespace EntitySpaces.SqlClientProvider
 
         static private DataTable SaveDynamicEntity(esDataRequest request)
         {
-            SqlCommand cmd = null;
-
-            if (request.EntitySavePacket.CurrentValues == null || request.EntitySavePacket.CurrentValues.Count == 0) return null;
+            OracleCommand cmd = null;
 
             switch (request.EntitySavePacket.RowState)
             {
@@ -1479,7 +1367,6 @@ namespace EntitySpaces.SqlClientProvider
             try
             {
                 esTransactionScope.Enlist(cmd, request.ConnectionString, CreateIDbConnectionDelegate);
-
                 int count = 0;
 
                 #region Profiling
@@ -1491,7 +1378,7 @@ namespace EntitySpaces.SqlClientProvider
                         {
                             count = cmd.ExecuteNonQuery();
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             esTrace.Exception = ex.Message;
                             throw;
@@ -1503,11 +1390,41 @@ namespace EntitySpaces.SqlClientProvider
                 {
                     count = cmd.ExecuteNonQuery();
                 }
-
+                // hd, 19.03.2014: eingefügt, da immer -1 von ODP.Net zurückgegeben wird
+                if (count < 0)
+                {
+                    count = count * -1;
+                }
                 if (count < 1)
                 {
-                    throw new esConcurrencyException("Update failed to update any records for Table " + Shared.CreateFullName(request));
+                    throw new esConcurrencyException("Update failed to update any records");
                 }
+
+
+                if (request.EntitySavePacket.RowState != esDataRowState.Deleted && cmd.Parameters != null)
+                {
+                    foreach (OracleParameter param in cmd.Parameters)
+                    {
+                        switch (param.Direction)
+                        {
+                            case ParameterDirection.Output:
+                            case ParameterDirection.InputOutput:
+                                if (param.OracleDbType == OracleDbType.Decimal)
+                                {
+                                    // 20.01.2016 791sd: Sonderbehandlung Decimal, da OracleDbType.Decimal nicht IConvertible implementiert
+                                    request.EntitySavePacket.CurrentValues[param.SourceColumn] = Convert.ToDecimal(param.Value.ToString());
+                                }
+                                else
+                                {
+                                    request.EntitySavePacket.CurrentValues[param.SourceColumn] = param.Value;
+                                }
+                                //request.EntitySavePacket.CurrentValues[param.SourceColumn] = param.Value;
+                                break;
+                        }
+                    }
+                }
+
+
             }
             finally
             {
@@ -1515,114 +1432,8 @@ namespace EntitySpaces.SqlClientProvider
                 cmd.Dispose();
             }
 
-            if (request.EntitySavePacket.RowState != esDataRowState.Deleted && cmd.Parameters != null)
-            {
-                foreach (SqlParameter param in cmd.Parameters)
-                {
-                    switch (param.Direction)
-                    {
-                        case ParameterDirection.Output:
-                        case ParameterDirection.InputOutput:
-
-                            request.EntitySavePacket.CurrentValues[param.SourceColumn] = param.Value;
-                            break;
-                    }
-                }
-            }
 
             return null;
-        }
-
-        static private DataTable SaveBulkInsert(esDataRequest request)
-        {
-            if (request.CollectionSavePacket == null) return null;
-
-            DataTable dataTable = CreateDataTableForBulkInsert(request);
-
-            foreach (esEntitySavePacket packet in request.CollectionSavePacket)
-            {
-                if (packet.RowState != esDataRowState.Added) continue;
-
-                DataRow row = dataTable.NewRow();
-                dataTable.Rows.Add(row);
-
-                SetModifiedValues(request, packet, row);
-            }
-
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default;
-            bool first = true;
-
-            if (request.BulkSaveOptions != null)
-            {
-                foreach (string opt in request.BulkSaveOptions)
-                {
-                    if (first)
-                    {
-                        first = false;
-                        options = (SqlBulkCopyOptions)Enum.Parse(typeof(SqlBulkCopyOptions), opt);
-                    }
-                    else
-                    {
-                        options |= (SqlBulkCopyOptions)Enum.Parse(typeof(SqlBulkCopyOptions), opt);
-                    }
-                }
-            }
-
-            if (first)
-            {
-                using (SqlBulkCopy bulkCopy = new SqlBulkCopy(request.ConnectionString))
-                {
-                    bulkCopy.DestinationTableName = Shared.CreateFullName(request);
-                    bulkCopy.WriteToServer(dataTable);
-                }
-            }
-            else
-            {
-                using (SqlBulkCopy bulkCopy = new SqlBulkCopy(request.ConnectionString, options))
-                {
-                    bulkCopy.DestinationTableName = Shared.CreateFullName(request);
-                    bulkCopy.WriteToServer(dataTable);
-                }
-            }
-
-            return null;
-        }
-
-        static private DataTable CreateDataTableForBulkInsert(esDataRequest request)
-        {
-            DataTable dataTable = new DataTable();
-            DataColumnCollection dataColumns = dataTable.Columns;
-            esColumnMetadataCollection cols = request.Columns;
-
-            if (request.SelectedColumns == null)
-            {
-                esColumnMetadata col;
-                for (int i = 0; i < cols.Count; i++)
-                {
-                    col = cols[i];
-                    dataColumns.Add(new DataColumn(col.Name, col.Type));
-                }
-            }
-            else
-            {
-                foreach (string col in request.SelectedColumns.Keys)
-                {
-                    dataColumns.Add(new DataColumn(col, cols[col].Type));
-                }
-            }
-
-            return dataTable;
-        }
-
-        static void SetModifiedValues(esDataRequest request, esEntitySavePacket packet, DataRow row)
-        {
-            foreach (string column in packet.ModifiedColumns)
-            {
-                if (request.Columns.FindByColumnName(column) != null)
-                {
-                    row[column] = packet.CurrentValues[column];
-                }
-            }
         }
     }
 }

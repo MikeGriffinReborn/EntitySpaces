@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29503.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntitySpaces.ORM.OracleManagedClient", "EntitySpaces.ORM.OracleManagedClient\EntitySpaces.ORM.OracleManagedClient.csproj", "{9EF27270-F9AD-49E2-AD55-C9D507827B04}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9EF27270-F9AD-49E2-AD55-C9D507827B04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EF27270-F9AD-49E2-AD55-C9D507827B04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EF27270-F9AD-49E2-AD55-C9D507827B04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EF27270-F9AD-49E2-AD55-C9D507827B04}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {66B8A55F-8972-40CD-8BF8-0E00C1E31731}
+	EndGlobalSection
+EndGlobal
