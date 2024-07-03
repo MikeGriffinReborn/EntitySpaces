@@ -1,3 +1,5 @@
+THIS IS NOW BEING MAINTAINED BY Paul Cordova @ [EntitySpaces Modernized](https://github.com/paulcordova/EntitySpaces)
+
 Click here for the [Glossy Site ...](https://mikegriffinreborn.github.io/EntitySpaces/)
 
 <img src="https://repository-images.githubusercontent.com/194275145/55b5b080-1ccf-11ea-8609-15b9de0d2351" alt="EntitySpaces" width="531" height="268">
