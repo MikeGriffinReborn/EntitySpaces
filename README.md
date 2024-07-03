@@ -1,6 +1,4 @@
-## THIS IS NOW BEING MAINTAINED BY Paul Cordova @ [EntitySpaces Modernized](https://github.com/paulcordova/EntitySpaces)
-
-
+## Modernized BY Paul Cordova --> @ [EntitySpaces Modernized](https://github.com/paulcordova/EntitySpaces)
 
 Click here for the [Glossy Site ...](https://mikegriffinreborn.github.io/EntitySpaces/)
 
