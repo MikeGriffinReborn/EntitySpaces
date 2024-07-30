@@ -255,7 +255,7 @@ namespace EntitySpaces.SqlClientProvider
                 sql += seqDeclare;
             }
 
-            sql += " INSERT INTO " + fullName;
+            sql += " INSERT INTO " + fullName + GetTableHints(packet) + " ";
 
             if (into.Length != 0 && seqCount > 0)
             {
@@ -305,7 +305,7 @@ namespace EntitySpaces.SqlClientProvider
 
             string set = string.Empty;
             string sql = "SET NOCOUNT OFF ";
-            sql += "UPDATE " + CreateFullName(request) + " SET ";
+            sql += "UPDATE " + CreateFullName(request) + GetTableHints(packet) + " SET ";
 
             string where = String.Empty;
             string conncur = String.Empty;
@@ -716,12 +716,12 @@ namespace EntitySpaces.SqlClientProvider
             string catalog = iQuery.Catalog ?? request.Catalog ?? providerMetadata.Catalog;
             string schema = iQuery.Schema ?? request.Schema ?? providerMetadata.Schema;
 
-            if (catalog != null && schema != null)
+            if (!string.IsNullOrWhiteSpace(catalog) && !string.IsNullOrWhiteSpace(schema))
             {
                 name += Delimiters.TableOpen + catalog + Delimiters.TableClose + ".";
             }
 
-            if (schema != null)
+            if (!string.IsNullOrWhiteSpace(schema))
             {
                 name += Delimiters.TableOpen + schema + Delimiters.TableClose + ".";
             }
@@ -737,6 +737,15 @@ namespace EntitySpaces.SqlClientProvider
             return name;
         }
 
+        static public string GetTableHints(esEntitySavePacket packet)
+        {
+            if (string.IsNullOrWhiteSpace(packet.TableHints))
+            {
+                return string.Empty;
+            }
+            return " with (" + packet.TableHints.Trim() + ")";
+        }
+
         static public string CreateFullName(esDataRequest request)
         {
             string name = String.Empty;
@@ -744,12 +753,12 @@ namespace EntitySpaces.SqlClientProvider
             string catalog = request.Catalog ?? request.ProviderMetadata.Catalog;
             string schema = request.Schema ?? request.ProviderMetadata.Schema;
 
-            if (catalog != null && schema != null)
+            if (!string.IsNullOrWhiteSpace(catalog) && !string.IsNullOrWhiteSpace(schema))
             {
                 name += Delimiters.TableOpen + catalog + Delimiters.TableClose + ".";
             }
 
-            if (schema != null)
+            if (!string.IsNullOrWhiteSpace(schema))
             {
                 name += Delimiters.TableOpen + schema + Delimiters.TableClose + ".";
             }
@@ -769,18 +778,18 @@ namespace EntitySpaces.SqlClientProvider
         {
             string name = String.Empty;
 
-            if ( (request.Catalog != null || request.ProviderMetadata.Catalog != null) &&
-                 (request.Schema != null || request.ProviderMetadata.Schema != null) )
+            if ( (!string.IsNullOrWhiteSpace(request.Catalog) || !string.IsNullOrWhiteSpace(request.ProviderMetadata.Catalog)) &&
+                 (!string.IsNullOrWhiteSpace(request.Schema) || !string.IsNullOrWhiteSpace(request.ProviderMetadata.Schema)) )
             {
                 name += Delimiters.TableOpen;
-                name += request.Catalog != null ? request.Catalog : request.ProviderMetadata.Catalog;
+                name += !string.IsNullOrWhiteSpace(request.Catalog) ? request.Catalog : request.ProviderMetadata.Catalog;
                 name += Delimiters.TableClose + ".";
             }
 
-            if (request.Schema != null || request.ProviderMetadata.Schema != null)
+            if (!string.IsNullOrWhiteSpace(request.Schema) || !string.IsNullOrWhiteSpace(request.ProviderMetadata.Schema))
             {
                 name += Delimiters.TableOpen;
-                name += request.Schema != null ? request.Schema : request.ProviderMetadata.Schema;
+                name += !string.IsNullOrWhiteSpace(request.Schema) ? request.Schema : request.ProviderMetadata.Schema;
                 name += Delimiters.TableClose + ".";
             }
 

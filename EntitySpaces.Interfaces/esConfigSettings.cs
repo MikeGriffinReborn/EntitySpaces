@@ -30,7 +30,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+#if DOTNET4||DOTNET5
 using System.Configuration;
+#endif
 
 namespace EntitySpaces.Interfaces
 {
@@ -45,6 +47,9 @@ namespace EntitySpaces.Interfaces
         {
             get
             {
+#if DOTNET4 || DOTNET5
+                esConfigSection.InitializeFromConfigSection(connectionInfo);
+#endif
                 return connectionInfo;
             }
         }

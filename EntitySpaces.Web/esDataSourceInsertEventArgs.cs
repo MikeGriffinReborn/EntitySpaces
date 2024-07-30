@@ -1,4 +1,4 @@
-﻿/*  New BSD License
+/*  New BSD License
 -------------------------------------------------------------------------------
 Copyright (c) 2006-2012, EntitySpaces, LLC
 All rights reserved.
@@ -28,18 +28,45 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Collections;
+using System.Security.Permissions;
+using System.Web;
 
-namespace EntitySpaces.Interfaces
+using EntitySpaces.Core;
+
+namespace EntitySpaces.Web
 {
-    public struct esEntitySavePacket
+    /// <summary>
+    /// Passed to the esPreInsert, esInsert, and esPostInsert events.
+    /// </summary>
+    /// <seealso cref="esDataSource"/>
+    [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal), AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
+    public class esDataSourceInsertEventArgs : EventArgs
     {
-        public esSmartDictionary CurrentValues;
-        public esSmartDictionary OriginalValues;
-        public List<string> ModifiedColumns;
-        public esDataRowState RowState;
-        public object Entity;
-        public string TableHints;
+        /// <summary>
+        /// This property is used in the pre events to apply business logic criteria and cancel the actual event if those criteria are met.
+        /// </summary>
+        public bool Cancel;
+
+        /// <summary>
+        /// The esEntityCollection if valid
+        /// </summary>
+        public esEntityCollectionBase Collection;
+
+        /// <summary>
+        /// The esEntity if valid
+        /// </summary>
+        public esEntity Entity;
+
+        /// <summary>
+        /// The low level values passed in from the control
+        /// </summary>
+        public IDictionary Values;
+
+        /// <summary>
+        /// Set this to true to indicate that you have saved the data. This will prevent
+        /// the esDataSource from attempting to save it.
+        /// </summary>
+        public bool EventWasHandled;
     }
 }

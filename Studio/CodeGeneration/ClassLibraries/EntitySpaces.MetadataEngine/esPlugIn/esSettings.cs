@@ -571,7 +571,7 @@ namespace EntitySpaces.MetadataEngine
 
             string version = GetFileVersion(pathAndFileName);
 
-            if (version.Substring(0, 4) != "2011" && version.Substring(0, 4) != "2012")
+            if (version?.Length >= 4 && version.Substring(0, 4) != "0000" && string.Compare(version.Substring(0, 4), "2011") < 0)
             {
                 // Convert the old project file in place
                 ConvertSettings(pathAndFileName);
