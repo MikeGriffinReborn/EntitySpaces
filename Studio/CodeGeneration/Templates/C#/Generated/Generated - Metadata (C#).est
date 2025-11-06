@@ -213,7 +213,7 @@ namespace <%=Namespace%>
 		}
 		
 		#region ColumnNames
-		public class ColumnNames
+		public static class ColumnNames
 		{ <% 
 			 foreach(IColumn col in cols)
 			 {%>
@@ -381,7 +381,7 @@ namespace <%=Namespace%>
 
 		static private <%=source.Metadata%> meta;
 		static protected Dictionary<string, MapToMeta> mapDelegates;
-		static private int _esDefault = RegisterDelegateesDefault();
+		static private readonly int _esDefault = RegisterDelegateesDefault();
 	}
 }
 <script runat="template">
