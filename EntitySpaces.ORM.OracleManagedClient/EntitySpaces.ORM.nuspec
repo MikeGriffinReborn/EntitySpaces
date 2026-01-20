@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>EntitySpaces.ORM.OracleManagedClient</id>
+    <version>2019.9.20.0</version>
+    <authors>EntitySpaces.ORM.OracleManagedClient</authors>
+    <owners>EntitySpaces.ORM.OracleManagedClient</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">BSD-2-Clause-FreeBSD</license>
+    <projectUrl>https://github.com/MikeGriffinReborn/EntitySpaces_DotNetStandard</projectUrl>
+    <description>EntitySpaces in .NET Standard Mode for Oracle Server (single assembly install)</description>
+    <tags>EntitySpaces, ORM</tags>
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Oracle.ManagedDataAccess" version="19.10.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".netcoreapp2.0">
+        <dependency id="Oracle.ManagedDataAccess.Core" version="3.21.1" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <readme>readme.md</readme>
+  </metadata>
+</package>

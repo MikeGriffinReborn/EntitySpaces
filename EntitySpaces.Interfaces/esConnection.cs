@@ -115,7 +115,9 @@ namespace EntitySpaces.Interfaces
                 string cnString = String.Empty;
 
                 if (this.connectionString == null)
+                {
                     cnString = esConfigSettings.DefaultConnection.ConnectionString;
+                }
                 else
                 {
                     cnString = this.connectionString;
@@ -130,7 +132,7 @@ namespace EntitySpaces.Interfaces
                             int index = cnString.IndexOf(':');
                             string name = cnString.Substring(index + 1);
                             this.connectionString = cnString = "";
-                                //System.Configuration.ConfigurationManager.ConnectionStrings[name].ConnectionString;
+                            //System.Configuration.ConfigurationManager.ConnectionStrings[name].ConnectionString;
 
                             esConfigSettings.DefaultConnection.ConnectionString = cnString;
 

@@ -24,7 +24,7 @@ namespace EntitySpaces.Common
 
             string version = GetFileVersion(fileNameAndFilePath);
 
-            if (version != null && version.Substring(0, 4) != "2011" && version.Substring(0, 4) != "2012")
+            if (version?.Length >= 4 && version.Substring(0, 4) != "0000" && string.Compare(version.Substring(0, 4), "2011") < 0)
             {
                 // Convert the old project file in place
                 ConvertProject(fileNameAndFilePath, mainSettings);

@@ -1,4 +1,4 @@
-﻿/*  New BSD License
+/*  New BSD License
 -------------------------------------------------------------------------------
 Copyright (c) 2006-2012, EntitySpaces, LLC
 All rights reserved.
@@ -28,18 +28,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Security.Permissions;
+using System.Web;
 
-namespace EntitySpaces.Interfaces
+using EntitySpaces.Core;
+
+namespace EntitySpaces.Web
 {
-    public struct esEntitySavePacket
+    /// <summary>
+    /// Passed to the esCreateCollection event
+    /// </summary>
+    [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal), AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
+    public class esDataSourceCreateCollectionEventArgs : EventArgs
     {
-        public esSmartDictionary CurrentValues;
-        public esSmartDictionary OriginalValues;
-        public List<string> ModifiedColumns;
-        public esDataRowState RowState;
-        public object Entity;
-        public string TableHints;
+        // Properties
+        public esEntityCollectionBase Collection;
     }
 }

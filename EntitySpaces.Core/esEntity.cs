@@ -2625,6 +2625,7 @@ namespace EntitySpaces.Core
             request.EntitySavePacket.CurrentValues = currentValues;
             request.EntitySavePacket.RowState = rowState;
             request.EntitySavePacket.ModifiedColumns = es.ModifiedColumns;
+            request.EntitySavePacket.TableHints = es.TableHints;
 
             request.Columns = Meta.Columns;
             request.SqlAccessType = sqlAccessType;
@@ -4117,6 +4118,12 @@ namespace EntitySpaces.Core
             set { this._isLazyLoadDisabled = value; }
         }
 
+        string IEntity.TableHints
+        {
+            get { return this._tableHints; }
+            set { this._tableHints = value; }
+        }
+
         /// <summary>
         /// Called by EntitySpaces during the DynamicQuery Prefetch logic
         /// </summary>
@@ -4604,6 +4611,9 @@ namespace EntitySpaces.Core
 
         [NonSerialized]
         internal bool _isLazyLoadDisabled;
+
+        [NonSerialized]
+        internal string _tableHints;
 
         [NonSerialized]
         private bool applyDefaultsCalled;
